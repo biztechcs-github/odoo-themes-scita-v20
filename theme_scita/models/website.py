@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of AppJetty. See LICENSE file for full copyright and licensing details.
 
+import re
+
 import werkzeug
 from lxml import etree
 from odoo import models, api, fields
@@ -309,3 +311,116 @@ class website(models.Model):
                 not rec.website_hide_price
                 and request.env.user.partner_id.website_show_price
             )
+
+
+
+    # A CSS background is the worst case for LCP: the browser cannot even ask
+    # for it until the stylesheet has parsed and the element has been laid out.
+    # On the electronics demo that put the hero banner's discovery 2.06s into
+    # the load. <img> is cheaper to discover but still waits behind the
+    # stylesheet. Whichever of the two appears first in the page's own markup
+    # is the top of the page, so that is the one worth a preload hint.
+    # Odoo-stored images (website-editable fields like
+    # theme_scita.sct_banner_slider_image) are served as /web/image/<model>.
+    # <field>, with no file extension at all - only static theme assets under
+    # /theme_scita/static/... end in .png/.jpg/etc. Matching only the
+    # extension form (as this used to) silently misses every dynamic hero
+    # image and falls through to whatever static <img> happens to appear
+    # first in the arch instead - on this site that was a 430x116 category-
+    # slider thumbnail nowhere near the real hero, wasting the one preload
+    # slot on the wrong 4KB image while the real ~200KB hero got none.
+    _SCITA_URL_BODY = r'/(?:web/image/[^"\'()&\s]+|[^"\'()&\s]+\.(?:png|jpe?g|webp|gif))'
+    _SCITA_BG_IMAGE_RE = re.compile(
+        r'background-image:\s*url\(\s*(?:&#34;|&quot;|["\'])?'
+        r'(' + _SCITA_URL_BODY + r')'
+    )
+    _SCITA_IMG_TAG_RE = re.compile(r'<img\b[^>]*?>')
+    _SCITA_IMG_SRC_RE = re.compile(r'\ssrc="(' + _SCITA_URL_BODY + r')"')
+    _SCITA_IMG_WIDTH_RE = re.compile(r'\swidth="(\d+)"')
+
+    def _scita_lcp_preload_href(self, main_object):
+        """URL of the page's likely LCP image, or False.
+
+        Only literal, same-origin URLs are considered - t-att-src is evaluated
+        too late to be useful here, and guessing would risk preloading
+        something the page never requests. Any failure returns False: a
+        performance hint must never be able to break a page.
+        """
+        try:
+            self.ensure_one()
+            if main_object is None or 'arch' not in getattr(main_object, '_fields', {}):
+                return False
+            arch = main_object.sudo().arch
+            if not arch:
+                return False
+
+            candidates = []
+            background = self._SCITA_BG_IMAGE_RE.search(arch)
+            if background:
+                candidates.append((background.start(), background.group(1)))
+
+            for tag in self._SCITA_IMG_TAG_RE.finditer(arch):
+                markup = tag.group(0)
+                src = self._SCITA_IMG_SRC_RE.search(markup)
+                if not src:
+                    # .svg is deliberately excluded: in this theme they are
+                    # arrows and other chrome, never the LCP element.
+                    continue
+                declared = self._SCITA_IMG_WIDTH_RE.search(markup)
+                if declared and int(declared.group(1)) < 200:
+                    continue
+                candidates.append((tag.start(), src.group(1)))
+                break
+
+            href = min(candidates)[1] if candidates else False
+            # Recorded so ir_qweb's eager-image hook (models/ir_qweb.py) can
+            # tell whether this request already has a definitive LCP answer.
+            # Without this, that hook falls back to "first <img> in rendered
+            # document order" - wrong whenever the real LCP is a CSS
+            # background (as on the homepage hero), where it ends up
+            # eager-loading + fetchpriority=high'ing an unrelated first
+            # <img> instead, stealing bandwidth from the actual LCP resource
+            # on the throttled connection.
+            request._scita_lcp_href = href
+            return href
+        except Exception:  # noqa: BLE001
+            return False
+
+    def _scita_google_font_css_hrefs(self):
+        """Hrefs of the locally-hosted Google-font stylesheets, for preloading.
+
+        Odoo's "host fonts locally" feature pulls the font CSS in with an
+        ``@import`` from *inside* web.assets_frontend
+        (addons/website/static/src/scss/website.scss). An @import nested in a
+        render-blocking stylesheet is the worst case for discovery: the
+        browser cannot request the font CSS until the whole ~1.4MB bundle has
+        downloaded and parsed, and cannot request the woff2 files until that
+        CSS in turn arrives. Measured on the 17 Aug 2026 mobile run that is a
+        4-level critical chain, 2.03s of maximum critical path latency for a
+        1.1KB file.
+
+        Emitting a preload for the same URL in the initial HTML (see
+        theme_scita_preload_google_font in views/website_view.xml) lets it be
+        fetched in parallel with the bundle instead of serially after it; the
+        @import then resolves from cache. The URL has to match the one the
+        SCSS builds byte for byte or it would be a second request, hence the
+        '/web/content/<id>/google-font-<name>' shape below.
+
+        Attachment ids differ per database, so this is looked up rather than
+        hard-coded. Any failure returns an empty list: a performance hint must
+        never be able to break a page.
+        """
+        try:
+            attachments = self.env['ir.attachment'].sudo().search([
+                ('name', 'like', '% (google-font)'),
+                ('mimetype', '=', 'text/css'),
+            ])
+            hrefs = []
+            for attachment in attachments:
+                font_name = attachment.name.replace(' (google-font)', '').strip()
+                if not font_name:
+                    continue
+                hrefs.append('/web/content/%s/google-font-%s' % (attachment.id, font_name))
+            return hrefs
+        except Exception:  # noqa: BLE001
+            return []

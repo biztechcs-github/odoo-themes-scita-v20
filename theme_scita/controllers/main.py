@@ -1821,7 +1821,16 @@ class PWASupport(http.Controller):
                 "theme_color": theme_color,
             },
         )
-        return request.make_response(content, [("Content-Type", mimetype)])
+        # The <link rel="manifest"> in website.layout means every page view
+        # re-requests this. It is cheap server-side (~6ms) but it is still a
+        # whole extra request on the document's critical path, and on a
+        # throttled mobile connection Lighthouse measured it queuing for ~2s.
+        # The contents only change when the PWA settings or the app icon
+        # change, so let the browser keep it for a day.
+        return request.make_response(content, [
+            ("Content-Type", mimetype),
+            ("Cache-Control", "public, max-age=86400"),
+        ])
 
     @http.route("/theme_scita/pwa/offline", type="http", auth="public", website=True)
     def pwa_offline_page(self):

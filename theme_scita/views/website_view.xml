@@ -115,4 +115,102 @@
             <field name="view_mode">list,form</field>
             <field name="context">{'search_default_my_websites':1}</field>
         </record>
+
+        <!-- Fonts are self-hosted (see migrations/19.0.0.17): Odoo's "host font
+             locally" mechanism downloads Poppins once into an ir.attachment and
+             serves it from this server, so the page never actually requests
+             fonts.gstatic.com/fonts.googleapis.com. Lighthouse flags both
+             preconnects as unused connection setup cost; drop them instead of
+             adding a second one. -->
+        <template id="theme_scita_fonts_preconnect" inherit_id="website.layout" name="Remove Unused Google Fonts Preconnect">
+            <xpath expr="//link[@rel='preconnect'][@href='https://fonts.gstatic.com/']" position="replace"/>
+        </template>
+
+        <!-- Keep this preload. It is tempting to drop it: a preload is fetched at
+             High priority, so Lineicons (67 KB) and Odoo's fontawesome (78 KB)
+             do compete with the 18.8 KB LCP image on a throttled connection.
+             Measured on 3007scita, dropping both made things worse, not better -
+             FCP went 2.76s -> 3.60s across three runs - because the icon fonts
+             use font-display: block, so first paint waits for them either way.
+             Preloading is what stops that wait being long. If the preloads are
+             ever removed, font-display must go back to swap in the same change. -->
+        <!-- Odoo preloads the full 77KB fontawesome-webfont.woff2 in
+             web.frontend_layout. That is High-priority bandwidth taken from
+             the 14KB LCP hero image, and static/src/css/fontawesome-subset.css
+             now serves the glyphs this theme uses from a 4.6KB file instead,
+             so preload that rather than the original. The full file is still
+             reachable through core's own un-ranged @font-face if a page uses a
+             glyph outside the subset - see that CSS file for the mechanism. -->
+        <template id="theme_scita_preload_fontawesome_subset" inherit_id="web.frontend_layout" name="Preload FontAwesome Subset">
+            <xpath expr="//link[@rel='preload'][contains(@href, 'fontawesome-webfont')]" position="replace">
+                <link rel="preload" href="/theme_scita/static/src/fonts/fontawesome-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+            </xpath>
+        </template>
+
+        <template id="theme_scita_preload_icon_font" inherit_id="website.layout" name="Preload Icon Font">
+            <xpath expr="//head" position="inside">
+                <!-- The 1.2KB subset, not the 66KB full file: a preload is
+                     High priority, so what is preloaded here is taken out of
+                     the same budget the LCP hero image needs. Every other
+                     Lineicon still resolves through the complementary
+                     unicode-range in line-icons-deferred.css. -->
+                <link rel="preload" href="/theme_scita/static/src/fonts/Lineicons-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+            </xpath>
+        </template>
+
+        <!-- Non-blocking load for the product-slider styles. media="print" keeps
+             the stylesheet off the critical path, then it is promoted to
+             media="all" as soon as it has downloaded. Safe because everything it
+             styles arrives after load anyway (RPC-injected sliders, quick-view
+             modal), so there is nothing on screen for it to restyle - and the
+             href filter means we only ever promote our own sheet, never a real
+             print stylesheet belonging to Odoo or another module. -->
+        <!-- Start the LCP image downloading straight away instead of after the
+             stylesheet clears the connection. See website._scita_lcp_preload_href
+             for why this is derived from the page's own markup. -->
+        <template id="theme_scita_preload_lcp_image" inherit_id="website.layout" name="Preload LCP Image">
+            <xpath expr="//head" position="inside">
+                <t t-set="scita_lcp_href" t-value="website._scita_lcp_preload_href(main_object) if website else False"/>
+                <link t-if="scita_lcp_href" rel="preload" as="image" t-att-href="scita_lcp_href" fetchpriority="high"/>
+            </xpath>
+        </template>
+
+        <!-- Break the @import chain for the self-hosted Google font. See
+             website._scita_google_font_css_hrefs for why: the font CSS is
+             @imported from inside web.assets_frontend, so without this the
+             browser only discovers it after the whole bundle has parsed, and
+             the woff2 files only after that again. Preloading the exact same
+             URL here makes that fetch parallel instead of serial. -->
+        <template id="theme_scita_preload_google_font" inherit_id="website.layout" name="Preload Self-Hosted Google Font CSS">
+            <xpath expr="//head" position="inside">
+                <t t-foreach="website._scita_google_font_css_hrefs() if website else []" t-as="scita_font_href">
+                    <link rel="preload" as="style" t-att-href="scita_font_href"/>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="theme_scita_async_snippet_css" inherit_id="website.layout" name="Async Snippet Product CSS">
+            <xpath expr="//head" position="inside">
+                <t t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true" media="print"/>
+                <script type="text/javascript">
+                    (function () {
+                        var sel = 'link[rel="stylesheet"][media="print"][href*="assets_snippet_product_css"]';
+                        Array.prototype.forEach.call(document.querySelectorAll(sel), function (link) {
+                            if (link.sheet) {
+                                link.media = 'all';
+                            } else {
+                                link.addEventListener('load', function () { link.media = 'all'; });
+                            }
+                        });
+                    })();
+                </script>
+            </xpath>
+        </template>
+
+        <template id="theme_scita_brand_promotion_fixed_size" inherit_id="web.brand_promotion_message" name="Brand Promotion Badge Fixed Size">
+            <xpath expr="//img[@src='/web/static/img/odoo_logo_tiny.png']" position="attributes">
+                <attribute name="style">width: 49.6px; height: 16px; vertical-align: baseline;</attribute>
+            </xpath>
+        </template>
+
 </odoo>
