@@ -2714,6 +2714,17 @@
 
 						.container{
 							padding: 0;
+							align-items: flex-start;
+						}
+					}
+					// Odoo 20 caps the title section at 520px, which left the
+					// breadcrumb and prev/next short of the card edge. Let the
+					// section span the card and keep the cap on the title/SKU.
+					.o_wsale_product_details_content_section_title:has(> .page-title){
+						max-width: none;
+
+						> :not(.page-title){
+							max-width: var(--o-wsale-product-details-content-section-max-width, 520px);
 						}
 					}
 

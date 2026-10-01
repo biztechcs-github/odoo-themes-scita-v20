@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import publicWidget from "@theme_scita/js/compat/public_widget";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
@@ -127,6 +127,13 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
                     }
                 }
                 
+                // Odoo 20 binds add to cart / wishlist / compare (and Scita's quick view) as
+                // interactions, which only run on elements they were started on.
+                const interactions = this.services?.["public.interactions"];
+                if (interactions && newProductsAdded) {
+                    interactions.startInteractions(this.product_grid);
+                }
+
                 // Update product count
                 this.product_count = this.product_grid.querySelectorAll('.oe_product').length;
                 

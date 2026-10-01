@@ -1,0 +1,36 @@
+// Odoo 20 no longer ships FontAwesome on the website; the theme brings FontAwesome 4.7
+// back (static/lib/fontawesome). These rules restore what Odoo 19 layered on top of it
+// (web/static/src/scss/fontawesome_overridden.scss) for the icons Scita relies on.
+
+// Odoo 19 drew fa-twitter with the X logo from Odoo's UI icon font; in 20 that font
+// exposes it as the "oi_x" ligature.
+.fa.fa-twitter,
+.fa-twitter.fa {
+    font-family: 'odoo_ui_icons' !important;
+    font-feature-settings: 'liga';
+
+    &::before {
+        content: 'oi_x';
+    }
+}
+
+// Right-to-left languages: flip directional icons, as Odoo 19 did.
+.o_rtl .fa {
+    &.fa-align-right, &.fa-align-left,
+    &.fa-chevron-right, &.fa-chevron-left,
+    &.fa-arrow-right, &.fa-arrow-left,
+    &.fa-hand-o-right, &.fa-hand-o-left,
+    &.fa-arrow-circle-right, &.fa-arrow-circle-left,
+    &.fa-caret-right, &.fa-caret-left,
+    &.fa-rotate-right, &.fa-rotate-left,
+    &.fa-angle-double-right, &.fa-angle-double-left,
+    &.fa-angle-right, &.fa-angle-left,
+    &.fa-quote-right, &.fa-quote-left,
+    &.fa-chevron-circle-right, &.fa-chevron-circle-left,
+    &.fa-long-arrow-right, &.fa-long-arrow-left,
+    &.fa-toggle-right, &.fa-toggle-left,
+    &.fa-caret-square-o-right, &.fa-caret-square-o-left,
+    &.fa-arrow-circle-o-left, &.fa-arrow-circle-o-right {
+        transform: rotate(180deg);
+    }
+}

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { rpc } from '@web/core/network/rpc';
-import wSaleUtils from "@website_sale/js/website_sale_utils";
-import publicWidget from '@web/legacy/js/public/public_widget';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import wSaleUtils from "@theme_scita/js/compat/website_sale_utils";
+import publicWidget from '@theme_scita/js/compat/public_widget';
+import wishlistUtils from '@website_sale/js/wishlist_utils';
 
 odoo.define('theme_scita.quick_view', [], function (require) {
     'use strict';
@@ -128,7 +128,9 @@ odoo.define('theme_scita.quick_view', [], function (require) {
 
 
 
-                $("#shop_quick_view_modal").off("click", "a.js_add_cart_json, #add_to_cart")
+                // off() must use the same selector as on(), otherwise a handler is added on
+                // every open and the product gets added once per previous open.
+                $("#shop_quick_view_modal").off("click", "#add_to_cart")
                     .on("click", "#add_to_cart", async function (ev) {
                         ev.preventDefault();
 
@@ -196,7 +198,7 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                         await rpc('/shop/wishlist/add', { product_id: productId });
                         wishlistUtils.addWishlistProduct(productId);
                         wishlistUtils.updateWishlistNavBar();
-                        wishlistUtils.updateDisabled(el, true);
+                        el.disabled = true; el.classList.add('disabled');
 
                         wSaleUtils.animateClone(
                             $(document.querySelector('.o_wsale_my_wish')),
@@ -209,7 +211,7 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                 //------------------------------------------------------------------
                 // Quantity Change
                 //------------------------------------------------------------------
-                $("#shop_quick_view_modal").on("change", ".js_main_product input[name='add_qty']", function (ev) {
+                $("#shop_quick_view_modal").off("change", ".js_main_product input[name='add_qty']").on("change", ".js_main_product input[name='add_qty']", function (ev) {
                     // Just trigger change, WebsiteSale listens inside page,
                     // but here we can refresh price explicitly if needed
                     $(ev.currentTarget).closest("form").trigger("change");
@@ -218,12 +220,12 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                 //------------------------------------------------------------------
                 // Variant Change
                 //------------------------------------------------------------------
-                $("#shop_quick_view_modal").on("change", "[data-attribute_exclusions]", function (ev) {
+                $("#shop_quick_view_modal").off("change", "[data-attribute_exclusions]").on("change", "[data-attribute_exclusions]", function (ev) {
                     $(ev.currentTarget).closest("form").trigger("change");
                 });
 
                 // Highlight active swatch
-                $("#shop_quick_view_modal").on("change", ".list-inline-item .css_attribute_color", function (ev) {
+                $("#shop_quick_view_modal").off("change", ".list-inline-item .css_attribute_color").on("change", ".list-inline-item .css_attribute_color", function (ev) {
                     const $parent = $(ev.target).closest('.js_product');
                     $parent.find('.css_attribute_color').removeClass("active");
                     $parent.find('.css_attribute_color').filter(':has(input:checked)').addClass("active");
@@ -243,10 +245,17 @@ odoo.define('theme_scita.quick_view', [], function (require) {
 
             $product.find('.css_attribute_color').removeClass("active");
             $swatch.addClass("active");
+            // Odoo 20 product pages have no product_template_id input and handle swatch
+            // changes themselves (ProductPage); only act where the Scita inputs exist
+            // (quick view modal / Scita product blocks), otherwise the RPC gets a null template.
+            const templateId = parseInt($product.find('input[name="product_template_id"]').val());
+            if (!templateId) {
+                return;
+            }
             const combination = wSaleUtils.getSelectedAttributeValues($product[0]);
             // Fetch variant info from Odoo
             const combinationInfo = await rpc('/website_sale/get_combination_info', {
-                product_template_id: parseInt($product.find('input[name="product_template_id"]').val()),
+                product_template_id: templateId,
                 product_id: parseInt($product.find('input[name="product_id"]').val()),
                 combination: combination,
                 add_qty: parseInt($product.find('input[name="add_qty"]').val()) || 1,
@@ -293,7 +302,7 @@ odoo.define('theme_scita.quick_view', [], function (require) {
         _onRequestQuoteClick(ev) {
             ev.preventDefault();
             const $btn = $(ev.currentTarget);
-            const productId = $btn.data('product_id');
+            const productId = $btn.data('product_id') ?? $btn.data('product-id');
             // Set this ID in the modal before it opens
             const $modal = $('#cfp_pop_up');
             $modal.find('#product_id').val(productId);

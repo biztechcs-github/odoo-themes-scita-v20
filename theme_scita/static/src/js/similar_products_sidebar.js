@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import publicWidget from "@theme_scita/js/compat/public_widget";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({

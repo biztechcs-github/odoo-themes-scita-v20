@@ -1,0 +1,263 @@
+// Scita search dropdown (views/template.xml: search_autocomplete_results).
+// Loaded after comman.scss so it can refine the older dropdown rules.
+
+.o_searchbar_form .o_dropdown_menu:has(.searchbar_cat_right) {
+    border: 0;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 18px 40px rgba($dark-color, 0.16), 0 2px 6px rgba($dark-color, 0.06);
+    scrollbar-width: thin;
+    scrollbar-color: rgba($primary, 0.35) transparent;
+
+    > .d-flex {
+        flex-wrap: nowrap !important;
+        min-height: 100%;
+    }
+
+    // section titles: "Your search", "Categories", "Brands"
+    .searchbar_cat_left > h6,
+    .searchbar_cat_right > .p-3 > .fw-bold {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px !important;
+        color: rgba($dark-color, 0.55) !important;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+
+        .fa {
+            color: $primary !important;
+            font-size: 13px;
+        }
+    }
+
+    // left column: search suggestions
+    .searchbar_cat_left {
+        flex: 0 0 auto;
+        width: 180px;
+        border-right: 1px solid rgba($primary, 0.08) !important;
+        background: linear-gradient(180deg, rgba($primary, 0.06), rgba($primary, 0.015));
+
+        .search_chip {
+            display: flex !important;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px !important;
+            border: 1px solid rgba($primary, 0.12);
+            border-radius: 12px;
+            background: $light-color !important;
+            color: $dark-color !important;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.3;
+            text-align: left;
+            white-space: normal;
+            box-shadow: 0 1px 2px rgba($dark-color, 0.04);
+            transition: all 0.2s ease-in;
+
+            .fa {
+                flex: 0 0 auto;
+                margin: 0 !important;
+                color: $primary;
+                transition: color 0.2s ease-in;
+            }
+            &:hover {
+                border-color: $primary;
+                background: $primary !important;
+                color: $light-color !important;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 14px rgba($primary, 0.25);
+
+                .fa {
+                    color: $light-color;
+                }
+            }
+        }
+    }
+
+    .searchbar_cat_right {
+        flex: 1 1 auto;
+        min-width: 0;
+
+        > hr {
+            margin: 0 16px;
+            border-color: rgba($primary, 0.1);
+            opacity: 1;
+        }
+
+        // category / brand chips
+        .chip-link .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 14px 4px 4px;
+            border: 1px solid rgba($primary, 0.15);
+            border-radius: 50px;
+            background: $light-color;
+            transition: all 0.2s ease-in;
+
+            img {
+                width: 30px;
+                height: 30px;
+                margin: 0 !important;
+                padding: 3px;
+                border-radius: 50%;
+                background: rgba($primary, 0.06);
+                object-fit: contain;
+            }
+            .o_search_result_item_detail {
+                padding: 0 !important;
+
+                .h6 {
+                    margin: 0;
+                    color: $dark-color !important;
+                    font-size: 13px;
+                }
+            }
+            &:hover {
+                border-color: $primary;
+                background: rgba($primary, 0.06);
+                box-shadow: 0 4px 12px rgba($primary, 0.15);
+            }
+        }
+
+        // product results
+        > .p-3:last-child {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 8px 12px 12px !important;
+        }
+        .dropdown-item {
+            padding: 7px 12px !important;
+            // !important: an older dropdown rule draws a grey line under every result
+            border: 1px solid transparent !important;
+            border-radius: 14px;
+            background: transparent !important;
+            transition: all 0.2s ease-in;
+
+            .o_search_result_item {
+                gap: 14px;
+                background: transparent !important; // older hover rule painted a grey box
+
+                // one row: a long description used to wrap under the image
+                // (phones keep Scita's own layout with the price on its own line)
+                @media (min-width: 768px) {
+                    flex-wrap: nowrap !important;
+                }
+
+                > img, > i {
+                    flex: 0 0 52px;
+                    width: 52px !important;
+                    height: 52px !important;
+                    padding: 5px;
+                    border: 1px solid rgba($primary, 0.08);
+                    border-radius: 12px;
+                    background: $light-color;
+                    object-fit: contain;
+                    transition: transform 0.3s ease-in;
+                }
+                .o_search_result_item_detail {
+                    flex: 1 1 0; // shares the row with the image even where the row may wrap (phones)
+                    min-width: 0;
+                    padding: 0 !important;
+
+                    .h6 {
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        margin-bottom: 2px !important;
+                        color: $dark-color;
+                        font-size: 15px;
+                        font-weight: 600 !important;
+                    }
+                    p {
+                        display: -webkit-box;
+                        -webkit-line-clamp: 1;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        color: rgba($dark-color, 0.55);
+                        font-size: 13px !important;
+                    }
+                }
+                .pro_price b {
+                    display: inline-block;
+                    padding: 5px 12px;
+                    border-radius: 50px;
+                    background: rgba($primary, 0.08);
+                    color: $primary;
+                    font-size: 14px;
+                    font-weight: 700;
+                }
+            }
+            &:hover, &:focus, &.focus {
+                border-color: rgba($primary, 0.12) !important;
+                background: rgba($primary, 0.05) !important;
+                box-shadow: 0 6px 16px rgba($dark-color, 0.06);
+
+                .o_search_result_item {
+                    > img {
+                        transform: scale(1.06);
+                    }
+                    .h6, .h6 * {
+                        color: $primary !important; // incl. the highlighted search term
+                    }
+                    .pro_price b {
+                        background: $primary;
+                        color: $light-color !important;
+                    }
+                }
+            }
+        }
+    }
+
+    // desktop: wider than the search box, like a mega search panel; its width and
+    // position are set by js/search_dropdown_width.js (Odoo sizes it inline)
+    @media (min-width: 992px) {
+        right: auto !important;
+        border-radius: 16px;
+        margin-top: 6px;
+
+        // the two columns side by side: an older rule pins the left one to 180px (from
+        // 1024px up) and sizes the right one from that
+        .d-flex:has(> .searchbar_cat_left) {
+            flex-wrap: nowrap !important;
+        }
+        .searchbar_cat_left {
+            flex: 0 0 250px;
+            width: 250px;
+            max-width: 250px;
+        }
+        .searchbar_cat_left + .searchbar_cat_right {
+            flex: 1 1 0;
+            width: auto !important;
+            max-width: none;
+            min-width: 0;
+        }
+    }
+
+    // compact result rows: beats an older `padding: 15px 10px !important` on these links
+    .searchbar_cat_right > .p-3 > li > a.dropdown-item,
+    .searchbar_cat_right > .p-3 a.dropdown-item.dropdown-item {
+        padding: 7px 12px !important;
+    }
+
+    // phones: stack the suggestion column above the results
+    @media (max-width: 767px) {
+        > .d-flex {
+            flex-wrap: wrap !important;
+        }
+        .searchbar_cat_left {
+            width: 100%;
+            border-right: 0 !important;
+            border-bottom: 1px solid rgba($primary, 0.08);
+
+            > .d-flex {
+                flex-direction: row !important;
+                flex-wrap: wrap;
+            }
+        }
+    }
+}

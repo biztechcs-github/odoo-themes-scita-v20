@@ -10,8 +10,8 @@
         <field name="state">open</field>
     </record>
     <data noupdate='1'>
-	    <record id="website.default_website" model="website">
-	        <field name="pwa_app_icon_512" type="base64" file="theme_scita/static/src/img/PWA/image_512.png"/>
+	    <record id="base.default_website" model="website">
+	        <field name="pwa_app_icon_512" type="bytes" file="theme_scita/static/src/img/PWA/image_512.png"/>
 	    </record>
 	</data>
 </odoo>

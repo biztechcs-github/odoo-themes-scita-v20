@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from '@web/legacy/js/public/public_widget';
+import publicWidget from '@theme_scita/js/compat/public_widget';
 
 publicWidget.registry.SetProductIdModal = publicWidget.Widget.extend({
     selector: '#wrapwrap',
@@ -13,7 +13,8 @@ publicWidget.registry.SetProductIdModal = publicWidget.Widget.extend({
         ev.preventDefault();
 
         const $btn = $(ev.currentTarget);
-        const productId = $btn.data('product-id');
+        // Buttons carry data-product_id or data-product-id depending on the template
+        const productId = $btn.data('product_id') ?? $btn.data('product-id');
         $('#cfp_pop_up').find('#product_id').val(productId);
     },
 });

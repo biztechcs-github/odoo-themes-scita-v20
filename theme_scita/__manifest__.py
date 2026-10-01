@@ -5,7 +5,7 @@
     'author': 'AppJetty',
     'website': 'https://www.appjetty.com/',
     'category': 'Theme/Ecommerce',
-    'version': '19.0.0.47',
+    'version': '20.0.1.0',
     'license': 'OPL-1',
     'description': '''Theme Scita
 Business theme
@@ -41,7 +41,7 @@ odoo responsive website theme
 Scita Theme
 Odoo Scita Theme
 Scita theme for Odoo
-odoo 19 theme
+odoo 20 theme
 multipurpose theme
 odoo multipurpose theme
 odoo responsive theme
@@ -65,8 +65,6 @@ publish unpublish product
         'sale_management',
         'website_sale',
         'website_sale_stock',
-        'website_sale_comparison',
-        'website_sale_wishlist',
         'hr',
         'website_blog',
         'website_sale_loyalty',
@@ -74,7 +72,7 @@ publish unpublish product
         'html_builder',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'data/ir_asset.xml',
         'data/theme_scita_data.xml',
         'data/extra_pages_data.xml',
@@ -155,10 +153,17 @@ publish unpublish product
         'web.assets_frontend': [
             'theme_scita/static/src/css/owl.carousel.css',
             'theme_scita/static/src/fonts/line-icons.css',
+            # Odoo 20 removed FontAwesome from the website: ship 4.7 (as Odoo 19 did) before the subset
+            'theme_scita/static/lib/fontawesome/css/font-awesome.css',
+            'theme_scita/static/src/scss/fontawesome_compat.scss',
             'theme_scita/static/src/css/fontawesome-subset.css',
             'theme_scita/static/src/scss/variable.scss',
+            # after variable.scss: uses Scita's $light-color
+            'theme_scita/static/src/scss/product_card_equal_height.scss',
             'theme_scita/static/src/scss/mixins.scss',
             'theme_scita/static/src/scss/comman.scss',
+            # after comman.scss: refines its search dropdown rules
+            'theme_scita/static/src/scss/search_dropdown.scss',
             'theme_scita/static/src/scss/snippets.scss',
             # Split out of snippets.scss for readability only. Kept here
             # because these specific selectors are the ones actually used by
@@ -181,7 +186,14 @@ publish unpublish product
             'theme_scita/static/src/scss/header/header_styles.scss',
             'theme_scita/static/src/scss/footer/default_footer.scss',
             'theme_scita/static/src/scss/mobile_category.scss',
+            # Odoo 20 ships no jQuery: the theme brings its own (plain script, must stay first),
+            # then the publicWidget compatibility layer, then the jQuery plugins.
+            'theme_scita/static/lib/jquery/jquery.js',
+            'theme_scita/static/src/js/compat/public_widget.js',
+            'theme_scita/static/src/js/compat/website_sale_utils.js',
             'theme_scita/static/src/js/owl.carousel.min.js',
+            # only acts on #pg_carousel_category (the /snippet_studio playground)
+            'theme_scita/static/src/js/pg_slider.js',
             'theme_scita/static/src/js/scita_fronted.js',
             'theme_scita/static/src/js/timer_fronted.js',
             'theme_scita/static/src/js/new_scita_frontend.js',
@@ -195,6 +207,7 @@ publish unpublish product
             'theme_scita/static/src/js/bulk_price_btn.js',
             'theme_scita/static/src/js/quick_view.js',
             'theme_scita/static/src/js/request_quote.js',
+            'theme_scita/static/src/js/search_dropdown_width.js',
             'theme_scita/static/src/js/lazy_load_button.js',
             'theme_scita/static/src/js/mobile_view.js',
             'theme_scita/static/src/js/snippet_preview.js',
@@ -202,7 +215,6 @@ publish unpublish product
             'theme_scita/static/src/js/theme_wishlist_fix.js',
             'theme_scita/static/src/js/product_comparison_extend.js',
             'theme_scita/static/src/js/similar_products_sidebar.js',
-            'theme_scita/static/src/scss/mobile_category.scss',
             ('before', '/theme_scita/static/src/scss/comman.scss',
              'theme_scita/static/src/scss/button/button_styles.scss'),
             ('before', '/theme_scita/static/src/scss/comman.scss',
@@ -219,7 +231,7 @@ publish unpublish product
             'theme_scita/static/src/scss/variable.scss',
             'theme_scita/static/src/scss/mixins.scss',
             'theme_scita/static/src/scss/playground.scss',
-            'theme_scita/static/src/js/pg_slider.js',
+            # pg_slider.js lives in web.assets_frontend (it needs the compat layer loaded first)
         ],
         'theme_scita.assets_pwa': [
             'theme_scita/static/src/js/pwa_implementation.js',
@@ -270,6 +282,8 @@ publish unpublish product
             # deliberately loaded *before* comman.scss and therefore must
             # stay in the critical bundle.
             'theme_scita/static/src/scss/product_style.scss',
+            # product page CTA row layout; must come after product_style.scss
+            'theme_scita/static/src/scss/product_cta_layout.scss',
             'theme_scita/static/src/scss/megamenu_style.scss',
             'theme_scita/static/src/scss/footer/footer_styles.scss',
             # 605 Lineicons glyphs shipped, ~7 actually used anywhere in this
@@ -300,7 +314,6 @@ publish unpublish product
         ],
         'website.assets_wysiwyg': [
             '/theme_scita/static/src/xml/**/*',
-           'theme_scita/static/src/js/timer_editor.js',
         ],
         'website.assets_editor': [
         ],

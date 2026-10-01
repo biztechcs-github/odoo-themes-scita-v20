@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import publicWidget from '@web/legacy/js/public/public_widget';
+import publicWidget from '@theme_scita/js/compat/public_widget';
 import { rpc } from '@web/core/network/rpc';
 import { _t } from '@web/core/l10n/translation';
-import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
-import wSaleUtils from '@website_sale/js/website_sale_utils';
+import comparisonUtils from '@website_sale/js/comparison_utils';
+import wSaleUtils from '@theme_scita/js/compat/website_sale_utils';
 
 publicWidget.registry.ComparePopupNotification = publicWidget.Widget.extend({
     selector: '#wrapwrap',
@@ -119,7 +119,7 @@ publicWidget.registry.ComparePopupNotification = publicWidget.Widget.extend({
 
         // Add product
         comparisonUtils.addComparisonProduct(productId);
-        comparisonUtils.updateDisabled(el, true);
+        el.disabled = true; el.classList.add('disabled');
         el.querySelector('span')?.classList.add('text-primary');
 
         // Update compare count in header (with small delay to ensure localStorage is updated)

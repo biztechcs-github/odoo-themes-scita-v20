@@ -1,1 +1,0 @@
-FAIL: 13 incomplete tasks (task groups 4-8: CSS async-split, font-display check, image resizing, legacy JS trim, final Lighthouse verification, manual QA, staged-not-committed confirmation); Security Considerations section missing from design.md

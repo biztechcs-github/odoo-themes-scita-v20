@@ -20,26 +20,26 @@
 		                                                    <div class="pwp-img">
 		                                                        <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger btn_unpub" title="This product is unpublished.">Unpublished</a>
 		                                                        <div t-if="product and product.product_style_tag_id.style=='style1'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position" t-att-style="'background-color:%s' % product.product_style_tag_id.color_code">
-									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-esc="product.product_style_tag_id.name"/>
+									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                            </div>
 									                            <div t-if="product and product.product_style_tag_id.style=='style2'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position" t-att-style="'background-color: %s' % product.product_style_tag_id.color_code">
-									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-esc="product.product_style_tag_id.name"/>
+									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                            </div>
 									                            <div t-if="product and product.product_style_tag_id.style=='style3' and product.product_style_tag_id.position=='right'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position">
 									                                <span class="sct-top-right-part" t-att-style="'border-right-color: %s;' % product.product_style_tag_id.color_code"/>
-									                                <span class='sct-tag-name' t-att-style="'background-color: %s;' % product.product_style_tag_id.color_code +'color:%s' % product.product_style_tag_id.font_color_code" t-esc="product.product_style_tag_id.name"/>
+									                                <span class='sct-tag-name' t-att-style="'background-color: %s;' % product.product_style_tag_id.color_code +'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                            </div>
 									                            <div t-if="product and product.product_style_tag_id.style=='style3' and product.product_style_tag_id.position=='left'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position">
 									                                <span class="sct-top-right-part" t-att-style="'border-left-color: %s;' % product.product_style_tag_id.color_code"/>
-									                                <span class='sct-tag-name' t-att-style="'background-color: %s;' % product.product_style_tag_id.color_code +'color:%s' % product.product_style_tag_id.font_color_code" t-esc="product.product_style_tag_id.name"/>
+									                                <span class='sct-tag-name' t-att-style="'background-color: %s;' % product.product_style_tag_id.color_code +'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                            </div>
 									                            <div t-if="product and product.product_style_tag_id.style=='style4'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position">
 									                                <span class="sct-top-right-part" t-att-style="' border-left-color: %s;' % product.product_style_tag_id.color_code"/>
-									                                <span class='sct-tag-name' t-att-style="'background-color: %s;' % product.product_style_tag_id.color_code +'color:%s' % product.product_style_tag_id.font_color_code" t-esc="product.product_style_tag_id.name"/>
+									                                <span class='sct-tag-name' t-att-style="'background-color: %s;' % product.product_style_tag_id.color_code +'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                                <span class="sct-top-left-part" t-att-style="'border-top-color: %s;' % product.product_style_tag_id.color_code"/>
 									                            </div>
 																<div t-if="product and product.product_style_tag_id.style=='style5'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position" t-att-style="'background-color:%s' % product.product_style_tag_id.color_code">
-									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-esc="product.product_style_tag_id.name"/>
+									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                            </div>
 		                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
 		                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" width="220" height="270" loading="lazy" t-att-src="website.image_url(product, 'image_1920','220x270')"/>
@@ -47,7 +47,7 @@
 		                                                    </div>
 		                                                    <div class="pwd-desc">
 		                                                        <div class="pink-box">
-		                                                                <ul class='ratings' t-if="request.website.viewref('theme_scita.theme_scita_rating').active">
+		                                                                <ul class='ratings' t-if="request.env.website.viewref('theme_scita.theme_scita_rating').active">
 		                                                                    <div t-set="rating_val" t-value="product.sudo().rating_get_stats().get('avg')"/>
 		                                                                    <t t-set="prod_curr_rate" t-value="0"/>
 		                                                                    <t t-set="is_half_star" t-value="0"/>
@@ -77,11 +77,11 @@
 		                                                            <p class="price">
 		                                                                <b>
 		                                                                    <t t-if="True">
-		                                                                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+		                                                                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-out="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
 		                                                                    </t>
-		                                                                    <span t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-		                                                                    <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
-		                                                                    <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+		                                                                    <span t-if="combination_info['price']" t-out="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+		                                                                    <span itemprop="price" style="display:none;" t-out="combination_info['price']" />
+		                                                                    <span itemprop="priceCurrency" style="display:none;" t-out="website.currency_id.name" />
 		                                                                </b>
 		                                                            </p>
 		                                                        </div>
@@ -92,10 +92,10 @@
 		                                                                <button type="button" class="btn scita_cstm_btn quick_view_sct_btn qbtn" title="Quick View" t-att-data-id="product.id">
 														                    <span class="lni lni-eye"/>
 														                </button>
-		                                                                <t t-if="request.website.viewref('website_sale_comparison.add_to_compare').active and product.product_variant_ids">
+		                                                                <t t-if="request.env.website.viewref('website_sale.add_to_compare').active and product.product_variant_ids">
 		                                                                   <a class="btn btn-xs o_add_compare" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="scita_comparelist"><span class="fa fa-exchange"></span></a>
 		                                                                </t>
-		                                                                <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active and product.product_variant_ids">
+		                                                                <t t-if="request.env.website.viewref('website_sale.add_to_wishlist').active and product.product_variant_ids">
 		                                                                    <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
 		                                                                    <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="lni lni-heart"></span></a>
 		                                                                </t>

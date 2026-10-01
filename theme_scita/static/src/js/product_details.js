@@ -1,61 +1,42 @@
 /** @odoo-module **/
+/**
+ * Product page helpers (Odoo 20).
+ *
+ * Kept from 19 (unchanged behaviour): recommended products slider, the
+ * mobile / product-page body classes and the delivery zip-code checker.
+ *
+ * Dropped because they were never called on 19 either:
+ *  - VariantMixin._onChangeCombinationProd (nothing referenced it)
+ *  - WebsiteSale.onVariantChange / _onClickSubmit patches (19's WebsiteSale
+ *    had no such methods, so the patch only added unused ones)
+ *
+ * Added for Odoo 20: Scita wraps the add-to-cart button in its own markup, so
+ * the button is no longer a direct child of #add_to_cart_wrap. Odoo uses that
+ * parent check to know the product was configured on the page; without this
+ * patch the product configurator would reopen on every add to cart.
+ */
 
-import animation from "@website/js/content/snippets.animation";
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import VariantMixin from "@website_sale/js/variant_mixin";
-import publicWidget from "@web/legacy/js/public/public_widget";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
 import { patch } from "@web/core/utils/patch";
-import { WebsiteSale } from "@website_sale/interactions/website_sale";
+import { AddToCart } from "@website_sale/interactions/add_to_cart";
 
-odoo.define("theme_scita.scita_product_js", [], function () {
-  "use strict";
-
-  // Update image based on variant change
-  VariantMixin._onChangeCombinationProd = function (ev, $parent, combination) {
-    let product_id = 0;
-    if ($parent.find("input.product_id:checked").length) {
-      product_id = $parent.find("input.product_id:checked").val();
-    } else {
-      product_id = $parent.find(".product_id").val();
-    }
-
-    update_gallery_product_variant_image($parent, product_id);
-    // default code as per varaint wise start
-    rpc("/shop/variant_change", {
-      pro_id: product_id,
-    }).then(function (data) {
-      if (data.default_code) {
-        var code = $(".sct-default-code").html();
-        if (code) {
-          $(".sct-default-code").html(data.default_code);
-        } else {
-          $(".sct-sku-display-div").append(
-            '<p class="sct-sku-display">SKU: <span class="sct-default-code">' +
-              data.default_code +
-              "</span> </p>"
-          );
+patch(AddToCart.prototype, {
+    addToCart(ev) {
+        const button = ev.currentTarget;
+        const wrap = button.closest("#add_to_cart_wrap");
+        if (!wrap || button.parentElement === wrap) {
+            return super.addToCart(ev);
         }
-      } else {
-        $(".sct-sku-display-div").empty();
-      }
-    });
-  };
-
-  function update_gallery_product_variant_image(event_source, product_id) {
-    const $imgs = $("#gallery .item img");
-    $imgs.each(function () {
-      $(this).attr(
-        "src",
-        "/web/image/product.product/" + product_id + "/image_1920"
-      );
-    });
-    $("img.js_variant_img_small").attr(
-      "src",
-      "/web/image/product.product/" + product_id + "/image_1920"
-    );
-  }
+        // Core reads `button.parentElement.id` synchronously while building the
+        // cart.add() options, i.e. before its first await.
+        Object.defineProperty(button, "parentElement", { value: wrap, configurable: true });
+        try {
+            return super.addToCart(ev);
+        } finally {
+            delete button.parentElement;
+        }
+    },
+});
 
   $(document).ready(function () {
     // product detail page
@@ -117,56 +98,3 @@ odoo.define("theme_scita.scita_product_js", [], function () {
       });
     });
   });
-});
-
-// ajax cart start
-
-patch(WebsiteSale.prototype, {
-  onVariantChange(ev) {
-    const $parent = ev.currentTarget.closest(".js_product");
-    VariantMixin._onChangeCombination(ev, $parent, combinationInfo);
-  },
-
-  async _onClickSubmit(ev, forceSubmit) {
-    const $target = $(ev.currentTarget);
-    if (
-      $target.is("#add_to_cart,.o_wsale_product_btn .a-submit") &&
-      !forceSubmit
-    ) {
-      return;
-    }
-    if ($("header .o_wsale_my_cart").hasClass("d-none")) {
-      $("header .o_wsale_my_cart").removeClass("d-none");
-      $("header .o_wsale_my_cart sup.my_cart_quantity").removeClass("d-none");
-    }
-    const $aSubmit = $(ev.currentTarget);
-    if (!ev.isDefaultPrevented() && !$aSubmit.is(".disabled")) {
-      ev.preventDefault();
-      if ($aSubmit.parents(".ajax_cart_template").length) {
-        const frm = $aSubmit.closest("form");
-        const product_product = frm.find('input[name="product_id"]').val();
-        let quantity = frm.find(".quantity").val() || 1;
-        const data = await rpc("/shop/cart/add", {
-          product_template_id: $target.data("template-id"),
-          product_id: parseInt(product_product),
-          quantity,
-        });
-        wSaleUtils.updateCartNavBar(data);
-      } else {
-        $aSubmit.closest("form").submit();
-      }
-    }
-    if ($aSubmit.hasClass("a-submit-disable")) {
-      $aSubmit.addClass("disabled");
-    }
-    if ($aSubmit.hasClass("a-submit-loading")) {
-      const loading = '<span class="fa fa-cog fa-spin"/>';
-      const fa_span = $aSubmit.find('span[class*="fa"]');
-      if (fa_span.length) {
-        fa_span.replaceWith(loading);
-      } else {
-        $aSubmit.append(loading);
-      }
-    }
-  },
-});

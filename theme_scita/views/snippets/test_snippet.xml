@@ -358,9 +358,8 @@
             <t t-snippet="theme_scita.retial_promo_banner_snippet_1" string="Retail Promo Banner" group="scita_promo_banner">
                 <keywords>promo, banner, advertisement, retail</keywords>
             </t>
-            <t t-snippet="theme_scita.promo_banner_snippet_3" string="Promo Banner 2" group="scita_promo_banner">
-                <t t-thumbnail="/theme_scita/static/src/img/snippet_icon/promo-banner-3.png"/>
-            </t>
+            <t t-snippet="theme_scita.promo_banner_snippet_3" string="Promo Banner 2" group="scita_promo_banner"
+               t-thumbnail="/theme_scita/static/src/img/snippet_icon/promo-banner-3.png"/>
             <t t-snippet="theme_scita.retial_advertisement_banner_1" string="Retail Ad Banner" group="scita_promo_banner">
                 <keywords>promo, banner, advertisement, retail</keywords>
             </t>

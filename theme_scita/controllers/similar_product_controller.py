@@ -2,9 +2,9 @@ from odoo import http
 from odoo.http import request
 
 class SimilarProductController(http.Controller):
-    @http.route('/get_similar_products', type='json', auth='public', methods=['POST'], website=True)
+    @http.route('/get_similar_products', type='jsonrpc', auth='public', methods=['POST'], website=True)
     def get_similar_products_sidebar(self, product_id):
-            currency = request.website.currency_id
+            currency = request.env.website.currency_id
             Product = request.env['product.template'].sudo()
             product = Product.browse(product_id)
 

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of AppJetty. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, tools
 from odoo.addons.website_sale.controllers import main
 
@@ -14,7 +16,7 @@ class ProductPublicCategory(models.Model):
     include_in_megamenu = fields.Boolean(
         string="Include in mega menu", help="Include in mega menu")
     menu_id = fields.Many2one('website.menu', string="Main menu")
-    description = fields.Text(string="Description",
+    description = fields.Text(string="Slider Description",
                               translate=True,
                               help="""Short description which will be 
                               visible below category slider.""")
@@ -93,56 +95,36 @@ class ProductTemplate(models.Model):
         translate=True,
     )
 
-    def _get_combination_info(
-        self,
-        combination=False,
-        product_id=False,
-        add_qty=1,
-        parent_combination=False,
-        only_template=False,
-    ):
-        combination_info = super()._get_combination_info(
-            combination=combination,
-            product_id=product_id,
-            add_qty=add_qty,
-            parent_combination=parent_combination,
-            only_template=only_template,
-        )
-        combination_info.update(
-            {
-                "website_hide_price": self.website_hide_price,
-                "website_hide_price_message": self.website_hide_price_message,
-            }
-        )
-        return combination_info
-
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         """Hide price on the search bar results"""
         results_data = super()._search_render_results(
             fetch_fields, mapping, icon, limit
         )
         website_show_price = (
-            self.env["website"].get_current_website().website_show_price
+            self.env.website.website_show_price
+        )
+        login_to_see_price = (
+            self.env.website.login_see_price and self.env.user._is_public()
         )
         for product, data in zip(self, results_data, strict=True):
-            if product.website_hide_price or not website_show_price:
-                data.update(
-                    {
-                        "price": "<span>%s</span>"
-                        % (product.website_hide_price_message or ""),
-                        "list_price": "",
-                    }
-                )
+            if login_to_see_price:
+                data.update({"price": "", "list_price": ""})
+            elif product.website_hide_price or not website_show_price:
+                # Markup: a plain str was escaped and showed the <span> tags as text
+                message = product.website_hide_price_message
+                data.update({
+                    "price": Markup("<span>%s</span>") % message if message else "",
+                    "list_price": "",
+                })
         return results_data
 
-    def _website_show_quick_add(self):
-        website_show_price = (
-            self.env["website"].get_current_website().website_show_price
-        )
-        return (
-            website_show_price and not self.website_hide_price
-        ) and super()._website_show_quick_add()
-    
+    def _is_add_to_cart_possible(self, parent_combination=None):
+        """Removed from website_sale in Odoo 20; Scita templates still use it (same logic as 19)."""
+        self.ensure_one()
+        if not self.active or not self.filtered_domain(self.env['website']._product_domain()):
+            return False
+        return next(self._get_possible_combinations(parent_combination), False) is not False
+
     def quick_publish_product(self):
         self.ensure_one()
         self.is_published = not (self.is_published)
@@ -193,20 +175,22 @@ class ProductTemplate(models.Model):
         combination_info['quote_request'] = self.quote_request
         return combination_info
 
-    def _website_show_quick_add(self):
+    def _website_show_quick_add(self, product=None):
         """Hide the quick add to cart option on website if quote_request is enabled."""
+        # Odoo 20 passes the variant (product.product calls it with `self`)
         if self.quote_request:
             return False
-        return super()._website_show_quick_add()
+        return super()._website_show_quick_add(product=product)
 
     def _search_render_results_prices(self, mapping, combination_info):
         """Modify displayed price in search results if quote_request is enabled."""
-        price, list_price = super()._search_render_results_prices(mapping, combination_info)
+        # Odoo 20 returns only the rendered price (no list price any more)
+        price = super()._search_render_results_prices(mapping, combination_info)
 
         if combination_info.get('quote_request'):
             price = 'Not Available For Sale'
 
-        return price, list_price
+        return price
 
 
 class ProductProduct(models.Model):
@@ -259,7 +243,8 @@ class Brands(models.Model):
     )
     @api.depends('product_ids')
     def _get_products_count(self):
-        self.products_count = len(self.product_ids)
+        for brand in self:
+            brand.products_count = len(brand.product_ids)
 
 class ScitaMultiProductImages(models.Model):
     _name = 'scita.product.images'

@@ -39,10 +39,9 @@
                                     t-att-data-name="product_block_name"
                             >
                                 <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                    <t t-call="website_sale.products_item">
-                                        <t t-set="product"
-                                           t-value="td_product['product']"/>
-                                    </t>
+                                    <t t-set="product" t-value="td_product['product']"/>
+                                    <t t-set="product_variant" t-value="product_variants[product]"/>
+                                    <t t-call="website_sale.products_item"/>
                                 </div>
                             </div>
                         </t>
@@ -55,7 +54,9 @@
     <template id="lazy_load_button" inherit_id="website_sale.products" active="False"
               name="Lazy Load Button">
        <xpath expr="//div[@id='o_wsale_pager']" position="replace">
-            <div class="products_pager d-flex justify-content-center pt-4 pb-4" t-if="is_show_more_button">
+            <!-- keep id="o_wsale_pager" and use t-attf-class: Odoo views (e.g. the shop's Floating toolbar)
+                 target it and add classes through t-attf-class, which replaces a static class -->
+            <div id="o_wsale_pager" t-attf-class="products_pager sct_products_pager d-flex justify-content-center pt-4 pb-4" t-if="is_show_more_button">
                 <button type="button" class="s_ajax_load_btn btn btn-primary d-none" >Load more</button>
             </div>
         </xpath>
@@ -69,10 +70,10 @@
                 <t t-if="category">
                     <div class="selected_category" t-att-data-index="category.id"></div>
                 </t>
-                <t t-if="attrib_values and isinstance(attrib_values, list)">
+                <t t-if="scita_attrib_values">
                     <div class="attributes">
-                        <div class="attrib_list" t-att-data-list="attrib_values"></div>
-                        <t t-foreach="attrib_values" t-as="attribute_list_ids">
+                        <div class="attrib_list" t-att-data-list="scita_attrib_values"></div>
+                        <t t-foreach="scita_attrib_values" t-as="attribute_list_ids">
                             <t t-if="isinstance(attribute_list_ids, (list, tuple)) and len(attribute_list_ids) >= 2">
                                 <div class="attribute" t-att-data-attribute="attribute_list_ids[0]"
                                      t-att-data-attribute-value="attribute_list_ids[1]"></div>
@@ -87,7 +88,9 @@
     <template id="default_pager" inherit_id="website_sale.products" active="False"
               name="Default">
        <xpath expr="//div[@id='o_wsale_pager']" position="replace">
-            <div class="products_pager d-flex justify-content-center pt-4 pb-4">
+            <!-- keep id="o_wsale_pager" and use t-attf-class: Odoo views (e.g. the shop's Floating toolbar)
+                 target it and add classes through t-attf-class, which replaces a static class -->
+            <div id="o_wsale_pager" t-attf-class="products_pager sct_products_pager d-flex justify-content-center pt-4 pb-4">
                 <t t-call="website.pager"/>
             </div>
         </xpath>
@@ -95,5 +98,98 @@
 
     <template id="theme_scita.header_text_element_inherited_theme_scita" inherit_id="website.header_text_element">
         <xpath expr=".//t[@t-elif]/div/small[1]" position="replace"/>
+    </template>
+
+    <!-- Scita search dropdown (was the OWL extension static/src/snippets/000_categories.xml on 19).
+         Odoo 20 renders autocomplete results server-side, so the same markup lives here.
+         Links are wrapped in <li style="display: contents"> so Odoo 20's keyboard navigation
+         (li > a) keeps working without changing the layout. -->
+    <template id="search_autocomplete_results" name="Scita Search Autocomplete Results">
+        <t t-set="combos" t-value="[r for r in results if r.get('is_combo')]"/>
+        <t t-set="categories" t-value="[r for r in results if r.get('category')]"/>
+        <t t-set="brands" t-value="[r for r in results if r.get('brand')]"/>
+        <t t-set="items" t-value="[r for r in results if not r.get('is_combo') and not r.get('brand') and not r.get('category')]"/>
+        <div class="d-flex flex-wrap">
+            <t t-if="combos">
+                <div class="p-3 border-end searchbar_cat_left">
+                    <h6 class="fw-bold mb-3"><i class="fa fa-dot-circle-o text-purple me-1"></i> Your search:</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <li t-foreach="combos" t-as="result" style="display: contents">
+                            <a t-att-href="result['website_url']" class="badge bg-light text-dark px-3 py-2 search_chip text-decoration-none d-block">
+                                <i class="fa fa-search me-2" aria-hidden="true"></i>
+                                <t t-out="result['name']"/>
+                            </a>
+                        </li>
+                    </div>
+                </div>
+            </t>
+            <div class="w-100 searchbar_cat_right">
+                <div class="p-3">
+                    <!-- Categories Section -->
+                    <t t-if="categories">
+                        <div class="mb-2 fw-bold text-purple">
+                            <i class="fa fa-dot-circle-o text-purple me-1"></i> Categories:
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <li t-foreach="categories" t-as="result" style="display: contents">
+                                <a t-att-href="result['website_url']" class="chip-link text-decoration-none">
+                                    <span class="chip">
+                                        <t t-if="result.get('image')">
+                                            <img t-att-src="result['image']" class=""/>
+                                        </t>
+                                        <div class="d-flex align-items-center flex-wrap o_search_result_item">
+                                            <div class="o_search_result_item_detail px-3">
+                                                <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </a>
+                            </li>
+                        </div>
+                    </t>
+                    <!-- Brands Section -->
+                    <t t-if="brands">
+                        <div class="mb-2 fw-bold text-primary">
+                            <i class="fa fa-dot-circle-o text-primary me-1"></i> Brands:
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <li t-foreach="brands" t-as="result" style="display: contents">
+                                <a t-att-href="result['website_url']" class="chip-link text-decoration-none">
+                                    <span class="chip">
+                                        <div class="d-flex align-items-center flex-wrap o_search_result_item">
+                                            <t t-if="result.get('image')">
+                                                <img t-att-src="result['image']" class="me-2"/>
+                                            </t>
+                                            <div class="o_search_result_item_detail px-3">
+                                                <div class="h6 fw-bold text-primary" t-out="result['name']"/>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </a>
+                            </li>
+                        </div>
+                    </t>
+                </div>
+                <hr t-if="results"/>
+                <div class="p-3">
+                    <li t-foreach="items" t-as="result" style="display: contents">
+                        <a t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
+                            <div class="d-flex align-items-center flex-wrap o_search_result_item">
+                                <img t-if="result.get('image_url')" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
+                                <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result.get('_fa') or ''}" style="font-size: 34px;"/>
+                                <div class="o_search_result_item_detail px-3">
+                                    <t t-set="description" t-value="result.get('description')"/>
+                                    <div t-attf-class="h6 fw-bold #{'' if description else 'mb-0'}" t-out="result['name']"/>
+                                    <p t-if="description" class="mb-0" t-out="description"/>
+                                </div>
+                                <div t-if="result.get('search_item_metadata')" class="flex-shrink-0 ms-auto pro_price">
+                                    <b class="text-nowrap" t-out="result['search_item_metadata']"/>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </div>
+            </div>
+        </div>
     </template>
 </odoo>

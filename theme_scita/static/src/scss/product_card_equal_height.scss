@@ -1,0 +1,302 @@
+// Scita product carousels (Trending Collections, deal / product sliders…): cards size to their
+// own content, so a two-line title or a row of colour swatches made some cards taller and the
+// ADD bars did not line up. Stretch every slide to the tallest one and pin the ADD bar to the
+// bottom. Scoped to carousels that contain Scita product cards (.cs-product).
+.owl-carousel:has(.cs-product) {
+    .owl-stage {
+        display: flex;
+    }
+    .owl-item {
+        display: flex;
+        height: auto;
+
+        > form,
+        > div {
+            display: flex;
+            width: 100%;
+        }
+    }
+    .cs-product {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    }
+    .pwd-desc {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+    }
+    .pwp-info {
+        flex: 1 1 auto;
+    }
+    .cart_wrapper {
+        margin-top: auto;
+    }
+}
+
+// Hover action buttons (quick view / compare / wishlist): their size came from padding around
+// icons of different widths (Lineicons vs FontAwesome), so the column looked misaligned.
+// Give them one fixed square size with the icon centred. Not the cart / login
+// buttons in the same row: those carry text, and the 32px basis squeezed
+// "Add to cart" onto three lines (Effect Style 5).
+.cs-product .sct-hover-info > .btn:not(.cart_view_sct_btn, .js_add_cart, .login-price-btn) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    padding: 0;
+    line-height: 1;
+
+    > span,
+    > i {
+        font-size: 16px;
+        line-height: 1;
+    }
+}
+
+// Wishlist page: Odoo 20's card actions (Add to Cart + compare) plus Scita's quick view button
+// did not fit in the card width, so the quick view (eye) button was cut off. Keep all three on
+// one line: the icon buttons are fixed squares and Add to Cart takes the remaining width.
+.o_wishlist_table .o_wsale_product_btn {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 6px;
+
+    .o_wsale_product_action_row {
+        display: flex;
+        flex: 1 1 auto;
+        padding: 0; // its 8px padding made the quick view button taller than the others
+        min-width: 0;
+        gap: 6px;
+    }
+    .o_wsale_product_btn_primary {
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: center;
+        padding-left: 8px;
+        padding-right: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        // on phones Odoo renders it as a square icon button; keep it a normal bar
+        aspect-ratio: auto;
+        height: auto;
+
+        .o_label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    .btn:not(.o_wsale_product_btn_primary) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 40px;
+        width: 40px;
+        min-width: 40px;
+        padding: 0;
+        aspect-ratio: auto;
+    }
+}
+
+// Wishlist page: the price + buttons block has Bootstrap's justify-content-center (an !important
+// utility), so its content was vertically centred in the leftover space and the button rows sat
+// at different heights depending on title / description length. Align it to the card bottom.
+.o_wishlist_table .o_wishlist_item .o_wsale_product_sub {
+    justify-content: flex-end !important;
+}
+
+// Odoo 20 draws the "already in wishlist" heart with its own icon font
+// (content: "favorite_f"); Scita's buttons use FontAwesome / LineIcons,
+// which printed the ligature name as text. Use their own heart glyphs
+// again, as in 19.
+.o_add_wishlist_dyn.o_add_wishlist_dyn.disabled {
+    i.fa::before { content: "\f004"; }
+    i.lni.lni-heart::before { content: "\eb13"; }
+}
+
+// Request Quote button: the shop hover styles give it Scita's look (filled primary,
+// outlined on hover) but it wrapped onto two lines; the product snippets' copy
+// (.request_for_quote_button, no btn-primary) had no style at all and showed as text.
+// (!important: a global `.btn-link, a { white-space: normal !important }` rule)
+#products_grid .o_wsale_product_request_quote .btn#request_for_quote_button {
+    white-space: nowrap !important;
+}
+a.btn.request_for_quote_button#request_for_quote_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 3px 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: $primary;
+    color: $light-color;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: nowrap !important;
+
+    &:hover, &:focus {
+        background-color: transparent;
+        border-color: $primary;
+        color: $primary;
+    }
+}
+
+// Fashion multi-category slider: Request Quote takes the ADD pill's place and look
+// (always visible, same size/shape/hover), whatever product hover effect is chosen.
+.fashion_multi_category_slider .cs-product .o_wsale_product_request_quote {
+    width: 100%;
+
+    a.btn.request_for_quote_button#request_for_quote_button {
+        position: static !important;
+        opacity: 1 !important;
+        transform: none !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100% !important;
+        min-height: 38px;
+        margin: 0 !important;
+        padding: 3px 8px;
+        border: 1px solid transparent;
+        border-radius: 40px;
+        background-color: $light-grey-color;
+        color: $gray-900;
+        font-size: 16px !important; // global #request_for_quote_button sets 14px !important
+        font-weight: 700;
+        text-transform: capitalize;
+        transition: 0.5s;
+
+        &:hover, &:focus {
+            background-color: transparent;
+            border-color: $secondary;
+            color: $gray-900;
+        }
+    }
+}
+
+// Product page Request Quote (next to the quantity with Buy Now on, or below it
+// otherwise): same pill as Scita's Add to Cart, aligned with the quantity box.
+// (!important where Scita's global #request_for_quote_button / .btn-link rules
+// and the button's mt-2 utility would win.)
+#product_detail #product_details #o_wsale_cta_wrapper a.btn#request_for_quote_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    margin: 0 !important;
+    padding: 0 20px !important;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    background-color: $secondary;
+    color: $light-color;
+    font-size: 18px !important;
+    line-height: 21px;
+    white-space: nowrap !important;
+
+    &:hover, &:focus {
+        background-color: transparent;
+        border-color: $secondary;
+        color: $secondary;
+    }
+    @media (max-width: 767px) {
+        height: auto;
+        padding: 8px !important;
+        font-size: 13px !important;
+        line-height: 1;
+    }
+}
+
+// Scita's pagers ("Load more" / default) keep id="o_wsale_pager" so Odoo views
+// can target it; keep them free of the side borders Odoo draws on its own pager.
+#o_wsale_pager.sct_products_pager {
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+
+// Product snippets: a wishlisted product (rendered with `disabled`, or given the
+// `disabled` class when added) keeps the outline Lineicons heart - Lineicons has no
+// filled one. Show a filled heart in Odoo's wishlist colour, as the shop does.
+.cs-product a.o_add_wishlist:is([disabled], .disabled) {
+    // the `disabled` class (added on click) fades buttons; the attribute (page load) does not
+    opacity: 1;
+
+    .lni-heart::before,
+    .fa-heart-o::before {
+        content: "\f004";
+        font-family: FontAwesome;
+        color: var(--addWishlist-color-active, #ff3d3a);
+    }
+}
+
+// Scita mega menus inside a side menu (Odoo's hamburger / sidebar headers - marked
+// .o_mega_menu_is_offcanvas - and mobile menus): Bootstrap
+// positioned them absolute at the bottom of the panel, off-screen, so clicking seemed to do
+// nothing. Open them in place under their item, panel-wide, columns stacked (Odoo's own
+// .o_mega_menu has its offcanvas mode; Scita's .mega-dropdown-menu did not).
+:is(.o_navbar_mobile, .o_mega_menu_is_offcanvas) .li-mega-menu > .dropdown-menu.mega-dropdown-menu {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 8px 12px !important;
+    border: 0;
+    box-shadow: none;
+    background: rgba($primary, 0.03);
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+// Scita mega menus moved into Odoo's "+" overflow menu (header autohide): Odoo turns
+// dropdown toggles there into grey, unclickable headings with the sub-menu always
+// expanded - fine for small dropdowns, not for Scita's mega menus (sliders, images,
+// product cards). Keep them looking like the other "+" entries (one line, no grey) and
+// let a click open the mega menu in place, columns stacked.
+.navbar .o_extra_menu_items > .show > li.li-mega-menu {
+    > a.dropdown-toggle {
+        background-color: transparent;
+        pointer-events: auto;
+        white-space: nowrap !important;
+    }
+    > .dropdown-menu.mega-dropdown-menu {
+        display: none;
+        position: static !important;
+        inset: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        min-width: 280px;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 8px 12px !important;
+        border: 0;
+        box-shadow: none;
+        background: rgba($primary, 0.03);
+
+        &.show {
+            display: block;
+        }
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        [class*="col-"] {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+}

@@ -1,6 +1,6 @@
  /** @odoo-module **/
 
- import publicWidget from "@web/legacy/js/public/public_widget";
+ import publicWidget from "@theme_scita/js/compat/public_widget";
 
 //Brands filter
 publicWidget.registry.brandFilterWidget = publicWidget.Widget.extend({

@@ -504,6 +504,11 @@ body #wrapwrap.o_portal {
 							input {
 								background-color: transparent;
 							}
+							// Odoo 20 puts Bootstrap `border` utilities (!important) on the
+							// buttons and input, which drew lines inside Scita's pill
+							.btn-link, input {
+								border: 0 !important;
+							}
 						}
 						.sct_remove_wrap {
 							.js_delete_product  {

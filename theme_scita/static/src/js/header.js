@@ -1,6 +1,6 @@
 /** @odoo-module **/
-import publicWidget from "@web/legacy/js/public/public_widget";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
+import publicWidget from "@theme_scita/js/compat/public_widget";
+import wSaleUtils from "@theme_scita/js/compat/website_sale_utils";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { KeepLast } from "@web/core/utils/concurrency";

@@ -175,12 +175,12 @@ class website(models.Model):
     # for hr.employee
     def get_snippet_employee(self):
         employee = self.env['hr.employee'].sudo().search(
-            [('include_inourteam', '=', 'True')])
+            [('include_inourteam', '=', True)])
         return employee
 
     def get_snippet_blog_post(self):
         post = self.env['blog.post'].sudo().search(
-            [('website_published', '=', 'True')])
+            [('website_published', '=', True)])
         return post
 
     # For pages megamenu
@@ -198,7 +198,7 @@ class website(models.Model):
     # For category megamenu
     def get_public_product_category(self, submenu):
         categories = self.env['product.public.category'].search(
-            [('parent_id', '=', False), ("website_id", "in", (False, request.website.id)),
+            [('parent_id', '=', False), ("website_id", "in", (False, request.env.website.id)),
              ('include_in_megamenu',
               '!=', False),
              ('menu_id', '=', submenu.id)],
@@ -206,7 +206,7 @@ class website(models.Model):
         return categories
 
     def get_all_public_product_category(self, submenu):
-        categories = self.env['product.public.category'].search([("website_id", "in", (False, request.website.id)),
+        categories = self.env['product.public.category'].search([("website_id", "in", (False, request.env.website.id)),
                                                                  ('include_in_megamenu',
                                                                   '!=', False),
                                                                  ('menu_id', '=', submenu.id)],
@@ -215,15 +215,12 @@ class website(models.Model):
 
     # For child category megamenu
     def get_public_product_child_category(self, children):
-        child_categories = []
-        for child in children:
-            categories = self.env['product.public.category'].search([
-                ('id', '=', child.id),
-                ("website_id", "in", (False, request.website.id)),
-                ('include_in_megamenu', '!=', False)], order="name")
-            if categories:
-                child_categories.append(categories)
-        return child_categories
+        # one search for all the children (was one per child); same result and order
+        allowed = self.env['product.public.category'].search([
+            ('id', 'in', children.ids),
+            ("website_id", "in", (False, request.env.website.id)),
+            ('include_in_megamenu', '!=', False)])
+        return [child for child in children if child in allowed]
 
     def get_parent_category_breadcum(self, category):
         data = []
@@ -245,7 +242,6 @@ class website(models.Model):
     def get_user_address(self, user_id=None):
         address_details = {}
         if user_id:
-            self.sudo().write({})
             address_details['street'] = user_id.street if user_id.street else None
             address_details['street2'] = user_id.street2 if user_id.street2 else None
             address_details['city'] = user_id.city if user_id.city else None
@@ -270,15 +266,33 @@ class website(models.Model):
     def get_all_categories(self):
         categoriess = self.env['product.public.category'].search(
             [('include_in_allcategory', "=", True), ('parent_id', '=', False),
-             ("website_id", "in", [False, request.website.id])])
+             ("website_id", "in", [False, request.env.website.id])])
         return categoriess
 
     # For category menu in topmenu
     def get_child_all_categories(self, child_id):
         child_categories = self.env['product.public.category'].search(
             [('include_in_allcategory', "=", True), ('parent_id', '=', child_id.id),
-             ("website_id", "in", [False, request.website.id])], order="sequence asc")
+             ("website_id", "in", [False, request.env.website.id])], order="sequence asc")
         return child_categories
+
+    def get_all_categories_menu(self):
+        """Header "All Categories" menu in one query, instead of one search per category
+        and sub-category on every page (get_all_categories / get_child_all_categories).
+        Same categories and order: top level as the model's default order, children by
+        sequence."""
+        categories = self.env['product.public.category'].search([
+            ('include_in_allcategory', '=', True),
+            ('website_id', 'in', [False, request.env.website.id]),
+        ])
+        Category = self.env['product.public.category']
+        children = {}
+        for category in categories.filtered('parent_id').sorted(lambda c: (c.sequence, c.id)):
+            children[category.parent_id.id] = children.get(category.parent_id.id, Category) | category
+        return {
+            'roots': categories.filtered(lambda c: not c.parent_id),
+            'children': children,
+        }
 
     def get_categories(self, category=None):
         cat = {}
@@ -306,11 +320,29 @@ class website(models.Model):
     )
 
     def _compute_website_show_price(self):
+        # outside a request (cron, tests, backend calls) fall back on the env user
+        user = request.env.user if request else self.env.user
         for rec in self:
             rec.website_show_price = (
                 not rec.website_hide_price
-                and request.env.user.partner_id.website_show_price
+                and user.partner_id.website_show_price
             )
+
+    def _sct_hide_line_price(self, line):
+        """Cart / checkout: hide this order line's price (Request Quote or login to see price)."""
+        self.ensure_one()
+        return bool(
+            not self.website_show_price
+            or (self.login_see_price and self.env.user._is_public())
+            or (line and line.product_id.website_hide_price)
+        )
+
+    def _sct_hide_order_prices(self, order):
+        """Cart / checkout totals: hidden as soon as one line's price is, since they'd reveal it."""
+        self.ensure_one()
+        return self._sct_hide_line_price(False) or bool(
+            order and any(order.website_order_line.product_id.mapped('website_hide_price'))
+        )
 
 
 

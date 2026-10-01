@@ -7,6 +7,18 @@
     object-fit: contain;
 }
 
+// Keep the header icons (account, wishlist, compare, cart) at their natural
+// width and let the main menu shrink instead: its overflowing items go to the
+// "+" dropdown. Without this a long menu crushes the icons to 0px.
+header#top {
+    .menu_right {
+        flex-shrink: 0;
+    }
+    #top_menu {
+        min-width: 0;
+    }
+}
+
 .sct-footer-logo img {
     height: 40px;
     width: auto;
@@ -1498,6 +1510,13 @@
         .top-header {
             padding: 22px 0;
 
+            // One row on desktop: when the right-hand block grows (logged-in name, wishlist,
+            // editor-only elements, narrower editor frame) the search box shrinks instead of
+            // the whole row wrapping onto several lines.
+            @include min992 {
+                flex-wrap: nowrap;
+            }
+
             .logo {
                 max-width: 32%;
 
@@ -1506,13 +1525,20 @@
                 }
             }
 
+            // In the website editor Odoo's HTML cleanup removes the <li class="search_bar">
+            // wrapper (an <li> outside a list), leaving the bare search form in the row: size
+            // both the same way so the header does not break while editing.
             .search_bar,
+            > .o_searchbar_form,
             >p {
                 list-style: none;
                 width: calc(100% - 40px);
 
                 @include min992 {
                     max-width: 460px;
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    margin: 0 16px;
                 }
 
                 @include min1340 {
@@ -1561,14 +1587,11 @@
             .menu_right {
                 order: 0;
 
+                // size to its content (name + icons); the search box takes the remaining space
                 @include min992 {
-                    flex: 0 0 calc(88% - 484px);
-                    max-width: calc(88% - 484px);
-                }
-
-                @include min1340 {
-                    flex: 0 0 calc(88% - 704px);
-                    max-width: calc(88% - 704px);
+                    flex: 0 0 auto;
+                    max-width: none;
+                    width: auto;
                 }
 
                 .delivery_icon,
@@ -2681,6 +2704,11 @@
         .top-header {
             padding: 22px 0;
 
+            // one row on desktop: the search box shrinks instead of the row wrapping
+            @include min992 {
+                flex-wrap: nowrap;
+            }
+
             .logo {
                 max-width: 32%;
 
@@ -2690,12 +2718,16 @@
             }
 
             .search_bar,
+            > .o_searchbar_form,
             >p {
                 width: calc(100% - 40px);
                 list-style: none;
 
                 @include min992 {
                     max-width: 460px;
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    margin: 0 16px;
                 }
 
                 @include min1440 {
@@ -2740,14 +2772,11 @@
             .menu_right {
                 order: 0;
 
+                // size to its content (name + icons); the search box takes the remaining space
                 @include min992 {
-                    flex: 0 0 calc(88% - 484px);
-                    max-width: calc(88% - 484px);
-                }
-
-                @include min1340 {
-                    flex: 0 0 calc(88% - 800px);
-                    max-width: calc(88% - 800px);
+                    flex: 0 0 auto;
+                    max-width: none;
+                    width: auto;
                 }
 
                 .delivery_icon,

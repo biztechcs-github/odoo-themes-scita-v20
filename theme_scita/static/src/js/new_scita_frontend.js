@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import publicWidget from "@theme_scita/js/compat/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { browser } from '@web/core/browser/browser';
@@ -188,7 +188,9 @@ publicWidget.registry.deal_seller_multi_product_custom_snippet = publicWidget.Wi
               var date = self.$target.data("date");
               if(date != "nan"){
                   var toDate = new Date(date).getTime();
-                  var x = setInterval(function() {
+                  if (isNaN(toDate)) { return; } // no / invalid date
+                  clearInterval(self._timerInterval);
+                  var x = self._timerInterval = setInterval(function() {
                         
                         // Get todays date and time
                         var now = new Date().getTime();
@@ -246,6 +248,7 @@ publicWidget.registry.deal_seller_multi_product_custom_snippet = publicWidget.Wi
         },
         
         destroy: function() {
+            clearInterval(this._timerInterval);
             // Clean up observer if it exists
             if (this._observer) {
                 this._observer.disconnect();
@@ -491,6 +494,7 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
     },
     
     destroy: function() {
+        clearInterval(this._timerInterval);
         // Clean up observer if it exists
         if (this._observer) {
             this._observer.disconnect();
@@ -650,7 +654,9 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
         var date = self.$target.data("date");
         if(date != "nan"){
             var toDate = new Date(date).getTime();
-            var x = setInterval(function() {
+            if (isNaN(toDate)) { return; } // no / invalid date
+            clearInterval(self._timerInterval);
+            var x = self._timerInterval = setInterval(function() {
                 var now = new Date().getTime();
                 var diffrence = toDate - now;// Time calculations for days, hours, minutes and seconds
                 if (diffrence > 0) {

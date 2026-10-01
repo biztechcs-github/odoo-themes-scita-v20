@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import publicWidget from "@theme_scita/js/compat/public_widget";
   
 //   animation.registry.js_counter_timer = animation.Class.extend({
 	publicWidget.registry.js_counter_timer = publicWidget.Widget.extend({
@@ -14,6 +14,11 @@ import publicWidget from "@web/legacy/js/public/public_widget";
       stop: function(){
         this.clean();
       },
+      destroy: function(){
+        // the compat layer tears widgets down with destroy(), not stop()
+        clearInterval(this._timerInterval);
+        return this._super.apply(this, arguments);
+      },
 
       redrow: function(debug){
         this.clean(debug);
@@ -21,6 +26,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
       },
 
       clean:function(debug){
+        clearInterval(this._timerInterval);
         this.$target.empty();
       },
       build: function(debug)
@@ -31,7 +37,10 @@ import publicWidget from "@web/legacy/js/public/public_widget";
     	  if(date != "nan")
         	  {
     		  var toDate = new Date(date).getTime();
-    		  var x = setInterval(function() {
+    		  if (isNaN(toDate)) {
+    			  return; // no / invalid date: nothing to count down to
+    		  }
+    		  var x = self._timerInterval = setInterval(function() {
     				
     				// Get todays date and time
     				var now = new Date().getTime();

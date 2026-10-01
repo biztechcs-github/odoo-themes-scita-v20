@@ -1,33 +1,60 @@
 /** @odoo-module **/
-import lazyloader from "@web/legacy/js/public/lazyloader";
+// Odoo 20 removed @web/legacy/js/public/lazyloader. On 19 this code waited for
+// `lazyloader.allScriptsLoaded`, i.e. every deferred script having run after the
+// window load event; waiting for `load` (plus a tick for deferred bundles such as
+// the theme's jQuery) gives the same timing.
 
-lazyloader.allScriptsLoaded.then(function () {
-    'use strict';
-    const isIos = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      return /iphone|ipad|ipod/.test( userAgent );
+function whenAllScriptsLoaded(fn) {
+    const run = () => setTimeout(fn, 0);
+    if (document.readyState === "complete") {
+        run();
+    } else {
+        window.addEventListener("load", run, { once: true });
     }
+}
 
-    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+whenAllScriptsLoaded(function () {
+    "use strict";
+    const $ = window.jQuery;
+    const popups = () => document.querySelectorAll(".mobile-deive-popup");
+    const show = (els) => els.forEach((el) => (el.style.display = "block"));
+    const hide = (els) => els.forEach((el) => (el.style.display = "none"));
+
+    const isIos = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test(userAgent);
+    };
+
+    const isInStandaloneMode = () => "standalone" in window.navigator && window.navigator.standalone;
 
     if (isIos() && !isInStandaloneMode()) {
-        var mobileDevicePopup = $(".mobile-deive-popup");
-        mobileDevicePopup.show();
-        $(mobileDevicePopup).click(function() {
-            mobileDevicePopup.hide();
-            localStorage.setItem("iphone_pwa_msg", 'false');
-        });
+        show(popups());
+        popups().forEach((el) =>
+            el.addEventListener("click", () => {
+                hide(popups());
+                localStorage.setItem("iphone_pwa_msg", "false");
+            })
+        );
     }
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service_worker').then(function(reg) {
-        }).catch(function(error) {
-        });
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service_worker").catch(() => {});
     }
-    $(".sct_pwa_iphone_close").on('click',function(e) {
-        $(e.target).closest(".mobile-deive-popup").hide("fast");
-        localStorage.setItem("iphone_pwa_msg", 'false');
+    document.addEventListener("click", (e) => {
+        const closeBtn = e.target.closest(".sct_pwa_iphone_close");
+        if (!closeBtn) {
+            return;
+        }
+        const popup = closeBtn.closest(".mobile-deive-popup");
+        if (popup) {
+            if ($) {
+                $(popup).hide("fast"); // same animation as 19
+            } else {
+                popup.style.display = "none";
+            }
+        }
+        localStorage.setItem("iphone_pwa_msg", "false");
     });
-    if (localStorage.getItem("iphone_pwa_msg") == 'false') {
-        $(".mobile-deive-popup").addClass("o_hidden");
+    if (localStorage.getItem("iphone_pwa_msg") == "false") {
+        popups().forEach((el) => el.classList.add("o_hidden"));
     }
 });

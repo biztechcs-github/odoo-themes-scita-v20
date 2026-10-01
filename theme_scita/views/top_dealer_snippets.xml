@@ -29,7 +29,7 @@
                                     </a>
                                 </div>
                                 <div class="product-disc">
-                                    <h3 class="title"><t t-esc="dealer.product_count"/> Products</h3>
+                                    <h3 class="title"><t t-out="dealer.product_count"/> Products</h3>
                                 </div>
                             </div>
                             <div class="block-bottom">
@@ -37,17 +37,17 @@
                                     <li>
                                         <img src="/web/image/theme_scita.top_dealer_location_svg" alt="Location" title="Location"/>
                                         <p>
-                                            <span t-esc="dealer.street"/>
-                                            <span t-esc="dealer.street2"/>
-                                            <span t-esc="dealer.city"/>
-                                            <span t-esc="dealer.state_id.name"/>
-                                            <span t-esc="dealer.country_id.name"/>
+                                            <span t-out="dealer.street"/>
+                                            <span t-out="dealer.street2"/>
+                                            <span t-out="dealer.city"/>
+                                            <span t-out="dealer.state_id.name"/>
+                                            <span t-out="dealer.country_id.name"/>
                                         </p>
                                     </li>
                                     <li>
                                         <img src="/web/image/theme_scita.top_dealer_phone_svg_img" alt="Contact" title="Contact"/>
                                         <p>
-                                            <a href="#" t-att-title="dealer.phone"><span t-esc="dealer.phone"/></a>
+                                            <a href="#" t-att-title="dealer.phone"><span t-out="dealer.phone"/></a>
                                         </p>
                                     </li>
                                 </ul>

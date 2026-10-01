@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import publicWidget from '@web/legacy/js/public/public_widget';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import publicWidget from '@theme_scita/js/compat/public_widget';
+import wishlistUtils from '@website_sale/js/wishlist_utils';
 import { rpc } from '@web/core/network/rpc';
-import wSaleUtils from '@website_sale/js/website_sale_utils';
+import wSaleUtils from '@theme_scita/js/compat/website_sale_utils';
 
 publicWidget.registry.ThemeWishlistFix = publicWidget.Widget.extend({
     selector: "#wrapwrap",
@@ -28,7 +28,7 @@ publicWidget.registry.ThemeWishlistFix = publicWidget.Widget.extend({
             await rpc('/shop/wishlist/add', { product_id: productId });
             wishlistUtils.addWishlistProduct(productId);
             wishlistUtils.updateWishlistNavBar();
-            wishlistUtils.updateDisabled(el, true);
+            el.disabled = true; el.classList.add('disabled');
             await wSaleUtils.animateClone(
                 $(document.querySelector('.o_wsale_my_wish')),
                 $(document.querySelector('#product_detail_main') ?? el.closest('.o_cart_product') ?? form),

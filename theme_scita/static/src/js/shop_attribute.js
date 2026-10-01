@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import publicWidget from "@theme_scita/js/compat/public_widget";
 
 publicWidget.registry.ScitaProductPreviewAttribute = publicWidget.Widget.extend({
     selector: ".scita_attribute_select",
@@ -9,7 +9,9 @@ publicWidget.registry.ScitaProductPreviewAttribute = publicWidget.Widget.extend(
         "mouseleave": "_onMouseLeave",
     },
     start: function () {
-        this.imageEl = this.el.closest('form').querySelector('img');
+        // Odoo 20 shop cards are <article class="oe_product_cart">, Scita snippet cards are still forms
+        const card = this.el.closest('form') || this.el.closest('.oe_product_cart');
+        this.imageEl = card ? card.querySelector('img') : null;
         return this._super.apply(this, arguments);
     },
     _onMouseEnterSwatch: function (ev) {
@@ -23,6 +25,9 @@ publicWidget.registry.ScitaProductPreviewAttribute = publicWidget.Widget.extend(
         this._updateImgSrc();
     },
     _updateImgSrc: function (src=false) {
+        if (!this.imageEl) {
+            return;
+        }
         this.imageEl.src = src || this.el.dataset.defaultImgSrc;
     },
 });

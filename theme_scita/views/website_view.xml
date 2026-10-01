@@ -122,9 +122,7 @@
              fonts.gstatic.com/fonts.googleapis.com. Lighthouse flags both
              preconnects as unused connection setup cost; drop them instead of
              adding a second one. -->
-        <template id="theme_scita_fonts_preconnect" inherit_id="website.layout" name="Remove Unused Google Fonts Preconnect">
-            <xpath expr="//link[@rel='preconnect'][@href='https://fonts.gstatic.com/']" position="replace"/>
-        </template>
+        <!-- theme_scita_fonts_preconnect: dropped in 20, core website.font_links only preconnects when Google fonts are used -->
 
         <!-- Keep this preload. It is tempting to drop it: a preload is fetched at
              High priority, so Lineicons (67 KB) and Odoo's fontawesome (78 KB)
@@ -142,7 +140,7 @@
              reachable through core's own un-ranged @font-face if a page uses a
              glyph outside the subset - see that CSS file for the mechanism. -->
         <template id="theme_scita_preload_fontawesome_subset" inherit_id="web.frontend_layout" name="Preload FontAwesome Subset">
-            <xpath expr="//link[@rel='preload'][contains(@href, 'fontawesome-webfont')]" position="replace">
+            <xpath expr="//head" position="inside">
                 <link rel="preload" href="/theme_scita/static/src/fonts/fontawesome-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
             </xpath>
         </template>
@@ -206,11 +204,6 @@
                 </script>
             </xpath>
         </template>
-
-        <template id="theme_scita_brand_promotion_fixed_size" inherit_id="web.brand_promotion_message" name="Brand Promotion Badge Fixed Size">
-            <xpath expr="//img[@src='/web/static/img/odoo_logo_tiny.png']" position="attributes">
-                <attribute name="style">width: 49.6px; height: 16px; vertical-align: baseline;</attribute>
-            </xpath>
-        </template>
+        <!-- theme_scita_brand_promotion_fixed_size: dropped in 20, web.brand_promotion_message has no logo image anymore -->
 
 </odoo>

@@ -5,6 +5,9 @@
     <field name="name">Searchbar categories 000 XML</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">theme_scita/static/src/snippets/000_categories.xml</field>
+    <!-- Odoo 20 renders search results server-side; this OWL extension targets markup that no
+         longer exists and would break the search dropdown. Re-enable once ported. -->
+    <field name="active" eval="False"/>
 </record>
 
 </odoo>

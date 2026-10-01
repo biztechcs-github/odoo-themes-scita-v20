@@ -1,40 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Hide Add To Cart Button and quantity selector if not website_show_price -->    
-    <template id="product_details" inherit_id="website_sale_wishlist.product_wishlist">
+    <template id="product_details" inherit_id="website_sale.product_wishlist">
         
-        <!-- 🧩 Add Request Quote / Login button before price in wishlist -->
-        <xpath expr="//div[hasclass('container', 'oe_website_sale')]//div[hasclass('align-middle', 'o_wish_price')]" position="before">
+        <!-- 🧩 Request Quote / Login button in the wishlist action row.
+             Odoo 20: it takes the Add to Cart slot, so it stays on one line
+             with the compare / quick view buttons. -->
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/button[@name='add_to_cart']" position="before">
             <t t-if="website and (
                 (not website.website_show_price)
                 or wish.product_id.website_hide_price
                 or (website.login_see_price and request.env.user._is_public())
             )">
-                <div class="align-middle text-center">
-                    <!-- Case 1: User not logged in and login_see_price is enabled -->
-                    <t t-if="website.login_see_price and request.env.user._is_public()">
-                        <a t-attf-href="/web/login"
-                           class="btn btn-outline-primary mt-2 login-price-btn">
-                            Login to see price
-                        </a>
-                    </t>
-                    
-                    <!-- Case 2: Price hidden (Request Quote) -->
-                    <t t-else="">
-                        <a role="button"
-                           id="request_for_quote_button"
-                           data-bs-toggle="modal"
-                           data-bs-target="#cfp_pop_up"
-                           href="#"
-                           t-att-data-product_id="wish.product_id.id"
-                           class="btn btn-primary mt-2">
-                            Request Quote
-                        </a>
-                    </t>
-                </div>
+                <!-- Case 1: User not logged in and login_see_price is enabled -->
+                <a t-if="website.login_see_price and request.env.user._is_public()"
+                   t-attf-href="/web/login?redirect={{ request.httprequest.path }}"
+                   class="o_wsale_product_btn_primary btn btn-outline-primary login-price-btn">
+                    Login to see price
+                </a>
+                <!-- Case 2: Price hidden (Request Quote) -->
+                <a t-else=""
+                   role="button"
+                   id="request_for_quote_button"
+                   data-bs-toggle="modal"
+                   data-bs-target="#cfp_pop_up"
+                   href="#"
+                   t-att-data-product_id="wish.product_id.id"
+                   class="o_wsale_product_btn_primary btn btn-primary">
+                    Request Quote
+                </a>
             </t>
         </xpath>
-        
+
         <!-- 🧱 Hide price when conditions are met -->
         <xpath expr="//div[hasclass('container', 'oe_website_sale')]//div[hasclass('align-middle', 'o_wish_price')]" position="attributes">
             <attribute name="t-if">
@@ -44,16 +41,12 @@
                 and not (website.login_see_price and request.env.user._is_public())
             </attribute>
         </xpath>
-        
-        <!-- 🧱 Hide 'Add to Cart' button when price is hidden -->
-        <xpath expr="//div[hasclass('o_wsale_product_action_row')]" position="attributes">
-            <attribute name="t-if">
-                website 
-                and website.website_show_price 
-                and not wish.product_id.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
-        </xpath>  
+
+        <!-- 🧱 Hide 'Add to Cart' button when price is hidden (it carries t-else,
+             so hide it with a class instead of t-if) -->
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/button[@name='add_to_cart']" position="attributes">
+            <attribute name="t-attf-class">o_wsale_product_btn_primary btn btn-primary {{'' if (website and website.website_show_price and not wish.product_id.website_hide_price and not (website.login_see_price and request.env.user._is_public())) else 'd-none'}}</attribute>
+        </xpath>
     </template>
 
            
@@ -107,7 +100,7 @@
     <template id="shop_button_hide_product_price" inherit_id="website_sale.shop_product_buttons">
 
         <!-- Hide button block for shop page when hidden by any condition -->
-        <xpath expr="//button[hasclass('a-submit')]" position="attributes">
+        <xpath expr="//button[@name='add_to_cart']" position="attributes">
             <attribute name="t-if">
                 website 
                 and website.website_show_price
@@ -117,7 +110,7 @@
         </xpath>
 
         <!-- Replace price block with buttons -->
-        <xpath expr="//button[hasclass('a-submit')]" position="after">
+        <xpath expr="//button[@name='add_to_cart']" position="after">
             <t t-if="website and (
                 (not website.website_show_price)
                 or product.website_hide_price
@@ -137,7 +130,7 @@
     </template>
 
     <!-- Product compare detail start -->
-    <template id="product_compare_detail" inherit_id="website_sale_comparison.product_compare">
+    <template id="product_compare_detail" inherit_id="website_sale.product_compare">
         
         <!-- 🧩 Add Request Quote / Login button before price -->
         <xpath expr="//span[@t-out=&quot;combination_info['price']&quot;]" position="before">
@@ -182,13 +175,9 @@
         </xpath>
 
         <!-- 🧱 Hide 'Add to Cart' button in same conditions -->
-        <xpath expr="//button[@name='comparison_add_to_cart']" position="attributes">
-            <attribute name="t-if">
-                website 
-                and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+        <!-- Odoo 20: the button carries t-else, so hide it with a class instead of t-if -->
+        <xpath expr="//button[@name='add_to_cart']" position="attributes">
+            <attribute name="t-attf-class">btn btn-primary {{'' if (website and website.website_show_price and not product.website_hide_price and not (website.login_see_price and request.env.user._is_public())) else 'd-none'}}</attribute>
         </xpath>
 
     </template>
@@ -196,7 +185,7 @@
     <!-- Product compare detail end -->
 
     <template id="default_add_to_cart_hide_website_sale" inherit_id="website_sale.shop_product_buttons">
-        <xpath expr="//button[hasclass('o_wsale_product_btn_primary')]" position="attributes">
+        <xpath expr="//button[@name='add_to_cart']" position="attributes">
             <attribute name="t-if">
                     website and website.website_show_price and not product.website_hide_price
             </attribute>
@@ -294,7 +283,7 @@
                         <a href="#" role="button"
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
-                            t-att-data-product-id="product.id"
+                            t-att-data-product_id="product.id"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -339,7 +328,7 @@
                         <a href="#" role="button"
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
-                            t-att-data-product-id="product.id"
+                            t-att-data-product_id="product.id"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -395,7 +384,7 @@
                          <a href="#" role="button"
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
-                            t-att-data-product-id="deal_product.id"
+                            t-att-data-product_id="deal_product.id"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -439,7 +428,7 @@
                          <a href="#" role="button"
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
-                            t-att-data-product-id="product.id"
+                            t-att-data-product_id="product.id"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -483,7 +472,7 @@
                          <a href="#" role="button"
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
-                            t-att-data-product-id="product.id"
+                            t-att-data-product_id="product.id"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -512,7 +501,7 @@
     <!-- 🧩 Hide/Show "Buy Now" Button on Product Page -->
     <template id="hide_PDP_buy_now_btn_template" inherit_id="website_sale.product_buy_now">
         <!-- Hide Buy Now button -->
-        <xpath expr="//a[contains(@t-attf-class, 'o_we_buy_now')]" position="attributes">
+        <xpath expr="//button[@data-action='buy_now']" position="attributes">
             <attribute name="t-if">
                 website 
                 and website.website_show_price 
@@ -522,7 +511,7 @@
         </xpath>
 
         <!-- Show "Login to See Price" or "Request Quote" -->
-        <xpath expr="//a[contains(@t-attf-class, 'o_we_buy_now')]" position="after">
+        <xpath expr="//button[@data-action='buy_now']" position="after">
             <t t-if="website and (
                 product.website_hide_price
                 or (website.login_see_price and request.env.user._is_public())
@@ -531,7 +520,7 @@
                 <!-- Case 1: Login required -->
                 <t t-if="website.login_see_price and request.env.user._is_public()">
                     
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ request.httprequest.path }}"
                     class="btn btn-outline-primary btn_cta mt-2 login-price-btn">
                         Login to see price
                     </a>
@@ -554,37 +543,34 @@
     </template>
 
 
-    <template id="theme_scita_product_details_terms_and_share" inherit_id="website_sale.product_terms_and_conditions">
-            <!--        adding the modal pop up-->
-        <xpath expr="//small[hasclass('text-muted','mb-0')]" position="before">
-            <t t-call="theme_scita.request_for_quote_modal"/>
-        </xpath>
-
-   </template>
-
+   <!-- The one Request Quote pop-up of every page. It used to be added again by the
+        product, shop, compare and wishlist pages too: with several #cfp_pop_up in the
+        page, Bootstrap opened the in-page copy, which on the wishlist showed inline
+        instead of as a pop-up. It also sat after </html>; now at the end of <body>. -->
    <template id="theme_scita_home_page" inherit_id="website.layout">
-    <!--        adding the modal pop up in home page         -->
-        <xpath expr="//html" position="after">
+        <xpath expr="//div[@id='wrapwrap']" position="after">
             <t t-call="theme_scita.request_for_quote_modal"/>
         </xpath>
-
    </template>
 
     <template id="display_request_quote_in_pdp_template" inherit_id="theme_scita.theme_scita_product_details_add_to_cart">
 
-        <!-- 🧱 Hide Add to Cart area if price hidden or login required -->
+        <!-- 🧱 Hide Add to Cart area if price hidden or login required.
+             Odoo 20 reads the product ids from the add-to-cart button on every variant
+             change, so the block stays in the DOM (hidden) instead of being removed. -->
         <xpath expr="//div[hasclass('sct-main-price-description')]" position="attributes">
-            <attribute name="t-if">
-                website 
-                and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-attf-class">sct-main-price-description #{'' if (website and website.website_show_price and not product.website_hide_price and not (website.login_see_price and request.env.user._is_public())) else 'd-none'}</attribute>
         </xpath>
 
         <!-- 🧩 Insert "Login to See Price" / "Request Quote" buttons -->
         <xpath expr="//div[hasclass('sct-other-desciption')]" position="inside">
-            <t t-if="website and (
+            <!-- Odoo 20: with Buy Now enabled, hide_PDP_buy_now_btn_template already
+                 renders this button next to the quantity, so skip it here. -->
+            <t t-set="sct_buy_now_shows_btn" t-value="is_view_active('website_sale.product_buy_now') and (
+                product.website_hide_price
+                or (website.login_see_price and request.env.user._is_public())
+            )"/>
+            <t t-if="website and not sct_buy_now_shows_btn and (
                 (not website.website_show_price)
                 or product.website_hide_price
                 or (website.login_see_price and request.env.user._is_public())
@@ -615,5 +601,84 @@
             </t>
         </xpath>
 
+    </template>
+    <!-- ========================================================= -->
+    <!-- Cart page / checkout: hide prices with Request Quote or  -->
+    <!-- login to see price (website._sct_hide_* in models/website.py) -->
+    <!-- ========================================================= -->
+
+    <!-- Line price: shared by the cart page and the checkout summary -->
+    <template id="sct_hide_cart_product_price" inherit_id="website_sale.cart_product_price" name="Scita: hide cart line price">
+        <xpath expr="//span" position="attributes">
+            <attribute name="t-if">not (website and website._sct_hide_line_price(line))</attribute>
+        </xpath>
+    </template>
+
+    <template id="sct_hide_cart_lines_price" inherit_id="website_sale.cart_lines_price" name="Scita: hide cart line strikethrough / unit price">
+        <xpath expr="//del" position="attributes">
+            <attribute name="t-if">line._should_show_strikethrough_price() and not (website and website._sct_hide_line_price(line))</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('cart_product_base_unit_price')]" position="attributes">
+            <attribute name="t-if">website.show_product_reference_price and line.product_id.base_unit_price and not website._sct_hide_line_price(line)</attribute>
+        </xpath>
+    </template>
+
+    <!-- Subtotal / taxes / total (cart, checkout, payment, confirmation).
+         Hidden with d-none, not removed: Odoo's checkout JS updates these rows
+         when the delivery method changes and crashes if they are missing. -->
+    <template id="sct_hide_cart_total" inherit_id="website_sale.total" name="Scita: hide cart totals">
+        <xpath expr="//div[contains(@t-attf-class, 'o_cart_total')]" position="attributes">
+            <attribute name="t-attf-class">o_cart_total #{_cart_total_classes} #{'d-none' if website and website._sct_hide_order_prices(website_sale_order) else ''}</attribute>
+        </xpath>
+    </template>
+
+    <!-- Mobile "Order $ total" summary button on checkout pages -->
+    <template id="sct_hide_checkout_mobile_total" inherit_id="website_sale.checkout_layout" name="Scita: hide mobile summary total">
+        <xpath expr="//span[@id='amount_total_summary']" position="attributes">
+            <attribute name="t-attf-class">monetary_field ms-auto #{'d-none' if website and website._sct_hide_order_prices(website_sale_order) else ''}</attribute>
+        </xpath>
+    </template>
+
+    <!-- Quick reorder panel on the cart page -->
+    <template id="sct_hide_quick_reorder_price" inherit_id="website_sale.quick_reorder_history" name="Scita: hide quick reorder price">
+        <xpath expr="//small[hasclass('o_wsale_quick_reorder_product_price')]" position="attributes">
+            <attribute name="t-if">not website._sct_hide_line_price(order_line)</attribute>
+        </xpath>
+    </template>
+
+    <!-- Suggested accessories on the cart page (combination_info is set inside the
+         price h6 and used after it, so hide its children rather than the h6) -->
+    <template id="sct_hide_suggested_product_price" inherit_id="website_sale.suggested_products_list" name="Scita: hide suggested product price">
+        <xpath expr="//del[@name='suggested_product_list_price']" position="attributes">
+            <attribute name="t-if">not (website._sct_hide_line_price(False) or product.website_hide_price)</attribute>
+        </xpath>
+        <xpath expr="//span[@name='suggested_product_price']" position="attributes">
+            <attribute name="t-if">not (website._sct_hide_line_price(False) or product.website_hide_price)</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website_sale.base_unit_price']" position="attributes">
+            <attribute name="t-if">combination_info.get('base_unit_price') and not (website._sct_hide_line_price(False) or product.website_hide_price)</attribute>
+        </xpath>
+    </template>
+    <!-- Request Quote / login to see price: no checkout. The server blocks it too
+         (sale.order._is_cart_ready_for_checkout in models/sale_order.py). -->
+    <template id="sct_hide_checkout_buttons" inherit_id="website_sale.navigation_buttons" name="Scita: no checkout when prices are hidden">
+        <xpath expr="//t[@t-if='website_sale_order and website_sale_order.website_order_line']" position="before">
+            <t t-set="sct_no_checkout" t-value="website_sale_order and website and website._sct_hide_order_prices(website_sale_order)"/>
+            <div t-if="sct_no_checkout" class="sct_no_checkout_notice alert alert-info mb-0">
+                <t t-if="website.login_see_price and website.is_public_user()">
+                    Please <a href="/web/login?redirect=/shop/cart">log in</a> to see the prices and place your order.
+                </t>
+                <t t-else="">
+                    Prices of some products in your cart are available on request.
+                    Please request a quote for them instead of checking out.
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-if='website_sale_order and website_sale_order.website_order_line']" position="attributes">
+            <attribute name="t-if">website_sale_order and website_sale_order.website_order_line and not sct_no_checkout</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='not hide_payment_button']" position="attributes">
+            <attribute name="t-if">not hide_payment_button and not sct_no_checkout</attribute>
+        </xpath>
     </template>
 </odoo>

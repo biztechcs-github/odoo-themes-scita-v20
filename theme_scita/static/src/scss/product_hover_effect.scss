@@ -275,6 +275,26 @@ span[name="hidden_ptavs_count"] {
                                         padding: 6px;
                                         top: -163px;
                                     }
+                                    // Odoo 20's compare icon (oi-fw) made that button taller than the
+                                    // others and it ran into the wishlist button: the top offsets
+                                    // assume one button size, so give all three the same square.
+                                    @media (min-width: 992px){
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        width: 26px;
+                                        height: 26px;
+                                        padding: 0;
+                                        line-height: 1;
+                                    }
+                                    @media (min-width: 1200px) {
+                                        width: 30px;
+                                        height: 30px;
+                                    }
+                                    > .oi, > .lni, > .fa, > i, > span{
+                                        width: auto;
+                                        line-height: 1;
+                                    }
                                     &:hover{
                                         color: $light-color;
                                         background: $primary;
@@ -413,6 +433,18 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            .oe_product_image .oe_product_image_img_wrapper{
+                transition: all 0.3s ease-in;
+            }
+            // The information panel slides up 30px on hover: shrink the image
+            // by the same amount so the panel doesn't cover the product.
+            &:not(.out_of_order_product):hover .o_wsale_product_grid_wrapper:not(:has(.sct_not_add_to_cart)){
+                @media (min-width: 992px){
+                    .oe_product_image .oe_product_image_img_wrapper{
+                        height: calc(100% - 30px) !important;
                     }
                 }
             }
@@ -1436,6 +1468,26 @@ span[name="hidden_ptavs_count"] {
                                         padding: 6px;
                                         top: -163px;
                                     }
+                                    // Odoo 20's compare icon (oi-fw) made that button taller than the
+                                    // others and it ran into the wishlist button: the top offsets
+                                    // assume one button size, so give all three the same square.
+                                    @media (min-width: 992px){
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        width: 26px;
+                                        height: 26px;
+                                        padding: 0;
+                                        line-height: 1;
+                                    }
+                                    @media (min-width: 1200px) {
+                                        width: 30px;
+                                        height: 30px;
+                                    }
+                                    > .oi, > .lni, > .fa, > i, > span{
+                                        width: auto;
+                                        line-height: 1;
+                                    }
 
                                     &:hover{
                                         color: $light-color;
@@ -1576,6 +1628,18 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            .oe_product_image .oe_product_image_img_wrapper{
+                transition: all 0.3s ease-in;
+            }
+            // The information panel slides up 30px on hover: shrink the image
+            // by the same amount so the panel doesn't cover the product.
+            &:not(.out_of_order_product):hover .o_wsale_product_grid_wrapper:not(:has(.sct_not_add_to_cart)){
+                @media (min-width: 992px){
+                    .oe_product_image .oe_product_image_img_wrapper{
+                        height: calc(100% - 30px) !important;
                     }
                 }
             }
@@ -2263,6 +2327,11 @@ span[name="hidden_ptavs_count"] {
                                         }
                                      }
                                 }
+                                     // the icons share the top-left corner with a left product
+                                     // label (New / Sale...): start the column below the label
+                                     &:has(.img_lbl.left) .sct-hover-info {
+                                        top: 42px;
+                                     }
                                 &:hover {
                                     .pwd-desc {
                                         .pwp-info {
@@ -2291,6 +2360,22 @@ span[name="hidden_ptavs_count"] {
         }
     }
     // .sct_product_snippet_2 css end here
+
+    // Effect Style 2 puts the hover icons in the top-left corner, where a left product
+    // label (New / Sale...) sits: on cards that have one, move the icons down below it.
+    // `translate` (not transform) so the icons' own slide-in animation is untouched.
+    #products_grid .oe_product_cart:has(.img_lbl.left) .o_wsale_product_btn :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn),
+    .cs-product:has(.img_lbl.left) :is(.sct-hover-info, .sct-feature-wrap) > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+        translate: 0 32px;
+    }
+    // the fashion slider's label sits lower in the card
+    .fashion_multi_category_slider .cs-product:has(.img_lbl.left) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+        translate: 0 48px;
+    }
+    // Top Picks moves the whole icon column instead (see its section above)
+    .sct_product_snippet_2 .cs-product:has(.img_lbl.left) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+        translate: none;
+    }
 }
 @else if o-website-value('prod-hover-style') == 'prod_hover_style_3' {
     #products_grid{
@@ -3500,6 +3585,20 @@ span[name="hidden_ptavs_count"] {
         }
     }
     // .sct_product_snippet_2 css end here
+
+    // Round hover buttons: the generic 32px icon rule (product_card_equal_height.scss)
+    // clamped them to 32px wide while this effect makes them 37px tall - ovals, next to a
+    // round 37px cart button. Take the width from the height instead, whatever the snippet.
+    @include min992 {
+        .cs-product .sct-hover-info > .btn.btn:not(.cart_view_sct_btn, .js_add_cart, .login-price-btn) {
+            aspect-ratio: 1 / 1;
+            width: auto;
+            min-width: 0;
+            max-width: none;
+            flex: 0 0 auto;
+        }
+    }
+
 }
 @else if o-website-value('prod-hover-style') == 'prod_hover_style_4' {
     #products_grid{
@@ -5230,6 +5329,10 @@ span[name="hidden_ptavs_count"] {
                                 padding: 5px;
                                 width: 27px;
                                 height: 27px;
+                                // this effect's 27px icons (the generic 32px flex-basis made the
+                                // row too wide for narrow cards and it wrapped over the price)
+                                flex: 0 0 auto;
+                                min-width: 27px;
                                 margin: 0 2px 5px;
                                 border-radius: 6px;
                                 background-color: $light-color;
@@ -5243,6 +5346,10 @@ span[name="hidden_ptavs_count"] {
                                 }
 
                                 &.cart_view_sct_btn, &.login-price-btn{
+                                    // keep "Add to cart" on one line: the flex row shrank it to its
+                                    // min-width, it wrapped to 3 lines and covered rating / price
+                                    flex-shrink: 0;
+                                    white-space: nowrap;
                                     @include min1200{
                                         font-size: 15px;
                                         color: $light-color;
@@ -5452,6 +5559,35 @@ span[name="hidden_ptavs_count"] {
         }
     }
     // .sct_product_snippet_2 css end here
+
+    // Request Quote products: the button takes Add to cart's place at the left of the
+    // bottom row (sliding in with it) and compare goes back next to wishlist / quick view,
+    // instead of the button floating over the card with compare alone on the left.
+    @include min992 {
+        #products_grid .oe_product .oe_product_cart:has(.o_wsale_product_request_quote #request_for_quote_button) {
+            .o_wsale_product_information .o_wsale_product_request_quote .btn#request_for_quote_button {
+                top: auto;
+                bottom: 4px;
+                left: 8px;
+                display: inline-flex;
+                align-items: center;
+                height: 31px;
+                margin: 0 !important;
+                white-space: nowrap !important;
+                transform: none;
+                transition: all 0.3s ease-in;
+            }
+            .o_wsale_product_btn .o_wsale_product_action_row {
+                justify-content: flex-end;
+            }
+        }
+        #products_grid .oe_product:hover .oe_product_cart:has(.o_wsale_product_request_quote #request_for_quote_button) {
+            .o_wsale_product_information .o_wsale_product_request_quote .btn#request_for_quote_button {
+                transform: translateY(30px);
+            }
+        }
+    }
+
 }
 
 @else {
@@ -5726,6 +5862,26 @@ span[name="hidden_ptavs_count"] {
                                         padding: 6px;
                                         top: -163px;
                                     }
+                                    // Odoo 20's compare icon (oi-fw) made that button taller than the
+                                    // others and it ran into the wishlist button: the top offsets
+                                    // assume one button size, so give all three the same square.
+                                    @media (min-width: 992px){
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        width: 26px;
+                                        height: 26px;
+                                        padding: 0;
+                                        line-height: 1;
+                                    }
+                                    @media (min-width: 1200px) {
+                                        width: 30px;
+                                        height: 30px;
+                                    }
+                                    > .oi, > .lni, > .fa, > i, > span{
+                                        width: auto;
+                                        line-height: 1;
+                                    }
                                     &:hover{
                                         color: $light-color;
                                         background: $primary;
@@ -5864,6 +6020,18 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            .oe_product_image .oe_product_image_img_wrapper{
+                transition: all 0.3s ease-in;
+            }
+            // The information panel slides up 30px on hover: shrink the image
+            // by the same amount so the panel doesn't cover the product.
+            &:not(.out_of_order_product):hover .o_wsale_product_grid_wrapper:not(:has(.sct_not_add_to_cart)){
+                @media (min-width: 992px){
+                    .oe_product_image .oe_product_image_img_wrapper{
+                        height: calc(100% - 30px) !important;
                     }
                 }
             }
@@ -6407,6 +6575,188 @@ span[name="hidden_ptavs_count"] {
                                         &.cart_view_sct_btn, &.login-price-btn{
                                             transform: translate(50%, 0px);
                                         }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Request Quote in the product snippets, hidden until hover like the other
+    // buttons. Only Effect Style 1-5 had these rules; this default branch (used
+    // while no style is picked, and otherwise a copy of Effect Style 1) did not,
+    // so the button sat static in the snippets. Copied from Effect Style 1; the
+    // card overflow / info padding it relies on only apply to cards that have it.
+    // Not for the fashion multi-category slider: there it stays visible in place
+    // of the ADD pill (product_card_equal_height.scss).
+    .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
+        .deal_day_wrap, .tab_content_inner, .content{
+            .deal_day_bottom_inner, .owl-item, .grid_product{
+                .cs-product:has(.o_wsale_product_request_quote){
+                    overflow: hidden;
+                    .pwd-desc{
+                        .pwp-info{
+                            padding-bottom: 10px;
+                        }
+                        .o_wsale_product_request_quote {
+                            text-align: center;
+
+                           @media (min-width:768px) and (max-width:992px) {
+                               width: 100% ;
+                           }
+                           #request_for_quote_button {
+                               transition: all 0.3s ease-in;
+                               top: unset;
+                               margin: auto;
+                               width: fit-content;
+                               transform: unset !important;
+                               margin-top: 15px;
+                               color: $primary;
+                               border: 1px solid $primary;
+                               @include min992{
+                                   margin: 0 auto;
+                                   box-shadow: none;
+                                   background: $primary;
+                                   padding: 5px 10px;
+                                   font-size: 14px;
+                                   min-width: 90px;
+                                   color: $white;
+                                   bottom: 0;
+                                   top: auto;
+                                   right: 50%;
+                                   transform: translate(50%, 10px);
+
+                                   &:hover{
+                                       background: $white;
+                                       color: $primary;
+                                   }
+                               }
+                               @include min992 {
+                                   position: absolute;
+                                   opacity: 0;
+                                   left: 0;
+                                   right: 0;
+
+                                   bottom: -50px;
+                               }
+                               &:hover {
+                                   color: $primary;
+                                   background-color: $white;
+                               }
+                           }
+                        }
+                    }
+                    &:hover{
+                        .pwd-desc{
+                            .o_wsale_product_request_quote #request_for_quote_button {
+                                bottom: 2px;
+                                opacity: 1;
+                                transition: all 0.3s ease-in;
+                                transform: unset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // Product snippet 2 ("Top Picks"): whole section as in Effect Style 1 - the default
+    // branch had none, so the hover icons sat over the product title, always shown.
+    .sct_product_snippet_2 {
+        .sct-snippet-full {
+            .bottom-row {
+                .cst_sct_right_side {
+                    .grid_product {
+                        form {
+                            .cs-product {
+                                .pwd-desc {
+                                    position: relative;
+                                }
+                                .sct-hover-info {
+                                    position: absolute;
+                                    top: 11px;
+                                    right: 18px;
+                                    bottom: unset;
+                                    transition: all 0.3s 
+                                ease-in;
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    flex-direction: column;
+                                    width: auto !important;
+                                    @include min992 {
+                                        opacity: 0;
+                                        transform: translate(30px, 10px);
+                                    }
+                                    .btn {
+                                        font-size: 16px;
+                                        padding: 5px;
+                                        width: 26px;
+                                        height: 26px;
+                                        margin: 0 2px 5px;
+                                        border-radius: 6px;
+                                        background-color: #ffffff;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        box-shadow: rgba(32, 32, 32, 0.2) 0px 0px 6px 0px;
+                                        @include min992 {
+                                            font-size: 18px;
+                                            width: 30px;
+                                            height: 30px;
+                                        }
+                                    }
+                                }
+                                .o_wsale_product_request_quote {
+                                    margin-top: auto;
+                                    text-align: center;
+                                    @media (min-width:768px) and (max-width:992px) {
+                                        width: 100% ;
+                                    }
+                                    #request_for_quote_button {
+                                        transition: all 0.3s ease-in;
+                                        top: unset;
+                                        margin: auto;
+                                        width: fit-content;
+                                        margin-top: 15px;
+                                        margin-bottom: 15px;
+                                        border: 1px solid $primary;
+                                        color: $primary;
+                                        @include min992 {
+                                            position: absolute;
+                                            opacity: 0;
+                                            left: 0;
+                                            right: 0;
+                                            bottom: -50px;
+                                            color: $white;
+                                            background-color: $primary;
+                                        }
+                                        &:hover {
+                                            color: $primary;
+                                            background-color: $white;
+                                        }
+                                    }
+                                }
+                                &:hover {
+                                    .pwd-desc {
+                                        .pwp-info {
+                                            @include min992 {
+                                                transform: translateY(-30px);
+                                            }
+                                        }
+                                        .sct-hover-info {
+                                            @include min992{
+                                                opacity: 1;
+                                                transform: translate(0px, 0px);
+                                            }
+                                        }
+                                    }
+                                    .o_wsale_product_request_quote #request_for_quote_button {
+                                        bottom: 0px;
+                                        opacity: 1;
+                                        transition: all 0.3s ease-in;
                                     }
                                 }
                             }

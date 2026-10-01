@@ -22,7 +22,7 @@ import logging
 import threading
 from collections import OrderedDict
 
-import odoo.http
+from odoo.http.router import Application
 
 _logger = logging.getLogger(__name__)
 
@@ -79,10 +79,18 @@ def _patch_gzip_compression():
         return
     _patched = True
 
-    original_call = odoo.http.Application.__call__
+    original_call = Application.__call__
 
     def gzip_call(self, environ, start_response):
         if 'gzip' not in environ.get('HTTP_ACCEPT_ENCODING', ''):
+            return original_call(self, environ, start_response)
+        # Connection upgrades (the bus websocket) must reach the server
+        # untouched: Odoo's server writes the 101 headers when
+        # start_response is called, and the websocket loop starts when the
+        # response is closed. Deferring the first and triggering the second
+        # (below) runs the loop on a socket the client never saw upgraded,
+        # then writes the headers to it after it has been closed.
+        if environ.get('HTTP_UPGRADE'):
             return original_call(self, environ, start_response)
 
         path = environ.get('PATH_INFO', '')
@@ -120,7 +128,8 @@ def _patch_gzip_compression():
         content_type = header_dict.get('content-type', '').split(';')[0].strip()
 
         compressible = (
-            'content-encoding' not in header_dict
+            not captured.get('status', '').startswith('1')
+            and 'content-encoding' not in header_dict
             and 'content-range' not in header_dict
             and content_type in COMPRESSIBLE_TYPES
         )
@@ -162,7 +171,7 @@ def _patch_gzip_compression():
         start_response(captured['status'], new_headers, captured.get('exc_info'))
         return [compressed]
 
-    odoo.http.Application.__call__ = gzip_call
+    Application.__call__ = gzip_call
     _logger.info("theme_scita: gzip response compression enabled (no reverse proxy detected)")
 
 

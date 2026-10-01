@@ -2,7 +2,7 @@
 
 // import animation from "@website/js/content/snippets.animation";
 import { _t } from "@web/core/l10n/translation";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import publicWidget from "@theme_scita/js/compat/public_widget";
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { browser } from '@web/core/browser/browser';
 
@@ -2797,7 +2797,11 @@ $(document).ready(function(){
                 }).then(function(data) {
                     self.$target.empty();
                     self.$target.append(data);
-                    const categoryId = $(".trend_prod_tab")[0].getAttribute('data-category-id');
+                    const firstTab = $(".trend_prod_tab")[0];
+                    if (!firstTab) {
+                        return; // configuration without categories: nothing to load
+                    }
+                    const categoryId = firstTab.getAttribute('data-category-id');
                      $.get("/theme_scita/get_trending_prducts", {
                         'category': categoryId,
                         'slider-id': slider_id || '',

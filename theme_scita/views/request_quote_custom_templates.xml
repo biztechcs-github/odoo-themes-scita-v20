@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--    website product form page-->
-     <template id="theme_scita_product_details_terms_and_share" inherit_id="website_sale.product_terms_and_conditions" name="Product Details Terms and Share">
-            <!--        adding the modal pop up-->
-        <xpath expr="//small[hasclass('text-muted','mb-0')]" position="before">
-            <t t-call="theme_scita.request_for_quote_modal"/>
-        </xpath>
-   </template>
 
     <!--    website product price template-->
     <!--  Common template for pop up modal-->
     <template id="request_for_quote_modal">
-        <div id="cfp_pop_up" role="dialog" class="modal fade">
+        <div id="cfp_pop_up" role="dialog" class="modal fade" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-content" style="height:auto">
                 <form method="POST" action="/quote_request/submit" class="">
                     <div class="page">
@@ -112,28 +106,8 @@
     </template>
 
     <!--    product comparison page-->
-    <template id="product_compare_request_for_quote" inherit_id="website_sale_comparison.product_compare"
-              name="Product Request Quote">
-        <!--        here we call the Request Quote pop up to the current template-->
-        <xpath expr="//div[hasclass('product_summary')]" position="after">
-            <t t-call="theme_scita.request_for_quote_modal"/>
-        </xpath>
-
-    </template>
 
     <!--    product wishlist page-->
-    <template id="product_comparison_request_for_quote" inherit_id="website_sale_wishlist.product_wishlist"
-              name="Product Request Quote">
-        <xpath expr="//div[@id='o_comparelist_table']" position="after">
-            <t t-call="theme_scita.request_for_quote_modal"/>
-        </xpath>
-    </template>
 
     
-    <template id="shop_page_request_for_quote" inherit_id="website_sale.products"
-              name="Product Request Quote">
-        <xpath expr="//div[@id='oe_structure_website_sale_products_2']" position="after">
-            <t t-call="theme_scita.request_for_quote_modal"/>
-        </xpath>
-    </template>
 </odoo>

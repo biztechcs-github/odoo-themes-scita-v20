@@ -18,12 +18,12 @@ class CustomResConfiguration(models.TransientModel):
         'Price Hide for Shop', related='website_id.hide_price', readonly=False)
     add_to_cart = fields.Boolean('Hide Add Cart Button', related='website_id.add_to_cart', readonly=False)
 
-    social_twitter = fields.Char('Twitter Account', related='website_id.social_twitter', readonly=False)
-    social_facebook = fields.Char('Facebook Account', related='website_id.social_facebook', readonly=False)
-    social_github = fields.Char('GitHub Account', related='website_id.social_github', readonly=False)
-    social_linkedin = fields.Char('LinkedIn Account', related='website_id.social_linkedin', readonly=False)
-    social_youtube = fields.Char('Youtube Account', related='website_id.social_youtube', readonly=False)
-    social_instagram = fields.Char('Instagram Account', related='website_id.social_instagram', readonly=False)
+    social_twitter = fields.Char('Twitter Account', related='website_id.company_id.social_twitter', readonly=False)
+    social_facebook = fields.Char('Facebook Account', related='website_id.company_id.social_facebook', readonly=False)
+    social_github = fields.Char('GitHub Account', related='website_id.company_id.social_github', readonly=False)
+    social_linkedin = fields.Char('LinkedIn Account', related='website_id.company_id.social_linkedin', readonly=False)
+    social_youtube = fields.Char('Youtube Account', related='website_id.company_id.social_youtube', readonly=False)
+    social_instagram = fields.Char('Instagram Account', related='website_id.company_id.social_instagram', readonly=False)
 
     # For multi image
     no_extra_options = fields.Boolean(string='Slider effects',

@@ -3,7 +3,7 @@
     <template id="website_pwa_support_temp" name="Web layout PWA Support" inherit_id="portal.frontend_layout">
         <xpath expr="//head" position="inside">
             <t t-set='website_obj' t-value="request.env['website']" />
-            <t t-set='current_website_obj' t-value="website_obj.sudo().get_current_website()" />
+            <t t-set='current_website_obj' t-value="request.env.website.sudo()" />
             <t t-if="current_website_obj.is_app_pwa">
                 <link rel="manifest" t-attf-href="/theme_scita/manifest_file/#{current_website_obj.id}" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -17,13 +17,15 @@
     </template>
     <template id="pwa_service_worker" name="Service Worker PWA">
         'use strict';
-        const PWA_CACHE_NAME = '<t t-esc="pwa_cache_version" />';
+        const PWA_CACHE_NAME = '<t t-out="pwa_cache_version" />';
         const URL_TO_CACHE = [
           <t t-foreach="urls_to_cache" t-as="url_to_cache">
-              '<t t-esc="url_to_cache" />',
+              '<t t-out="url_to_cache" />',
           </t>
         ];
         self.addEventListener('install', function (ev) {
+    // take over right away so an old worker (which cached backend pages) stops controlling tabs
+    self.skipWaiting();
           ev.waitUntil(
            caches.open(PWA_CACHE_NAME).then(function (cache) {
                return cache.addAll(URL_TO_CACHE);
@@ -42,80 +44,107 @@
            );
           self.clients.claim();
         });
-        self.addEventListener('fetch', function(ev) {
-        if (!ev.request.url.startsWith('http')) {
-            return;
-        }
+        // Only website assets/images/pages are handled. The backend, RPC/JSON calls, the bus and the
+// editor are never intercepted: replaying cached copies of those (e.g. while the server restarts)
+// brought back stale sessions / CSRF tokens and showed "session expired" to logged-in users.
+function scitaSkip(req) {
+    if (req.method !== 'GET' || !req.url.startsWith(self.location.origin)) {
+        return true;
+    }
+    const url = new URL(req.url);
+    const path = url.pathname;
+    if (url.searchParams.has('debug')) {
+        return true;
+    }
+    if (path === '/web/login' || path.startsWith('/odoo') || path.startsWith('/@/') ||
+        path.startsWith('/websocket') || path.startsWith('/longpolling') || path.startsWith('/bus') ||
+        path.startsWith('/json') || path.startsWith('/mail/') || path.startsWith('/website/') ||
+        path.startsWith('/my') || path.startsWith('/shop/cart') || path.startsWith('/shop/checkout') ||
+        path.startsWith('/shop/payment') || path.startsWith('/shop/confirm')) {
+        return true;
+    }
+    // /web/* is backend except static bundles and images
+    if (path.startsWith('/web')) {
+        const isStatic = ['/web/assets/', '/web/image', '/web/content'].some(function (p) { return path.startsWith(p); });
+        return !isStatic;
+    }
+    return false;
+}
+self.addEventListener('fetch', function(ev) {
+    const req = ev.request;
+    if (!req.url.startsWith('http') || scitaSkip(req)) {
+        return; // let the browser handle it normally
+    }
+    if (req.mode === 'navigate') {
+        // pages: always from the network (fresh session/CSRF); offline page only when offline
         ev.respondWith(
-            fetch(ev.request) 
-            .then(function(res) {
-                if(!res || res.status !== 200 || res.type !== 'basic') {
-                  return res;
-                }
-                var reqMethod = ev.request.method
-                if(!reqMethod || reqMethod != 'POST'){
-                    var resToCache = res.clone();
-                    caches.open(PWA_CACHE_NAME)
-                    .then(function(cache) {
-                        cache.put(ev.request, resToCache);
-                    });
-                }
-                return res;
-            })
-            .catch(function(err) {
-                return caches.open(PWA_CACHE_NAME) 
-                .then(function(cache) {
-                    return cache.match(ev.request)
-                    .then(function(res) {
-                        if(res != undefined){
-                            return res
-                        }
-                        return cache.match('/theme_scita/pwa/offline') || Promise.resolve()
-                    })
+            fetch(req).catch(function () {
+                return caches.open(PWA_CACHE_NAME).then(function (cache) {
+                    return cache.match('/theme_scita/pwa/offline');
                 });
             })
         );
-    });
-    </template>
+        return;
+    }
+    // static assets / images: network first, cache as fallback
+    ev.respondWith(
+        fetch(req)
+        .then(function(res) {
+            if (res ? (res.status === 200 ? res.type === 'basic' : false) : false) {
+                const resToCache = res.clone();
+                caches.open(PWA_CACHE_NAME).then(function(cache) {
+                    cache.put(req, resToCache);
+                });
+            }
+            return res;
+        })
+        .catch(function() {
+            return caches.open(PWA_CACHE_NAME).then(function(cache) {
+                return cache.match(req);
+            });
+        })
+    );
+});
+</template>
     <template id="manifest_temp" name="PWA Manifest Template">
         {
-          "name": "<t t-esc="pwa_name" />",
-          "short_name": "<t t-esc="pwa_short_name" />",
-          "start_url": "<t t-esc="start_url" />",
+          "name": "<t t-out="pwa_name" />",
+          "short_name": "<t t-out="pwa_short_name" />",
+          "start_url": "<t t-out="start_url" />",
           "scope": "/",
           "display": "standalone",
-          "background_color": "<t t-esc="background_color" />",
-          "theme_color": "<t t-esc="theme_color" />",
+          "background_color": "<t t-out="background_color" />",
+          "theme_color": "<t t-out="theme_color" />",
           "icons": [{
-                "src": "<t t-esc="image_72" />",
+                "src": "<t t-out="image_72" />",
                 "sizes": "72x72",
                 "type": "image/png"
             }, {
-                "src": "<t t-esc="image_96" />",
+                "src": "<t t-out="image_96" />",
                 "sizes": "96x96",
                 "type": "image/png"
             },{
-                "src": "<t t-esc="image_128" />",
+                "src": "<t t-out="image_128" />",
                 "sizes": "128x128",
                 "type": "image/png"
             }, {
-                "src": "<t t-esc="image_144" />",
+                "src": "<t t-out="image_144" />",
                 "sizes": "144x144",
                 "type": "image/png"
             }, {
-                "src": "<t t-esc="image_152" />",
+                "src": "<t t-out="image_152" />",
                 "sizes": "152x152",
                 "type": "image/png"
             }, {
-                "src": "<t t-esc="image_192" />",
+                "src": "<t t-out="image_192" />",
                 "sizes": "192x192",
                 "type": "image/png"
             }, {
-                "src": "<t t-esc="image_256" />",
+                "src": "<t t-out="image_256" />",
                 "sizes": "256x256",
                 "type": "image/png"
             }, {
-                "src": "<t t-esc="image_512" />",
+                "src": "<t t-out="image_512" />",
                 "sizes": "512x512",
                 "type": "image/png"
             }]
@@ -124,7 +153,7 @@
     <template id="pwa_mobile_device_popup" inherit_id="web.frontend_layout" name='Mobile Device PWA Popup'>
          <xpath expr="//div[@id='wrapwrap']/main" position="inside">
             <t t-set='website_obj' t-value="request.env['website']" />
-            <t t-set='current_website_obj' t-value="website_obj.sudo().get_current_website()" />
+            <t t-set='current_website_obj' t-value="request.env.website.sudo()" />
             <t t-if='current_website_obj.is_app_pwa'>
                 <t t-call-assets="theme_scita.assets_pwa" t-js="true" t-css="false" defer_load="true"/>
             </t>

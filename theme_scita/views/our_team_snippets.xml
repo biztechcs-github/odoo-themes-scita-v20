@@ -30,9 +30,9 @@
                                         <img class="img-responsive" t-att-src="website.image_url(cust_employees, 'image_1920')"/>
                                     </div>
                                     <div class="name">
-                                        <h3 class='sct_title' t-esc="cust_employees.name"/>
+                                        <h3 class='sct_title' t-out="cust_employees.name"/>
                                         <p class='sct_simple_text'>
-                                            <span t-esc="cust_employees.function"/>
+                                            <span t-out="cust_employees.function"/>
                                         </p>
                                     </div>
                                     <div class="follow">
@@ -84,9 +84,9 @@
                             <img class="img-responsive" t-att-src="website.image_url(cust_employees, 'image_1920')"/>
                         </div>
                         <div class="name">
-                            <h3 class='sct_title' t-esc="cust_employees.name"/>
+                            <h3 class='sct_title' t-out="cust_employees.name"/>
                             <h4 class='sct_job_desig'>
-                                <span t-esc="cust_employees.function"/>
+                                <span t-out="cust_employees.function"/>
                             </h4>
                         </div>
                     </div>     
@@ -124,7 +124,7 @@
                             <img class="img-responsive" t-att-src="website.image_url(cust_employees, 'image_1920')"/>
                             <div class="user_content_hover_wrap">
                                 <div class='sct_emp_desc'>
-                                    <p class='sct_simple_text' t-esc="cust_employees.emp_description"/>
+                                    <p class='sct_simple_text' t-out="cust_employees.emp_description"/>
                                 </div>
                                 <div class="sct_hover_follow">
                                     <a t-att-href="'%s'%(cust_employees.emp_social_twitter)" t-if="cust_employees.emp_social_twitter">
@@ -140,9 +140,9 @@
                             </div>
                         </div>
                         <div class="name">
-                            <h3 class='sct_title' t-esc="cust_employees.name"/>
+                            <h3 class='sct_title' t-out="cust_employees.name"/>
                             <h4 class='sct_job_desig sct_blue_line'>
-                                <span t-esc="cust_employees.function"/>
+                                <span t-out="cust_employees.function"/>
                             </h4>
                         </div>
                     </div>     

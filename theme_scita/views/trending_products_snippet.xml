@@ -34,17 +34,17 @@
                             <div class="title-block ">
                                 <h2 class="section-title style1">
                                      <t t-if="config and config.name">
-                                        <t t-esc="config.name"/>
+                                        <t t-out="config.name"/>
                                     </t>
                                 </h2>
                             </div>
                             <div class="trending_prod_inner d-flex flex-wrap justify-content-between">
                                 <t t-set="bg_url">
                                     <t t-if="config and config.image">
-                                        <t t-esc="'/web/image/%s/%s/image' % (config._name, config.id)"/>
+                                        <t t-out="'/web/image/%s/%s/image' % (config._name, config.id)"/>
                                     </t>
                                     <t t-else="">
-                                        <t t-esc="'/web/image/theme_scita.sct_trending_product_bg'"/>
+                                        <t t-out="'/web/image/theme_scita.sct_trending_product_bg'"/>
                                     </t>
                                 </t>
                                 <ul id="trending_products_categories" class="nav nav-tabs" t-att-style="'background-image: url(%s);' % bg_url">
@@ -53,14 +53,14 @@
                                         <t t-if="count == 1">
                                             <li class="trend_prod_tab" t-att-data-category-id="trend_product.id">
                                                 <a data-bs-toggle="tab" class="cat_tab show active" href="#multi-collection1-2-1">
-                                                    <span t-esc="trend_product.name"/>
+                                                    <span t-out="trend_product.name"/>
                                                 </a>
                                             </li>
                                         </t>
                                         <t t-else="">
                                             <li class="trend_prod_tab" t-att-data-category-id="trend_product.id">
                                                 <a data-bs-toggle="tab" href="#multi-collection2-2-1" class="cat_tab">
-                                                    <t t-esc="trend_product.name"/>
+                                                    <t t-out="trend_product.name"/>
                                                 </a>
                                             </li>
                                         </t>
@@ -108,10 +108,10 @@
                                                                     <div class="pwd-desc">
                                                                         <div class="pwp-info">
                                                                             <p class="pwpi-title">
-                                                                                <span t-esc="product.name"/>
+                                                                                <span t-out="product.name"/>
                                                                             </p>
                                                                             <div class="ratings">
-                                                                                <div class="pink-box" contenteditable="false" t-if="request.website.viewref('theme_scita.theme_scita_rating').active">
+                                                                                <div class="pink-box" contenteditable="false" t-if="request.env.website.viewref('theme_scita.theme_scita_rating').active">
                                                                                     <t t-set="rating_val" t-value="product.sudo().rating_get_stats().get('avg')"/>
                                                                                     <div class="ratings">
                                                                                         <t t-set="prod_curr_rate" t-value="0"/>
@@ -147,11 +147,11 @@
                                                                                         </bdi>
                                                                                     </del>
                                                                                     <t t-if="True">
-                                                                                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                                                                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-out="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                                                                     </t>
-                                                                                    <span t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                                                                                    <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
-                                                                                    <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+                                                                                    <span t-if="combination_info['price']" t-out="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                                                    <span itemprop="price" style="display:none;" t-out="combination_info['price']" />
+                                                                                    <span itemprop="priceCurrency" style="display:none;" t-out="website.currency_id.name" />
                                                                                 </b>
                                                                             </p>
                                                                             <div class="js_main_product">
@@ -221,7 +221,7 @@
                                                                         <div class="sct-hover-info product_price ajax_cart_template">
                                                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                                                                 <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden"/>
-                                                                                <!-- <t t-if="request.website.viewref('website_sale.products_add_to_cart').active and product.product_variant_ids"> -->
+                                                                                <!-- <t t-if="request.env.website.viewref('website_sale.products_add_to_cart').active and product.product_variant_ids"> -->
                                                                                     <button class="button btn btn-cart a-submit  js_add_cart cart_view_sct_btn" t-att-data-id="product.id" t-att-data-template-id="product.id">
                                                                                         <span class="lni lni-cart-1 cart_icon"></span>
                                                                                         <span class="add_to_cart_text">Add to cart</span>
@@ -230,12 +230,12 @@
                                                                                 <button type="button" role="button" class="btn scita_cstm_btn quick_view_sct_btn qbtn" title="Quick View" t-att-data-id="product.id">
                                                                                     <span class="lni lni-eye"/>
                                                                                 </button>
-                                                                                <t t-if="request.website.viewref('website_sale_comparison.add_to_compare').active and product.product_variant_ids">
+                                                                                <t t-if="request.env.website.viewref('website_sale.add_to_compare').active and product.product_variant_ids">
                                                                                     <a class="btn btn-xs o_add_compare" role="button" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="scita_comparelist">
                                                                                         <span class="fa fa-exchange"></span>
                                                                                     </a>
                                                                                 </t>
-                                                                                <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active and product.product_variant_ids">
+                                                                                <t t-if="request.env.website.viewref('website_sale.add_to_wishlist').active and product.product_variant_ids">
                                                                                     <t t-set="in_wish"
                                                                                     t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
                                                                                     <a class="btn btn-default btn-xs o_add_wishlist" role="button"

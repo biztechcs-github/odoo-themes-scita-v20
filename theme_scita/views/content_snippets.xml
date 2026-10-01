@@ -85,8 +85,7 @@
                     </div>
                     <div class='col-md-7  col-lg-8  sct_according_div'>
                         <div class="sct_base_class ps-ps-md-3 ps-lg-5">
-                            <t t-call="website.s_accordion">
-                                <t t-set="extra_classes" t-valuef="accordion-flush"/>
+                            <t t-call="website.s_accordion" extra_classes.f="accordion-flush">
                             </t>
                         </div>
                     </div>

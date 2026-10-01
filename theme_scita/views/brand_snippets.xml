@@ -27,7 +27,7 @@
                             Brands
                         </h2>
                         <h2 class="section-title" t-if="slider_header">
-                            <t t-esc="slider_header.name"/>
+                            <t t-out="slider_header.name"/>
                         </h2>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                             Brands
                         </h2>
                         <h2 class="section-title" t-if="slider_header">
-                            <t t-esc="slider_header.name"/>
+                            <t t-out="slider_header.name"/>
                         </h2>
                       
                     </div>

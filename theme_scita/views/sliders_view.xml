@@ -241,7 +241,7 @@
             <form string="Product Brands">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="btn oe_stat_button" icon="fa-cubes" name="%(action_open_brand_products)d" type="action">
+                        <button class="btn oe_stat_button" icon="deployed_code" name="%(action_open_brand_products)d" type="action">
                             <field name="products_count" string="Products" widget="statinfo"/>
                         </button>
                     </div>

@@ -37,31 +37,59 @@
             <attribute name="class">col-md-7</attribute>
         </xpath> -->
     </template>
-    <template id="theme_scita_product_details_terms_and_share" inherit_id="website_sale.product_terms_and_conditions" name="Product Details Terms and Share">
+    <!-- Odoo 20 removed website_sale.product_terms_and_conditions; Scita keeps its own copy -->
+    <template id="product_terms_and_conditions" name="Terms and Conditions">
+        <small class="text-muted mb-0">
+            <a href="/terms" class="o_translate_inline text-muted"><u>Terms and Conditions</u></a><br/>
+            30-day money-back guarantee<br/>
+            Shipping: 2-3 Business Days
+        </small>
+    </template>
+    <template id="product_terms_and_conditions_hook" inherit_id="website_sale.product" name="Scita Product Terms and Conditions Hook">
+        <xpath expr="//div[hasclass('o_wsale_product_details_content_section_cta')]" position="inside">
+            <t t-if="is_view_active('theme_scita.product_terms_and_conditions')" t-call="theme_scita.product_terms_and_conditions"/>
+        </xpath>
+    </template>
+    <!-- Never in effect: the same id was defined again in request_quote_custom_templates.xml and
+         hide_price_configurations.xml, which load later and replaced it (also in 19). Those copies
+         only added the Request Quote pop-up, now added once in website.layout, so this one is kept
+         disabled to leave the product page unchanged.
+    <template id="theme_scita_product_details_terms_and_share" inherit_id="theme_scita.product_terms_and_conditions" name="Product Details Terms and Share">
         <xpath expr="//small[hasclass('text-muted','mb-0')]" position="before">
             <t t-if="product.product_brand_id">
                 <img class="brand_img" style="max-height: 50px;" t-att-src="website.image_url(product.product_brand_id, 'image')"/>
             </t>
         </xpath>
-        <!-- Add id attribute to small tag -->
+        <!~~ Add id attribute to small tag ~~>
         <xpath expr="//small[hasclass('text-muted','mb-0')]" position="attributes">
             <attribute name="id">o_product_terms_and_share</attribute>
         </xpath>
 
-        <!-- <xpath expr="//div[@id='o_product_terms_and_share']" position='attributes'>
+        <!~~ <xpath expr="//div[@id='o_product_terms_and_share']" position='attributes'>
 <attribute name='class'>d-flex justify-content-between flex-column flex-md-row mb-3</attribute>
-</xpath> -->
+</xpath> ~~>
     </template>
+    -->
     <template id="theme_scita_product_details_add_to_cart" inherit_id="website_sale.cta_wrapper" name="Product Details Add to Cart">
-        <xpath expr="//a[@id='add_to_cart']" position="attributes">
-            <attribute name="class">btn btn-lg js_check_product a-submit</attribute>
-        </xpath>
-        <xpath expr="//a[@id='add_to_cart']" position="replace">
+        <!-- Odoo 20: add to cart is button[name=add_to_cart] driven by core JS; keep Scita's wrapper and look around it -->
+        <xpath expr="//button[@name='add_to_cart'][@data-action='add_to_cart']" position="replace">
             <div class='sct-main-price-description'>
-                <div class='sct-price-option' t-if="not combination_info['prevent_zero_price_sale'] and (not request.env.user._is_public() and website.add_to_cart or not website.add_to_cart)">
+                <div class='sct-price-option' t-if="not combination_info.get('prevent_sale') and (not request.env.user._is_public() and website.add_to_cart or not website.add_to_cart)">
                     <div class="sct-add-to-cart-mob">
-                        <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block" href="#">
-                            <i class="lni lni-cart-1"></i> Add to Cart</a>
+                        <button
+                            name="add_to_cart"
+                            type="button"
+                            id="add_to_cart"
+                            class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block"
+                            data-action="add_to_cart"
+                            data-animation-selector=".o_wsale_product_images"
+                            t-att-data-product-category-id="product.public_categ_ids.ids and product.public_categ_ids.ids[0]"
+                            t-att-data-product-id="product_variant.id"
+                            t-att-data-product-template-id="product.id"
+                            t-att-data-product-type="product.type"
+                            t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                        >
+                            <i class="lni lni-cart-1"></i> Add to Cart</button>
                     </div>
                 </div>
             </div>
@@ -89,23 +117,23 @@
                 <h4 class='sct_deliever_msg'>
                     <strong class="deliver">
                         <i t-if="res_company.delivery_icon" t-att-class="res_company.delivery_icon"></i>
-                        <t t-esc="res_company.delivery_text"/>
+                        <t t-out="res_company.delivery_text"/>
                     </strong>
                 </h4>
                 <div class='sct_input_btn' t-if="res_company">
                     <input type="text" class="form-control value-zip" name="zipcode" placeholder="Zip Code"/>
                     <a role="button" id="check" class="btn checker">
-                        <t t-esc="res_company.delivery_btn_name"/>
+                        <t t-out="res_company.delivery_btn_name"/>
                     </a>
                     <div class="get_status">
                         <span id='fail_msg' t-if="res_company.delivery_fail_msg" class='o_hidden'>
-                            <t t-esc="res_company.delivery_fail_msg" />
+                            <t t-out="res_company.delivery_fail_msg" />
                         </span>
                         <span id='success_msg' t-if="res_company.delivery_success_msg" class='o_hidden'>
-                            <t t-esc="res_company.delivery_success_msg"/>
+                            <t t-out="res_company.delivery_success_msg"/>
                         </span>
                         <span id='blank_msg' t-if="res_company.delivery_blank_msg" class='o_hidden'>
-                            <t t-esc="res_company.delivery_blank_msg"/>
+                            <t t-out="res_company.delivery_blank_msg"/>
                         </span>
                     </div>
                 </div>
@@ -128,10 +156,10 @@
                             <table class='table table-striped table-sm table-hover'>
                                 <tr t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product[field.name]'>
                                     <td class='sct_extra_label'>
-                                        <t t-esc='field.label'/>
+                                        <t t-out='field.label'/>
                                     </td>
                                     <t t-if='field.field_id.ttype != "binary"'>
-                                        <td class='sct_extra_value' t-esc='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
+                                        <td class='sct_extra_value' t-out='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
                                     </t>
                                     <t t-else=''>
                                         <td class='sct_extra_value'>
@@ -162,17 +190,21 @@
             <attribute name="class">btn a-submit</attribute>
             <attribute name="t-if">not request.env.user._is_public() and website.add_to_cart or not website.add_to_cart</attribute>
         </xpath>
-        <xpath expr="//i[hasclass('fa','fa-shopping-cart')]" position="after">
+        <!-- Odoo 20 ships its own label; swap it for Scita's -->
+        <xpath expr="//button[@name='add_to_cart']/span[hasclass('o_label')]" position="replace">
             <span class="add_to_cart_text">Add to cart</span>
         </xpath>
-        <xpath expr="//i[hasclass('fa','fa-shopping-cart')]" position="attributes">
+        <xpath expr="//button[@name='add_to_cart']/i" position="attributes">
             <attribute name='class'>lni lni-cart-1</attribute>
         </xpath>
     </template>
+    <!-- Scita's wishlist / compare buttons are the default (the theme disables Odoo's on install,
+         see theme_custom.py). When Odoo's own button is enabled from the editor ("Actions"), it
+         takes over and Scita's matching button is not rendered, so the two never show together. -->
     <template id="product_add_to_compare" inherit_id="theme_scita.theme_scita_product_details_add_to_cart" name="Add to comparison in product page">
         <xpath expr="//div[hasclass('sct-add-to-cart-mob')]" position="after">
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-            <a aria-label="Compare" class="btn btn-xs o_add_compare o_add_compare_dyn" data-action="o_comparelist" role="button" t-att-data-product-product-id="product_variant.id" t-if="product_variant" title="Compare" type="button">
+            <a aria-label="Compare" class="btn btn-xs o_add_compare o_add_compare_dyn" data-action="o_comparelist" role="button" t-att-data-product-product-id="product_variant.id" t-if="product_variant and not is_view_active('website_sale.product_add_to_compare')" title="Compare" type="button">
                 <span class="fa fa-exchange"/>
                 <span class='sct_icon_text'>Compare</span>
             </a>
@@ -182,7 +214,7 @@
         <xpath expr="//div[hasclass('sct-add-to-cart-mob')]" position="after">
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
             <t t-set="in_wish" t-value="product_variant and product_variant._is_in_wishlist()"/>
-            <button t-if="product_variant and product.type != 'combo'" type="button" role="button" class="btn btn-link px-0 pe-3 o_add_wishlist_dyn" t-att-disabled="in_wish" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant.id" data-action="o_wishlist" title="Add to wishlist">
+            <button t-if="product_variant and product.type != 'combo' and not is_view_active('website_sale.product_add_to_wishlist')" type="button" role="button" class="btn btn-link px-0 pe-3 o_add_wishlist_dyn" t-att-disabled="in_wish" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant.id" data-action="o_wishlist" title="Add to wishlist">
                 <i class="lni lni-heart me-2" role="img" aria-label="Add to wishlist"/>
 Add to wishlist
             </button>
@@ -263,8 +295,7 @@ Add to wishlist
                                                         <span>Tags</span>
                                                     </td>
                                                     <td class="w-75 text-muted">
-                                                        <t t-call="website_sale.product_tags">
-                                                            <t t-set="all_product_tags" t-value="product.product_variant_ids.all_product_tag_ids"/>
+                                                        <t t-call="website_sale.product_tags" all_product_tags="product.product_variant_ids.all_product_tag_ids">
                                                         </t>
                                                     </td>
                                                 </tr>
@@ -301,7 +332,7 @@ Buy now
 </xpath>
 </template> -->
     <!-- <template id="scita_snippet_options_wishlist" inherit_id="website_sale_wishlist.snippet_options" name="Scita Wishlist Snippet Options">
-<xpath expr="//we-button[@data-customize-website-views='website_sale_wishlist.product_add_to_wishlist']" position="replace">
+<xpath expr="//we-button[@data-customize-website-views='website_sale.product_add_to_wishlist']" position="replace">
 <we-button title="Wishlist" data-customize-website-views="theme_scita.scita_product_add_to_wishlist" data-no-preview="true" data-reload="/">
 <i class="fa fa-fw fa-heart"/>
 Wishlist
@@ -309,18 +340,18 @@ Wishlist
 </xpath>
 </template>
 <template id="scita_snippet_options_comparison" inherit_id="website_sale_comparison.snippet_options" name="Scita Compare Snippet Options">
-<xpath expr="//we-button[@data-customize-website-views='website_sale_comparison.product_add_to_compare']" position="replace">
+<xpath expr="//we-button[@data-customize-website-views='website_sale.product_add_to_compare']" position="replace">
 <we-button title="Compare" class="fa fa-fw fa-exchange" data-customize-website-views="theme_scita.product_add_to_compare" data-no-preview="true" data-reload="/"/>
 </xpath>
-<xpath expr="//we-button[@data-customize-website-views='website_sale_comparison.product_attributes_body']" position="after">
+<xpath expr="//we-button[@data-customize-website-views='website_sale.product_attributes_body']" position="after">
 <we-button data-customize-website-views="theme_scita.scita_product_description_table">Inside Tab</we-button>
 </xpath>
 </template> -->
     <template id="scita_tax_indication" inherit_id="website_sale.tax_indication">
-        <xpath expr='//span' position='attributes'>
+        <xpath expr='//small[@t-if]' position='attributes'>
             <attribute name='class'>sct_vat</attribute>
         </xpath>
-        <xpath expr='//span[@t-else=""]' position='attributes'>
+        <xpath expr='//small[@t-else=""]' position='attributes'>
             <attribute name='class'>sct_vat</attribute>
         </xpath>
     </template>
@@ -358,7 +389,7 @@ Wishlist
             </section>
             <h1 class='sct-prod-name' itemprop="name" t-field="product.name">Product Name</h1>
             <div class='sct-sku-display-div'>
-                <p class='sct-sku-display'>SKU: <span class='sct-default-code' t-esc='product.default_code'/>
+                <p class='sct-sku-display'>SKU: <span class='sct-default-code' t-out='product.default_code'/>
                 </p>
             </div>
             <!-- <div class='sct-main-description-div' t-if="product.description_sale">
@@ -370,14 +401,14 @@ Wishlist
         <xpath expr="//div[hasclass('sct-sku-display-div')]" position="replace">
             <div class='sct-sku-display-div'>
                 <t t-if='product.default_code'>
-                    <p class='sct-sku-display'>SKU: <span class='sct-default-code' t-esc='product.default_code'/>
+                    <p class='sct-sku-display'>SKU: <span class='sct-default-code' t-out='product.default_code'/>
                     </p>
                 </t>
             </div>
         </xpath>
     </template>
     <template id="hide_product_breadcrumb" inherit_id="website_sale.product" name="Hide Breadcrumb on Product Page">
-        <xpath expr="//ol[@class='o_wsale_breadcrumb breadcrumb m-0 p-0']" position="attributes">
+        <xpath expr="//ol[hasclass('o_wsale_breadcrumb')]" position="attributes">
             <attribute name="t-attf-style">display:none;</attribute>
         </xpath>
     </template>
@@ -390,7 +421,7 @@ Wishlist
     <!-- Hide base Odoo 19 Customer Reviews section -->
     <template id="hide_base_review_section" inherit_id="website_sale.product_comment" name="Hide Base Review Section (Scita)" priority="99">
         <!-- Remove the entire base Customer Reviews section -->
-        <xpath expr="//div[@class='o_shop_discussion_rating border-top']" position="replace"/>
+        <xpath expr="//div[hasclass('o_shop_discussion_rating')]" position="replace"/>
     </template>
 
     <!-- Add custom Reviews tab after Description tab -->
@@ -400,9 +431,10 @@ Wishlist
             <li role="presentation" t-if="is_view_active('website_sale.product_comment')">
                 <a aria-controls="reviews" data-bs-toggle="tab" href="#reviews" role="tab">
                     Reviews
-                    <t t-if="product.website_message_ids">
+                    <!-- Odoo 20 dropped website_message_ids; use the review count Odoo shows next to the stars -->
+                    <t t-if="product.rating_count">
                         <span class="review_label">
-                            (<t t-esc="len(product.website_message_ids)"/>)
+                            (<t t-out="product.rating_count"/>)
                         </span>
                     </t>
                 </a>
@@ -414,11 +446,7 @@ Wishlist
                 <div class="tab-pane" id="reviews" role="tabpanel">
                     <div class="container">
                         <!-- <h3 class="mb-3">Customer Reviews</h3> -->
-                        <t t-call="portal.message_thread">
-                            <t t-set="object" t-value="product"/>
-                            <t t-set="display_rating" t-value="True"/>
-                            <t t-set="message_per_page" t-value="5"/>
-                            <t t-set="two_columns" t-value="True"/>
+                        <t t-call="portal.message_thread" object="product" display_rating="True" message_per_page="5" two_columns="True">
                         </t>
                     </div>
                 </div>
@@ -439,7 +467,7 @@ Wishlist
         </xpath>
     </template>
         <template id="scita_tag"
-            inherit_id="website_sale.product_terms_and_conditions"
+            inherit_id="theme_scita.product_terms_and_conditions"
             name="Add Product Tags After Terms  Conditions">
 
         <!-- Target the <small> inside your terms template -->
@@ -452,7 +480,7 @@ Wishlist
                         <t t-foreach="enumerate(product_variant.all_product_tag_ids)" t-as="tag_item">
                             <t t-set="i" t-value="tag_item[0]"/>
                             <t t-set="tag" t-value="tag_item[1]"/>
-                            <t t-esc="tag.name"/>
+                            <t t-out="tag.name"/>
                             <t t-if="i + 1 &lt; tag_len">, </t>
                         </t>
                     </p>
@@ -464,9 +492,9 @@ Wishlist
             inherit_id="website_sale.product"
             name="Remove Empty Price Section in Product Page">
 
-    <xpath expr="//div[contains(@class, 'o_wsale_product_details_content_section_price')]" position="replace"/>
+    <xpath expr="//div[hasclass('o_wsale_product_details_content_section_price')]" position="replace"/>
     </template>
-    <template id="remove_empty_price_section" inherit_id="website_sale.product_terms_and_conditions">
+    <template id="remove_empty_price_section" inherit_id="theme_scita.product_terms_and_conditions">
         <xpath expr="//small[hasclass('text-muted','mb-0')]" position="attributes">
             <attribute name="id">o_product_terms_and_share</attribute>
         </xpath>

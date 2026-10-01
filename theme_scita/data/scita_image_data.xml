@@ -415,12 +415,6 @@
             <field name="type">url</field>
             <field name="url">/theme_scita/static/src/img/it/portfolio-small-img4.jpg</field>
         </record>
-        <record id="theme_scita.sct_protflio_snippet_1_small_image_4" model="ir.attachment">
-            <field name="public" eval="True"/>
-            <field name="name">sct_protflio_snippet_1_small_image_4.jpg</field>
-            <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/it/portfolio-small-img4.jpg</field>
-        </record>
         <record id="theme_scita.sct_adveertis_snippet_3_img_1" model="ir.attachment">
             <field name="public" eval="True"/>
             <field name="name">sct_adveertis_snippet_3_img_1.jpg</field>
@@ -1428,12 +1422,6 @@
             <field name="name">sct_corporate_call_3.jpg</field>
             <field name="type">url</field>
             <field name="url">/theme_scita/static/src/img/scita_demo_img/corporate/call-3.jpg</field>
-        </record>
-        <record id="theme_scita.sct_hosting_banner_2" model="ir.attachment">
-            <field name="public" eval="True"/>
-            <field name="name">sct_hosting_banner_2.jpg</field>
-            <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/scita_demo_img/hosting-n-server/banner-2.jpg</field>
         </record>
         <record id="theme_scita.sct_hosting_banner_2" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -3121,12 +3109,6 @@
             <field name="type">url</field>
             <field name="url">/theme_scita/static/src/img/scita_demo_img/home_delivery/f-1.jpg</field>
         </record>
-        <record id="theme_scita.sct_home_delivery_f_1" model="ir.attachment">
-            <field name="public" eval="True"/>
-            <field name="name">sct_home_delivery_f_1.jpg</field>
-            <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/scita_demo_img/home_delivery/f-1.jpg</field>
-        </record>
         <record id="theme_scita.sct_home_delivery_f_2" model="ir.attachment">
             <field name="public" eval="True"/>
             <field name="name">sct_home_delivery_f_2.jpg</field>
@@ -3385,12 +3367,6 @@
             <field name="name">sct_discount_img.jpg</field>
             <field name="type">url</field>
             <field name="url">/theme_scita/static/src/img/grocery/discount_img.svg</field>
-        </record>
-        <record id="theme_scita.sct_menu_burger" model="ir.attachment">
-            <field name="public" eval="True"/>
-            <field name="name">sct_menu_burger</field>
-            <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/grocery/menu_burger.svg</field>
         </record>
         <record id="theme_scita.sct_menu_burger" model="ir.attachment">
             <field name="public" eval="True"/>

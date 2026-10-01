@@ -32,7 +32,10 @@ class BlogSlider(models.Model):
     website_id = fields.Many2one(
         'website',
         string="Website",
-        default=lambda self: self.env['website'].get_current_website(),
+        # env.website is empty outside a website request (e.g. the backend form);
+        # fall back like Odoo 19's get_current_website() did
+        default=lambda self: self.env.website or self.env['website'].search(
+            [('company_id', 'in', [self.env.company.id, False])], limit=1),
         required=True
     )
 

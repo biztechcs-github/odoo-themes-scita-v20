@@ -2,6 +2,10 @@
 <odoo>
   <template id="brand_template" name="Brand Listing Page">
     <t t-call="website.layout">
+      <!-- #wrap + oe_structure: drop areas for the website editor (without them every
+           block was disabled on this page) -->
+      <div id="wrap">
+      <div class="oe_structure oe_empty" id="oe_structure_scita_brands_1"/>
       <div class="container py-4">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="mb-0">Our Brands</h2>
@@ -18,7 +22,7 @@
                       t-attf-class="btn btn-outline-#{'primary' if is_active else 'secondary'}"
                       t-att-disabled="not is_active and 'disabled' or False"
                       t-att-data-letter="letter.lower()">
-                  <span t-esc="letter" class="fw-bold"/>
+                  <span t-out="letter" class="fw-bold"/>
               </button>
           </t>
         </div>
@@ -34,10 +38,10 @@
                     <div class="card text-center h-100">
                         <img t-att-src="brand['image_url']" alt="" width="40"/>
                         <div class="card-body">
-                            <strong><t t-esc="brand['name']"/></strong><br/>
+                            <strong><t t-out="brand['name']"/></strong><br/>
                             <t t-foreach="product_count" t-as="item">
                                 <t t-if="item['brand_id'] == brand['id']">
-                                    <t t-esc="item['count']"/> products
+                                    <t t-out="item['count']"/> products
                                 </t>
                             </t>
                         </div>
@@ -46,6 +50,8 @@
             </div>
         </t>
         </div>
+      </div>
+      <div class="oe_structure oe_empty" id="oe_structure_scita_brands_2"/>
       </div>
     </t>
   </template>

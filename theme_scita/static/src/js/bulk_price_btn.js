@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import publicWidget from '@web/legacy/js/public/public_widget';
+import publicWidget from '@theme_scita/js/compat/public_widget';
 import { patch } from '@web/core/utils/patch';
-import { WebsiteSale } from '@website_sale/interactions/website_sale';
+import { AddToCart } from '@website_sale/interactions/add_to_cart';
+import { ProductPage } from '@website_sale/interactions/product_page';
 
 publicWidget.registry.BulkPriceButtonWidget = publicWidget.Widget.extend({
     selector: '.js_product',
@@ -42,24 +43,21 @@ publicWidget.registry.BulkPriceButtonWidget = publicWidget.Widget.extend({
     },
 });
 
-patch(WebsiteSale.prototype, {
-    // Inject the bulk quantity into rootProduct so the configurator dialog
-    // receives the correct qty and our server-side fix can apply the bulk price.
-    // Without this, input[name="add_qty"] may not exist on the page, causing
-    // quantity to default to 1 and the dialog to show the regular price.
-    _updateRootProduct(form) {
-        super._updateRootProduct(form);
-        if (!form) return;
-        const jsProduct = form.closest('.js_product') ?? form;
-        if (!jsProduct) return;
-        const activeQty = parseInt(jsProduct.dataset.bulkActiveQty) || 0;
-        if (activeQty >= 2) {
-            this.rootProduct = { ...this.rootProduct, quantity: activeQty };
-        }
+// Odoo 20: the quantity sent to the cart comes from AddToCart, so the active
+// bulk quantity is injected there (19 did this in WebsiteSale._updateRootProduct).
+patch(AddToCart.prototype, {
+    _getOptionalParams(el) {
+        const params = super._getOptionalParams(el);
+        const jsProduct = el?.closest?.('.js_product') ?? el;
+        const activeQty = parseInt(jsProduct?.dataset?.bulkActiveQty) || 0;
+        return activeQty >= 2 ? { ...params, quantity: activeQty } : params;
     },
+});
 
-    _onChangeCombination(ev, parent, combination) {
-        super._onChangeCombination(...arguments);
+// Odoo 20: WebsiteSale became ProductPage and _onChangeCombination is async.
+patch(ProductPage.prototype, {
+    async _onChangeCombination(ev, parent, combination) {
+        await super._onChangeCombination(...arguments);
 
         const bulkSection = parent.querySelector('#o_bulk_price_section');
         if (!bulkSection) return;
