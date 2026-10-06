@@ -13,10 +13,16 @@
                 or (website.login_see_price and request.env.user._is_public())
             )">
                 <!-- Case 1: User not logged in and login_see_price is enabled -->
+                <!-- icon + .o_label like Odoo's Add to Cart: Odoo hides the label on narrow
+                     cards (phones), where the text wrapped and stretched the row -->
                 <a t-if="website.login_see_price and request.env.user._is_public()"
                    t-attf-href="/web/login?redirect={{ request.httprequest.path }}"
-                   class="o_wsale_product_btn_primary btn btn-outline-primary login-price-btn">
-                    Login to see price
+                   class="o_wsale_product_btn_primary btn btn-outline-primary login-price-btn"
+                   title="Login to see price" aria-label="Login to see price">
+                    <span class="d-inline-flex align-items-baseline">
+                        <i class="fa fa-fw fa-sign-in" role="presentation"/>
+                        <span class="o_label small ms-1">Login to see price</span>
+                    </span>
                 </a>
                 <!-- Case 2: Price hidden (Request Quote) -->
                 <a t-else=""
@@ -26,8 +32,12 @@
                    data-bs-target="#cfp_pop_up"
                    href="#"
                    t-att-data-product_id="wish.product_id.id"
-                   class="o_wsale_product_btn_primary btn btn-primary">
-                    Request Quote
+                   class="o_wsale_product_btn_primary btn btn-primary"
+                   title="Request Quote" aria-label="Request Quote">
+                    <span class="d-inline-flex align-items-baseline">
+                        <i class="oi oi-fw o_not-animable" data-icon="mail" role="presentation"/>
+                        <span class="o_label small ms-1">Request Quote</span>
+                    </span>
                 </a>
             </t>
         </xpath>
@@ -88,8 +98,12 @@
                         data-bs-target="#cfp_pop_up"
                         t-att-data-product_id="product.id"
                         href="#"
-                        class="btn btn-primary mt-2">
-                            Request Quote
+                        class="btn btn-primary mt-2"
+                        title="Request Quote" aria-label="Request Quote">
+                            <!-- icon only shown where the card is too narrow for the label
+                                 (hover style 5 next to compare / wishlist / quick view) -->
+                            <i class="oi o_not-animable o_sct_rq_icon d-none" data-icon="mail" role="presentation"/>
+                            <span class="o_sct_rq_label">Request Quote</span>
                         </a>
                     </div>
                 </t>
@@ -178,6 +192,17 @@
         <!-- Odoo 20: the button carries t-else, so hide it with a class instead of t-if -->
         <xpath expr="//button[@name='add_to_cart']" position="attributes">
             <attribute name="t-attf-class">btn btn-primary {{'' if (website and website.website_show_price and not product.website_hide_price and not (website.login_see_price and request.env.user._is_public())) else 'd-none'}}</attribute>
+        </xpath>
+
+        <!-- 🧱 The sticky mini overview at the top of the page shows prices too -->
+        <xpath expr="//div[@id='miniStickyComparison']//div[@t-if=&quot;not combination_info['hide_price']&quot;]" position="attributes">
+            <attribute name="t-if">
+                not combination_info['hide_price']
+                and website
+                and website.website_show_price
+                and not product.website_hide_price
+                and not (website.login_see_price and request.env.user._is_public())
+            </attribute>
         </xpath>
 
     </template>
@@ -483,6 +508,21 @@
         </xpath>
     </template>
 
+
+    <!-- 🧩 Product page: no quantity selector for request-quote / login-to-see-price products.
+         Hidden, not removed (the variant / price scripts read input[name=add_qty]); an inline
+         style because the box carries Bootstrap's d-inline-flex (!important). -->
+    <template id="hide_PDP_quantity_template" inherit_id="website_sale.product_quantity">
+        <xpath expr="//div[contains(@t-attf-class, 'css_quantity')]" position="attributes">
+            <attribute name="t-att-style">
+                'display: none !important;' if website and (
+                    not website.website_show_price
+                    or product.website_hide_price
+                    or (website.login_see_price and request.env.user._is_public())
+                ) else None
+            </attribute>
+        </xpath>
+    </template>
 
     <!-- 🧩 Hide/Show Price on Product Page -->
     <template id="hide_PDP_price_template" inherit_id="website_sale.product_price">

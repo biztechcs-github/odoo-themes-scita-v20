@@ -35,6 +35,22 @@
     }
 }
 
+// Scita product cards below 992px (from 992px the action icons are a hover overlay): the
+// quick view / wishlist row follows the rating, so in a card without a price line (request
+// quote, login to see price) or with a shorter one it sat higher than in the other cards,
+// leaving a gap above the Request Quote / ADD bar. Keep the row at the bottom of the info
+// block, right above the bar and level across the slider.
+@media (max-width: 991.98px) {
+    .cs-product .pwd-desc > .pwp-info:has(> .sct-hover-info) {
+        display: flex;
+        flex-direction: column;
+
+        > .sct-hover-info {
+            margin-top: auto;
+        }
+    }
+}
+
 // Hover action buttons (quick view / compare / wishlist): their size came from padding around
 // icons of different widths (Lineicons vs FontAwesome), so the column looked misaligned.
 // Give them one fixed square size with the icon centred. Not the cart / login
@@ -80,11 +96,20 @@
         justify-content: center;
         padding-left: 8px;
         padding-right: 8px;
-        white-space: nowrap;
+        white-space: nowrap !important; // the Request Quote / login links: Scita's `a` rule wraps
         overflow: hidden;
         // on phones Odoo renders it as a square icon button; keep it a normal bar
         aspect-ratio: auto;
         height: auto;
+        // the Request Quote link: Scita's global #request_for_quote_button rule (!important)
+        // adds a 10px margin and smaller padding / font, which made its row taller and sit
+        // higher than the others; the id is needed to outrank it
+        &#request_for_quote_button {
+            margin: 0 !important;
+            padding: 6px 8px !important;
+            font-size: 16px !important;
+            line-height: 24px !important;
+        }
 
         .o_label {
             overflow: hidden;
@@ -114,9 +139,18 @@
 // (content: "favorite_f"); Scita's buttons use FontAwesome / LineIcons,
 // which printed the ligature name as text. Use their own heart glyphs
 // again, as in 19.
-.o_add_wishlist_dyn.o_add_wishlist_dyn.disabled {
-    i.fa::before { content: "\f004"; }
-    i.lni.lni-heart::before { content: "\eb13"; }
+// A wishlisted product is rendered with the `disabled` attribute (product page, quick view)
+// or gets the `disabled` class when added; both show a filled heart in Odoo's wishlist
+// colour, as the product cards do (!important: the quick view's own grey `.disabled` rule).
+.o_add_wishlist_dyn.o_add_wishlist_dyn:is([disabled], .disabled) {
+    opacity: 1;
+
+    i.fa::before,
+    i.lni.lni-heart::before {
+        content: "\f004";
+        font-family: FontAwesome;
+        color: var(--addWishlist-color-active, #ff3d3a) !important;
+    }
 }
 
 // Request Quote button: the shop hover styles give it Scita's look (filled primary,
@@ -195,7 +229,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     border: 1px solid transparent;
     border-radius: 50px;
     background-color: $secondary;
-    color: $light-color;
+    color: color-contrast($secondary);
     font-size: 18px !important;
     line-height: 21px;
     white-space: nowrap !important;
@@ -203,7 +237,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     &:hover, &:focus {
         background-color: transparent;
         border-color: $secondary;
-        color: $secondary;
+        color: if(contrast-ratio($secondary, $white) < 4.5, shade-color($secondary, 60%), $secondary);
     }
     @media (max-width: 767px) {
         height: auto;
@@ -235,6 +269,23 @@ a.btn.request_for_quote_button#request_for_quote_button {
     }
 }
 
+// Shop cards: Odoo 20's wishlist button draws a Material Symbols heart, much heavier than
+// Scita's Lineicons quick-view eye beside it. Use the Lineicons outline heart, and the same
+// filled red heart as the snippets once the product is in the wishlist (also on hover, where
+// Odoo previews its filled heart). !important: Odoo's .o_wsale_products_opt_has_wishlist rules.
+.o_wsale_product_btn .o_add_wishlist .oi[data-icon]::before {
+    font-family: 'Lineicons' !important;
+    content: "\eb13" !important;
+    font-size: 20px;
+    font-weight: normal;
+}
+.o_wsale_product_btn .o_add_wishlist:is([disabled], .disabled) .oi[data-icon]::before {
+    font-family: FontAwesome !important;
+    content: "\f004" !important;
+    font-size: 18px; // FontAwesome's heart is drawn larger than Lineicons' at the same size
+    color: var(--addWishlist-color-active, #ff3d3a) !important;
+}
+
 // Scita mega menus inside a side menu (Odoo's hamburger / sidebar headers - marked
 // .o_mega_menu_is_offcanvas - and mobile menus): Bootstrap
 // positioned them absolute at the bottom of the panel, off-screen, so clicking seemed to do
@@ -253,12 +304,14 @@ a.btn.request_for_quote_button#request_for_quote_button {
     background: rgba($primary, 0.03);
 
     .row {
-        margin-left: 0;
-        margin-right: 0;
+        margin-left: 0 !important; // a Scita rule keeps the -15px gutter margin
+        margin-right: 0 !important;
     }
+    // !important: Scita's mega-menu grid (e.g. 6 x col-sm-2 category cards) is more specific
     [class*="col-"] {
-        flex: 0 0 100%;
-        max-width: 100%;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
@@ -267,19 +320,34 @@ a.btn.request_for_quote_button#request_for_quote_button {
 // expanded - fine for small dropdowns, not for Scita's mega menus (sliders, images,
 // product cards). Keep them looking like the other "+" entries (one line, no grey) and
 // let a click open the mega menu in place, columns stacked.
-.navbar .o_extra_menu_items > .show > li.li-mega-menu {
+header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
+    // States spelled out with !important: Scita's header rules make dropdown items white
+    // on hover / focus / active (!important) for a dark background, which left the label
+    // white on white once the toggle got Odoo's .show or kept the focus from a click.
+    // `header` + the states below outrank those rules (header_styles.scss is loaded later).
     > a.dropdown-toggle {
-        background-color: transparent;
+        &, &:focus, &:focus-visible, &:active, &.active {
+            background-color: transparent !important;
+            color: $gray-900 !important;
+        }
         pointer-events: auto;
         white-space: nowrap !important;
+
+        &.show, &.show:focus, &.show:active {
+            background-color: rgba($primary, 0.08) !important; // open
+            color: $primary !important;
+        }
+        &:hover, &.show:hover {
+            background-color: #202020 !important; // as the other "+" entries
+            color: #fbfbfb !important;
+        }
     }
     > .dropdown-menu.mega-dropdown-menu {
-        display: none;
+        display: none !important; // ignore any inline display left by scripts
         position: static !important;
         inset: auto !important;
         transform: none !important;
         width: 100% !important;
-        min-width: 280px;
         max-width: 100% !important;
         margin: 0 !important;
         padding: 8px 12px !important;
@@ -288,15 +356,130 @@ a.btn.request_for_quote_button#request_for_quote_button {
         background: rgba($primary, 0.03);
 
         &.show {
-            display: block;
+            display: block !important;
         }
         .row {
-            margin-left: 0;
-            margin-right: 0;
+            margin-left: 0 !important; // a Scita rule keeps the -15px gutter margin
+            margin-right: 0 !important;
         }
         [class*="col-"] {
-            flex: 0 0 100%;
-            max-width: 100%;
+            flex: 0 0 100% !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
     }
+}
+// ...wide enough for their one-line names, and roomier while one of them is open
+.navbar .o_extra_menu_items > .dropdown-menu:has(> li.li-mega-menu) {
+    min-width: max-content;
+}
+.navbar .o_extra_menu_items > .dropdown-menu:has(> li.li-mega-menu > .dropdown-menu.show) {
+    // min-width too: max-content would follow the open menu's banner image / product grid
+    // and stretch the list off-screen, hiding the menu names
+    // !important: Scita header 1 pins this list to 250px with an id selector, which clipped
+    // the open menu's text
+    min-width: 0 !important;
+    width: 320px !important;
+    max-width: calc(100vw - 32px) !important;
+
+    > li.li-mega-menu > .dropdown-menu.show img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+// Compare page on phones: Odoo gives every product column a fixed 270px, so the second
+// product was cut off at the screen edge and the table had to be swiped sideways. Fit two
+// columns to the table's visible width (with 3+ products the rest still swipe). Sized from
+// .oe_website_sale, which holds both the table and the mini sticky header, so their columns
+// stay the same width and scroll in sync. The table's scroll box spans the container plus
+// its gutter (Odoo's negative margin) minus the table's side padding.
+@media (max-width: 767.98px) {
+    .o_wsale_comparison_page .oe_website_sale {
+        container-type: inline-size;
+
+        .o_wsale_compare_table_column {
+            --o-website-sale-comparison-table-column-width: calc((100cqi + var(--gutter-x, 30px) - 2 * var(--o-website-sale-comparison-table-column-padding-x)) / 2);
+        }
+    }
+}
+
+// Compare page on phones with 3+ products: instead of swiping sideways, show products 1-2
+// with all their rows, then products 3-4 below. The table is a list of rows (images, names,
+// one per attribute, tags) each holding one cell per product, and every attribute cell repeats
+// the attribute name. So: make the table a 2-column grid, let the rows' cells flow into it
+// (display: contents) and move the cells of products 3+ after all the others (order).
+// Cells of one row stay level, as in the original table.
+@media (max-width: 767.98px) {
+    .o_wsale_comparison_page #o_comparelist_table:has(> ul:first-child > li:nth-child(3)) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        min-width: 0; // Odoo: max-content, for the sideways scroll
+        padding: 0 var(--o-website-sale-comparison-table-column-padding-x);
+
+        > ul,
+        > div,       // an attribute category: its title + its attribute rows
+        > div > ul {
+            display: contents !important; // the rows carry Bootstrap's d-flex (!important)
+        }
+        li.o_wsale_compare_table_column {
+            width: auto;
+            min-width: 0;
+        }
+        // products 3+ (3rd / 4th cell of every row) go after products 1-2
+        li.o_wsale_compare_table_column:nth-child(n+3) {
+            order: 1;
+        }
+        // category titles span both columns (shown once, above products 1-2)
+        > div > div {
+            grid-column: 1 / -1;
+        }
+        // the rows' own spacing / separators are lost with display: contents; put them on
+        // the cells: names row (pt-3 pb-5), attribute and tags rows (py-3 + a border)
+        > ul:nth-child(2) > li {
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+        }
+        > div > ul > li,
+        > ul:nth-child(n+3) > li {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid $border-color;
+        }
+        // start of products 3-4: a gap and a line above their images
+        > ul:first-child > li:nth-child(n+3) {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid $border-color;
+        }
+    }
+    // the sticky mini overview (shown once the product row scrolls away): 2 + 2 as well,
+    // instead of products 3-4 hidden off to the side
+    .o_wsale_comparison_page .o_wsale_comparison_mini_sticky ul:has(> li:nth-child(3)) {
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+
+        > li.o_wsale_compare_table_column {
+            width: 50%;
+        }
+    }
+}
+
+// "Added to cart" popup: Odoo's container has no z-index, so positioned page content painted
+// over it - on the shop page the product card under it (z-index 1) covered its image and text.
+// Above the page, below the header (1030) and dialogs / modals (1050+), like Odoo's other
+// sticky shop overlay (the compare page's mini bar, $zindex-fixed - 1).
+[name="o_cart_notification_container"] {
+    z-index: $zindex-fixed - 1;
+}
+
+// Bootstrap 4's "sr-only" no longer exists in Bootstrap 5 ("visually-hidden"). The theme's
+// templates use visually-hidden now, but snippets dropped on pages before keep the old class
+// in the saved page (e.g. the carousel's "Previous" / "Next" labels): hide it the Bootstrap 5
+// way - off screen, still read by screen readers.
+.sr-only,
+.sr-only-focusable:not(:focus):not(:focus-within) {
+    @include visually-hidden();
 }

@@ -588,7 +588,7 @@
                 <div class="my-cart">
                     <div class="cart-header">
                         <div class="cart-title">
-                            <span id="mycart_collapse" data-target="#show-cart">
+                            <span id="mycart_collapse" data-bs-target="#show-cart">
                                 My Cart
                                 <span class="theme_scita_cart_quantity my_cart_quantity"
     t-out="website_sale_order and website_sale_order.cart_quantity or 0"/>
@@ -668,8 +668,9 @@
                                                         </t>
                                                     </div>
 
-                                                    <!-- Remove Line Button -->
-                                                    <button class="sc-remove-line btn btn-light"
+                                                    <!-- Remove Line Button (ms-auto: with the quantity box hidden for
+                                                         Request Quote it would otherwise sit on the left) -->
+                                                    <button t-attf-class="sc-remove-line btn btn-light #{'ms-auto' if sct_hide_line_price else ''}"
                                                             title="remove"
                                                             t-att-data-line-id="line.id"
                                                             t-att-data-product-id="line.product_id.id">
@@ -785,7 +786,7 @@
                                         <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                     </a>
                                 </td>
-                                <td class='text-left'>
+                                <td class='text-start'>
                                     <strong><a t-att-href="wish.product_id.website_url"><t t-out="wish.product_id.display_name" /></a></strong>
                                     <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                 </td>

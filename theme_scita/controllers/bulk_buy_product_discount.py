@@ -69,6 +69,26 @@ class ScitaBulkVariantController(WebsiteSaleVariantController):
                     combination_info['price'] = best['fixed_price']
 
         combination_info['bulk_prices'] = bulk_prices
+
+        # Prices hidden by Scita (request quote, prices hidden on the website, or "login to
+        # see price" for visitors) are only left out of the page templates; this JSON is what
+        # the product page fetches on every variant change, so leave them out here too.
+        website = request.env.website
+        template = request.env['product.template'].browse(int(product_template_id or 0)).exists()
+        if (
+            not website.website_show_price
+            or website.website_hide_price
+            or (template and template.website_hide_price)
+            or (website.login_see_price and request.env.user._is_public())
+        ):
+            combination_info.update({
+                'price': 0,
+                'list_price': 0,
+                'compare_list_price': 0,
+                'has_discounted_price': False,
+                'hide_price': True,
+                'bulk_prices': [],
+            })
         return combination_info
 
 

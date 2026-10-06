@@ -126,10 +126,6 @@ class CategorySlider3ModifyPlugin extends Plugin {
     selector = ".oe_category_slider";
 
     resources = {
-        builder_options: {
-            template: "product_category_option",
-            selector: ".oe_category_slider",
-        },
         so_content_addition_selector: [".oe_category_slider"],
         builder_actions: {
             CategorySlider3ModifyBtnAction,

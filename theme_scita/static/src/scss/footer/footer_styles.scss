@@ -1,5 +1,7 @@
 @if o-website-value('footer-template') == 'Footer-1' {
-    footer{
+    // footer.o_footer: Odoo 20 paints .o_footer with the footer colour preset, which
+    // beat a plain `footer` rule and hid this template's own background
+    footer.o_footer {
         background:$light-color;
     }
 
@@ -24,10 +26,11 @@
                     li {
                         a {
                             font-size: $fot-label;
-                            color: $light-color;
+                            // dark on Footer-1's white background (white links were invisible)
+                            color: $dark-color;
                             font-weight: 600;
                             &:hover{
-                                color:rgba($light-color, 0.5);
+                                color:rgba($dark-color, 0.6);
                             }
                             @media (max-width: 767px){
                                 margin-right:10px;
@@ -70,7 +73,7 @@
                 }
             }
         }
-        .row.s_hr.text-left {
+        .row.s_hr.text-start {
             hr {
                 display: none !important;
             }
@@ -78,9 +81,9 @@
         .sct-fot-address {
             ul {
                 li {
-                    color: $white;
+                    color: $dark-color;
                     .fa {
-                          color: $white;
+                          color: $dark-color;
                     }
                 }
             }
@@ -187,7 +190,9 @@
     }
 }
 @if o-website-value('footer-template') == 'Footer-2' {
-    footer {
+    // footer.o_footer: Odoo 20 paints .o_footer with the footer colour preset, which
+    // beat a plain `footer` rule and hid this template's own background
+    footer.o_footer {
         background: #141414;
     }
     .footer-content{
@@ -341,8 +346,11 @@
 
 }
 @if o-website-value('footer-template') == 'Footer-3' {
-    footer{
-         background: #ededed;
+    // footer.o_footer: Odoo 20 paints .o_footer with the footer colour preset, which
+    // beat a plain `footer` rule and hid this template's own background
+    footer.o_footer {
+         // dark like its thumbnail (Footer-3.png): the text of this template is white
+         background: #141414;
     }
     .footer-content{
         @media (max-width: 991px){

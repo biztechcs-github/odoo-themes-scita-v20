@@ -46,17 +46,16 @@
                 </div>
                <div class="carousel-control-prev" data-bs-target="#myCarousel" data-bs-slide="prev" role="img" aria-label="Previous" title="Previous">
                     <span class="carousel-control-prev-icon"/>
-                    <span class="sr-only">Previous</span>
+                    <span class="visually-hidden">Previous</span>
                 </div>
                 <div class="carousel-control-next" data-bs-target="#myCarousel" data-bs-slide="next" role="img" aria-label="Next" title="Next">
                     <span class="carousel-control-next-icon"/>
-                    <span class="sr-only">Next</span>
+                    <span class="visually-hidden">Next</span>
                 </div>
-                <ol class="carousel-indicators o_hidden">
-                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
-                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
-                    <li data-bs-target="#myCarousel" data-bs-slide-to="2"></li>
-                </ol>
+                <div class="carousel-indicators o_hidden" role="tablist">
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>
+                </div>
             </div>
       
         </section>
@@ -67,10 +66,10 @@
                 <div class="row sct_banner_row">
                     <section class="col-md-7 banner_slider s_carousel_wrapper">
                         <div id="carouselExampleIndicators" class="s_carousel s_carousel_default carousel slide" data-bs-interval="10000">
-                            <ol class="carousel-indicators">
-                                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
-                                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
-                            </ol>
+                            <div class="carousel-indicators" role="tablist">
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>
+                            </div>
                             <div class="carousel-inner">
                                 <div class="carousel-item active oe_custom_bg oe_img_bg" style="background-image:url('/web/image/theme_scita.sct_banner_slider_image')" data-name="Slide">
                                     <div class="slider-content carousel-content">
@@ -179,16 +178,16 @@
                     <!-- Controls -->
                     <div class="carousel-control-prev" data-bs-target="#myCarousel" data-bs-slide="prev" role="img" aria-label="Previous" title="Previous">
                         <span class="carousel-control-prev-icon"/>
-                        <span class="sr-only">Previous</span>
+                        <span class="visually-hidden">Previous</span>
                     </div>
                     <div class="carousel-control-next" data-bs-target="#myCarousel" data-bs-slide="next" role="img" aria-label="Next" title="Next">
                         <span class="carousel-control-next-icon"/>
-                        <span class="sr-only">Next</span>
+                        <span class="visually-hidden">Next</span>
                     </div>
-                    <ol class="carousel-indicators o_hidden">
-                        <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
-                        <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
-                    </ol>
+                    <div class="carousel-indicators o_hidden" role="tablist">
+                        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
+                        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>
+                    </div>
                 
             </div>   
         </section>   
@@ -201,10 +200,10 @@
                 <div class="row sct_banner_row">
                     <section class="col-md-6 col-lg-9 banner_slider s_carousel_wrapper">
                         <div id="carouselExampleIndicatorsItMain" class="s_carousel s_carousel_default carousel slide" data-bs-interval="10000">
-                            <ol class="carousel-indicators">
-                                <li data-bs-target="#carouselExampleIndicatorsItMain" data-bs-slide-to="0" class="active"></li>
-                                <li data-bs-target="#carouselExampleIndicatorsItMain" data-bs-slide-to="1"></li>
-                            </ol>
+                            <div class="carousel-indicators" role="tablist">
+                                <button type="button" data-bs-target="#carouselExampleIndicatorsItMain" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
+                                <button type="button" data-bs-target="#carouselExampleIndicatorsItMain" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>
+                            </div>
                             <div class="carousel-inner">
                                 <div class="carousel-item active" data-name="Slide">
                                     <div class="row align-items-center">
@@ -383,6 +382,8 @@
                                 <div
                                     class="ripple-btn"
                                     tabindex="0"
+                                    role="button"
+                                    t-att-aria-label="point.product_id.name or point.link or 'Hotspot'"
                                     data-bs-toggle="popover"
                                     data-bs-placement="auto"
                                     data-bs-html="true"
@@ -395,7 +396,7 @@
                                                     (('&lt;img src=&quot;/web/image/product.template/' + str(point.product_id.id) + '/image_1920&quot; /&gt;') if point.product_id.image_1920 else '') +
                                                     '&lt;div class=&quot;hotspot_product_content&quot;&gt;' +
                                                         '&lt;a href=&quot;/shop/product/' + str(point.product_id.id) + '&quot; target=&quot;' + ('_blank' if point.open_in_new_tab else '_self') + '&quot;&gt;' +
-                                                            point.product_id.name +
+                                                            (point.product_id.name or '') +
                                                         '&lt;/a&gt;' +
                                                         '&lt;p class=&quot;hotspot-price&quot;&gt;' +
                                                             website.currency_id.symbol + ' ' + str(point.product_id.list_price) +
@@ -415,9 +416,9 @@
                                     <t t-set="point_color" t-value="point.color or '#ffffff'"/>
                                     <span
                                         class="ripple-circle"
-                                        t-att-style="'background-color:' + point.color + ';'">
-                                        <span class="ripple-circle-before" t-att-style="'border-color:' + point.color + ';'"></span>
-                                        <span class="ripple-circle-after" t-att-style="'border-color:' + point.color + ';'"></span>
+                                        t-att-style="'background-color:' + point_color + ';'">
+                                        <span class="ripple-circle-before" t-att-style="'border-color:' + point_color + ';'"></span>
+                                        <span class="ripple-circle-after" t-att-style="'border-color:' + point_color + ';'"></span>
                                     </span>
                                 </div>
                             </div>

@@ -1263,7 +1263,7 @@
                 <div class="modal-body">
                     <div class="row quick">
                         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
-                        <t t-set="combination_info" t-value="product.with_context(website_sale_stock_get_quantity=True)._get_combination_info(combination, add_qty=add_qty)"/>
+                        <t t-set="combination_info" t-value="product.with_context(website_sale_product_page=True)._get_combination_info(combination, add_qty=add_qty)"/>
                         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
                         <t t-set="additional_title" t-value="product.name"/>
@@ -1297,8 +1297,8 @@
                                                 </t>
                                                 <div>
                                                     <t t-call="website_sale.product_price"/>
-                                                    <small t-if="combination_info['base_unit_price']"
-                                                           class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
+                                                    <small t-if="combination_info.get('base_unit_price')"
+                                                           class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="product.group_show_uom_price">
                                                     </small>
                                                 </div>
                                                 <t t-placeholder="select">
@@ -1309,7 +1309,8 @@
                                                     </t>
                                                 </t>
                                                 <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                                <t t-set="show_add_to_cart" t-value="not combination_info.get('prevent_sale') and (combination_info.get('allow_out_of_stock_order', True) or combination_info.get('free_qty', 0) &gt; 0)"/>
+                                                <!-- Odoo 20: is_sold_out (stock left minus what is already in the cart) is only computed with website_sale_product_page in the context -->
+                                                <t t-set="show_add_to_cart" t-value="not combination_info.get('prevent_sale') and not combination_info.get('is_sold_out')"/>
                                                 <div id="add_to_cart_wrap" t-attf-class="{{'d-inline-flex' if show_add_to_cart else 'd-none'}} align-items-center mb-2 me-auto">
                                                     <!-- Quantity update start-->
                                                     <div t-attf-class="css_quantity input-group {{'d-inline-flex' if show_add_to_cart else 'd-none'}} me-2 mb-2 align-middle" contenteditable="false">
@@ -1399,7 +1400,7 @@
     </template>
     <!--  Quick view  popup End -->
     <template id='shop_cart_view_modal'>
-        <t t-set="combination_info" t-value="product.with_context(website_sale_stock_get_quantity=True)._get_combination_info(combination, add_qty=add_qty)"/>
+        <t t-set="combination_info" t-value="product.with_context(website_sale_product_page=True)._get_combination_info(combination, add_qty=add_qty)"/>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">

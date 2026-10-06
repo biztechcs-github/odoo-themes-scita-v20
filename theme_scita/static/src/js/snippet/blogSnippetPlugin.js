@@ -257,10 +257,6 @@ class BlogSliderModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".scita_blog_slider";
     resources = {
-        builder_options: {
-            template: "theme_scita_blog_slider_option",
-            selector: ".scita_blog_slider",
-        },
         so_content_addition_selector: [".scita_blog_slider"],
         builder_actions: {
             BlogSliderModifyBtnAction,
@@ -372,10 +368,6 @@ class Blog4CustomModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".blog_4_custom";
     resources = {
-        builder_options: {
-            template: "blog_4_custom_snippet_option",
-            selector: ".blog_4_custom",
-        },
         so_content_addition_selector: [".blog_4_custom"],
         builder_actions: {
             Blog4CustomModifyBtnAction,
@@ -487,10 +479,6 @@ class Blog2CustomModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".blog_2_custom";
     resources = {
-        builder_options: {
-            template: "blog_2_custom_snippet_option",
-            selector: ".blog_2_custom",
-        },
         so_content_addition_selector: [".blog_2_custom"],
         builder_actions: {
             Blog2CustomModifyBtnAction,
@@ -602,10 +590,6 @@ class Blog5CustomModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".blog_5_custom";
     resources = {
-        builder_options: {
-            template: "blog_5_custom_snippet_option",
-            selector: ".blog_5_custom",
-        },
         so_content_addition_selector: [".blog_5_custom"],
         builder_actions: {
             Blog5CustomModifyBtnAction,

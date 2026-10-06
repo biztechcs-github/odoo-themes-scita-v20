@@ -116,10 +116,6 @@ class SctProductSnippet1ModifyPlugin extends Plugin {
     selector = ".sct_product_snippet_1";
 
     resources = {
-        builder_options: {
-            template: "sct_product_snippet_1_option",
-            selector: ".sct_product_snippet_1",
-        },
         so_content_addition_selector: [".sct_product_snippet_1"],
         builder_actions: {
             ModifyBtnAction,

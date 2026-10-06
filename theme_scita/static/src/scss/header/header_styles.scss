@@ -493,7 +493,8 @@ header#top {
                 .o_extra_menu_items {
                     .dropdown-menu {
                         width: 250px;
-                        min-height: 300px;
+                        // no min-height: the "+" list (and any mega menu opened in it) is only
+                        // as tall as its items, without blank space under the last one
                     }
 
                     .dropdown-menu {
@@ -1643,7 +1644,7 @@ header#top {
                         width: 17px !important;
                         height: 17px !important;
                         background: $secondary !important;
-                        color: $light-color !important;
+                        color: color-contrast($secondary) !important;
                         @include flex;
                         @include align-content;
                         @include content-cn;
@@ -1762,7 +1763,7 @@ header#top {
                                         width: 16px;
                                         height: 16px;
                                         background-color: $secondary;
-                                        color: $light-color;
+                                        color: color-contrast($secondary);
                                         font-size: 12px;
                                         line-height: normal;
                                         font-weight: 600;
@@ -2253,7 +2254,7 @@ header#top {
                         width: 17px;
                         height: 17px;
                         background: $secondary !important;
-                        color: $light-color !important;
+                        color: color-contrast($secondary) !important;
                         border-radius: 50px;
                         position: absolute;
                         top: 0px !important;
@@ -2820,7 +2821,7 @@ header#top {
                         height: 17px !important;
                         background: $secondary !important;
                         border-color: $secondary !important;
-                        color: $light-color !important;
+                        color: color-contrast($secondary) !important;
                         @include flex;
                         @include align-content;
                         @include content-cn;
@@ -2933,7 +2934,7 @@ header#top {
                                         width: 16px;
                                         height: 16px;
                                         background-color: $secondary;
-                                        color: $light-color;
+                                        color: color-contrast($secondary);
                                         font-size: 12px;
                                         line-height: normal;
                                         font-weight: 600;
@@ -3422,7 +3423,7 @@ header#top {
                         height: 17px;
                         background: $secondary !important;
                         border-color: $secondary !important;
-                        color: $light-color !important;
+                        color: color-contrast($secondary) !important;
                         border-radius: 50px;
                         position: absolute;
                         top: 3px !important;
@@ -3973,15 +3974,6 @@ header {
 
 // version 15 css starts here 15-011-2021
 
-.dropdown-menu {
-    .o_search_result_item {
-        .media-body {
-            .mb-0 {
-                white-space: break-spaces;
-            }
-        }
-    }
-}
 
 header {
     .navbar {
@@ -4512,16 +4504,6 @@ header {
 .o_searchbar_form {
     .dropdown-menu {
         .dropdown-item {
-            .media-body {
-
-                .btn-link,
-                .extra_link {
-                    position: static !important;
-                    color: rgb(32, 32, 32) !important;
-                    border: none;
-                    padding: 0;
-                }
-            }
 
             &:hover {
 
@@ -4979,7 +4961,7 @@ header {
                     .my_cart_quantity, .compare_quantity, .compare_quantity {
                         background-color: $secondary !important;
                         border-color: $secondary !important;
-                        color: $light-color !important;
+                        color: color-contrast($secondary) !important;
                         font-size: 9px;
                         padding: 0;
                         width: 17px;

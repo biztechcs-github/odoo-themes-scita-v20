@@ -262,10 +262,6 @@ function makeSnippetPlugins({
         selector = selector;
 
         resources = {
-            builder_options: {
-                template: optionTemplate,
-                selector: selector,
-            },
             so_content_addition_selector: [selector],
             builder_actions: {
                 [actionId]: ModifyBtnAction,

@@ -313,7 +313,7 @@ body #wrapwrap{
 		    .modal-title {
 		    	font-weight: normal !important;
 		    }
-		    .close {
+		    .btn-close {
 		    	font-size: 30px;
 		    }
 		    textarea {
@@ -462,8 +462,23 @@ body #wrapwrap{
 	@media (max-width: 991px){
 		height: auto !important;
 	}
-	.s_carousel, .carousel-inner,.carousel-item  {
-		height: 100%;
+	// The slides fill the whole block, also when the block is taller than the slide
+	// content (Height option, tall screens): the slide is the hotspot/image area.
+	display: flex;
+	flex-direction: column;
+	> .s_carousel {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.carousel-inner {
+		flex-grow: 1;
+		display: flex;
+	}
+	.carousel-item {
+		> .content {
+			height: 100%;
+		}
 	}
 	.carousel-item{
 		border-radius: 25px;

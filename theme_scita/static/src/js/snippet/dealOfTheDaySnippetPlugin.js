@@ -152,10 +152,6 @@ class DealOfTheDayModifyPlugin extends Plugin {
     selector = ".oe_deal_of_the_day";
 
     resources = {
-        builder_options: {
-            template: "theme_scita_deal_of_the_day_option",
-            selector: ".oe_deal_of_the_day",
-        },
         so_content_addition_selector: [".oe_deal_of_the_day"],
         builder_actions: {
             DealOfTheDayModifyBtnAction,

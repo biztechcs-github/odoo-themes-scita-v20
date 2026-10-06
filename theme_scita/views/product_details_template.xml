@@ -74,8 +74,10 @@
         <!-- Odoo 20: add to cart is button[name=add_to_cart] driven by core JS; keep Scita's wrapper and look around it -->
         <xpath expr="//button[@name='add_to_cart'][@data-action='add_to_cart']" position="replace">
             <div class='sct-main-price-description'>
-                <div class='sct-price-option' t-if="not combination_info.get('prevent_sale') and (not request.env.user._is_public() and website.add_to_cart or not website.add_to_cart)">
-                    <div class="sct-add-to-cart-mob">
+                <!-- Scita's Add to wishlist / Compare are added in here too: only the cart button
+                     depends on the product being sellable, so they stay on sold-out / Contact Us pages -->
+                <div class='sct-price-option'>
+                    <div class="sct-add-to-cart-mob" t-if="not combination_info.get('prevent_sale') and (not request.env.user._is_public() and website.add_to_cart or not website.add_to_cart)">
                         <button
                             name="add_to_cart"
                             type="button"
@@ -95,6 +97,13 @@
             </div>
             <div class='sct-other-desciption'></div>
         </xpath>
+    </template>
+    <template id="theme_scita_stock_notification_in_cta" inherit_id="website_sale.cta_wrapper" name="Product Details Notify me form in the CTA row">
+        <!-- Scita's zip checker lives in the CTA row: keep the "Notify me" e-mail form right
+             under its button instead of below the zip checker (as Odoo's boxed layouts do) -->
+        <div id="out_of_stock_buttons_wrapper" position="after">
+            <div id="stock_notification_wrapper" position="move"/>
+        </div>
     </template>
     <template id="theme_scita_price" inherit_id="theme_scita.theme_scita_product_details_add_to_cart" name="Product Details Price (non-boxed CTA only)">
         <!-- Boxed purchase style already shows price in the CTA header (with "Price" label). -->
@@ -308,16 +317,6 @@ Add to wishlist
                     </div>
                 </section>
             </div>
-        </xpath>
-    </template>
-    <template id="scita_product_buy_now" inherit_id="theme_scita.theme_scita_product_details" active="False" name="Scita Buy Now Button">
-        <xpath expr="//t[@t-set='hasBuyNow']" position="attributes">
-            <attribute name="t-value" remove="false" add="true" separator=" "/>
-        </xpath>
-        <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
-Buy now
-            </a>
         </xpath>
     </template>
     <!-- <template id="scita_snippet_options" inherit_id="website_sale.snippet_options" name="Scita Product Details Editor Options">

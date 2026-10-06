@@ -12,7 +12,7 @@
                         <form class="form-horizontal" role="form">
                             <div class="row">
                                 <label class="col-sm-3 control-label">Embed Code</label>
-                                <div class="form-group col-sm-9">
+                                <div class="mb-3 col-sm-9">
                                     <!-- <input type="text" class="form-control" id="address_html_code" placeholder="Add Embed Code"/> -->
                                     <textarea rows="4" cols="50" id="address_html_code" placeholder="Add Embed Code"></textarea>
                                     <p>Go to google map. Find address then click on share button. Click on embed a map and copy html.</p>
@@ -40,7 +40,7 @@
                         <form class="form-horizontal" role="form">
                             <div class="row">
                                 <label class="col-sm-3 control-label">Embed Code</label>
-                                <div class="form-group col-sm-9">
+                                <div class="mb-3 col-sm-9">
                                     <!-- <input type="text" class="form-control" id="address_content_html_code" placeholder="Add Embed Code"/> -->
                                     <textarea rows="4" cols="50" id="address_content_html_code" placeholder="Add Embed Code"></textarea>
                                     <p>Go to google map. Find address then click on share button. Click on embed a map and copy html.</p>

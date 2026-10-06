@@ -277,7 +277,7 @@
                                 <button class="button btn btn-cart js_add_cart a-submit cart_view_sct_btn" t-att-data-id="product.id"  t-att-data-template-id="product.id">
                                     ADD
                                 </button>
-                                <div class="input-group-append dropdown-plus">
+                                <div class="dropdown-plus">
                                     <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                         <i class="fa fa-plus"/>
                                     </span>
@@ -542,7 +542,7 @@
                                                     t-att-value="product.product_variant_id.id"
                                                     type="hidden"/>
                                                 <button class="button btn btn-cart js_add_cart cart_view_sct_btn"
-                                                        t-att-data-id="product.product_variant_id.id"
+                                                        t-att-data-id="product.id"
                                                         t-att-data-template-id="product.id">
                                                     <span class="lni lni-cart-1 cart_icon"/>
                                                     <span class="add_to_cart_text">Add to cart</span>
@@ -872,7 +872,7 @@
                                 <button class="button btn btn-cart js_add_cart a-submit cart_view_sct_btn" t-att-data-id="product.id"  t-att-data-template-id="product.id">
                                     ADD
                                 </button>
-                                <div class="input-group-append dropdown-plus">
+                                <div class="dropdown-plus">
                                     <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                         <i class="fa fa-plus"/>
                                     </span>

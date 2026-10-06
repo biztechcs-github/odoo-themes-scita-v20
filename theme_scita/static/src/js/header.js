@@ -13,20 +13,14 @@ publicWidget.registry.HeaderExtraMenuItems = publicWidget.Widget.extend({
     events: {
         // 'click a#user_account': '_onCollapseShow',
         'click #user_account': '_onUserAccount',
-        'click .o_extra_menu_items .dropdown': '_onMegamenuClick',
-        'click .o_extra_menu_items':'_onClickExtraItem',
+        // Mega menus inside Odoo's "+" overflow menu: opened by Bootstrap + CSS
+        // (product_card_equal_height.scss) and one at a time (extra_menu_megamenu.js).
+        // The old slideToggle handlers here set inline display styles that fought with it.
         'click li.li-mega-menu i.fa-chevron-right': '_onClickSliderRight',
         'click li.li-mega-menu i.fa-chevron-left': '_onClickSliderLeft',
     },
     _onUserAccount(event) {
         $('div.toggle-config').toggleClass("o_hidden");
-    },
-    _onMegamenuClick(event){
-        event.stopPropagation();
-        $(event.currentTarget).find('.dropdown-menu').slideToggle();
-    },
-    _onClickExtraItem(event){
-        $(event.currentTarget).find('li .dropdown-menu').css('display','none');
     },
     _onClickSliderRight(event){
         event.stopImmediatePropagation();
@@ -59,7 +53,8 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
             self._onRemoveLine(ev);
         });
 
-        $('body').off('click', '.js_add_cart_json').on('click', '.js_add_cart_json', async function(ev) {
+        // only the sidebar cart's +/- (product pages and snippets have their own handlers)
+        $('body').off('click', '.cart_details .js_add_cart_json').on('click', '.cart_details .js_add_cart_json', async function(ev) {
             ev.preventDefault();
             const $btn = $(this);
             const $input = $btn.siblings('input.scita_js_quantity');
@@ -122,6 +117,16 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
     async _onChangeQty(ev) {
         const $target = $(ev.currentTarget);
         const qty = parseInt($target.val());
+        // Only send real changes: the input's value attribute still holds the quantity the
+        // server rendered. A change event without a new number (e.g. fired again on a
+        // re-rendered sidebar, or a cleared field) must never update - or delete - the line.
+        const renderedQty = parseInt($target.attr("value"));
+        if (isNaN(qty) || qty < 0 || qty === renderedQty) {
+            if (!isNaN(renderedQty)) {
+                $target.val(renderedQty);
+            }
+            return;
+        }
         const priceUnit = parseFloat($target.data("price-unit"));
         const currencyId = $target.data("currency-id");
         const params = {
@@ -190,6 +195,7 @@ $(document).ready(function() {
     });
     $back_to_top.on('click', function(event) {
         event.preventDefault();
-        $('body,html').animate({scrollTop: 0}, scroll_top_duration);
+        // the page scrolls inside #wrapwrap (comman.scss), not body/html
+        $('#wrapwrap').animate({scrollTop: 0}, scroll_top_duration);
     });
 });

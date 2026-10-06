@@ -23,7 +23,7 @@
                     vars: { 'footer-template': 'Footer-3' } 
                 }"
             >
-                <Image attrs="{ style: 'width: 100%;' }" src="'/theme_scita/static/src/img/snippet_icon/Footer-2.png'"/>
+                <Image attrs="{ style: 'width: 100%;' }" src="'/theme_scita/static/src/img/snippet_icon/Footer-3.png'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title="'Footer-4'"
                 actionParam="{ 

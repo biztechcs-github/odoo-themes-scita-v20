@@ -129,10 +129,6 @@ class GoogleMapModifyPlugin extends Plugin {
     static dependencies = [];
 
     resources = {
-        builder_options: {
-            template: "s_google_map_option",
-            selector: ".google_map_v1",
-        },
         so_content_addition_selector: [".google_map_v1"],
         builder_actions: { GoogleMapModifyBtnAction },
     };
@@ -144,10 +140,6 @@ class GoogleMapContentModifyPlugin extends Plugin {
     static dependencies = [];
 
     resources = {
-        builder_options: {
-            template: "s_google_map_option_c",
-            selector: ".google_map_v2",
-        },
         so_content_addition_selector: [".google_map_v2"],
         builder_actions: { GoogleMapContentModifyBtnAction },
     };

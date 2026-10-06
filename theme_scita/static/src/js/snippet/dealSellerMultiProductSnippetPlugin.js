@@ -140,10 +140,6 @@ class DealSellerMultiProductModifyPlugin extends Plugin {
     selector = ".deal_multi_product_slider";
 
     resources = {
-        builder_options: {
-            template: "deal_seller_multi_product_custom_snippet",
-            selector: ".deal_multi_product_slider",
-        },
         so_content_addition_selector: [".deal_multi_product_slider"],
         builder_actions: {
             DealSellerMultiProductModifyAction,

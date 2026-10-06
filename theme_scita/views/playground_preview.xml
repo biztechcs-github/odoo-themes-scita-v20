@@ -1238,18 +1238,18 @@
                                         <div class="carousel-control">
                                             <div class="carousel-control-prev o_we_no_overlay" data-bs-target="#myCarousel1749732166454" role="img" aria-label="Previous" title="Previous" data-bs-slide="prev">
                                                 <span class="carousel-control-prev-icon"></span>
-                                                <span class="sr-only o_default_snippet_text">
+                                                <span class="visually-hidden o_default_snippet_text">
                                                     Previous</span>
                                             </div>
                                             <div class="carousel-control-next o_we_no_overlay" data-bs-target="#myCarousel1749732166454" role="img" aria-label="Next" title="Next" data-bs-slide="next">
                                                 <span class="carousel-control-next-icon"></span>
-                                                <span class="sr-only o_default_snippet_text">Next</span>
+                                                <span class="visually-hidden o_default_snippet_text">Next</span>
                                             </div>
                                         </div>
-                                        <ol class="carousel-indicators o_hidden o_we_no_overlay">
-                                            <li data-bs-target="#myCarousel1749732166454" class="active" data-bs-slide-to="0" aria-current="true"></li>
-                                            <li data-bs-target="#myCarousel1749732166454" data-bs-slide-to="1"></li>
-                                        </ol>
+                                        <div class="carousel-indicators o_hidden o_we_no_overlay" role="tablist">
+                                            <button type="button" data-bs-target="#myCarousel1749732166454" class="active" data-bs-slide-to="0" aria-label="Slide 1" role="tab" aria-selected="true"/>
+                                            <button type="button" data-bs-target="#myCarousel1749732166454" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>
+                                        </div>
                                     </div>
                                 </section>
                             </div>
@@ -1527,7 +1527,7 @@
                                                         <button class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
-                                                        <div class="input-group-append dropdown-plus">
+                                                        <div class="dropdown-plus">
                                                             <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                                                 <i class="fa fa-plus"></i>
                                                             </span>
@@ -1584,7 +1584,7 @@
                                                         <button class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
-                                                        <div class="input-group-append dropdown-plus">
+                                                        <div class="dropdown-plus">
                                                             <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                                                 <i class="fa fa-plus"></i>
                                                             </span>
@@ -1641,7 +1641,7 @@
                                                         <button class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
-                                                        <div class="input-group-append dropdown-plus">
+                                                        <div class="dropdown-plus">
                                                             <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                                                 <i class="fa fa-plus"></i>
                                                             </span>
@@ -1698,7 +1698,7 @@
                                                         <button class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
-                                                        <div class="input-group-append dropdown-plus">
+                                                        <div class="dropdown-plus">
                                                             <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                                                 <i class="fa fa-plus"></i>
                                                             </span>

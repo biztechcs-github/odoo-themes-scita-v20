@@ -136,10 +136,6 @@ class TrendingProductsModifyPlugin extends Plugin {
     selector = ".theme_scita_trending_products";
 
     resources = {
-        builder_options: {
-            template: "theme_scita_trending_products_option",
-            selector: ".theme_scita_trending_products",
-        },
         so_content_addition_selector: [".theme_scita_trending_products"],
         builder_actions: {
             TrendingProductsModifyBtnAction,

@@ -2406,6 +2406,12 @@ span[name="hidden_ptavs_count"] {
                             bottom: 0;
                             opacity: 0;
                         }
+                        // phones / tablets have no hover: the button stays in the card (below
+                        // the name) instead of sliding in over the image
+                        @media (max-width: 991.98px) {
+                            margin: 8px 0 0;
+                            background: none;
+                        }
                         .btn#request_for_quote_button{
                             border-radius: 6px;
                             min-height: auto;
@@ -2823,6 +2829,12 @@ span[name="hidden_ptavs_count"] {
                                 right: 18px;
                                 @media (max-width:1024px) {
                                     top: -35px;
+                                }
+                                // phones / tablets: in the card flow, not over the product image
+                                @media (max-width: 991.98px) {
+                                    position: static;
+                                    margin-left: auto;
+                                    margin-right: auto;
                                 }
                             }
                         }
@@ -3847,6 +3859,12 @@ span[name="hidden_ptavs_count"] {
                                 right: 20px;
                                 width: fit-content;
                                 margin: 0 auto;
+                                // phones / tablets: in the card flow under the name - over the
+                                // image it covered the wishlist / quick view icons
+                                @media (max-width: 991.98px) {
+                                    position: static;
+                                    margin-top: 6px;
+                                }
                             }
                         }
                     }
@@ -4907,7 +4925,11 @@ span[name="hidden_ptavs_count"] {
                             }
                             .o_wsale_product_sub{
                                 .o_wsale_product_btn{
-                                    transform: translateY(30px)
+                                    // desktop only, like the -38px above: on phones the info block
+                                    // doesn't move, so a tap pushed the icons onto the description
+                                    @include min992{
+                                        transform: translateY(30px);
+                                    }
                                 }
                             }
                         }
@@ -5579,6 +5601,74 @@ span[name="hidden_ptavs_count"] {
             }
             .o_wsale_product_btn .o_wsale_product_action_row {
                 justify-content: flex-end;
+            }
+            // the icons stay on the right (below 1200px the row was centred, under the button)
+            // and the button stops before them: room for wishlist + quick view, + compare when
+            // shown; on narrow cards the label is shortened (...) instead of overlapping
+            .o_wsale_product_btn {
+                justify-content: flex-end;
+            }
+            .o_wsale_product_information .o_wsale_product_request_quote .btn#request_for_quote_button {
+                display: inline-block;
+                line-height: 29px;
+                padding-top: 0;
+                padding-bottom: 0;
+                max-width: calc(100% - 82px);
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            &:has(.o_add_compare) .o_wsale_product_information .o_wsale_product_request_quote .btn#request_for_quote_button {
+                max-width: calc(100% - 114px);
+            }
+        }
+        // Add to cart + compare / wishlist / quick view did not fit narrow cards (4 per row
+        // up to ~1440px): quick view stuck out of the card. Let the label give way instead
+        // (the inner row holding Add to cart + compare must be allowed to shrink too).
+        #products_grid .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_sub .o_wsale_product_btn .o_wsale_product_action_row {
+            min-width: 0;
+        }
+        #products_grid .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_sub .o_wsale_product_btn .btn.a-submit {
+            flex-shrink: 1;
+            min-width: 0;
+            overflow: hidden;
+
+            .add_to_cart_text {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+        // narrow cards (4 per row below Bootstrap's xxl breakpoint, ~190px) with the compare
+        // icon shown: the label would be cut to "Add ..."; show the cart as the icon button
+        // Scita already uses below 1200px, and a slightly tighter Request Quote
+        @media (min-width: 1200px) and (max-width: 1399.98px) {
+            #products_grid .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_sub .o_wsale_product_btn:has(.o_add_compare) .btn.a-submit {
+                min-width: 0;
+                padding-left: 6px;
+                padding-right: 6px;
+
+                .add_to_cart_text {
+                    display: none;
+                }
+            }
+        }
+        // Request Quote the same way, also from 992px where Scita's cart is an icon already:
+        // an icon button (the label stays as its tooltip)
+        @media (min-width: 992px) and (max-width: 1399.98px) {
+            #products_grid .oe_product .oe_product_cart:has(.o_wsale_product_request_quote #request_for_quote_button):has(.o_add_compare) .o_wsale_product_information .o_wsale_product_request_quote .btn#request_for_quote_button {
+                min-width: 0;
+                padding-left: 6px;
+                padding-right: 6px;
+
+                .o_sct_rq_icon {
+                    display: inline-block !important;
+                    font-size: 18px;
+                    vertical-align: middle;
+                }
+                .o_sct_rq_label {
+                    display: none;
+                }
             }
         }
         #products_grid .oe_product:hover .oe_product_cart:has(.o_wsale_product_request_quote #request_for_quote_button) {

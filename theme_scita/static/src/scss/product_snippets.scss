@@ -410,7 +410,7 @@
 				min-height: 38px;
 			}
 		}
-		.input-group-append {
+		.dropdown-plus {
 			background: $light-color;
 			border-radius: 50px;
 			@include transition(all, 0.5s, ease);
@@ -632,7 +632,7 @@
 										background-color: transparent;
 										border-color: $secondary;
 									}
-									.input-group-append{
+									.dropdown-plus{
 										background-color: #F0F0F0;
 									}
 								}
@@ -908,7 +908,7 @@
 									background-color: $light-color;
 									border-color: $secondary;
 								}
-								.input-group-append{
+								.dropdown-plus{
 									background-color: #F0F0F0;
 								}
 							}
@@ -1018,7 +1018,7 @@
 .quickview-modal {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
-	.close {
+	.btn-close {
 		color: $primary;
 		opacity: 1;
 		&:focus{
@@ -1250,7 +1250,7 @@
 
 				&:hover {
 					background-color: $secondary;
-					color: $light-color;
+					color: color-contrast($secondary);
 				}
 
 				@media (max-width: 768px) {
@@ -1271,7 +1271,7 @@
 			margin-bottom: 15px !important;
 			border-radius: 50px;
 			background-color: $secondary;
-			color: $light-color;
+			color: color-contrast($secondary);
 			
 			@media (min-width: 768px) {
 				padding-right: 35px !important;
@@ -1280,7 +1280,7 @@
 			&:hover, &:active{
 				border-color: $secondary;
 				background: transparent;
-				color: $secondary;
+				color: if(contrast-ratio($secondary, $white) < 4.5, shade-color($secondary, 60%), $secondary);
 			}
 
 			.lni{
@@ -1446,7 +1446,7 @@
 
 											&:hover {
 												background-color: $secondary;
-												color: $light-color;
+												color: color-contrast($secondary);
 											}
 
 											@media (max-width: 768px) {
@@ -1543,7 +1543,7 @@
                     min-height: 42px;
                 }
             }
-            .input-group-append{
+            .dropdown-plus{
                 background: $light-color;
                 border-radius: 50px;
                 transition: all 0.3s ease-in-out;
@@ -1572,7 +1572,7 @@
                 background-color: transparent;
                 border-color: $secondary;
     
-                .input-group-append{
+                .dropdown-plus{
                     background: $dark-grey-color;
                 }
             }
@@ -1603,7 +1603,7 @@
                 }
             }
     
-            .input-group-append, .input-group-prepend{
+            .dropdown-plus{
                 background: $light-color;
                 border-radius: 50px !important;
                 width: 28px;

@@ -123,10 +123,6 @@ class CategorySlider2ModifyPlugin extends Plugin {
     selector = ".cat_slider_4";
 
     resources = {
-        builder_options: {
-            template: "theme_scita_category_slider_4_option",
-            selector: ".cat_slider_4",
-        },
         so_content_addition_selector: [".cat_slider_4"],
         builder_actions: {
             CategorySlider2ModifyBtnAction,

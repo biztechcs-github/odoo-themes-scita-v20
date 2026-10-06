@@ -113,10 +113,6 @@ class VideoBannerModifyPlugin extends Plugin {
     selector = ".dynamic_video_banner";
 
     resources = {
-        builder_options: {
-            template: "dynamic_video_banner",
-            selector: ".dynamic_video_banner",
-        },
         so_content_addition_selector: [".dynamic_video_banner"],
         builder_actions: {
             VideoBannerModifyBtnAction,

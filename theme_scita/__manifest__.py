@@ -162,6 +162,7 @@ publish unpublish product
             'theme_scita/static/src/scss/product_card_equal_height.scss',
             'theme_scita/static/src/scss/mixins.scss',
             'theme_scita/static/src/scss/comman.scss',
+            'theme_scita/static/src/scss/image_hotspot.scss',
             # after comman.scss: refines its search dropdown rules
             'theme_scita/static/src/scss/search_dropdown.scss',
             'theme_scita/static/src/scss/snippets.scss',
@@ -208,12 +209,15 @@ publish unpublish product
             'theme_scita/static/src/js/quick_view.js',
             'theme_scita/static/src/js/request_quote.js',
             'theme_scita/static/src/js/search_dropdown_width.js',
+            'theme_scita/static/src/js/extra_menu_megamenu.js',
             'theme_scita/static/src/js/lazy_load_button.js',
             'theme_scita/static/src/js/mobile_view.js',
             'theme_scita/static/src/js/snippet_preview.js',
             'theme_scita/static/src/js/feather_init.js',
             'theme_scita/static/src/js/theme_wishlist_fix.js',
             'theme_scita/static/src/js/product_comparison_extend.js',
+            'theme_scita/static/src/js/compare_mini_sticky.js',
+            'theme_scita/static/src/js/cart_notification_offset.js',
             'theme_scita/static/src/js/similar_products_sidebar.js',
             ('before', '/theme_scita/static/src/scss/comman.scss',
              'theme_scita/static/src/scss/button/button_styles.scss'),
@@ -317,10 +321,13 @@ publish unpublish product
         ],
         'website.assets_editor': [
         ],
-        'html_builder.assets': [
-            'theme_scita/static/src/js/scita_block_tab_patch.js',
-        ],
         'website.website_builder_assets': [
+          # Odoo 20 "Add/Remove Slide" need Bootstrap 5 carousel indicators (old pages have <li>)
+          'theme_scita/static/src/js/carousel_indicators_compat.js',
+          # Odoo 20 saves image width/height attributes as inline px styles: restore them
+          'theme_scita/static/src/js/img_size_attrs_plugin.js',
+          # Scita block styles in the "Insert a block" previews
+          'theme_scita/static/src/js/snippet_preview_css_plugin.js',
           'theme_scita/static/src/xml/scita_header_option.xml',
           'theme_scita/static/src/xml/scita_footer_option.xml',
           'theme_scita/static/src/xml/snippet_modify.xml',

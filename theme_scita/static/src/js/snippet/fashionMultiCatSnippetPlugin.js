@@ -137,10 +137,6 @@ class FashionMultiCatSnippetModifyPlugin extends Plugin {
     selector = ".fashion_multi_category_slider";
 
     resources = {
-        builder_options: {
-            template: "fashion_multi_cat_custom_snippet",
-            selector: ".fashion_multi_category_slider",
-        },
         so_content_addition_selector: [".fashion_multi_category_slider"],
         builder_actions: {
             FashionMultiCatModifyBtnAction,

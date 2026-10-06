@@ -103,8 +103,8 @@
 			}
 		}
 		.form-btn {
-			.form-group {
-				margin-bottom: 0;
+			.mb-3 {
+				margin-bottom: 0 !important; // "form-group" before Bootstrap 5
 			}
 		}
 		.sct-scocial-icon-footer {
@@ -365,7 +365,7 @@ body .o_portal_security_body{
 			}
 		}
 		.alert-warning{
-			.close{
+			.btn-close{
 				position: absolute;
 				top: 0;
 				right: 0;

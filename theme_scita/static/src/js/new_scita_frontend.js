@@ -414,8 +414,8 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
         "mouseenter .scita_attribute_li": "_onMouseEnterSwatch",
         "mouseleave .css_attribute_color": "_onMouseLeave",
         "click .js_add_cart": "_onClickAddToCart",
-        "click .js_add_cart_json": "_onClickUpdateQty",
         'click .cart_view_sct_btn': 'cartViewData',
+        "click .js_add_cart_json": "_onClickUpdateQty",
     },
     
     _restorePlaceholder: function() {
@@ -526,43 +526,16 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
             
                 const self = this;
                 
-                // Strategy: Use custom endpoint to get cart lines for this product
-                rpc("/shop/cart/get_lines", {
-                    product_id: productID
-                }).then((cartLines) => {
-                    // Check if product already exists in cart
-                    const existingLine = cartLines.length > 0 ? cartLines[0] : null;
-                    
-                    if (existingLine) {
-                        const newQuantity = existingLine.quantity + addQuantity;
-                        
-                        // Update existing line with new total quantity
-                        return rpc("/shop/cart/update", {
-                            line_id: existingLine.line_id,
-                            product_id: productID,
-                            quantity: newQuantity
-                        });
-                    } else {
-                        // Product doesn't exist, add it
-                        return rpc("/shop/cart/add", {
-                            product_id: productID,
-                            product_template_id: productTemplateID,
-                            quantity: addQuantity,
-                        });
-                    }
+                // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
+                // the same click opens Scita's own confirmation (cartViewData, .cart_view_sct_btn).
+                rpc("/shop/cart/add", {
+                    product_id: productID,
+                    product_template_id: productTemplateID,
+                    quantity: addQuantity,
                 }).then((data) => {
-                    if (data.cart_quantity) {
+                    if (data && data.cart_quantity) {
                         self._updateCartIcon(data.cart_quantity);
                     }
-                    
-                    if (data.notification_info) {
-                        self._showCartNotification(self.call.bind(self), data.notification_info);
-                    }
-                    
-                    if (data.quantity && data.tracking_info) {
-                        self._trackProducts(data.tracking_info);
-                    }
-                    
                 }).catch((err) => {
                     // Silent error handling
                 });

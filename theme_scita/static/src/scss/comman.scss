@@ -75,7 +75,7 @@ input.form-control {
 .css_attribute_color input{
 	transition: none;
 }
-.was-validated .form-control:invalid, .form-control.is-invalid, .was-validated .custom-select:invalid, .custom-select.is-invalid {
+.was-validated .form-control:invalid, .form-control.is-invalid, .was-validated .form-select:invalid, .form-select.is-invalid {
 	border:1px solid #dc3545 !important;
 }
 .o_website_rating_static {
@@ -673,9 +673,6 @@ header{
 		}
 	}
 }
-.s_carousel .sr-only{
-	display: none;
-}
 .card-body{
 	background-color: transparent !important;
 }
@@ -788,7 +785,7 @@ body {
 				opacity: 1;
 				@include align-content;
 				background-color: $light-color; 
-				.close {
+				.btn-close {
 					padding: 0;
 					margin: 0;
 					color: $dark-color;
@@ -811,11 +808,6 @@ body {
 					}
 					h6 {
 						font-size: 14px;
-					}
-					.form-row {
-						.mt-3.form-row {
-							margin-top: 0 !important;
-						}
 					}
 					.o_theme_customize_option {
 						label {
@@ -1372,15 +1364,11 @@ body.editor_enable {
 		.modal-body {
 			padding: 30px;
 			.sct-cart-modal-main {
-				.close {
+				.btn-close {
 					position: absolute;
 				    right: 10px;
 				    top: 10px;
-				    background: #000000;
 				    opacity: 1;
-				    padding: 5px 8px;
-				    color: #fff;
-				    font-size: 16px;
 				    z-index: 2;
 				}
 				.sct-left-m-side {
@@ -1748,20 +1736,6 @@ body{
 								width: 110px;
 								margin-top: 10px;
 								height:30px;
-								.input-group-prepend,.input-group-append{
-									a{
-										border: 1px solid #d9d9d9;
-										border-radius: 0px;
-										font-size: 13px;
-										padding: 0rem 0.75rem;
-										color:$dark-color;
-										line-height: 30px;
-										background-color: #e9ecef;
-										&:hover{
-											color:$primary;
-										}
-									}
-								}
 								input.form-control{
 									text-align: center;
 									font-size: 14px;
@@ -1835,12 +1809,6 @@ body{
 					}
 					#order_total td {
 						font-weight: 600;
-					}
-					.text-right{
-							text-align:left !important;
-					}
-					.text-xl-right{
-							text-align:right !important;
 					}
 				    .button-box{
 						display: block;
@@ -2181,12 +2149,6 @@ header{
 			#product_details{
 				.js_product{
 					.input-group{
-						.input-group-prepend, .input-group-append{
-							.btn{
-								line-height: 40px !important;
-								padding: 0 15px !important;
-							}
-						}
 					}
 				}
 			}
@@ -2443,6 +2405,8 @@ body #wrapwrap::-webkit-scrollbar{
 
 		&:hover{
 			background-color: transparent;
+			// Odoo 20's cart toast has no .o_notification_fade, so the hover colour above no longer applies
+			color: $primary;
 
 			&::after{
 				border-color: $black;
@@ -2717,7 +2681,7 @@ body #wrapwrap::-webkit-scrollbar{
 
 							&:hover {
 								background-color: $secondary;
-								color: $light-color;
+								color: color-contrast($secondary);
 							}
 
 							@media (max-width: 768px) {

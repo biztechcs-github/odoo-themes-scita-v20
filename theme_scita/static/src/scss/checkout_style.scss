@@ -788,125 +788,6 @@ body #wrapwrap.o_portal {
     border-color: $primary;
 }
 
-// image hotspot css start here
-.image_hotspot_section {
-	padding: 50px 0;
-	@include min992{
-		padding: 60px 0;
-	}
-    .image_hotspot_box{
-        position: relative;
-		z-index: 1;
-		> img{
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-
-        .ripple-btn{
-			position: relative;
-            .ripple-circle{
-                border-radius: 50%; 
-				height: 15px;
-				width: 15px;
-				border-radius: 50%;
-				background-color: $white;
-				display: block;
-                cursor: pointer;
-				@media (max-width: 767px){
-					height: 10px;
-					width: 10px;
-				}
-                .ripple-circle-before, .ripple-circle-after{
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
-                    border: 1px solid $white;
-                    border-radius: 50%;
-                }
-                .ripple-circle-before{
-                    animation: ripple 2s linear infinite;
-                }
-                .ripple-circle-after{
-                    animation: ripple 2s linear 1s infinite;
-                }
-                @keyframes ripple{
-                    0% { transform: scale(1); }
-                    50% { transform: scale(2); opacity:1; }
-                    100% { transform: scale(2.5); opacity:0; }
-                }
-            }
-        }
-    }
-}
-.popover{
-	--popover-max-width: auto;
-	border: 0;
-	.popover-body{
-		box-shadow: 1px 1px 30px 0px rgba(0,0,0,0.1);
-		padding: 0;
-
-		.hotspot-tooltip{
-			.triangle-up{
-				display: none;
-			}
-			.hotspot_box{
-				@include flex;
-			}
-			.hotspot-product-img{
-				@include flex;
-				padding: 10px 12px;
-				img{
-					height: auto;
-					min-width: 60px;
-					width: 60px;
-					box-shadow: 0 0 4px 1px $light-grey-color;
-					background-color: $light-grey-color;
-					border-radius: 5px;
-					padding: 3px;
-				}
-				.hotspot_product_content{
-					margin: 0 12px;
-					a{
-						display: block;
-						color: $primary;
-						margin: 0 0 3px;
-						white-space: nowrap !important;
-						text-overflow: ellipsis;
-						overflow: hidden;
-						font-size: $title - 4;
-						max-width: 100px;
-						&:hover{
-							text-decoration: underline;
-						}
-					}
-					.hotspot-price{
-						margin: 0;
-						font-weight: 600;
-						font-size: $title - 4;
-						span{
-							margin-left: 5px;
-						}
-					}
-				}
-			}
-			.btn{
-				padding: 10px 19px;
-				font-size: $title + 6;
-				margin: 0;
-				background: $primary;
-				color: $white;
-				@include flex;
-				@include align-content;
-				border-radius: 0 10px 10px 0;
-			}
-		}
-	}
-}
 @keyframes popup-product {
 	0% {
 	  transform: scale(70%);
@@ -941,4 +822,23 @@ body #wrapwrap.o_portal {
 #brand_filter button:hover {
 	background-color: #212529;
 	color: white;
+}
+
+// Checkout address lists (Scita's grid of cards, theme.xml scita_address_row).
+// Odoo 20 puts the cards straight into the list, without the column wrappers of 19, so the
+// .row/.g-3 gutters became padding inside the cards: they touched each other and, three in
+// a row, were too narrow for the "Main Address" badge (clipped at the card edge).
+.all_billing.row,
+.all_shipping.row {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 0 0 32px;
+
+    > .o_address_card {
+        width: auto;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
 }

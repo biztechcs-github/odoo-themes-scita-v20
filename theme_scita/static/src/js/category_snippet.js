@@ -126,10 +126,6 @@ class CategorySnippetModifyPlugin extends Plugin {
     selector = ".oe_cat_slider";
 
     resources = {
-        builder_options: {
-            template: "theme_scita_category_slider_option", 
-            selector: ".oe_cat_slider",
-        },
         so_content_addition_selector: [".oe_cat_slider"],
         builder_actions: {
             CategorySnippetModifyBtnAction,

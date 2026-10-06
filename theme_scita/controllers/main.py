@@ -19,6 +19,12 @@ from odoo.addons.website_sale.controllers.wishlist import ProductWishlist
 from odoo.fields import  Domain
 PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
 
+def _brand_filter_query(brand_value):
+    """Shop query param filtering on a brand attribute value. Odoo 20 reads attribute filters
+    as `<attribute-slug>=<value-slug>` (e.g. `brand-1=apple-21`) and ignores `attribute_value=`."""
+    slug = request.env['ir.http']._slug
+    return f"{slug(brand_value.attribute_id)}={slug(brand_value)}"
+
 class WebsiteAutocomplate(Website):
 
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
@@ -69,7 +75,7 @@ class WebsiteAutocomplate(Website):
                         'name': brand.name,
                         'brand': True,
                         'image': image_url,
-                        'website_url': f"/shop?attribute_value={brand_attr.id}-{brand.id}",
+                        'website_url': f"/shop?{_brand_filter_query(brand)}",
                     })  
 
 
@@ -99,7 +105,7 @@ class WebsiteAutocomplate(Website):
                     combo = f"{categ.name} {brand}"
                     combo_upper = combo.upper()
                     if all(word in combo_upper for word in search_words):
-                        url = f"/shop?category={categ.id}&attribute_value={brand_attr_id}-{brand_id}"
+                        url = f"/shop?category={categ.id}&{_brand_filter_query(attr_line.value_ids[0])}"
                         combo_set.add((combo, url))
 
 
@@ -873,14 +879,15 @@ class ScitaShop(WebsiteSale):
         max_number_of_product_for_carousel = 12
         visitor = request.env['ir.http']._get_visitor_from_request()
         if visitor:
-            excluded_products = request.cart.mapped(
-                'order_line.product_id.id')
-            products = request.env['website.track'].sudo().read_group(
+            cart = request.cart
+            excluded_products = cart.order_line.product_id.ids if cart else []
+            # Odoo 20: read_group(domain, groupby, aggregates, ..., order) returns tuples
+            products = request.env['website.track'].sudo()._read_group(
                 [('visitor_id', '=', visitor.id), ('product_id', '!=', False),
                  ('product_id', 'not in', excluded_products)],
-                ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel,
-                orderby='visit_datetime DESC')
-            products_ids = [product['product_id'][0] for product in products]
+                ['product_id'], ['visit_datetime:max'], limit=max_number_of_product_for_carousel,
+                order='visit_datetime:max DESC')
+            products_ids = [product.id for product, _last_visit in products]
             if products_ids:
                 viewed_products = request.env['product.product'].browse(
                     products_ids)
@@ -896,7 +903,11 @@ class ScitaShop(WebsiteSale):
                     combination_info = product._get_combination_info_variant()
                     res_product = product.read(
                         ['id', 'name', 'website_url'])[0]
-                    res_product.update(combination_info)
+                    # only JSON-serialisable values (20's combination info holds recordsets)
+                    res_product.update({
+                        key: value for key, value in combination_info.items()
+                        if isinstance(value, (str, int, float, bool, type(None)))
+                    })
                     res_product['price'] = FieldMonetary.value_to_html(
                         res_product['price'], monetary_options)
                     if rating:
@@ -1625,7 +1636,7 @@ class PWASupport(http.Controller):
                     brands.append({
                         'id': brand.id,
                         'name': brand.name,
-                        'website_url': f"/shop?attribute_value={brand_attr.id}-{brand.id}",
+                        'website_url': f"/shop?{_brand_filter_query(brand)}",
                         'image_url': f"/web/image/product.attribute.value/{brand.id}/image"
                     })
 

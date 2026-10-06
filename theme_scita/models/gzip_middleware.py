@@ -59,6 +59,8 @@ COMPRESSIBLE_TYPES = frozenset((
     'image/svg+xml',
 ))
 MIN_SIZE_TO_COMPRESS = 1024
+# headers that belong to the one request being answered, never to a cached copy
+_PER_CLIENT_HEADERS = frozenset(('set-cookie',))
 
 _patched = False
 
@@ -94,7 +96,13 @@ def _patch_gzip_compression():
             return original_call(self, environ, start_response)
 
         path = environ.get('PATH_INFO', '')
-        cacheable = path.startswith(_ASSET_URL_PREFIX)
+        # Only plain GETs of content-hashed asset URLs are served from / stored in the
+        # cache: a HEAD has no body to replay and a Range request expects a part of it.
+        cacheable = (
+            path.startswith(_ASSET_URL_PREFIX)
+            and environ.get('REQUEST_METHOD') == 'GET'
+            and not environ.get('HTTP_RANGE')
+        )
         if cacheable:
             hit = _cache_get(path)
             if hit is not None:
@@ -164,9 +172,15 @@ def _patch_gzip_compression():
         new_headers.append(('Vary', ', '.join(vary_values)))
 
         # Only content-hashed asset URLs are cached, and only on a plain 200 -
-        # a 304 or a redirect must never be replayed as a body.
-        if cacheable and captured['status'].startswith('200'):
-            _cache_put(path, (captured['status'], new_headers, compressed))
+        # a 304 or a redirect must never be replayed as a body. Per-visitor headers
+        # are never stored: the response carries this visitor's session cookie
+        # (Set-Cookie: session_id=...), and replaying it gave every later visitor
+        # that same session - sharing it, and logging signed-in users out.
+        if cacheable and captured['status'].startswith('200') and compressed:
+            shared_headers = [
+                (k, v) for k, v in new_headers if k.lower() not in _PER_CLIENT_HEADERS
+            ]
+            _cache_put(path, (captured['status'], shared_headers, compressed))
 
         start_response(captured['status'], new_headers, captured.get('exc_info'))
         return [compressed]

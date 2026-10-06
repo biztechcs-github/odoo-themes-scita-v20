@@ -1,4 +1,4 @@
-// Product page call-to-action layout (>= md)
+// Product page call-to-action layout
 // ------------------------------------------
 // Price on its own row, then quantity + Add to Cart + Buy now on one line, then
 // Add to wishlist and Compare underneath (Scita's buttons, or Odoo's own ones in
@@ -13,142 +13,216 @@
 // reach three ids, and these have to win over them. #product_detail also keeps the
 // quick-view modal out: it renders its own #o_wsale_cta_wrapper outside that section.
 
-@media (min-width: 768px) {
-    #wrapwrap #product_detail #product_details #o_wsale_cta_wrapper {
-        // the row is shrink-to-fit (.w-lg-auto); take the whole column instead
-        width: 100% !important;
-        align-items: center;
-        column-gap: 16px;
-        row-gap: 16px;
+#wrapwrap #product_detail #product_details #o_wsale_cta_wrapper {
+    // the row is shrink-to-fit (.w-lg-auto); take the whole column instead
+    width: 100% !important;
+    align-items: center;
+    column-gap: 16px;
+    row-gap: 16px;
 
-        // website_sale boxes the wrapper as soon as a .product_price sits inside it
-        // (_onChangeCombination adds these classes at runtime).
-        &.o_wsale_cta_wrapper_boxed {
-            padding: 0 !important;
-            border: 0 !important;
-            max-width: none !important;
-        }
+    // website_sale boxes the wrapper as soon as a .product_price sits inside it
+    // (_onChangeCombination adds these classes at runtime).
+    &.o_wsale_cta_wrapper_boxed {
+        padding: 0 !important;
+        border: 0 !important;
+        max-width: none !important;
+    }
 
-        // flatten the wrappers so their contents join this flex row. !important:
-        // website_sale toggles .d-inline-flex on #add_to_cart_wrap from JS; a .d-none
-        // wrapper (sold out, price hidden) must stay hidden.
-        #add_to_cart_wrap:not(.d-none) {
-            display: contents !important;
+    // flatten the wrappers so their contents join this flex row. !important:
+    // website_sale toggles .d-inline-flex / .d-none on #add_to_cart_wrap from JS.
+    // Scita keeps the price and the zip checker in that wrapper too, so a .d-none
+    // wrapper (sold out, Contact Us) is flattened as well and only loses what buys:
+    // the price stays on top and Notify me / Contact Us take Add to Cart's place.
+    #add_to_cart_wrap {
+        display: contents !important;
 
-            .sct-main-price-description:not(.d-none),
-            .sct-price-option {
-                display: contents;
-            }
-
-            .product_price {
-                order: -3;
-                flex: 0 0 100%;
-                margin: 0;
-            }
-
-            .css_quantity {
-                order: -2 !important; // beats Bootstrap's .order-first
-                margin: 0 !important;
-                flex: 0 0 auto;
-            }
-
-            // Add to Cart and Buy now share the row with the quantity picker. flex-basis 0
-            // keeps them there: sized from what is left of the row they never wrap onto
-            // their own line, whatever the column width; max-content stops them growing
-            // past their label. (product_style.scss makes the cart wrapper a full row.)
+        &.d-none {
+            .css_quantity,
             .sct-add-to-cart-mob,
             [data-action="buy_now"] {
-                order: -1;
-                flex: 1 1 0;
+                display: none !important;
+            }
+        }
+
+        .sct-main-price-description:not(.d-none),
+        .sct-price-option {
+            display: contents;
+        }
+
+        .product_price {
+            order: -3;
+            flex: 0 0 100%;
+            margin: 0;
+        }
+
+        .css_quantity {
+            order: -2 !important; // beats Bootstrap's .order-first
+            margin: 0 !important;
+            flex: 0 0 auto;
+            height: 50px; // as tall as the buttons beside it (tablets had 42px)
+            align-items: center;
+        }
+
+        // Add to Cart and Buy now share the row with the quantity picker. flex-basis 0
+        // keeps them there: sized from what is left of the row they never wrap onto
+        // their own line, whatever the column width; max-content stops them growing
+        // past their label. (product_style.scss makes the cart wrapper a full row.)
+        .sct-add-to-cart-mob,
+        [data-action="buy_now"] {
+            order: -1;
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: max-content;
+            width: auto !important; // .w-100 on Buy now comes from website_sale
+            margin: 0 !important;
+        }
+
+        .sct-add-to-cart-mob {
+            display: inline-flex;
+
+            > .btn {
+                flex: 1 1 auto;
                 min-width: 0;
-                max-width: max-content;
-                width: auto !important; // .w-100 on Buy now comes from website_sale
-                margin: 0 !important;
+            }
+        }
+
+        .sct-add-to-cart-mob > .btn,
+        [data-action="buy_now"] {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 50px;
+            padding: 0 20px !important;
+            margin: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        // second row: Scita's Add to wishlist / Compare
+        .o_add_wishlist_dyn,
+        .o_add_compare_dyn {
+            order: 2;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            margin: 0 !important;
+        }
+
+        .sct-other-desciption {
+            order: 3;
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+    }
+
+    // Contact Us / Notify me take Add to Cart's place when the product can't be bought,
+    // in the same pill shape and height as Scita's Add to Cart
+    #contact_us_wrapper,
+    #out_of_stock_buttons_wrapper {
+        order: -1;
+
+        > .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            padding: 0 24px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        > .btn.d-none {
+            display: none !important;
+        }
+    }
+
+    // its e-mail form, right under it
+    #stock_notification_wrapper {
+        order: -1;
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin: 0 !important;
+
+        .form-control {
+            height: 44px;
+            border-radius: 50px 0 0 50px;
+            padding-left: 20px;
+        }
+
+        #stock_notification_submit_button {
+            border-radius: 0 50px 50px 0;
+            padding: 0 24px;
+        }
+    }
+
+    // Odoo's own wishlist / compare buttons (only rendered when enabled from the
+    // editor, in place of Scita's): second row too. !important: .w-100 utility.
+    #product_option_block {
+        order: 2;
+        flex: 0 0 auto;
+        width: auto !important;
+    }
+
+    // line break: what follows (order >= 1) starts a new row
+    &::before {
+        content: "";
+        order: 1;
+        flex: 0 0 100%;
+        height: 0;
+    }
+}
+
+// Phones: same order, but Add to Cart takes what the quantity picker leaves of its row and
+// Buy now gets a full row of its own under them (it used to drop below Add to wishlist, and
+// product_style.scss shrank Add to Cart to a 13px label).
+@media (max-width: 767.98px) {
+    #wrapwrap #product_detail #product_details #o_wsale_cta_wrapper {
+        column-gap: 12px;
+        row-gap: 12px;
+
+        #add_to_cart_wrap:not(.d-none) {
+            .css_quantity {
+                height: 48px; // Scita's compact mobile picker was 40px
             }
 
             .sct-add-to-cart-mob {
-                display: inline-flex;
+                flex: 1 1 0;
+                max-width: none;
 
                 > .btn {
-                    flex: 1 1 auto;
-                    min-width: 0;
+                    max-width: none; // a product_style.scss mobile rule caps it at 33.33%
                 }
+            }
+
+            [data-action="buy_now"] {
+                order: 0;
+                flex: 0 0 100%;
+                max-width: 100%;
             }
 
             .sct-add-to-cart-mob > .btn,
             [data-action="buy_now"] {
-                display: inline-flex !important;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
-                height: 50px;
-                padding: 0 20px !important;
-                margin: 0 !important;
-                white-space: nowrap !important;
+                height: 48px;
+                padding: 0 16px !important;
+                font-size: 16px !important;
             }
-
-            // second row: Scita's Add to wishlist / Compare
-            .o_add_wishlist_dyn,
-            .o_add_compare_dyn {
-                order: 2;
-                flex: 0 0 auto;
-                display: inline-flex;
-                align-items: center;
-                margin: 0 !important;
-            }
-
-            .sct-other-desciption {
-                order: 3;
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding-top: 20px;
-                border-top: 1px solid #dee2e6;
-            }
-        }
-
-        // Contact Us / Notify me take Add to Cart's place when the product can't be bought
-        #contact_us_wrapper,
-        #out_of_stock_buttons_wrapper {
-            order: -1;
-        }
-
-        // Odoo's own wishlist / compare buttons (only rendered when enabled from the
-        // editor, in place of Scita's): second row too. !important: .w-100 utility.
-        #product_option_block {
-            order: 2;
-            flex: 0 0 auto;
-            width: auto !important;
-        }
-
-        // line break: what follows (order >= 1) starts a new row
-        &::before {
-            content: "";
-            order: 1;
-            flex: 0 0 100%;
-            height: 0;
         }
     }
 }
 
-// Below md the CTA stays stacked; keep "Buy now" above the zip checker and the
-// Add to Cart label on one line.
-@media (max-width: 767.98px) {
-    #wrapwrap #product_detail #product_details #o_wsale_cta_wrapper #add_to_cart_wrap {
-        .sct-main-price-description {
-            order: 0;
-        }
-
-        [data-action="buy_now"] {
-            order: 1;
-        }
-
-        .sct-other-desciption {
-            order: 2;
-        }
-
-        .sct-add-to-cart-mob > .btn {
-            white-space: nowrap !important;
-            width: auto;
-        }
-    }
+// Quick view: the "Out of Stock" box that replaces Add to Cart, styled like the product
+// page's stock message instead of a bare bordered strip glued to the tags below it
+#shop_quick_view_modal #product_unavailable.d-flex {
+    align-items: flex-start !important;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 0 16px;
+    padding: 6px 20px;
+    border: 0 !important;
+    border-radius: 4px !important;
+    background: rgba($secondary, 0.1) !important;
+    color: if(contrast-ratio($secondary, $white) < 4.5, shade-color($secondary, 60%), $secondary);
+    font-size: 14px;
 }

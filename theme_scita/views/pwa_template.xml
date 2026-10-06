@@ -160,7 +160,7 @@ self.addEventListener('fetch', function(ev) {
             <div class="mobile-deive-popup" t-if='current_website_obj.is_app_pwa'>
                 <img t-att-src="request.env['website'].image_url(current_website_obj, 'pwa_app_icon_512', '50x50')" class='img pwa-icon-img'/>
                 <p>
-                    <button type="button" class='sct_pwa_iphone_close float-right'>X
+                    <button type="button" class='sct_pwa_iphone_close float-end'>X
                     </button>
                     To install this Web App in your ISO device press<img src="/theme_scita/static/src/img/PWA/mobile_icon.png" class='pwa-small-img' width="735" height="735"/> and then Add to Home Screen.
                 </p>
