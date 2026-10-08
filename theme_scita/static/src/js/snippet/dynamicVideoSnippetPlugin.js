@@ -9,7 +9,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 // ---------------------------------------------
 // Shared Modal Logic
 // ---------------------------------------------
-async function openVideoBannerModal(snippetEl) {
+async function openVideoBannerModal(snippetEl, onChange) {
     // Render modal template
     const modalEl = renderToElement("theme_scita.video_banner_block");
     document.body.appendChild(modalEl);
@@ -79,6 +79,8 @@ async function openVideoBannerModal(snippetEl) {
                 </div>
             </div>
         `;
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -98,7 +100,7 @@ async function openVideoBannerModal(snippetEl) {
 // ---------------------------------------------
 class VideoBannerSnippetPlugin extends Plugin {
     static id = "videoBannerSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -114,7 +116,7 @@ class VideoBannerSnippetPlugin extends Plugin {
         snippetEl.innerHTML = "";
 
         // ✅ open modal once after drop
-        openVideoBannerModal(snippetEl);
+        openVideoBannerModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -127,10 +129,11 @@ registry.category("website-plugins").add(
 // ---------------------------------------------
 export class VideoBannerModifyBtnAction extends BuilderAction {
     static id = "videoBannerModifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openVideoBannerModal(editingElement);
+            openVideoBannerModal(editingElement, () => this.dependencies.history.commit());
         }
     }
 

@@ -2383,11 +2383,12 @@ $(document).ready(function(){
         _restorePlaceholder: function() {
             var self = this;
             // Check if this is rendered content (has video tag or rendered video content)
-            var hasRenderedContent = self.$target.find('video, source').length > 0;
             var hasPlaceholder = self.$target.find('.category-slider-placeholder').length > 0;
             
-            // Only restore if we have rendered content and no placeholder
-            if (hasRenderedContent && !hasPlaceholder) {
+            // Restore when the placeholder is gone: the video was rendered, or (pages saved
+            // with the old rendering) an empty section was nested in the block, which left it
+            // 0px high in the editor, impossible to select
+            if (!hasPlaceholder) {
                 var video_url = self.$target.attr('data-video-url');
                 var titleText = _t("Video Banner");
                 
@@ -2425,6 +2426,11 @@ $(document).ready(function(){
         
         start: function() {
             var self = this;
+            // a block nested in another one (old rendering, see _restorePlaceholder): the outer
+            // block replaces its content
+            if (this.$target.parent().closest('.dynamic_video_banner').length) {
+                return this._super.apply(this, arguments);
+            }
             if (this.editableMode) {
                 // Restore placeholder when in editable mode
                 self._restorePlaceholder();
@@ -2452,15 +2458,16 @@ $(document).ready(function(){
                     this._observer = observer;
                 }
             }
+            var video_url = self.$target.attr('data-video-url');
             // no video chosen yet: keep the placeholder (the empty video section that comes back
             // otherwise collapsed the block to 0px, and in the editor it could not be selected)
-            if (!this.editableMode && self.$target.attr('data-video-url')) {
+            if (!this.editableMode && video_url) {
                 $.get("/video/video_url_get", {
-                    'video_url': self.$target.attr('data-video-url'),
+                    'video_url': video_url,
                 }).then(function(data) {
                     if (data) {
                         self.$target.empty().append(data);
-                        $(".dynamic_video_banner").removeClass('o_hidden');
+                        self.$target.removeClass('o_hidden');
                     }
                 });
             }

@@ -36,7 +36,10 @@ export async function downscaleImage(file) {
 export class ScitaVisualSearch extends Interaction {
     static selector = "#o_scita_visual_search_modal";
     dynamicContent = {
-        _document: { "t-on-click": this.onDocumentClick },
+        // capture phase: the camera button may sit in a search box that opens Odoo's own search
+        // pop-up on any click (mobile menu, data-force-modal-trigger): that pop-up opened on top
+        // of this one and covered it. Handled (and stopped) before the search box sees it.
+        _document: { "t-on-click.capture": this.onDocumentClick },
         ".o_scita_vs_file": { "t-on-change": this.locked(this.onFileChange, true) },
         ".o_scita_vs_reset": { "t-on-click": this.reset },
     };
@@ -58,6 +61,7 @@ export class ScitaVisualSearch extends Interaction {
             return;
         }
         ev.preventDefault();
+        ev.stopPropagation();
         // the button may live inside the search modal: close it first
         const openModal = ev.target.closest(".modal.show");
         if (openModal && openModal !== this.el) {
@@ -121,7 +125,7 @@ export class ScitaVisualSearch extends Interaction {
             return;
         }
         this.renderChips(result.chips || []);
-        this.renderResults(result.products || []);
+        this.renderResults(result.products || [], result.exact !== false);
         if (result.search_url) {
             this.allLink.href = result.search_url;
             this.footer.classList.remove("d-none");
@@ -155,7 +159,7 @@ export class ScitaVisualSearch extends Interaction {
         }
     }
 
-    renderResults(products) {
+    renderResults(products, exact = true) {
         if (!products.length) {
             this.showError(_t("We couldn't find similar products. Try another photo or browse the shop."));
             return;
@@ -194,7 +198,16 @@ export class ScitaVisualSearch extends Interaction {
             col.append(card);
             this.results.append(col);
         }
-        this.status.textContent = _t("%s similar products", products.length);
+        if (!exact) {
+            // nothing of the photo's kind in the shop: say so, these are only related products
+            this.status.textContent = products.length === 1
+                ? _t("We don't have this product. 1 related product:")
+                : _t("We don't have this product. %s related products:", products.length);
+        } else {
+            this.status.textContent = products.length === 1
+                ? _t("1 similar product")
+                : _t("%s similar products", products.length);
+        }
     }
 }
 

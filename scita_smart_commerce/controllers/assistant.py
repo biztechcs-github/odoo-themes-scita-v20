@@ -1,4 +1,5 @@
 import json
+import re
 import logging
 import math
 
@@ -95,9 +96,26 @@ class ScitaAssistantController(http.Controller):
             return {'error': Ai.public_error(e)}
         return {
             'reply': reply,
-            'products': list(state['products'].values())[:MAX_SEARCH_RESULTS],
+            'products': self._mentioned_products(list(state['products'].values()), reply)[:MAX_SEARCH_RESULTS],
             'cart': state['cart'],
         }
+
+    @staticmethod
+    def _mentioned_products(cards, reply):
+        """The cards of the products the reply talks about. A search returns more than the answer
+        uses ("phones under $500": the word "phone" also found the headphones, which the AI left
+        out of its answer but still got a card under it). The AI shortens names ("Lounge Chair"
+        for "Lounge Chair (10 images)"): compared without the bracketed part. A reply naming
+        none of them (a general answer) keeps them all."""
+        def norm(text):
+            # "$249.00Lounge Chair": a price run into the next name still ends a word
+            text = re.sub(r'(\d)(?=[^\W\d_])', r'\1 ', (text or '').lower())
+            return ' '.join(re.findall(r'\w+', text))
+        text = ' %s ' % norm(reply)
+        mentioned = [c for c in cards
+                     if ' %s ' % norm(re.sub(r'\s*\([^)]*\)', '', c.get('name') or '')) in text
+                     or ' %s ' % norm(c.get('name')) in text]
+        return mentioned or cards
 
     # ------------------------------------------------------------------ conversation
 

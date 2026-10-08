@@ -40,6 +40,25 @@ class Website(models.Model):
         'Assistant Welcome Message', translate=True,
         default='Hi! Tell me what you are looking for and I will find it in our catalogue.')
     scita_visual_search_enabled = fields.Boolean('AI Visual Search')
+    scita_visual_search_match = fields.Selection([
+        ('name', 'Product name'),
+        ('name_description', 'Name and sales description'),
+        ('all', 'Name, description, tags and attributes'),
+    ], string='Match Photos On', default='all', required=True,
+        help='Which product information the words found in the photo (type, colour, material, style) '
+             'are compared with. Categories are always used.')
+    scita_visual_search_scope = fields.Selection([
+        ('category', 'Same category only'),
+        ('kind', 'Same kind first'),
+        ('similar', 'Anything similar'),
+    ], string='Results', default='kind', required=True,
+        help='Same category only: a chair photo shows chairs and nothing else. '
+             'Same kind first: products of the photo\'s kind; other similar products only when there are none. '
+             'Anything similar: every product sharing a colour, material or style, best matches first.')
+    scita_visual_search_exclude_services = fields.Boolean(
+        'Leave Out Services', default=True,
+        help='Services (assembly, delivery, warranty...) never look like a photo: do not list them.')
+    scita_visual_search_limit = fields.Integer('Number of Results', default=12)
     scita_compare_ai_enabled = fields.Boolean('AI Product Comparison')
     scita_price_alert_enabled = fields.Boolean('Price Drop Alerts')
     scita_price_alert_default_type = fields.Selection([
@@ -67,6 +86,12 @@ class Website(models.Model):
         help='Visitors who are not signed in confirm their alert from an email first (double opt-in), '
              'so nobody can subscribe someone else. Recommended (GDPR).')
     scita_free_shipping_bar_enabled = fields.Boolean('Free Shipping Progress Bar')
+
+    @api.constrains('scita_visual_search_limit')
+    def _check_scita_visual_search_limit(self):
+        for website in self:
+            if not 1 <= website.scita_visual_search_limit <= 48:
+                raise ValidationError(self.env._('Visual search shows between 1 and 48 results.'))
 
     @api.constrains('scita_price_alert_default_percent', 'scita_price_alert_expiry_days', 'scita_price_alert_retention_days')
     def _check_scita_price_alert_settings(self):

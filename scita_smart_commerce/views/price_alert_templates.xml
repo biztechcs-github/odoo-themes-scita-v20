@@ -115,6 +115,11 @@
     </template>
 
     <template id="price_alert_unsubscribed" name="Price Alert Unsubscribed">
+        <!-- browser tab title = the page's heading, not the view name -->
+        <t t-set="title_ask">Stop this price alert?</t>
+        <t t-set="title_done">Price alert stopped</t>
+        <t t-set="title_invalid">This link is not valid</t>
+        <t t-set="additional_title" t-value="title_done if valid and done else (title_ask if valid else title_invalid)"/>
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="container py-5 text-center">
@@ -122,14 +127,14 @@
                         <h2>Price alert stopped</h2>
                         <p class="text-muted">
                             You will no longer receive price alerts for
-                            <strong t-out="alert.product_id.display_name"/>.
+                            <strong t-out="alert._scita_product_name()"/>.
                         </p>
                         <a class="btn btn-primary" t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url">Back to the product</a>
                     </t>
                     <t t-elif="valid">
                         <h2>Stop this price alert?</h2>
                         <p class="text-muted">
-                            We will stop watching the price of <strong t-out="alert.product_id.display_name"/> for you.
+                            We will stop watching the price of <strong t-out="alert._scita_product_name()"/> for you.
                         </p>
                         <form method="post" t-attf-action="/scita/price_alert/unsubscribe/#{alert.id}/#{token}">
                             <button type="submit" class="btn btn-primary">Stop the alert</button>
@@ -147,6 +152,12 @@
     </template>
 
     <template id="price_alert_confirmed" name="Price Alert Confirmed">
+        <!-- browser tab title = the page's heading: it said "Price Alert Confirmed" (the view
+             name) before the shopper confirmed -->
+        <t t-set="title_ask">Confirm your price alert</t>
+        <t t-set="title_done">Your price alert is on</t>
+        <t t-set="title_invalid">This link is not valid</t>
+        <t t-set="additional_title" t-value="title_ask if valid and pending else (title_done if valid else title_invalid)"/>
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="container py-5 text-center">
@@ -181,6 +192,11 @@
     </template>
 
     <template id="price_alert_rearm" name="Price Alert: Keep Watching">
+        <!-- browser tab title = the page's heading, not the view name -->
+        <t t-set="title_ask">Keep watching the price?</t>
+        <t t-set="title_done">We keep watching the price</t>
+        <t t-set="title_invalid">This link is not valid</t>
+        <t t-set="additional_title" t-value="title_done if valid and done else (title_ask if valid else title_invalid)"/>
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="container py-5 text-center">
@@ -245,7 +261,7 @@
                                 <a t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url" class="d-flex align-items-center gap-2 text-reset">
                                     <img t-attf-src="/web/image/product.product/#{alert.product_id.id}/image_128" alt=""
                                          class="rounded" style="width: 48px; height: 48px; object-fit: contain;" loading="lazy"/>
-                                    <span t-out="alert.product_id.display_name"/>
+                                    <span t-out="alert._scita_product_name()"/>
                                 </a>
                             </td>
                             <td class="small" t-out="alert._scita_condition_text()"/>

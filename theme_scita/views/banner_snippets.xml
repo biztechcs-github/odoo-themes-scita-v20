@@ -326,14 +326,14 @@
             </div>
         </section>
     </template>
+    <!-- the video only: it is put inside the block's own section (a section here was nested in
+         the block, saved with the page by the editor, and hid the block there) -->
     <template id="sct_dynamic_banner_video_1" name="Video Banner 11">
-        <section class="dynamic_video_banner">
-            <t t-if="video_url">
-                <video width="100%" height="100%" autoplay="true" loop="infinite" muted="true" playsinline="true">
-                    <source t-att-src="video_url"/>
-                </video>
-            </t>
-        </section>
+        <t t-if="video_url">
+            <video width="100%" height="100%" autoplay="true" loop="infinite" muted="true" playsinline="true">
+                <source t-att-src="video_url"/>
+            </video>
+        </t>
     </template>
     <!-- for Dynamic Video Banner snippets end -->
 

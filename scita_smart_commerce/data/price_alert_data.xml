@@ -12,7 +12,7 @@
     <record id="mail_template_price_alert" model="mail.template">
         <field name="name">eCommerce: Price drop alert</field>
         <field name="model_id" ref="scita_smart_commerce.model_scita_price_alert"/>
-        <field name="subject">Price drop: {{ object.product_id.display_name }} is now {{ object._scita_format(object.last_price) }}</field>
+        <field name="subject">Price drop: {{ object._scita_product_name() }} is now {{ object._scita_format(object.last_price) }}</field>
         <field name="email_from">{{ (object.website_id.company_id.email_formatted or user.email_formatted) }}</field>
         <field name="email_to">{{ object.email }}</field>
         <field name="lang">{{ object.lang }}</field>
@@ -32,7 +32,7 @@
                      alt="" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;"/>
             </td>
             <td t-attf-style="padding: {{ '16px 16px 16px 0' if object.product_id.image_128 else '16px' }}; vertical-align: top;">
-                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;" t-out="object.product_id.display_name or ''">Product</div>
+                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;" t-out="object._scita_product_name()">Product</div>
                 <div>
                     <span t-if="saving[0]" style="text-decoration: line-through; color: #6c757d; margin-right: 8px;"
                           t-out="object._scita_format(object.price_at_creation) or ''">$ 100.00</span>
@@ -78,7 +78,7 @@
     <p>Hello,</p>
     <p>
         Someone (hopefully you) asked us to email this address when the price of
-        <strong t-out="object.product_id.display_name or ''">Product</strong>
+        <strong t-out="object._scita_product_name()">Product</strong>
         <t t-out="object._scita_condition_text() or ''">reaches $ 90.00 or less</t>.
     </p>
     <p style="margin: 24px 0;">

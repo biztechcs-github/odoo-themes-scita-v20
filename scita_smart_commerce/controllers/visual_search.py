@@ -25,7 +25,8 @@ _logger = logging.getLogger(__name__)
 MAX_IMAGE_BYTES = 5 * 1024 * 1024
 MAX_PIXELS = 25_000_000  # guard against decompression bombs
 ALLOWED_FORMATS = {'JPEG': 'image/jpeg', 'PNG': 'image/png', 'WEBP': 'image/webp', 'GIF': 'image/gif'}
-RESULT_LIMIT = 12
+# weak matches (a shared colour, a parent category) are dropped below this share of the best score
+MIN_SCORE_SHARE = 0.35
 MAX_VOCAB_CATEGORIES = 300
 MAX_VOCAB_VALUES = 400
 MAX_VOCAB_TAGS = 200
@@ -138,43 +139,69 @@ class ScitaVisualSearch(Controller):
                 {k: sorted(v) for k, v in attributes.items()},
                 sorted(set(tags)))
 
-    def _candidates(self, website, detected):
+    def _search_domain(self, website):
+        """The products a photo can match: services never look like a photo."""
+        domain = self._product_domain(website)
+        if website.scita_visual_search_exclude_services:
+            domain &= Domain('type', '!=', 'service')
+        return domain
+
+    def _specific_categories(self, website, names):
+        """The detected shop categories without those that are a parent of another detected one:
+        for a chair the AI may answer "Chairs", "Living Room" and "Furniture", and only "Chairs"
+        says what the product is (the others brought in the sofas and the tables)."""
+        names = [n for n in names if n.strip()]
+        if len(names) < 2:
+            return names
+        categories = request.env['product.public.category'].sudo().search(
+            website.website_domain() & Domain.OR([Domain('name', '=ilike', n) for n in names]))
+        ancestor_ids = {int(i) for c in categories for i in (c.parent_path or '').split('/')[:-2]}
+        broad = {_norm(c.name) for c in categories if c.id in ancestor_ids}
+        return [n for n in names if _norm(n) not in broad] or names
+
+    def _candidates(self, website, detected, match='all'):
         """Published products that share at least one detected word, category, attribute value
-        or tag (at most MAX_CANDIDATES): only those are scored, whatever the catalogue size."""
+        or tag (at most MAX_CANDIDATES): only those are scored, whatever the catalogue size.
+        `match` is the website's "Match photos on" setting."""
         words = set()
         for text in [v for v in (detected.get('product_type'), detected.get('style')) if isinstance(v, str)] \
                 + _str_list(detected.get('keywords')) \
                 + _str_list(detected.get('colors')) + _str_list(detected.get('materials')):
             words |= _words(text)
         words = sorted(words, key=len, reverse=True)[:MAX_QUERY_WORDS]
-        names = [n for n in _str_list(detected.get('colors')) + _str_list(detected.get('materials'))
-                 + _str_list(detected.get('matched_categories')) if n.strip()][:MAX_QUERY_WORDS]
-        matches = []
-        for word in words:
-            matches += [Domain('name', 'ilike', word), Domain('description_sale', 'ilike', word),
-                        Domain('product_tag_ids.name', 'ilike', word)]
-        for name in names:
-            matches += [Domain('public_categ_ids.name', '=ilike', name),
-                        Domain('attribute_line_ids.value_ids.name', '=ilike', name)]
+        text_fields = ['name']
+        if match in ('name_description', 'all'):
+            text_fields.append('description_sale')
+        if match == 'all':
+            text_fields.append('product_tag_ids.name')
+        matches = [Domain(field, 'ilike', word) for word in words for field in text_fields]
+        for name in [n for n in _str_list(detected.get('matched_categories')) if n.strip()][:MAX_QUERY_WORDS]:
+            matches.append(Domain('public_categ_ids.name', '=ilike', name))
+        if match == 'all':
+            for name in [n for n in _str_list(detected.get('colors')) + _str_list(detected.get('materials'))
+                         if n.strip()][:MAX_QUERY_WORDS]:
+                matches.append(Domain('attribute_line_ids.value_ids.name', '=ilike', name))
         if not matches:
             return request.env['product.template']
         return request.env['product.template'].sudo().search(
-            self._product_domain(website) & Domain.OR(matches),
+            self._search_domain(website) & Domain.OR(matches),
             limit=MAX_CANDIDATES, order='website_sequence, id')
 
     # ------------------------------------------------------------------ scoring
     @staticmethod
-    def score_product(product, detected):
+    def score_product(product, detected, match='all'):
         """Deterministic, explainable score of one product.template against detected attributes.
-        Returns (score, reasons)."""
+        `match` is the website's "Match photos on" setting. Returns (score, reasons)."""
         score, reasons = 0, []
         cat_names = {_norm(n) for n in (product.public_categ_ids | product.public_categ_ids.parent_id).mapped('name')}
-        values = {_norm(v) for v in product.attribute_line_ids.value_ids.mapped('name')}
-        tags = {_norm(t) for t in product.product_tag_ids.mapped('name')} if 'product_tag_ids' in product._fields else set()
+        values = {_norm(v) for v in product.attribute_line_ids.value_ids.mapped('name')} if match == 'all' else set()
         name_words = _words(product.name)
-        text_words = name_words | _words(product.description_sale)
-        for tag in tags:
-            text_words |= _words(tag)
+        text_words = set(name_words)
+        if match in ('name_description', 'all'):
+            text_words |= _words(product.description_sale)
+        if match == 'all':
+            for tag in product.product_tag_ids.mapped('name'):
+                text_words |= _words(tag)
 
         product_type = detected.get('product_type') if isinstance(detected.get('product_type'), str) else ''
         style = detected.get('style') if isinstance(detected.get('style'), str) else ''
@@ -182,10 +209,21 @@ class ScitaVisualSearch(Controller):
             if _norm(cat) in cat_names:
                 score += 5
                 reasons.append(cat)
-        ptype = _words(product_type)
-        if ptype and (ptype & name_words or any(ptype & _words(c) for c in cat_names)):
+        # singular forms: "chair" is the kind of a product in "Chairs" (an "Armchair" in that
+        # category got no kind points and fell under MIN_SCORE_SHARE)
+        ptype = _singular(_words(product_type))
+        kind_words = _singular(name_words)
+        for name in cat_names:
+            kind_words |= _singular(_words(name))
+        if ptype and ptype & kind_words:
             score += 3
             reasons.append(product_type)
+        # the whole detected type in the name ("lounge chair" in "Lounge Chair") comes first, and
+        # so does a product whose own category is that type ("chair": an "Armchair" in "Chairs")
+        ptype_norm = ' '.join(sorted(_singular(_words(product_type))))
+        if _norm(product_type) and (' %s ' % _norm(product_type) in ' %s ' % _norm(product.name)
+                                    or any(ptype_norm == ' '.join(sorted(_singular(_words(c)))) for c in cat_names)):
+            score += 4
         for color in _str_list(detected.get('colors')):
             if _norm(color) in values:
                 score += 3
@@ -205,6 +243,12 @@ class ScitaVisualSearch(Controller):
             elif hits & text_words:
                 score += 1
         return score, list(dict.fromkeys(r for r in reasons if r))
+
+    @staticmethod
+    def in_detected_category(product, detected):
+        """Is `product` in one of the detected shop categories (or below one)?"""
+        cat_names = {_norm(n) for n in (product.public_categ_ids | product.public_categ_ids.parent_id).mapped('name')}
+        return any(_norm(cat) in cat_names for cat in _str_list(detected.get('matched_categories')))
 
     @staticmethod
     def matches_kind(product, detected):
@@ -238,6 +282,31 @@ class ScitaVisualSearch(Controller):
             'price': '' if hide else monetary.value_to_html(info['price'], opts).striptags().strip(),
             'compare_price': '' if hide or compare <= info['price'] else monetary.value_to_html(compare, opts).striptags().strip(),
         }
+
+    def _rank(self, website, detected):
+        """Score and filter the products for the detected attributes, following the website's
+        visual search settings. Returns the best (score, sequence, id, product, reasons)."""
+        detected['matched_categories'] = self._specific_categories(
+            website, _str_list(detected.get('matched_categories')))
+        match, scope = website.scita_visual_search_match, website.scita_visual_search_scope
+        scored = []
+        for product in self._candidates(website, detected, match):
+            score, reasons = self.score_product(product, detected, match)
+            if score > 0:
+                scored.append((score, product.website_sequence, product.id, product, reasons))
+        if scope == 'category' and _str_list(detected.get('matched_categories')):
+            scored = [s for s in scored if self.in_detected_category(s[3], detected)]
+        elif scope in ('category', 'kind'):
+            # when products of the photo's kind exist, only show those: colour or style matches
+            # of other kinds (shirts for a laptop photo) would just fill the list
+            same_kind = [s for s in scored if self.matches_kind(s[3], detected)]
+            if same_kind or scope == 'category':
+                scored = same_kind
+        if scored and scope != 'similar':
+            best = max(s[0] for s in scored)
+            scored = [s for s in scored if s[0] >= best * MIN_SCORE_SHARE]
+        scored.sort(key=lambda s: (-s[0], s[1], s[2]))
+        return scored[:website.scita_visual_search_limit or 12]
 
     # ------------------------------------------------------------------ route
     @route('/scita/visual_search', type='jsonrpc', auth='public', website=True, methods=['POST'])
@@ -287,18 +356,8 @@ class ScitaVisualSearch(Controller):
         if not isinstance(detected, dict):
             detected = {}
 
-        scored = []
-        for product in self._candidates(website, detected):
-            score, reasons = self.score_product(product, detected)
-            if score > 0:
-                scored.append((score, product.website_sequence, product.id, product, reasons))
-        # when products of the photo's kind exist, only show those: colour or style matches
-        # of other kinds (shirts for a laptop photo) would just fill the list
-        same_kind = [s for s in scored if self.matches_kind(s[3], detected)]
-        if same_kind:
-            scored = same_kind
-        scored.sort(key=lambda s: (-s[0], s[1], s[2]))
-        public_products = request.env['product.template'].browse([s[2] for s in scored[:RESULT_LIMIT]])
+        scored = self._rank(website, detected)
+        public_products = request.env['product.template'].browse([s[2] for s in scored])
         # re-read with the visitor's rights so prices/urls are computed for them
         visible = public_products.with_env(request.env).filtered_domain(self._product_domain(website))
         by_id = {s[2]: s for s in scored}
@@ -314,10 +373,57 @@ class ScitaVisualSearch(Controller):
             if isinstance(chip, str) and chip.strip():
                 chips.setdefault(chip.strip().lower(), chip.strip())
         chips = list(chips.values())[:8]
-        product_type = detected.get('product_type') if isinstance(detected.get('product_type'), str) else ''
-        search_terms = ' '.join(filter(None, [product_type] + _str_list(detected.get('colors'))[:1])).strip()
         return {
             'products': cards,
             'chips': chips,
-            'search_url': '/shop?%s' % url_encode({'search': search_terms}) if search_terms else '/shop',
+            'search_url': self._all_results_url(website, detected, visible),
+            # False when the best result is not the photo's kind (a camera photo in a shop
+            # without cameras): the results are related products, not the product itself
+            'exact': bool(visible) and self._is_photo_product(visible[0], detected),
         }
+
+    @staticmethod
+    def _is_photo_product(product, detected):
+        """Is `product` the kind of thing in the photo, not just related to it? Its name or
+        categories name the detected type ("armchair", "Chairs" for "chair"), or it is in a
+        detected category without subcategories ("Phones" for a smartphone). A broad detected
+        category is not enough: a camera photo matched to "Electronics" found the phones."""
+        product_type = detected.get('product_type') if isinstance(detected.get('product_type'), str) else ''
+        ptype = _singular(_words(product_type))
+        categories = product.public_categ_ids | product.public_categ_ids.parent_id
+        kind_words = _singular(_words(product.name))
+        for name in categories.mapped('name'):
+            kind_words |= _singular(_words(name))
+        if ptype and ptype & kind_words:
+            return True
+        detected_cats = {_norm(c) for c in _str_list(detected.get('matched_categories'))}
+        return any(_norm(c.name) in detected_cats and not c.child_id for c in product.public_categ_ids)
+
+    def _all_results_url(self, website, detected, products):
+        """"See all results": a shop category page holding the best match (`products` are in
+        ranking order) and as many of the other results as possible. Taken from the detected
+        categories when one holds the best match, else from the best match's own categories.
+        A vase photo detected as "Home Decor" and "Living Room" (sofas, chairs) gave Living Room,
+        which holds the sofa and the armchair found but not the vase. Without any category, a
+        shop search for the product type's main noun: the shop search needs every word to match,
+        and the type plus a colour ("lounge chair black") listed fewer products than the photo
+        search itself."""
+        def holds(category, product):
+            return any(str(category.id) in (c.parent_path or '').split('/') for c in product.public_categ_ids)
+
+        def held(category):
+            return sum(1 for p in products if holds(category, p))
+
+        top = products[:1]
+        Category = request.env['product.public.category']
+        names = [n for n in _str_list(detected.get('matched_categories')) if n.strip()]
+        candidates = Category.search(website.website_domain() & Domain.OR(
+            [Domain('name', '=ilike', n) for n in names])) if names else Category
+        if top:
+            candidates = candidates.filtered(lambda c: holds(c, top)) or top.public_categ_ids
+        if candidates:
+            best = max(candidates, key=lambda c: (held(c), -c.sequence, -c.id))
+            return '/shop/category/%s' % request.env['ir.http']._slug(best)
+        product_type = detected.get('product_type') if isinstance(detected.get('product_type'), str) else ''
+        words = _WORD_RE.findall(product_type)
+        return '/shop?%s' % url_encode({'search': words[-1]}) if words else '/shop'

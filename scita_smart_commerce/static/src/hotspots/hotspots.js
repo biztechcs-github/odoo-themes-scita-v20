@@ -135,6 +135,20 @@ export class ScitaHotspots extends Interaction {
             y > 55 ? "o_scita_hotspot_card_up" : "o_scita_hotspot_card_down");
         card.style.left = `${x}%`;
         card.style.top = `${y}%`;
+        // keep it on screen: on a phone the image is narrower than the card on either side of
+        // the dot (a dot at 70% of a 354px banner slide opened the card off the left edge)
+        const rect = card.getBoundingClientRect();
+        const margin = 8;
+        const viewWidth = document.documentElement.clientWidth;
+        let shift = 0;
+        if (rect.left < margin) {
+            shift = margin - rect.left;
+        } else if (rect.right > viewWidth - margin) {
+            shift = viewWidth - margin - rect.right;
+        }
+        if (shift) {
+            card.style.marginLeft = `${shift}px`;
+        }
         this.cardEl = card;
         this.cardSpot = spot;
         spot.setAttribute("aria-expanded", "true");

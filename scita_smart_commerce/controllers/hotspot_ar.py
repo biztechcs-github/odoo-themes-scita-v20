@@ -58,7 +58,8 @@ class ScitaHotspotAr(http.Controller):
         return {
             'id': product.id,
             'product_id': variant.id,
-            'name': product.display_name,
+            # as shown on the website, without the internal reference ("[SC-SOFA] ...")
+            'name': product.with_context(display_default_code=False).display_name,
             'url': product.website_url,
             'image_url': '/web/image/product.template/%s/image_512' % product.id,
             'price': '' if hide_price else format_amount(request.env, info['price'], currency),

@@ -3721,6 +3721,12 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                                         margin-right: 0;
                                     }
 
+                                    // img-fluid's max-width: 100% of the shrink-to-fit icon button
+                                    // resolved to 0: the user, wishlist and cart icons were not shown
+                                    img {
+                                        max-width: none;
+                                    }
+
                                     a {
                                         &:hover {
                                             img {

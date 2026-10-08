@@ -514,6 +514,10 @@
 
     }
 
+    // dark footer: light copyright text (the copyright bar keeps the footer background)
+    .o_footer_copyright .o_footer_copyright_name {
+        color: rgba($light-color, 0.6);
+    }
 }
 
 @if o-website-value('footer-template') == 'Footer-6' {
@@ -1051,6 +1055,10 @@
             }
         }
     }
+    // dark footer: light copyright text (the copyright bar keeps the footer background)
+    .o_footer_copyright .o_footer_copyright_name {
+        color: rgba($light-color, 0.6);
+    }
 }
 
 footer{
@@ -1083,9 +1091,8 @@ footer{
     .container {
         border-top: 1px solid #f0f0f0;
     }
-    .o_footer_copyright_name {
-        color:rgba($light-color, 0.6);
-    }
+    // .o_footer_copyright_name: no fixed colour, it takes the (muted) text colour of the
+    // copyright colour preset; a fixed white was invisible on the light presets
     .sct-copyright-text {
         .o_footer_copyright_name {
             margin-right: 8px;
@@ -1098,11 +1105,12 @@ footer{
         .js_change_lang{
             margin: 0 !important;
             padding: 3px 10px;
-            color: $white !important;
+            // readable on a light secondary colour too (stays white on a dark one)
+            color: color-contrast($secondary) !important;
         }
         .list-inline-item{
             margin: 0;
-            color: $white;
+            color: color-contrast($secondary);
         }
     }
 }

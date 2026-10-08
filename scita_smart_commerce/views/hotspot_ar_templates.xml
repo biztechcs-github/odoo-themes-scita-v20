@@ -7,7 +7,7 @@
                 <t t-set="scita_ar_urls" t-value="product._scita_ar_urls()"/>
                 <div class="o_scita_ar_btn_wrap text-center mt-3">
                     <button type="button" class="btn btn-outline-primary o_scita_ar_btn"
-                            t-att-data-name="product.display_name"
+                            t-att-data-name="product.with_context(display_default_code=False).display_name"
                             t-att-data-glb="scita_ar_urls.get('glb')"
                             t-att-data-usdz="scita_ar_urls.get('usdz') or ''"
                             t-att-data-placement="scita_ar_urls.get('placement')"

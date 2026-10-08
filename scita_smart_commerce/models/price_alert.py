@@ -138,6 +138,12 @@ class ScitaPriceAlert(models.Model):
         days = website.sudo().scita_price_alert_expiry_days
         return fields.Datetime.now() + timedelta(days=days) if days > 0 else False
 
+    def _scita_product_name(self):
+        """The product as shoppers see it on the website: "Velvet Armchair (Red)", without the
+        internal reference ("[SC-ARMCHAIR-RED] ...") that display_name adds."""
+        self.ensure_one()
+        return self.product_id.with_context(display_default_code=False).display_name or ''
+
     def _scita_format(self, amount):
         self.ensure_one()
         return tools.format_amount(self.env, amount, self.currency_id, lang_code=self.lang or None)

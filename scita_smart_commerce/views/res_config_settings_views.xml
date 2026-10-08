@@ -55,6 +55,24 @@
                     </setting>
                     <setting id="scita_visual_search_setting" help="Shoppers upload a photo and see visually similar products.">
                         <field name="scita_visual_search_enabled"/>
+                        <div class="content-group" invisible="not scita_visual_search_enabled">
+                            <div class="row mt-2">
+                                <label for="scita_visual_search_match" string="Match photos on" class="col-lg-5 o_light_label"/>
+                                <field name="scita_visual_search_match" class="col-lg-7"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_visual_search_scope" string="Results" class="col-lg-5 o_light_label"/>
+                                <field name="scita_visual_search_scope" class="col-lg-7"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_visual_search_limit" string="Number of results" class="col-lg-5 o_light_label"/>
+                                <div class="col-lg-7"><field name="scita_visual_search_limit" class="oe_inline"/></div>
+                            </div>
+                            <div class="mt-1">
+                                <field name="scita_visual_search_exclude_services" class="oe_inline"/>
+                                <label for="scita_visual_search_exclude_services" string="Leave out services" class="o_light_label"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="scita_compare_ai_setting" help="On the comparison page, explain the differences between the selected products in plain language.">
                         <field name="scita_compare_ai_enabled"/>

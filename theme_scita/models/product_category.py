@@ -213,6 +213,12 @@ class ProductTemplate(models.Model):
             **kwargs
         )
         combination_info['quote_request'] = self.quote_request
+        # price hidden by Scita (login to see price, prices hidden, Request Quote): say so, as
+        # the compare bar, compare page and wishlist only check `hide_price`
+        website = self.env.website
+        if website and (self.quote_request or website._sct_hide_line_price(False)
+                        or self.website_hide_price):
+            combination_info.update(hide_price=True, compare_list_price=0)
         return combination_info
 
     def _scita_bulk_prices(self, variant, pricelist):

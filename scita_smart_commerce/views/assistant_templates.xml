@@ -2,10 +2,13 @@
 <odoo>
     <!-- Floating AI shopping assistant: rendered only when enabled and an API key is set
          (also for logged-in shop owners: `editable` means "may edit", not "editing").
-         Hidden while the website editor is open, see assistant.scss. -->
+         Hidden while the website editor is open, see assistant.scss, and in the translation
+         editor (`edit_translations`; `translatable` is true for any editor viewing a page in a
+         language other than the default one, which hid the assistant from them on all
+         translated pages). -->
     <template id="assistant_bubble" inherit_id="website.layout" name="Scita AI Shopping Assistant">
         <xpath expr="//div[@id='wrapwrap']" position="inside">
-            <t t-if="website and website.scita_assistant_enabled and not translatable and website._scita_ai_ready()">
+            <t t-if="website and website.scita_assistant_enabled and not edit_translations and website._scita_ai_ready()">
                 <div class="o_scita_assistant d-print-none"
                      t-att-data-name="website.scita_assistant_name or 'Shopping Assistant'"
                      t-att-data-welcome="website.scita_assistant_welcome or ''">
