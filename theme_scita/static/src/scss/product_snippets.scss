@@ -3371,3 +3371,45 @@
 	}
 }
 // sct_product_snippet_2 css end here
+// Quick view quantity picker. The rules above draw the -/+ in $secondary on white (too pale
+// with a light secondary) and, on phones, squeeze the picker to a third of the row (16px
+// wide, no longer round). Same look as the product page: round buttons, dark icons.
+#shop_quick_view_modal #add_to_cart_wrap .css_quantity,
+#shop_quick_view_modal .css_quantity {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+    align-items: center;
+
+    .btn {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1 !important;
+        color: rgba($dark-color, 0.75) !important;
+
+        &:hover,
+        &:focus-visible {
+            background-color: $secondary !important;
+            color: color-contrast($secondary) !important;
+        }
+    }
+
+    input {
+        width: 44px;
+        min-width: 44px;
+    }
+}
+
+// Quick view: the product's ribbon, clipped to the picture (the image has 10px padding)
+.sct_modal_image .sct_modal_ribbon {
+	position: absolute;
+	inset: 10px 10px auto;
+	aspect-ratio: 1; // the picture is square (object-fit: contain)
+	overflow: hidden;
+	pointer-events: none;
+	z-index: 1;
+}

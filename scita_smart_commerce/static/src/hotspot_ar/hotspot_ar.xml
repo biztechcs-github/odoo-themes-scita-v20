@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- 3D / AR viewer modal (model-viewer is inserted into .o_scita_ar_stage) -->
+    <t t-name="scita_smart_commerce.ArViewerModal">
+        <div class="modal fade o_scita_ar_modal" tabindex="-1" role="dialog" aria-modal="true"
+             t-att-aria-label="name">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" t-out="name"/>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="o_scita_ar_stage d-flex align-items-center justify-content-center">
+                            <div class="spinner-border text-primary" role="status"/>
+                        </div>
+                        <p class="o_scita_ar_status small text-muted text-center my-2" aria-live="polite">
+                            Loading 3D viewer...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+</templates>

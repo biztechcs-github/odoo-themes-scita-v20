@@ -704,7 +704,7 @@
     <template id="sct_hide_checkout_buttons" inherit_id="website_sale.navigation_buttons" name="Scita: no checkout when prices are hidden">
         <xpath expr="//t[@t-if='website_sale_order and website_sale_order.website_order_line']" position="before">
             <t t-set="sct_no_checkout" t-value="website_sale_order and website and website._sct_hide_order_prices(website_sale_order)"/>
-            <div t-if="sct_no_checkout" class="sct_no_checkout_notice alert alert-info mb-0">
+            <div role="status" t-if="sct_no_checkout" class="sct_no_checkout_notice alert alert-info mb-0">
                 <t t-if="website.login_see_price and website.is_public_user()">
                     Please <a href="/web/login?redirect=/shop/cart">log in</a> to see the prices and place your order.
                 </t>

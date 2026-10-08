@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product page: "View in 3D / View it in your room" under the gallery -->
+    <template id="product_ar_button" inherit_id="website_sale.product" name="Scita 3D / AR Button">
+        <xpath expr="//t[@t-call='website_sale.shop_product_images']" position="after">
+            <t t-if="product.scita_has_ar">
+                <t t-set="scita_ar_urls" t-value="product._scita_ar_urls()"/>
+                <div class="o_scita_ar_btn_wrap text-center mt-3">
+                    <button type="button" class="btn btn-outline-primary o_scita_ar_btn"
+                            t-att-data-name="product.display_name"
+                            t-att-data-glb="scita_ar_urls.get('glb')"
+                            t-att-data-usdz="scita_ar_urls.get('usdz') or ''"
+                            t-att-data-placement="scita_ar_urls.get('placement')"
+                            t-att-data-scale="scita_ar_urls.get('scale')"
+                            t-att-data-poster="'/web/image/product.template/%s/image_1024' % product.id"
+                            data-label3d="View in 3D">
+                        <span class="o_scita_ar_btn_icon" aria-hidden="true">&#x2B21;</span>
+                        <span class="o_scita_ar_btn_label">View in 3D</span>
+                    </button>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

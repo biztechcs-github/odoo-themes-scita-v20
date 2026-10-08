@@ -25,6 +25,11 @@ header#top {
     object-fit: contain;
 }
 
+// the app bar (z-index 1031) must not cover the open mobile menu / filters offcanvas
+body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
+    display: none !important;
+}
+
 // scita pwa menu design
 .ab-mob-view {
     position: fixed;
@@ -454,15 +459,19 @@ header#top {
                 }
             }
 
+            // Spacing as padding, not margins: Odoo's "more" menu (auto_hide_menu.js) counts the
+            // menu's margins as room for items, so the last item slid under the header icons.
             .scita_top_menu {
-                flex: 0 0 71%;
-                max-width: 71%;
-                margin-left: 20px;
-                margin-right: 10px !important;
+                flex: 0 0 calc(71% + 30px);
+                max-width: calc(71% + 30px);
+                margin-left: 0;
+                margin-right: 0 !important;
+                padding-left: 20px;
+                padding-right: 10px;
 
                 @media (max-width: 1279px) {
-                    max-width: 60%;
-                    flex: 0 0 60%;
+                    max-width: calc(60% + 30px);
+                    flex: 0 0 calc(60% + 30px);
 
                     .navbar-nav {
                         margin-left: 0 !important;

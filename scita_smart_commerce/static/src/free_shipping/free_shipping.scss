@@ -1,0 +1,45 @@
+.o_scita_fsb {
+    background-color: var(--o-cc1-bg, #fff);
+
+    .o_scita_fsb_progress {
+        height: 0.5rem;
+        background-color: rgba(0, 0, 0, 0.08);
+
+        .progress-bar {
+            background-color: var(--o-color-1, $primary);
+            transition: width 0.4s ease;
+
+            &.bg-success {
+                background-color: $success !important; // Odoo 20 has no --bs-* CSS variables
+            }
+        }
+    }
+
+    // the theme's cart styles size every image / image link of the cart area
+    .o_scita_fsb_suggestions {
+        li {
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        a.flex-shrink-0 {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border: 0;
+        }
+    }
+
+    .o_scita_fsb_img {
+        width: 48px !important;
+        height: 48px !important;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    &.o_scita_fsb_mini {
+        padding: 0.75rem !important;
+        font-size: 0.875rem;
+    }
+}

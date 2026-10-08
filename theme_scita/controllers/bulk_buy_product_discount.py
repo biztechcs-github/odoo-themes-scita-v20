@@ -46,17 +46,10 @@ class ScitaBulkVariantController(WebsiteSaleVariantController):
             # Use the server-resolved variant ID, not the stale one from the JS hidden input
             variant_id = combination_info.get('product_id')
 
-            rules = pricelist.item_ids.filtered(
-                lambda r: r.product_tmpl_id.id == tmpl_id
-                and r.min_quantity and r.min_quantity >= 2
-                and (not r.product_id or (variant_id and r.product_id.id == variant_id))
-            )
-
-            for rule in rules.sorted(key=lambda r: r.min_quantity):
-                bulk_prices.append({
-                    'min_quantity': int(rule.min_quantity),
-                    'fixed_price': rule.fixed_price,
-                })
+            variant = request.env['product.product'].browse(variant_id or []).exists()
+            template = request.env['product.template'].browse(tmpl_id).exists()
+            # unit price at each tier quantity, whatever the rule type (fixed, %, formula)
+            bulk_prices = template._scita_bulk_prices(variant, pricelist) if template else []
 
             # Override combination.price with the correct bulk price when qty qualifies.
             # Odoo's own pricelist computation may not always resolve correctly for
@@ -84,6 +77,7 @@ class ScitaBulkVariantController(WebsiteSaleVariantController):
             combination_info.update({
                 'price': 0,
                 'list_price': 0,
+                'raw_pricelist_price': 0,
                 'compare_list_price': 0,
                 'has_discounted_price': False,
                 'hide_price': True,
@@ -154,21 +148,11 @@ class ScitaBulkConfiguratorController(WebsiteSaleProductConfiguratorController):
         if not pricelist:
             return None
 
-        rules = pricelist.item_ids.filtered(
-            lambda r: r.product_tmpl_id.id == tmpl_id
-            and r.min_quantity and r.min_quantity >= 2
-            and (not r.product_id or (variant_id and r.product_id.id == variant_id))
-        )
-
-        if not rules:
-            return None
-
-        matching = [
-            (int(r.min_quantity), r.fixed_price)
-            for r in rules
-            if int(r.min_quantity) <= quantity
-        ]
-
+        template = request.env['product.template'].browse(tmpl_id).exists()
+        variant = request.env['product.product'].browse(variant_id or []).exists()
+        tiers = template._scita_bulk_prices(variant, pricelist) if template else []
+        matching = [(tier['min_quantity'], tier['fixed_price']) for tier in tiers
+                    if tier['min_quantity'] <= quantity]
         if not matching:
             return None
 

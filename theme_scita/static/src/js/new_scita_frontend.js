@@ -167,6 +167,10 @@ publicWidget.registry.deal_seller_multi_product_custom_snippet = publicWidget.Wi
                                 },
                             });
                         });
+                    } else {
+                        // nothing to show (block not configured / no published deal products):
+                        // drop the CLS height reservation so no blank gap is left on the page
+                        self.$target.css('min-height', '0px');
                     }
                 });
             }
@@ -506,6 +510,9 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
                 const element = ev.currentTarget;
                 const product_id = $(element).attr('data-id');
                 rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
+                    if (!data) {
+                        return;
+                    }
                     $("#shop_cart_view_modal").html(data).modal("show");
                 });
             },

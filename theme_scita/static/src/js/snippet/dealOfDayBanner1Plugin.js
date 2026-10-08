@@ -6,6 +6,28 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
+// A missing / invalid date must not block the editor with a browser alert() (it freezes the
+// whole builder until dismissed) nor save a "nan" countdown: flag the field in the dialog
+// and keep the dialog open.
+function rejectInvalidDate(dateInput, date) {
+    const feedbackClass = "o_scita_date_feedback";
+    let feedback = dateInput.parentElement.querySelector("." + feedbackClass);
+    if (!isNaN(date.getTime())) {
+        dateInput.classList.remove("is-invalid");
+        feedback?.remove();
+        return false;
+    }
+    dateInput.classList.add("is-invalid");
+    if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = `invalid-feedback d-block ${feedbackClass}`;
+        feedback.textContent = _t("Please choose the date when the deal ends.");
+        dateInput.after(feedback);
+    }
+    dateInput.focus();
+    return true;
+}
+
 // -------------------------------------------------
 // Shared Modal Logic
 // -------------------------------------------------
@@ -16,6 +38,19 @@ async function openDealOfDayBanner1Modal(snippetEl) {
 
     // Bootstrap modal
     const myModal = new Modal(modalEl);
+
+    // Esc closes it like the editor's own dialogs: the focus stays in the editor, so Bootstrap's
+    // keyboard handling (on the modal itself) never sees the key. Consumed, or the editor would
+    // also take it (Esc = fullscreen).
+    const closeOnEscape = (ev) => {
+        if (ev.key === "Escape" && modalEl.classList.contains("show")) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            myModal.hide();
+        }
+    };
+    document.addEventListener("keydown", closeOnEscape, true);
+    modalEl.addEventListener("hidden.bs.modal", () => document.removeEventListener("keydown", closeOnEscape, true));
     myModal.show();
 
     const dateInput = modalEl.querySelector("input#date");
@@ -55,6 +90,9 @@ async function openDealOfDayBanner1Modal(snippetEl) {
     // Handle submit
     submitBtn.addEventListener("click", () => {
         const date = new Date(dateInput.value);
+        if (rejectInvalidDate(dateInput, date)) {
+            return;
+        }
         const hours = parseInt(hourInput.value) || 0;
         const mins = parseInt(minInput.value) || 0;
         const secs = parseInt(secInput.value) || 0;
@@ -63,7 +101,6 @@ async function openDealOfDayBanner1Modal(snippetEl) {
         const timerElement = snippetEl.querySelector('.js_counter_timer');
 
         if (isNaN(date.getTime())) {
-            alert(_t("Invalid Time Format. Please enter correct format of Time"));
             if (timerElement) {
                 timerElement.setAttribute("data-date", "nan");
                 timerElement.setAttribute("data-msg", msgInput.value);

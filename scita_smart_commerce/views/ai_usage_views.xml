@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="scita_ai_usage_view_list" model="ir.ui.view">
+        <field name="name">scita.ai.usage.list</field>
+        <field name="model">scita.ai.usage</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="feature"/>
+                <field name="request_count" sum="Requests"/>
+                <field name="input_tokens" sum="Input tokens"/>
+                <field name="output_tokens" sum="Output tokens"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="scita_ai_usage_view_pivot" model="ir.ui.view">
+        <field name="name">scita.ai.usage.pivot</field>
+        <field name="model">scita.ai.usage</field>
+        <field name="arch" type="xml">
+            <pivot string="AI Usage">
+                <field name="date" type="row" interval="day"/>
+                <field name="feature" type="col"/>
+                <field name="request_count" type="measure"/>
+                <field name="input_tokens" type="measure"/>
+                <field name="output_tokens" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="scita_ai_usage_view_search" model="ir.ui.view">
+        <field name="name">scita.ai.usage.search</field>
+        <field name="model">scita.ai.usage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="website_id"/>
+                <field name="feature"/>
+                <filter name="this_month" string="This Month" date="date" default_period="month"/>
+                <group>
+                    <filter name="group_feature" string="Feature" context="{'group_by': 'feature'}"/>
+                    <filter name="group_date" string="Day" context="{'group_by': 'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="scita_ai_usage_action" model="ir.actions.act_window">
+        <field name="name">AI Usage</field>
+        <field name="res_model">scita.ai.usage</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="context">{'search_default_this_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No AI requests yet</p>
+            <p>Requests and tokens used by the shopping assistant, visual search and AI comparison,
+               per day. Your AI provider bills you for these tokens.</p>
+        </field>
+    </record>
+
+    <menuitem id="scita_ai_usage_menu" name="AI Usage" action="scita_ai_usage_action"
+              parent="website.menu_reporting" sequence="50" groups="website.group_website_designer"/>
+</odoo>

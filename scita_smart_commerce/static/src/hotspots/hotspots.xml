@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Product card opened by a hotspot dot: live price, stock and what the shopper can do -->
+    <t t-name="scita_smart_commerce.HotspotCard">
+        <div class="o_scita_hotspot_card card shadow" role="dialog" t-att-aria-label="product.name">
+            <button type="button" class="btn-close o_scita_hotspot_card_close" aria-label="Close"/>
+            <div class="d-flex gap-3 p-3">
+                <a t-att-href="product.url" class="o_scita_hotspot_card_img flex-shrink-0" tabindex="-1">
+                    <img t-att-src="product.image_url" t-att-alt="product.name" loading="lazy"/>
+                </a>
+                <div class="min-w-0 flex-grow-1">
+                    <a t-att-href="product.url" class="o_scita_hotspot_card_name" t-out="product.name"/>
+                    <div class="o_scita_hotspot_card_price">
+                        <t t-if="product.hide_price">
+                            <span class="text-muted small">Price on request</span>
+                        </t>
+                        <t t-else="">
+                            <span class="fw-bold" t-out="product.price"/>
+                            <del t-if="product.compare_price" class="text-muted small ms-1" t-out="product.compare_price"/>
+                        </t>
+                        <span t-if="!product.in_stock" class="badge text-bg-light border ms-1">Out of stock</span>
+                    </div>
+                    <div class="o_scita_hotspot_card_actions">
+                        <button t-if="product.can_add_to_cart" type="button" class="btn btn-sm btn-primary o_scita_hotspot_card_add">
+                            Add to cart
+                        </button>
+                        <a t-elif="product.hide_price" t-att-href="product.url" class="btn btn-sm btn-outline-primary">Request a quote</a>
+                        <a t-elif="product.needs_options and product.in_stock" t-att-href="product.url" class="btn btn-sm btn-outline-primary">Choose options</a>
+                        <a t-else="" t-att-href="product.url" class="btn btn-sm btn-outline-primary">View product</a>
+                        <button t-if="product.has_ar" type="button" class="btn btn-sm btn-outline-secondary o_scita_hotspot_card_ar">
+                            <t t-out="arLabel"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

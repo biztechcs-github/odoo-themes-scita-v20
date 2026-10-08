@@ -1,0 +1,9 @@
+id,name,model_id,group_id/id,operation,domain
+access_scita_ai_usage_manager,scita.ai.usage manager,scita.ai.usage,website.group_website_designer,r,
+access_scita_price_alert_salesman,scita.price.alert salesman,scita.price.alert,sales_team.group_sale_salesman,crud,
+access_scita_price_alert_report_salesman,scita.price.alert.report salesman,scita.price.alert.report,sales_team.group_sale_salesman,r,
+access_scita_compare_cache_system,scita.compare.cache system,scita.compare.cache,base.group_system,crud,
+access_scita_ar_photo_wizard_product_manager,scita.ar.photo.wizard product manager,scita.ar.photo.wizard,product.group_product_manager,crud,
+scita_price_alert_comp_rule,Price alerts: multi-company,scita.price.alert,,crud,"[('company_id', 'in', company_ids)]"
+scita_price_alert_report_comp_rule,Price alert report: multi-company,scita.price.alert.report,,crud,"[('company_id', 'in', company_ids)]"
+scita_ai_usage_comp_rule,AI usage: multi-company,scita.ai.usage,,crud,"[('website_id.company_id', 'in', company_ids)]"

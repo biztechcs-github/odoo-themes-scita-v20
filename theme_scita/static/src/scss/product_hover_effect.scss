@@ -3,7 +3,7 @@ span[name="hidden_ptavs_count"] {
     display: none !important;
 }
 
-@if o-website-value('prod-hover-style') == 'prod_hover_style_1' {
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' { // unset = style 1
     #products_grid{
         .oe_product{
             .o_wsale_product_grid_wrapper{
@@ -268,7 +268,7 @@ span[name="hidden_ptavs_count"] {
                                         padding: 4px;
                                         top: -134px;
                                         right: 17px;
-                                        transform: translateX(50px);
+                                        transform: translateX(80px); // 50px left ~10px showing when the card is padded (Chips design)
                                     }
                                     @media (min-width: 1200px) {
                                         font-size: 18px;
@@ -533,7 +533,9 @@ span[name="hidden_ptavs_count"] {
             }
         }
 
-        &.o_wsale_layout_list{
+        // Odoo 19+ list designs (Products Design > list): the class moved from #products_grid
+        // (o_wsale_layout_list, Odoo 18) to the inner grid (o_wsale_products_opt_layout_list)
+        &:has(.o_wsale_products_opt_layout_list){
             .oe_product{
                 .o_wsale_product_grid_wrapper {
                     .oe_product_cart {
@@ -1461,7 +1463,7 @@ span[name="hidden_ptavs_count"] {
                                         top: -134px;
                                         left: 17px;
                                         right: auto;
-                                        transform: translateX(-50px);
+                                        transform: translateX(-80px); // see style 1
                                     }
                                     @media (min-width: 1200px) {
                                         font-size: 18px;
@@ -1729,7 +1731,9 @@ span[name="hidden_ptavs_count"] {
             }
         }
 
-        &.o_wsale_layout_list{
+        // Odoo 19+ list designs (Products Design > list): the class moved from #products_grid
+        // (o_wsale_layout_list, Odoo 18) to the inner grid (o_wsale_products_opt_layout_list)
+        &:has(.o_wsale_products_opt_layout_list){
             .oe_product{
                 .o_wsale_product_grid_wrapper {
                     .oe_product_cart {
@@ -2361,21 +2365,7 @@ span[name="hidden_ptavs_count"] {
     }
     // .sct_product_snippet_2 css end here
 
-    // Effect Style 2 puts the hover icons in the top-left corner, where a left product
-    // label (New / Sale...) sits: on cards that have one, move the icons down below it.
-    // `translate` (not transform) so the icons' own slide-in animation is untouched.
-    #products_grid .oe_product_cart:has(.img_lbl.left) .o_wsale_product_btn :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn),
-    .cs-product:has(.img_lbl.left) :is(.sct-hover-info, .sct-feature-wrap) > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
-        translate: 0 32px;
-    }
-    // the fashion slider's label sits lower in the card
-    .fashion_multi_category_slider .cs-product:has(.img_lbl.left) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
-        translate: 0 48px;
-    }
-    // Top Picks moves the whole icon column instead (see its section above)
-    .sct_product_snippet_2 .cs-product:has(.img_lbl.left) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
-        translate: none;
-    }
+    // a left product label shares this corner: see sct-clear-corner-label at the end of the file
 }
 @else if o-website-value('prod-hover-style') == 'prod_hover_style_3' {
     #products_grid{
@@ -2434,7 +2424,9 @@ span[name="hidden_ptavs_count"] {
                             }
                         }
                     }
-                    .o_wsale_product_action_row {
+                    // only next to a "Request a Quote" button, which takes its place on small screens: on
+                    // the other cards it hid "Add to cart" (and compare) on phones and tablets
+                    &:has(.o_wsale_product_request_quote) .o_wsale_product_action_row {
                         @media (max-width:1024px) {
                             display: none;
                         }
@@ -2512,6 +2504,20 @@ span[name="hidden_ptavs_count"] {
                                 background: transparent;
                                 overflow: visible;
                                 visibility: visible;
+                            }
+                            // Odoo 20 wraps the cart button in .o_wsale_product_action_row, which the
+                            // Products Design presets offset (transform, padding): keep it in line with
+                            // the other round buttons, spaced like them
+                            @media (min-width: 1200px) {
+                                .o_wsale_product_action_row {
+                                    transform: none !important;
+                                    padding: 0;
+                                    margin: 0 3% 5px;
+
+                                    > .btn {
+                                        margin: 0;
+                                    }
+                                }
                             }
                             form {
                                 @include flex;
@@ -2866,7 +2872,9 @@ span[name="hidden_ptavs_count"] {
                 }
             }
         }
-        &.o_wsale_layout_list{
+        // Odoo 19+ list designs (Products Design > list): the class moved from #products_grid
+        // (o_wsale_layout_list, Odoo 18) to the inner grid (o_wsale_products_opt_layout_list)
+        &:has(.o_wsale_products_opt_layout_list){
             .oe_product{
                 .o_wsale_product_grid_wrapper {
                     .oe_product_cart {
@@ -3885,7 +3893,9 @@ span[name="hidden_ptavs_count"] {
                 }
             }
         }
-        &.o_wsale_layout_list{
+        // Odoo 19+ list designs (Products Design > list): the class moved from #products_grid
+        // (o_wsale_layout_list, Odoo 18) to the inner grid (o_wsale_products_opt_layout_list)
+        &:has(.o_wsale_products_opt_layout_list){
             .oe_product{
                 .o_wsale_product_grid_wrapper {
                     .oe_product_cart {
@@ -4799,7 +4809,7 @@ span[name="hidden_ptavs_count"] {
                                 right: 0;
                                 bottom: 0;
                                 position: absolute;
-                                transform: translateY(37px);
+                                transform: translateY(52px); // 37px left the top of the bar showing when the card is padded (Chips design)
                             }
                             @media (min-width:1200px) {
                                 flex-wrap: nowrap;
@@ -4953,7 +4963,9 @@ span[name="hidden_ptavs_count"] {
                 }
             }
         }
-        &.o_wsale_layout_list{
+        // Odoo 19+ list designs (Products Design > list): the class moved from #products_grid
+        // (o_wsale_layout_list, Odoo 18) to the inner grid (o_wsale_products_opt_layout_list)
+        &:has(.o_wsale_products_opt_layout_list){
             .oe_product{
                 .o_wsale_product_grid_wrapper {
                     .oe_product_cart {
@@ -5945,7 +5957,7 @@ span[name="hidden_ptavs_count"] {
                                         padding: 4px;
                                         top: -134px;
                                         right: 17px;
-                                        transform: translateX(50px);
+                                        transform: translateX(80px); // see style 1
                                     }
                                     @media (min-width: 1200px) {
                                         font-size: 18px;
@@ -6210,7 +6222,9 @@ span[name="hidden_ptavs_count"] {
             }
         }
 
-        &.o_wsale_layout_list{
+        // Odoo 19+ list designs (Products Design > list): the class moved from #products_grid
+        // (o_wsale_layout_list, Odoo 18) to the inner grid (o_wsale_products_opt_layout_list)
+        &:has(.o_wsale_products_opt_layout_list){
             .oe_product{
                 .o_wsale_product_grid_wrapper {
                     .oe_product_cart {
@@ -6927,7 +6941,7 @@ span[name="hidden_ptavs_count"] {
         }
     }
 }
-@if o-website-value('prod-hover-style') == 'prod_hover_style_1' {
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' { // unset = style 1
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day .deal_day_wrap .deal_day_bottom_inner .cs-product .pwd-desc .sct-hover-info .btn.login-price-btn {
         max-width: 100% !important;
         margin: 0 auto !important;
@@ -6974,6 +6988,30 @@ span[name="hidden_ptavs_count"] {
                 @media (max-width:992px) {
                     max-width: 100% !important;
                 }
+    }
+    // 16/9 images (4/3 or 6/5 ones on the narrow Chips cards) are too short for a diagonal ribbon
+    // and the centred button row: the ribbon steps aside while the row shows
+    @media (min-width: 992px) {
+        #products_grid .o_wsale_products_grid_table:not(.o_wsale_products_opt_layout_list):is(.o_wsale_products_opt_thumb_16_9, .o_wsale_products_opt_design_chips:is(.o_wsale_products_opt_thumb_4_3, .o_wsale_products_opt_thumb_6_5)) .oe_product:hover .o_ribbons.o_wsale_ribbon {
+            opacity: 0;
+            transition: opacity .2s;
+        }
+    }
+}
+// Hover styles 4 and 5, Scita product blocks on phones and tablets: the colour swatches sit in the
+// top right corner of the image, under a tag or ribbon there. They take the left corner when
+// that one is free, else they go down below the labels.
+@if o-website-value('prod-hover-style') == 'prod_hover_style_4' or o-website-value('prod-hover-style') == 'prod_hover_style_5' {
+    $sct-right-lbl: ':is(.img_lbl.right, .o_ribbons.o_right:not(:empty))';
+    $sct-left-lbl: ':is(.img_lbl.left, .o_ribbons.o_left:not(:empty))';
+    @media (max-width: 991.98px) {
+        .cs-product:has(#{$sct-right-lbl}):not(:has(#{$sct-left-lbl})) .pwd-desc .pwp-info .o_wsale_product_attribute {
+            right: auto;
+            left: 6px;
+        }
+        .cs-product:has(#{$sct-right-lbl}):has(#{$sct-left-lbl}) .pwd-desc .pwp-info .o_wsale_product_attribute {
+            top: -132px;
+        }
     }
 }
 @if o-website-value('prod-hover-style') == 'prod_hover_style_5' {
@@ -7044,3 +7082,724 @@ span[name="hidden_ptavs_count"] {
     }
 }
 // .sct_product_snippet_2 css end here
+
+// Hover styles 1 and 2: the hover buttons (compare, wishlist, quick view) stack down a corner of
+// the image (style 1: top-right, style 2: top-left). A style tag or an Odoo ribbon on that side
+// sits there too and covered the first buttons: start the column below it. `translate` adds to
+// the buttons' own margins and slide-in `transform` (the per-layout offsets stay as they are).
+// Styles 3-5 show the buttons in a row elsewhere: nothing to move.
+$sct-hover-btns: '.o_wsale_product_btn .btn:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn)';
+$sct-snippet-btns: ':is(.sct-hover-info, .sct-feature-wrap) > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn)';
+@mixin sct-clear-corner-label($side) {
+    $opp: if($side == right, left, right);
+    // shop grid
+    @media (min-width: 992px) {
+        .oe_product:has(.img_lbl.#{$side}) #{$sct-hover-btns} {
+            translate: 0 32px;
+        }
+        // "Style 5" tags are a two-line bookmark, taller than the others
+        .oe_product:has(.img_lbl.style5.#{$side}) #{$sct-hover-btns} {
+            translate: 0 48px;
+        }
+        // a diagonal ribbon band crosses the button column lower down than a tag, the more so
+        // as its text is long ("Out of stock")
+        .oe_product:has(.o_ribbons.o_#{$side}:not(:empty)) #{$sct-hover-btns} {
+            translate: 0 88px;
+        }
+        // a "Tag" ribbon is a small badge: less to clear than the band
+        .oe_product:has(.o_ribbons.o_wsale_badge.o_#{$side}:not(:empty)) #{$sct-hover-btns} {
+            translate: 0 48px;
+        }
+        // a tag set on the other side is moved to this one when a ribbon takes its corner
+        // (see the end of this file)
+        .oe_product:has(.img_lbl.#{$opp}):has(.o_ribbons.o_#{$opp}:not(:empty)) #{$sct-hover-btns} {
+            translate: 0 32px;
+        }
+        .oe_product:has(.img_lbl.style5.#{$opp}):has(.o_ribbons.o_#{$opp}:not(:empty)) #{$sct-hover-btns} {
+            translate: 0 48px;
+        }
+    }
+    // Scita product blocks (Products Snippet, Trending, Multi Category...): only where the
+    // buttons stack in the image corner; below lg they sit in a row under the price and
+    // moving them down pushed them out of the card
+    @media (min-width: 992px) {
+        .cs-product:has(.img_lbl.#{$side}) #{$sct-snippet-btns} {
+            translate: 0 32px;
+        }
+        .cs-product:has(.img_lbl.style5.#{$side}) #{$sct-snippet-btns} {
+            translate: 0 48px;
+        }
+        // the fashion slider's tag sits lower in the card
+        .fashion_multi_category_slider .cs-product:has(.img_lbl.#{$side}) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+            translate: 0 48px;
+        }
+        .fashion_multi_category_slider .cs-product:has(.img_lbl.style5.#{$side}) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+            translate: 0 64px;
+        }
+    }
+}
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' {
+    @include sct-clear-corner-label(right);
+} @else if o-website-value('prod-hover-style') == 'prod_hover_style_2' {
+    @include sct-clear-corner-label(left);
+    // Top Picks (Product Snippet 2) moves its whole icon column instead (see its style 2 section)
+    @media (min-width: 992px) {
+        .sct_product_snippet_2 .cs-product:has(.img_lbl.left) .sct-hover-info > :is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+            translate: none;
+        }
+    }
+}
+
+// Dynamic product blocks (carousel, grid...): with the wishlist "Fixed" (Products Design), Odoo
+// keeps the heart in the top-right corner of each card, always visible (whatever the hover
+// style); a Scita tag in that corner (set "right", or moved there by a left ribbon) or a
+// right-side ribbon sat under it. Other wishlist placements keep it in the button row.
+// (Bento keeps a "fixed" heart at the bottom of the image instead)
+$sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_design_bento) .o_carousel_product_card:not(.cs-product)';
+#{$sct-dyn-card}:has(.img_lbl.right) .o_add_wishlist,
+#{$sct-dyn-card}:has(.img_lbl.left):has(.o_ribbons.o_left:not(:empty)) .o_add_wishlist {
+    translate: 0 36px;
+}
+#{$sct-dyn-card}:has(.o_ribbons.o_wsale_badge.o_right:not(:empty)) .o_add_wishlist {
+    translate: 0 44px;
+}
+#{$sct-dyn-card}:has(.o_ribbons.o_wsale_ribbon.o_right:not(:empty)) .o_add_wishlist {
+    translate: 0 72px;
+}
+
+// Odoo 20 list designs (Products Design > Thumbnails / Cards / Grid / Showcase / Condensed / Large
+// list): one row per product. Each Scita hover style lays the buttons over a catalog card
+// (absolute, slid out until hover, fixed offsets) and its old list rules were written for Odoo
+// 18's markup: in a list row the buttons ended up above the card and "Add to cart" was stacked
+// apart. Here: title, price, then all buttons in one visible row, whatever the hover style.
+#products_grid:has(.o_wsale_products_opt_layout_list) .oe_product .o_wsale_product_grid_wrapper {
+    .oe_product_cart {
+        align-items: stretch;
+    }
+    .o_wsale_product_information {
+        display: flex !important;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 8px;
+        transform: none !important;
+        padding: 10px 15px !important;
+
+        .o_wsale_product_info_attributes_wrapper {
+            align-items: flex-start;
+            justify-content: flex-start;
+            width: 100%;
+            padding: 0;
+        }
+        .o_wsale_product_information_text {
+            width: 100%;
+            text-align: start;
+        }
+        .o_wsale_product_sub {
+            display: flex !important;
+            flex-direction: column;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            gap: 10px;
+            width: 100%;
+            margin: 0;
+
+            .product_price {
+                margin: 0;
+                text-align: start;
+            }
+        }
+        .o_wsale_product_btn {
+            position: static !important;
+            display: flex !important;
+            flex-direction: row !important; // a column between 992 and 1199px otherwise
+            flex-wrap: wrap;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 8px;
+            margin: 0 !important;
+            padding: 0 !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+
+            .o_wsale_product_action_row {
+                display: contents !important;
+            }
+            .btn {
+                position: static !important;
+                inset: auto !important;
+                transform: none !important;
+                translate: none !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                margin: 0 !important;
+            }
+            // the list rules give the buttons a transparent background: hover styles that draw
+            // light icons on a dark bar (style 3) left them white on white
+            .btn:not(.a-submit):not(.o_in_wishlist) {
+                color: $body-color !important;
+
+                :is(i, .oi, .fa, [class*="lni"]) {
+                    color: inherit !important;
+                }
+            }
+            // keep the cart button filled, its label is light
+            .btn.a-submit {
+                background-color: $primary !important;
+                border-color: $primary !important;
+                color: $light-color !important;
+
+                &:hover {
+                    background-color: transparent !important;
+                    color: $primary !important;
+                }
+            }
+        }
+    }
+}
+
+// Bento and Showcase draw the name/price over the image on a dark colour preset (white text,
+// darkening overlay). Scita's card keeps them below the image on a light card: there the price
+// was white on white and the image stayed darkened; Showcase (list) also stretched the image
+// over the whole row and pushed the text out of the card. Show them as Scita cards / list rows.
+#products_grid .o_wsale_products_grid_table:is(.o_wsale_products_opt_design_bento, .o_wsale_products_opt_design_showcase) {
+    --o-wsale-card-overlay: none;
+    --o-wsale-card-cc-bg: #{$body-bg};
+    --o-wsale-card-cc-bg-rgb: #{to-rgb($body-bg)};
+    --o-wsale-card-cc-text: #{$body-color};
+    --o-wsale-card-cc-text-rgb: #{to-rgb($body-color)};
+    --o-wsale-card-cc-muted: #{rgba($body-color, .7)};
+    --o-wsale-card-cc-headings: #{$body-color};
+    --o-wsale-card-cc-link: #{$body-color};
+    --o-wsale-card-info-position: relative;
+    --o-wsale-card-info-inset: auto;
+
+    .o_wsale_product_information {
+        --o-wsale-card-info-inset: auto;
+    }
+}
+// Bento also turns the text into a grid laid over the image, unwraps the text and button
+// containers (display: contents), and moves / collapses the buttons (max-height 0) until hover:
+// on phones the buttons ran past the bottom of the card or over the price. Give it the
+// Thumbnails values; the selectors stay weak so that each hover style's own layout still wins.
+#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_design_bento {
+    --o-wsale-card-btns-inset: 0 0 auto 0;
+    --o-wsale-card-btns-width: auto;
+    --o-wsale-card-sub-display: flex;
+    --o-wsale-card-btn-submit-order: 0;
+
+    .oe_product .o_wsale_product_information {
+        --_card-info-translate-y: 0px; // Bento slides the text down until hover
+        display: block !important;
+        pointer-events: auto;
+    }
+    .oe_product .o_wsale_product_btn {
+        max-height: none;
+
+        // Bento stretches the buttons over the row and drops their square shape
+        .btn {
+            --o-wsale-card-btns-btn-flex-grow: 0;
+            --o-wsale-card-btn-submit-flex-grow: initial;
+            --o-wsale-card-btn-aspect-ratio: initial;
+            --o-wsale-card-btn-submit-aspect-ratio: initial;
+            --o-wsale-card-btn-padding-x: initial;
+            --o-wsale-card-btn-submit-padding-x: initial;
+        }
+    }
+}
+.o_wsale_products_grid_table.o_wsale_products_opt_design_bento {
+    .o_wsale_product_information_text {
+        display: block;
+    }
+    .oe_product_cart .o_wsale_product_action_row {
+        display: flex;
+    }
+}
+// Bento gives the button bar the image's aspect ratio (it lays the bar over the image). Scita's
+// hover styles place the bar themselves, in the text column or above it, where that ratio made
+// it as tall as the image: an empty block under each price. Style 3 lays it over the image.
+@if o-website-value('prod-hover-style') != 'prod_hover_style_3' {
+    #products_grid#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_design_bento .oe_product .o_wsale_product_btn {
+        aspect-ratio: auto;
+    }
+}
+// "Description on hover" (Bento) reveals the description over the image; Scita's text sits under
+// the image, where the hidden description only left a gap between the name and the price
+#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_hover_show_description .oe_subdescription_wrapper {
+    opacity: 1;
+}
+// Odoo's "buttons on hover" layout of the catalog grid (the button bar laid over the image),
+// which Scita's hover styles build on, leaves Bento out: there the bar sat in the text column
+// and four buttons no longer fitted on one row. Give Bento the same layout (Odoo's rule, copied;
+// shop page only: the product blocks keep Odoo's own Bento).
+// Desktop only, as in Odoo: below 992px the buttons sit in Scita's row under the price.
+@media (min-width: 992px) {
+    #products_grid .o_wsale_products_opt_actions_onhover.o_wsale_products_opt_layout_catalog.o_wsale_products_opt_design_bento {
+        --o-wsale-card-price-flex-basis: 100%;
+        --o-wsale-card-btn-label-display: none;
+        --o-wsale-card-btns-margin-bottom: 0;
+
+        .o_wsale_product_btn {
+            position: absolute;
+            display: flex;
+            align-items: end;
+            aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1);
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 2;
+
+            .btn {
+                --btn-border-radius: 100%;
+                --btn-padding-x: .7rem;
+                --btn-hover-border-color: currentColor;
+
+                aspect-ratio: 1;
+                align-items: center;
+                justify-content: center;
+                transition: transform .15s ease, opacity .15s ease;
+            }
+            .o_wsale_product_action_row {
+                display: flex;
+                gap: map-get($spacers, 2);
+                transform: translateX(var(--o-wsale-card-offset-x)) translateY(calc(var(--o-wsale-card-offset-top) * -1));
+
+                .btn {
+                    opacity: 0;
+                    transform: translateY(100%);
+                }
+            }
+        }
+        .o_has_variations .o_wsale_product_action_row {
+            align-self: start;
+            flex-direction: column;
+            transform: translateX(var(--o-wsale-card-offset-x)) translateY(var(--o-wsale-card-offset-top));
+
+            .btn {
+                transform: translateX(-100%);
+            }
+        }
+        .oe_product_cart {
+            &:hover, &:has(:focus-visible) {
+                .o_wsale_product_action_row, .btn {
+                    pointer-events: auto;
+                }
+                .o_wsale_product_action_row .btn {
+                    opacity: 1;
+                    transform: translate(0, 0);
+                    transition: transform .15s ease-out, opacity .35s ease-out;
+                }
+            }
+        }
+    }
+}
+#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_design_showcase {
+    --o-wsale-card-thumb-size: 210px;
+    --o-wsale-card-thumb-min-height: 0;
+    --o-wsale-card-info-padding: 10px 15px;
+}
+
+// Designs that show the buttons all the time (Chips: actions "inline"): Scita's hover styles
+// put "Add to cart" absolute under the text, where the hover moves it into view; always shown,
+// it ran past the bottom of cards with a two-line name. Keep it in the flow. (Styles 3-5 already
+// show the buttons in a row.)
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' or o-website-value('prod-hover-style') == 'prod_hover_style_2' {
+    @media (min-width: 992px) {
+        #products_grid:has(.o_wsale_products_opt_layout_catalog:not(.o_wsale_products_opt_actions_onhover)) .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_btn .btn.a-submit {
+            position: static !important;
+            left: auto !important;
+            transform: none !important;
+            margin: 6px auto 0 !important;
+        }
+    }
+}
+
+
+// Shop page > Products Design > Buttons: a button switched off is still rendered for website
+// designers (so the editor can show it again at once), and Odoo hides it with low-priority CSS
+// keyed on its own classes. Scita's button styles, and its "a-submit" cart button, won over that:
+// admins kept seeing cart / compare / wishlist buttons that visitors don't get.
+#products_grid .o_wsale_products_grid_table {
+    &:not(.o_wsale_products_opt_has_cta) .oe_product_cart .o_wsale_product_btn .a-submit,
+    &:not(.o_wsale_products_opt_has_comparison) .oe_product_cart .o_wsale_product_btn .o_add_compare,
+    &:not(.o_wsale_products_opt_has_wishlist) .oe_product_cart .o_wsale_product_btn .o_add_wishlist {
+        display: none !important;
+    }
+    // Hover Effect "Border-Primary" (Cards, Chips): the card border is the wrapper's in Scita
+    &.o_wsale_products_opt_hover_border_primary:is(.o_wsale_products_opt_design_cards, .o_wsale_products_opt_design_chips) .oe_product:hover .o_wsale_product_grid_wrapper {
+        border-color: $primary;
+    }
+}
+
+// Hover styles 1 and 2 stack compare / wishlist / quick view down a corner of the image, each at
+// a fixed offset picked by its place among the buttons (`.btn + .btn`). A button switched off in
+// Products Design > Buttons kept its place (it is still rendered, hidden, for website designers),
+// and with only quick view left, quick view sat in the second place: the column started lower
+// down the image. Give each button the place it has among the buttons really shown.
+// compare / wishlist not shown on this card
+$sct-cmp-off: ':is(:not(:has(.o_add_compare)), .o_wsale_products_grid_table:not(.o_wsale_products_opt_has_comparison) *)';
+$sct-wish-off: ':is(:not(:has(.o_add_wishlist)), .o_wsale_products_grid_table:not(.o_wsale_products_opt_has_wishlist) *)';
+$sct-card: '#products_grid .o_wsale_products_grid_table:not(.o_wsale_products_opt_layout_list) .oe_product .oe_product_cart';
+$sct-btn: '.o_wsale_product_btn .btn';
+
+// The column is placed from the top of the text block, i.e. from the bottom of the image:
+// --sct-img-h is the image height (Scita's fixed 180 / 210px, or the one Products Design >
+// Image Ratio gives, see below).
+@mixin sct-btn-place($n) {
+    @media (min-width: 992px) {
+        top: calc(#{nth((41px, 79px, 117px), $n)} - var(--sct-img-h, 180px)) !important;
+    }
+    @media (min-width: 1200px) {
+        top: calc(#{nth((42px, 84px, 126px), $n)} - var(--sct-img-h, 210px)) !important;
+    }
+}
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' or o-website-value('prod-hover-style') == 'prod_hover_style_2' {
+    #{$sct-card} #{$sct-btn}.o_add_compare {
+        @include sct-btn-place(1);
+    }
+    #{$sct-card}#{$sct-cmp-off} #{$sct-btn}.o_add_wishlist {
+        @include sct-btn-place(1);
+    }
+    #{$sct-card}:not(#{$sct-cmp-off}) #{$sct-btn}.o_add_wishlist {
+        @include sct-btn-place(2);
+    }
+    #{$sct-card}#{$sct-cmp-off}#{$sct-wish-off} #{$sct-btn}.quick_view_sct_btn {
+        @include sct-btn-place(1);
+    }
+    #{$sct-card}#{$sct-cmp-off}:not(#{$sct-wish-off}) #{$sct-btn}.quick_view_sct_btn,
+    #{$sct-card}:not(#{$sct-cmp-off})#{$sct-wish-off} #{$sct-btn}.quick_view_sct_btn {
+        @include sct-btn-place(2);
+    }
+    #{$sct-card}:not(#{$sct-cmp-off}):not(#{$sct-wish-off}) #{$sct-btn}.quick_view_sct_btn {
+        @include sct-btn-place(3);
+    }
+}
+
+// Hover styles 1 and 2: compare / wishlist / quick view are round white buttons with a soft
+// shadow, 12px in from the corner of the image and 8px apart (30px, 34px from 1200px wide)
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' or o-website-value('prod-hover-style') == 'prod_hover_style_2' {
+    $sct-round-side: if(o-website-value('prod-hover-style') == 'prod_hover_style_2', left, right);
+    #{$sct-card} {
+        --sct-btn-size: 30px;
+        @media (min-width: 1200px) {
+            --sct-btn-size: 34px;
+        }
+    }
+    #{$sct-card} #{$sct-btn}:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--sct-btn-size) !important;
+        height: var(--sct-btn-size) !important;
+        min-width: 0;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 50% !important;
+        background: $white !important;
+        color: $body-color;
+        font-size: 16px;
+        line-height: 1;
+        box-shadow: 0 2px 10px rgba($black, .12);
+        transition: transform .3s ease, background-color .2s, color .2s, box-shadow .2s;
+
+        @media (min-width: 992px) {
+            #{$sct-round-side}: 12px !important;
+        }
+        @media (min-width: 1200px) {
+            font-size: 17px;
+        }
+        &:hover, &:focus-visible {
+            background: $primary !important;
+            color: color-contrast($primary) !important;
+            box-shadow: 0 4px 12px rgba($black, .18);
+        }
+        > :is(span, i) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            margin: 0;
+            line-height: 1;
+            color: inherit;
+
+            &::before {
+                width: auto; // the heart was drawn at the left of a 20px box
+            }
+        }
+        // Lineicons draw their glyphs in the top part of the line (ink centre at 1/3 of it, not
+        // 1/2): the heart and the eye sat high in the circle. The filled heart (in the wishlist)
+        // is a FontAwesome one, centred already.
+        > :is(.lni, .oi:not(.oi-fw):not(.oi-filled)) {
+            transform: translateY(.17em);
+        }
+        // Material Symbols' swap arrows fill the whole em: a size down to match the other two
+        > .oi-fw {
+            font-size: .88em;
+        }
+        // the filled heart (FontAwesome) is drawn larger than the outline one
+        > .oi-filled {
+            font-size: .82em;
+        }
+        .o_label {
+            display: none;
+        }
+    }
+    @media (max-width: 991.98px) {
+        #{$sct-card} #{$sct-btn}:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+            --sct-btn-size: 32px;
+        }
+    }
+    // phones: Add to cart is an icon only, round like the others
+    @media (max-width: 767.98px) {
+        #{$sct-card} #{$sct-btn}.a-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px !important;
+            height: 32px !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 50% !important;
+            background: $white !important;
+            color: $body-color !important;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba($black, .12);
+
+            > .lni {
+                transform: translateY(.17em); // see above
+            }
+        }
+    }
+}
+
+// An Odoo ribbon and a Scita tag set on the same top corner were drawn on top of each other.
+// A product has one of each at most, so the other top corner is free: the tag moves there
+// (with the shape of a tag set on that side). Stacked under the ribbon instead, it covered the
+// image and, on phones, the colour swatches.
+:is(.oe_product, .o_carousel_product_card):has(.o_ribbons.o_left:not(:empty)) .img_lbl.left {
+    left: auto;
+    right: 10px;
+
+    &.style3 .sct-top-right-part {
+        left: auto;
+        right: 0;
+    }
+    &.style4 {
+        left: auto;
+        right: 0;
+    }
+    &.style5 {
+        left: auto;
+        right: 12px;
+        border-left: 0;
+        border-right: var(--f) solid #0005;
+        clip-path: polygon(calc(100% - var(--f)) 0, 0 0, 0 100%, calc(50% - var(--f) / 2) calc(100% - var(--r)), calc(100% - var(--f)) 100%, calc(100% - var(--f)) var(--f), 100% var(--f));
+    }
+}
+:is(.oe_product, .o_carousel_product_card):has(.o_ribbons.o_right:not(:empty)) .img_lbl.right {
+    right: auto;
+    left: 10px;
+
+    &.style3 .sct-top-right-part {
+        right: auto;
+        left: 0;
+    }
+    &.style4 {
+        right: auto;
+        left: 20px;
+    }
+    &.style5 {
+        right: auto;
+        left: 12px;
+        border-right: 0;
+        border-left: var(--f) solid #0005;
+        clip-path: polygon(var(--f) 0, 100% 0, 100% 100%, calc(50% + var(--f) / 2) calc(100% - var(--r)), var(--f) 100%, var(--f) var(--f), 0 var(--f));
+    }
+}
+// a "Tag" ribbon with a long text ("Limited Offer Tag") reached the tag in the other corner of a
+// narrow card: next to a tag, keep it to its half of the image
+:is(.oe_product, .o_carousel_product_card):has(.img_lbl) .o_ribbons.o_wsale_badge {
+    max-width: calc(50% - 8px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+// ==== Products Design options under Scita's product cards (shop page)
+$sct-ratio: ':is(.o_wsale_products_opt_thumb_16_9, .o_wsale_products_opt_thumb_4_3, .o_wsale_products_opt_thumb_6_5, .o_wsale_products_opt_thumb_4_5, .o_wsale_products_opt_thumb_2_3)';
+
+// Image Ratio: Scita gives the images a fixed height (150 / 180 / 210px), so no ratio had any
+// effect. "Default" keeps that height; another ratio sizes the image (Odoo's aspect-ratio on the
+// image link) and tells the hover buttons how tall it is (100cqw: the card, a size container).
+#products_grid:has(.o_wsale_products_grid_table#{$sct-ratio}) .oe_product .o_wsale_product_grid_wrapper .oe_product_cart .oe_product_image {
+    height: auto !important;
+}
+#products_grid .o_wsale_products_grid_table#{$sct-ratio} {
+    @media (min-width: 992px) {
+        --sct-img-h: calc(10px + (100cqw - 20px) / var(--o-wsale-card-thumb-aspect-ratio, 1));
+    }
+}
+
+// Image hover effect (zoom in / out): Scita's grid cancelled the image transform (product_style)
+@media (min-width: 992px) {
+    #products_grid .o_wsale_products_grid_table_wrapper .o_wsale_products_grid_table .oe_product .o_wsale_product_grid_wrapper .oe_product_cart:hover .oe_product_image {
+        img.oe_product_image_img {
+            transform: var(--o-wsale-card-img-transform-hover, var(--o-wsale-card-img-transform));
+        }
+        img.oe_product_image_img_secondary {
+            transform: var(--o-wsale-card-img-secondary-transform-hover, var(--o-wsale-card-img-secondary-transform));
+        }
+    }
+}
+
+// Title style: "Link Color" (no "Default Color"), Bold, Font size "Theme default" (#products_grid
+// twice: above the hover styles' title colour)
+$sct-title: '.oe_product .o_wsale_products_item_title';
+#products_grid#products_grid .o_wsale_products_grid_table:not(.o_wsale_products_opt_name_color_regular) #{$sct-title} {
+    &, a {
+        color: $link-color !important;
+    }
+}
+#products_grid#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_name_weight_bold #{$sct-title} {
+    &, a {
+        font-weight: $font-weight-bold !important;
+    }
+}
+#products_grid#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_name_size_body #{$sct-title} {
+    &, a {
+        font-size: $font-size-base !important;
+    }
+}
+
+// Roundness: Cards, Chips and Bento round the card itself (Thumbnails rounds the image only)
+#products_grid#products_grid .o_wsale_products_grid_table:is(.o_wsale_products_opt_design_cards, .o_wsale_products_opt_design_chips, .o_wsale_products_opt_design_bento) .oe_product .o_wsale_product_grid_wrapper {
+    border-radius: var(--o-wsale-opt-border-radius, 6px);
+}
+
+// Hover styles 1 and 2 stack their buttons down one corner of the image, laid out for Scita's
+// 180 / 210px images. The column did not fit (it ran onto the product name) when
+// - the Image Ratio is not Default: a landscape image is too short, and on narrow cards a
+//   portrait one too once a tag pushes the column down;
+// - a diagonal ribbon is on the column's side: the column starts under the band.
+// There the buttons make a row along the bottom of the image, in the corner away from a diagonal
+// ribbon (bottom right, bottom left when the ribbon is on the right): tags and ribbons hold the
+// top corners; the colour swatches (bottom left) step aside while the row shows.
+@if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' or o-website-value('prod-hover-style') == 'prod_hover_style_2' {
+    $sct-col-side: if(o-website-value('prod-hover-style') == 'prod_hover_style_2', left, right);
+    $sct-grid: '.o_wsale_products_grid_table:not(.o_wsale_products_opt_layout_list)';
+    $sct-band-right: '.o_ribbons.o_wsale_ribbon.o_right:not(:empty)';
+    // the product (#products_grid twice: above the column places, which this replaces)
+    $sct-row-product: ':is(#products_grid#products_grid #{$sct-grid}#{$sct-ratio} .oe_product, #products_grid#products_grid #{$sct-grid} .oe_product:has(.o_ribbons.o_wsale_ribbon.o_#{$sct-col-side}:not(:empty)))';
+    $sct-row-card: '#{$sct-row-product} .oe_product_cart';
+    $sct-row-btns: '#{$sct-btn}:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn)';
+
+    @media (min-width: 992px) {
+        #{$sct-row-card} #{$sct-row-btns} {
+            top: calc(-12px - var(--sct-btn-size, 30px)) !important; // above the text block, i.e. at the bottom of the image
+            left: auto !important;
+            right: 12px !important;
+            translate: none !important;
+            transform: translateX(150px) !important; // hidden until hover (wider than the column)
+        }
+        #{$sct-row-product}:hover .oe_product_cart #{$sct-row-btns} {
+            transform: none !important;
+        }
+        // bottom right, right to left: quick view, wishlist, compare
+        #{$sct-row-card} #{$sct-btn}.o_add_wishlist {
+            right: calc(12px + var(--sct-btn-size, 30px) + 8px) !important;
+        }
+        #{$sct-row-card}:not(#{$sct-wish-off}) #{$sct-btn}.o_add_compare {
+            right: calc(12px + 2 * (var(--sct-btn-size, 30px) + 8px)) !important;
+        }
+        #{$sct-row-card}#{$sct-wish-off} #{$sct-btn}.o_add_compare {
+            right: calc(12px + var(--sct-btn-size, 30px) + 8px) !important;
+        }
+        // bottom left (diagonal ribbon on the right), left to right: compare, wishlist, quick view
+        $sct-row-left: '#{$sct-row-card}:has(#{$sct-band-right})';
+        #{$sct-row-left} #{$sct-row-btns} {
+            right: auto !important;
+            left: 12px !important;
+            transform: translateX(-150px) !important;
+        }
+        #{$sct-row-product}:hover .oe_product_cart:has(#{$sct-band-right}) #{$sct-row-btns} {
+            transform: none !important;
+        }
+        #{$sct-row-left}:not(#{$sct-cmp-off}) #{$sct-btn}.o_add_wishlist {
+            left: calc(12px + var(--sct-btn-size, 30px) + 8px) !important;
+        }
+        #{$sct-row-left}#{$sct-cmp-off}:not(#{$sct-wish-off}) #{$sct-btn}.quick_view_sct_btn,
+        #{$sct-row-left}:not(#{$sct-cmp-off})#{$sct-wish-off} #{$sct-btn}.quick_view_sct_btn {
+            left: calc(12px + var(--sct-btn-size, 30px) + 8px) !important;
+        }
+        #{$sct-row-left}:not(#{$sct-cmp-off}):not(#{$sct-wish-off}) #{$sct-btn}.quick_view_sct_btn {
+            left: calc(12px + 2 * (var(--sct-btn-size, 30px) + 8px)) !important;
+        }
+        // while the row shows, the colour swatches (bottom left) step aside
+        #{$sct-row-product}:hover .o_wsale_attribute_previewer {
+            opacity: 0;
+            visibility: hidden;
+        }
+        // 16/9 images (and 4/3 or 6/5 ones on the narrow Chips cards) are too short for a corner
+        // label and the row: the labels step aside while the row shows
+        $sct-short: ':is(.o_wsale_products_opt_thumb_16_9, .o_wsale_products_opt_design_chips:is(.o_wsale_products_opt_thumb_4_3, .o_wsale_products_opt_thumb_6_5))';
+        #products_grid#products_grid #{$sct-grid}#{$sct-short} .oe_product:hover :is(.img_lbl, .o_ribbons) {
+            opacity: 0;
+            transition: opacity .2s;
+        }
+    }
+}
+
+// Scita product blocks: in narrow columns (Trending Now at 992-1199px) "Add to cart" broke over
+// two lines
+.cs-product .a-submit {
+    white-space: nowrap;
+}
+
+// Scita product blocks: compare / wishlist / quick view are round white buttons with a soft
+// shadow, as on the shop page (each hover style still places them)
+.cs-product .btn:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: $white !important;
+    color: $body-color !important;
+    font-size: 15px;
+    line-height: 1;
+    box-shadow: 0 2px 10px rgba($black, .12) !important;
+
+    &:hover, &:focus-visible {
+        background: $primary !important;
+        color: color-contrast($primary) !important;
+        box-shadow: 0 4px 12px rgba($black, .18) !important;
+    }
+    > :is(span, i) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        margin: 0;
+        line-height: 1;
+        color: inherit !important;
+
+        &::before {
+            width: auto;
+        }
+    }
+    // Lineicons draw their glyphs in the top part of the line: centre them (see the shop buttons)
+    > .lni {
+        transform: translateY(.17em);
+    }
+    // in the wishlist, the heart is FontAwesome's filled one (product_card_equal_height.scss):
+    // centred already, and drawn larger than the Lineicons ones
+    &.o_add_wishlist:is([disabled], .disabled) > .lni-heart {
+        transform: none;
+        font-size: .82em;
+    }
+}

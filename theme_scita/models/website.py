@@ -6,6 +6,7 @@ import re
 import werkzeug
 from lxml import etree
 from odoo import models, api, fields
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
@@ -165,6 +166,8 @@ class website(models.Model):
                            ('public_categ_ids.parent_id', 'in', cat_id)]
         else:
             domain = []
+        # only products this website sells (not unpublished ones or another website's)
+        domain += [('is_published', '=', True), ('sale_ok', '=', True)] + list(self.website_domain())
         product_ids = self.env["product.template"].sudo(
         ).search(domain)
         domain_brand = [
@@ -185,15 +188,12 @@ class website(models.Model):
 
     # For pages megamenu
     def get_megamenu_pages(self, submenu):
-        menus = self.env['website.menu'].sudo().search(
-            [('parent_id', '=', submenu.id)])
-        return menus
+        # child_id is prefetched for the whole menu tree: no query per menu
+        return submenu.sudo().child_id
 
     # For pages megamenu count
     def get_megamenu_pages_count(self, submenu):
-        page_menu_count = self.env['website.menu'].sudo().search_count(
-            [('parent_id', '=', submenu.id)])
-        return page_menu_count
+        return len(submenu.sudo().child_id)
 
     # For category megamenu
     def get_public_product_category(self, submenu):
@@ -297,7 +297,7 @@ class website(models.Model):
     def get_categories(self, category=None):
         cat = {}
         shop_category = request.env['product.public.category'].sudo().search(
-            [('parent_id', '=', None)], order='name asc')
+            Domain('parent_id', '=', False) & self.website_domain(), order='name asc')
         cat.update({'categ': shop_category})
         return cat
 
@@ -456,3 +456,23 @@ class website(models.Model):
             return hrefs
         except Exception:  # noqa: BLE001
             return []
+
+
+class WebsiteSnippetFilter(models.Model):
+    _inherit = 'website.snippet.filter'
+
+    def _filter_records_to_values(self, records, **options):
+        """Odoo's dynamic product blocks: hide the price where Scita hides it (login to see
+        price, prices hidden on the website or for this customer, Request Quote products).
+        Odoo's card template already leaves the price out when `hide_price` is set."""
+        res_products = super()._filter_records_to_values(records, **options)
+        if (self.model_name or options.get('res_model')) != 'product.product' or options.get('is_sample'):
+            return res_products
+        website = self.env.website
+        hide_all = bool(website) and website._sct_hide_line_price(False)
+        for res_product in res_products:
+            product = res_product.get('_record')
+            template = product.product_tmpl_id if product and product._name == 'product.product' else product
+            if hide_all or (template and (template.website_hide_price or template.quote_request)):
+                res_product['hide_price'] = True
+        return res_products

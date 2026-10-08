@@ -842,3 +842,22 @@ body #wrapwrap.o_portal {
         padding: 0;
     }
 }
+
+// Cart line without -/+ ("Select Quantity" disabled in the editor, or a reward / discount
+// line): Odoo shows the quantity as plain read-only text. Without its buttons, Scita's grey
+// pill around it looked like an empty, disabled field with a faint number.
+[name^="website_sale_cart_line_quantity"].css_quantity:not(:has(button)) {
+    background-color: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    min-width: 0;
+
+    input.quantity {
+        color: $body-color;
+        font-weight: 500;
+        background-color: transparent !important;
+        min-height: 0 !important;
+        min-width: 1.5rem;
+        cursor: default;
+    }
+}

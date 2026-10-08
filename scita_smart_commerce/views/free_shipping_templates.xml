@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Progress bar towards free delivery. Values come from website._scita_free_shipping_info():
+         fsb = {reached, remaining, progress, threshold, currency, suggestions}, fsb_context = cart|mini -->
+    <template id="free_shipping_bar" name="Scita Free Shipping Progress Bar">
+        <div t-attf-class="o_scita_fsb border rounded p-3 mb-3 #{'o_scita_fsb_reached' if fsb['reached'] else ''} o_scita_fsb_#{fsb_context}">
+            <p class="o_scita_fsb_text mb-2 d-flex align-items-center gap-2">
+                <i class="fa fa-truck text-o-color-1" role="img" aria-hidden="true"/>
+                <t t-if="fsb['reached']">
+                    <span><strong>You've unlocked free delivery!</strong></span>
+                </t>
+                <t t-else="">
+                    <span>
+                        Add <strong t-out="fsb['remaining']" t-options="{'widget': 'monetary', 'display_currency': fsb['currency']}"/>
+                        more for <strong>free delivery</strong>
+                    </span>
+                </t>
+            </p>
+            <div class="progress o_scita_fsb_progress" role="progressbar"
+                 t-att-aria-valuenow="fsb['progress']" aria-valuemin="0" aria-valuemax="100"
+                 aria-label="Progress towards free delivery">
+                <div t-attf-class="progress-bar #{'bg-success' if fsb['reached'] else ''}"
+                     t-attf-style="width: #{fsb['progress']}%;"/>
+            </div>
+            <div t-if="fsb['suggestions']" class="o_scita_fsb_suggestions mt-3">
+                <p class="small text-muted mb-2">Add one of these to get there:</p>
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                    <li t-foreach="fsb['suggestions']" t-as="sugg" class="d-flex align-items-center gap-2">
+                        <t t-set="tmpl" t-value="sugg['product_tmpl']"/>
+                        <a t-att-href="tmpl.website_url" class="flex-shrink-0">
+                            <img t-att-src="'/web/image/product.template/%s/image_128' % tmpl.id"
+                                 t-att-alt="tmpl.name" width="48" height="48" loading="lazy"
+                                 class="rounded border o_scita_fsb_img"/>
+                        </a>
+                        <div class="flex-grow-1 min-w-0">
+                            <a t-att-href="tmpl.website_url" class="d-block text-truncate text-reset small fw-bold" t-out="tmpl.name"/>
+                            <span class="small" t-out="sugg['price']"
+                                  t-options="{'widget': 'monetary', 'display_currency': fsb['currency']}"/>
+                        </div>
+                        <button t-if="sugg['direct_add']" type="button"
+                                class="btn btn-sm btn-primary o_scita_fsb_add flex-shrink-0"
+                                t-att-data-product-template-id="tmpl.id"
+                                t-att-data-product-id="sugg['product_id']"
+                                t-attf-aria-label="Add #{tmpl.name} to cart">
+                            Add
+                        </button>
+                        <a t-else="" t-att-href="tmpl.website_url"
+                           class="btn btn-sm btn-outline-primary flex-shrink-0">Choose options</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+    <!-- Cart page: under the "Order summary" title, above the cart lines (outside Scita's
+         scrolling lines box). Server-rendered; the JS refreshes it on cart changes. -->
+    <template id="free_shipping_bar_cart" inherit_id="website_sale.cart" name="Scita Free Shipping Bar (cart)">
+        <xpath expr="//div[@id='shop_cart']/div[1]" position="after">
+            <t t-set="fsb" t-value="website._scita_free_shipping_info(website_sale_order or request.cart)"/>
+            <div class="o_scita_free_shipping_bar" data-context="cart">
+                <t t-if="fsb.get('show')" t-call="scita_smart_commerce.free_shipping_bar" fsb_context="'cart'"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Marks the page when the bar is enabled, so its JS (cart watcher) only runs then -->
+    <template id="free_shipping_flag" inherit_id="website.layout" name="Scita Free Shipping Bar (flag)">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-att-data-scita-fsb">'1' if website and website.scita_free_shipping_bar_enabled else None</attribute>
+        </xpath>
+    </template>
+</odoo>

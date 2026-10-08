@@ -593,7 +593,7 @@
                                 </div>
                                 <div class="sct-hover-info product_price">
                                     <form action="/shop/cart/update" method="post">
-                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                             <span class="lni lni-cart-1 cart_icon"></span>
                                             <span class="add_to_cart_text">Add to cart</span>
                                         </button>
@@ -645,7 +645,7 @@
                                 </div>
                                 <div class="sct-hover-info product_price">
                                     <form action="/shop/cart/update" method="post">
-                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                             <span class="lni lni-cart-1 cart_icon"></span>
                                             <span class="add_to_cart_text">Add to cart</span>
                                         </button>
@@ -697,7 +697,7 @@
                                 </div>
                                 <div class="sct-hover-info product_price">
                                     <form action="/shop/cart/update" method="post">
-                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                             <span class="lni lni-cart-1 cart_icon"></span>
                                             <span class="add_to_cart_text">Add to cart</span>
                                         </button>
@@ -749,7 +749,7 @@
                                 </div>
                                 <div class="sct-hover-info product_price">
                                     <form action="/shop/cart/update" method="post">
-                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                             <span class="lni lni-cart-1 cart_icon"></span>
                                             <span class="add_to_cart_text">Add to cart</span>
                                         </button>
@@ -1524,7 +1524,7 @@
                                                 </div>
                                                 <div class="cart_wrapper add_cart_div">
                                                     <form action="/shop/cart/update" method="post">
-                                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
                                                         <div class="dropdown-plus">
@@ -1581,7 +1581,7 @@
                                                 </div>
                                                 <div class="cart_wrapper add_cart_div">
                                                     <form action="/shop/cart/update" method="post">
-                                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
                                                         <div class="dropdown-plus">
@@ -1638,7 +1638,7 @@
                                                 </div>
                                                 <div class="cart_wrapper add_cart_div">
                                                     <form action="/shop/cart/update" method="post">
-                                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
                                                         <div class="dropdown-plus">
@@ -1695,7 +1695,7 @@
                                                 </div>
                                                 <div class="cart_wrapper add_cart_div">
                                                     <form action="/shop/cart/update" method="post">
-                                                        <button class="button btn btn-cart a-submit cart_view_sct_btn">
+                                                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn">
                                                             Add
                                                         </button>
                                                         <div class="dropdown-plus">

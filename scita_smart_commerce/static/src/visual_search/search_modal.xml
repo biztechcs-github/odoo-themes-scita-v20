@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Odoo's search pop-up (opened by the search icon of compact headers, or by a too
+         narrow search bar) is built in JS from this template, not from the website search
+         box view: add the camera there too. Hidden until the button's interaction finds the
+         visual search dialog on the page (i.e. the feature is enabled). -->
+    <t t-inherit="website.s_searchbar.modal" t-inherit-mode="extension">
+        <xpath expr="//button[@type='submit']" position="after">
+            <button type="button" class="btn o_scita_visual_search_btn d-none"
+                    title="Search by photo" aria-label="Search by photo">
+                <i class="oi" data-icon="photo_camera" role="img"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

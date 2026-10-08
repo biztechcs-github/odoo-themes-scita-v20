@@ -1,0 +1,44 @@
+.o_scita_price_alert {
+    .o_scita_price_alert_toggle {
+        color: var(--o-color-1, $primary);
+        font-size: 0.9rem;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+
+    .o_scita_price_alert_watching {
+        max-width: 32rem;
+        background-color: rgba($success, 0.1);
+        color: $body-color;
+
+        .btn-link {
+            font-size: inherit;
+        }
+    }
+
+    .o_scita_price_alert_form {
+        max-width: 32rem;
+
+        legend {
+            float: none; // Bootstrap reboot floats legends
+        }
+        .o_scita_price_alert_target {
+            width: 7rem;
+        }
+        background-color: var(--o-cc1-bg, #fff);
+
+        .o_scita_price_alert_submit {
+            white-space: nowrap !important; // theme_scita's comman.scss forces wrapping on buttons
+
+            // Scita's product page turns .btn-primary transparent on hover but keeps the
+            // white text: keep its look, make the label readable
+            &:hover,
+            &:focus {
+                color: $body-color !important;
+            }
+        }
+    }
+}

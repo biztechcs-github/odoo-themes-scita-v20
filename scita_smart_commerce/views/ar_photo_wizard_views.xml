@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="scita_ar_photo_wizard_view_form" model="ir.ui.view">
+        <field name="name">scita.ar.photo.wizard.form</field>
+        <field name="model">scita.ar.photo.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create a 3D / AR model from a photo">
+                <field name="product_tmpl_id" invisible="1"/>
+                <field name="mode" widget="radio" options="{'horizontal': true}" class="mb-2"/>
+                <div class="alert alert-info mb-3" role="status" invisible="mode != 'single'">
+                    One photo has no depth: the product becomes a <b>real-size cut-out</b> (flat card or thin box)
+                    that shoppers can view in 3D and place in their room. Ideal for wall art, mirrors, TVs, doors,
+                    rugs hung on a wall, boxed goods and "does it fit" checks.
+                </div>
+                <field name="multi_available" invisible="1"/>
+                <div class="alert alert-warning mb-3" role="alert" invisible="mode != 'multi' or multi_available">
+                    This mode needs the free <b>numpy</b> Python package on the server: ask your administrator
+                    to install it (<code>pip install numpy</code>) and restart Odoo.
+                </div>
+                <div class="alert alert-info mb-3" role="status" invisible="mode != 'multi'">
+                    Take each photo <b>straight on</b>, on a plain background, the product filling most of the
+                    photo; the <b>top</b> photo with the front of the product at the bottom. Front is required,
+                    the more sides the better. Box-shaped products get a photo on each face; other shapes are
+                    <b>carved from their outlines</b> (hollows such as the inside of a bowl stay filled).
+                </div>
+                <div class="alert alert-warning mb-3" role="alert" invisible="not has_uploaded_model">
+                    This product already has an uploaded 3D model: creating one from a photo replaces it.
+                </div>
+                <field name="has_uploaded_model" invisible="1"/>
+                <group>
+                    <group string="Photo">
+                        <field name="photo" widget="image" options="{'size': [0, 220]}"/>
+                        <field name="bg_method"/>
+                    </group>
+                    <group string="Real size">
+                        <field name="shape" widget="radio" invisible="mode != 'single'"/>
+                        <field name="multi_shape" invisible="mode != 'multi'"/>
+                        <field name="height_cm"/>
+                        <field name="width_cm" required="mode == 'multi'"/>
+                        <field name="depth_cm" invisible="mode == 'single' and shape != 'box'" required="mode == 'multi'"/>
+                        <field name="placement" widget="radio"/>
+                    </group>
+                </group>
+                <div invisible="mode != 'multi'" class="mb-3">
+                    <separator string="Other sides"/>
+                    <div class="d-flex flex-wrap gap-4">
+                        <div class="text-center o_scita_ar_side">
+                            <label for="photo_back" class="d-block fw-bold mb-1"/>
+                            <field name="photo_back" widget="image" nolabel="1" options="{'size': [110, 110]}"/>
+                        </div>
+                        <div class="text-center o_scita_ar_side">
+                            <label for="photo_left" class="d-block fw-bold mb-1"/>
+                            <field name="photo_left" widget="image" nolabel="1" options="{'size': [110, 110]}"/>
+                        </div>
+                        <div class="text-center o_scita_ar_side">
+                            <label for="photo_right" class="d-block fw-bold mb-1"/>
+                            <field name="photo_right" widget="image" nolabel="1" options="{'size': [110, 110]}"/>
+                        </div>
+                        <div class="text-center o_scita_ar_side">
+                            <label for="photo_top" class="d-block fw-bold mb-1"/>
+                            <field name="photo_top" widget="image" nolabel="1" options="{'size': [110, 110]}"/>
+                        </div>
+                        <div class="text-center o_scita_ar_side">
+                            <label for="photo_bottom" class="d-block fw-bold mb-1"/>
+                            <field name="photo_bottom" widget="image" nolabel="1" options="{'size': [110, 110]}"/>
+                        </div>
+                    </div>
+                </div>
+                <group invisible="not cutout" string="Preview">
+                    <field name="cutout" widget="image" options="{'size': [0, 220]}" nolabel="1" colspan="2"
+                           class="o_scita_ar_cutout"/>
+                    <field name="preview_info" nolabel="1" colspan="2" class="text-muted"/>
+                </group>
+                <footer>
+                    <button name="action_create" type="object" string="Create 3D model" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button name="action_preview" type="object" string="Preview" data-hotkey="w"/>
+                    <button string="Cancel" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

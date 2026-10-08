@@ -153,77 +153,6 @@ $(document).ready(function(){
     //End
 
     // Start
-    publicWidget.registry.theme_scita_product_slider = publicWidget.Widget.extend({ 
-        selector: ".oe_prod_slider",
-        disabledInEditableMode: false,
-        start: function() {
-            var self = this;
-            if (this.editableMode) {
-                var $prod_slider = $('#wrapwrap').find('#theme_scita_custom_product_slider');
-                var prod_name = _t("Products Slider")
-                $prod_slider.each(function(){
-                    $(this).empty().append('<div class="container">\
-                                                    <div class="block-title">\
-                                                        <h3 class="fancy">' + prod_name + '</h3>\
-                                                    </div>\
-                                                </div>')
-                });
-            }
-            if (!this.editableMode) {
-                var slider_id = self.$target.attr('data-prod-slider-id');
-                rpc("/theme_scita/product_get_dynamic_slider",{
-                    'slider-id': self.$target.attr('data-prod-slider-id') || '',
-                }).then(function(data) {
-                    if (data) {
-                        self.$target.empty();
-                        self.$target.append(data);
-                        $(".oe_prod_slider").removeClass('o_hidden');
-                        var sct_rtl = false;
-                        if ($('#wrapwrap').hasClass('o_rtl')) {
-                            sct_rtl = true;
-                        }
-                        rpc('/theme_scita/product_image_effect_config', {
-                            'slider_id': slider_id
-                        }).then(function(res) {
-                            $('div#' + res.s_id).owlCarousel({
-                                margin: 10,
-                                responsiveClass: true,
-                                items: res.counts,
-                                loop: false,
-                                rewind:true,
-                                nav:true,
-                                autoplay: res.auto_rotate,
-                                autoplayTimeout:res.auto_play_time,
-                                autoplayHoverPause:true,
-                                rtl: sct_rtl,
-                                responsive: {
-                                    0: {
-                                        items: 1,
-                                    },
-                                    420: {
-                                        items: 2,
-                                    },
-                                    768: {
-                                        items: 3,
-                                    },
-                                    1000: {
-                                        items: res.counts,
-                                    },
-                                    1500: {
-                                        items: res.counts,
-                                    },
-                                },
-                            });
-                            
-                        });
-                    }
-                });
-            }
-        }
-    });
-    //End
-
-    // Start
     publicWidget.registry.fashion_multi_cat_custom_snippet = publicWidget.Widget.extend({ 
 
         selector: ".fashion_multi_category_slider",
@@ -377,6 +306,9 @@ $(document).ready(function(){
                 const element = ev.currentTarget;
                 const product_id = $(element).attr('data-id');
                 rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
+                    if (!data) {
+                        return;
+                    }
                     $("#shop_cart_view_modal").html(data).modal("show");
                 });
             },
@@ -2020,6 +1952,9 @@ $(document).ready(function(){
                     const element = ev.currentTarget;
                     const product_id = $(element).attr('data-id');
                     rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
+                        if (!data) {
+                            return;
+                        }
                         $("#shop_cart_view_modal").html(data).modal("show");
                     });
                 },
@@ -2287,6 +2222,9 @@ $(document).ready(function(){
                     const element = ev.currentTarget;
                     const product_id = $(element).attr('data-id');
                     rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
+                        if (!data) {
+                            return;
+                        }
                         $("#shop_cart_view_modal").html(data).modal("show");
                     });
                 },
@@ -2514,7 +2452,9 @@ $(document).ready(function(){
                     this._observer = observer;
                 }
             }
-            if (!this.editableMode) {
+            // no video chosen yet: keep the placeholder (the empty video section that comes back
+            // otherwise collapsed the block to 0px, and in the editor it could not be selected)
+            if (!this.editableMode && self.$target.attr('data-video-url')) {
                 $.get("/video/video_url_get", {
                     'video_url': self.$target.attr('data-video-url'),
                 }).then(function(data) {
@@ -2711,6 +2651,9 @@ $(document).ready(function(){
             }
             if (!this.editableMode) {
                 var slider_id = self.$target.attr('data-cat-slider-id');
+                if (!slider_id) {
+                    return; // block not configured yet: the route 404s on an empty id
+                }
                 $.get("/theme_scita/trending_products_categories", {
                     'slider-id': slider_id || '',
                 }).then(function(data) {
@@ -2810,6 +2753,9 @@ $(document).ready(function(){
                 const element = ev.currentTarget;
                 const product_id = $(element).attr('data-id');
                 rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
+                    if (!data) {
+                        return;
+                    }
                     $("#shop_cart_view_modal").html(data).modal("show");
                 });
             },

@@ -1,0 +1,55 @@
+.o_scita_visual_search_modal {
+    .border-dashed {
+        border-style: dashed !important;
+    }
+    .o_scita_vs_preview_img {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+    }
+    .o_scita_vs_card:hover {
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+    }
+}
+
+// Camera button inside the search field, Google-style: [ text ... (camera) (search) ].
+// It comes after the search button in the markup (Theme Scita rewrites the first button of
+// the box), so flex `order` puts it before; no divider lines between the three parts.
+[role="search"]:has(> .o_scita_visual_search_btn:not(.d-none)) {
+    > .o_scita_visual_search_btn {
+        order: 1;
+        display: inline-flex;
+        min-width: 2.5rem;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.4rem;
+        margin: 0 !important;
+        background: transparent;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+
+        i {
+            font-size: 1.2em;
+            opacity: 0.75;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+
+        &:hover i,
+        &:focus-visible i {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    }
+
+    > button[type="submit"] {
+        order: 2;
+        border-left: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    > input.search-query {
+        border-right: 0 !important;
+    }
+}

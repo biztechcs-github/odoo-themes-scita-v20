@@ -11,7 +11,28 @@ import { ComparisonPage } from "@website_sale/interactions/comparison_page";
 //    from the start, over the page title and images. Measure its first cell instead.
 // 2. it listens to `window` scroll, but Scita makes #wrapwrap the scrolling element
 //    (comman.scss), so the overview never appeared. Also listen to the element that scrolls.
+// 3. it places the overview under the full height of the header (`.o_top_fixed_element`),
+//    as if the header stayed on screen; Scita's header scrolls away with the page, which
+//    left a header-high blank strip above the overview. Count only what is visible of it,
+//    again on every scroll (same as cart_notification_offset.js).
 patch(ComparisonPage.prototype, {
+    _adaptToHeaderChange() {
+        let position = 0;
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            const { top, height } = el.getBoundingClientRect();
+            position += Math.max(0, Math.min(height, height + top));
+        }
+        position = Math.round(position);
+        if (this.position !== position) {
+            this.position = position;
+            this.updateContent();
+            const miniStickyEl = this.el.querySelector("#miniStickyComparison");
+            if (miniStickyEl) {
+                miniStickyEl.style.top = `${position}px`;
+            }
+        }
+    },
+
     _initMiniStickyComparison() {
         const el = this.el;
         const querySelector = el.querySelector;
@@ -47,6 +68,8 @@ patch(ComparisonPage.prototype, {
             window.addEventListener = addEventListener;
             const scrollingEl = el.ownerDocument.querySelector("#wrapwrap");
             if (scrollingEl && getComputedStyle(scrollingEl).overflowY !== "visible") {
+                // first follow the header (it scrolls away), then show/hide the overview
+                scrollHandlers.unshift(() => this._adaptToHeaderChange());
                 for (const handler of scrollHandlers) {
                     scrollingEl.addEventListener("scroll", handler, { passive: true });
                     this.registerCleanup(() =>

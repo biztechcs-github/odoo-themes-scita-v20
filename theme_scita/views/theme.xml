@@ -1121,11 +1121,10 @@
     <!-- Products page -->
 
     <template id="theme_scita_sale_products" inherit_id="website_sale.products" name="Theme Scita Products">
+        <!-- Scita cards take one grid column each (see product_style.scss), not Odoo's g-col-* spans;
+             keep a marker for editor > Mobile "1 per row" (Odoo's g-col-12) -->
         <xpath expr="//div[@id='products_grid']//t[@t-if='td_product']//div" position="attributes">
-            <attribute name="t-attf-class">oe_product</attribute>
-        </xpath>
-        <xpath expr="//div[@id='products_grid']//t[@t-if='td_product']//div" position="attributes">
-            <attribute name="t-attf-class">oe_product</attribute>
+            <attribute name="t-attf-class">oe_product {{'sct_col_single' if col_class == 'g-col-12' else ''}}</attribute>
         </xpath>
         <xpath expr="//div[@id='o_wsale_container']/div[hasclass('o_wsale_products_main_row')]" position="attributes">
             <attribute name="class">row o_wsale_products_main_row sct_shop_box</attribute>
@@ -1133,14 +1132,15 @@
         <xpath expr="//div[@id='wrap']//div[hasclass('oe_structure')]" position="before">
             <section class="page-title">
                 <div class="container">
-                    <h1 class='brandcum_title'>
+                    <!-- Odoo 20 already renders the page <h1> (o_wsale_category_title): keep one h1 per page -->
+                    <div class='brandcum_title h1'>
                         <span t-if="not (category and category.name)">
                             All Products
                         </span>
                         <span t-if="category and category.name">
                             <t t-out="category.name"/>
                         </span>
-                    </h1>
+                    </div>
                     <ul class="breadcrumb">
                         <li>
                             <a href="/">Home</a>
@@ -1203,8 +1203,13 @@
         <xpath expr='//div[hasclass("flex-grow-1")]' position='attributes'>
             <attribute name='class' add="sct-content-wrap" separator=" "></attribute>
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'd-none d-md-flex align-items-center gap-2')]" position="attributes">
-            <attribute name='t-attf-class'>o_hidden</attribute>
+        <!-- Scita shows its own Remove link next to the quantity (scita_19_cart_lines): hide
+             Odoo's buttons row. Not for a combo, whose quantity selector is in this row. -->
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="attributes">
+            <attribute name='t-attf-class'>{{'d-none d-md-flex align-items-center gap-2 mt-2 justify-content-end' if is_combo else 'o_hidden'}}</attribute>
+        </xpath>
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/button[hasclass('js_delete_product')]" position="attributes">
+            <attribute name="t-attf-class">#{'d-none' if is_combo else ''}</attribute>
         </xpath>
     </template>
     <template  id="scita_19_cart_lines" inherit_id="website_sale.cart_lines_quantity" name='show quantity selector'>
@@ -1271,7 +1276,14 @@
                         <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale quick_view_main_wrap">
                             <section id="product_detail" t-attf-class="container py-4 px-0 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}">
                                 <div class="row m-0" id="product_detail_main" t-att-data-image_width="website.product_page_image_width" t-att-data-image_layout="website.product_page_image_layout">
-                                    <div class="col-12 col-md-5 mt-md-4 mt-lg-0 px-0 sct_modal_image">
+                                    <div class="col-12 col-md-5 mt-md-4 mt-lg-0 px-0 sct_modal_image position-relative">
+                                        <!-- the product's ribbon, as on the product page -->
+                                        <t t-set="ribbon" t-value="product.sudo()._get_ribbon(price_vals=combination_info, variant=product_variant)"/>
+                                        <div t-if="ribbon" class="sct_modal_ribbon">
+                                            <t t-set="bg_color" t-value="ribbon.bg_color"/>
+                                            <t t-set="text_color" t-value="ribbon.text_color"/>
+                                            <t t-call="website_sale.product_ribbon"/>
+                                        </div>
                                         <img class="product_detail_img col-md-12" t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_1920' % product_variant.id" alt="Product Image"/>
                                         <img class="product_detail_img col-md-12" t-else="" t-att-src="'/web/image/product.template/%s/image_1920' % product.id" alt="Product Image"/>
                                     </div>
@@ -1308,7 +1320,7 @@
                                                     <t t-call="website_sale.variants" ul_class.f="flex-column" parent_combination="None" combination="combination_info['combination']">
                                                     </t>
                                                 </t>
-                                                <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
+                                                <p role="status" t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                                                 <!-- Odoo 20: is_sold_out (stock left minus what is already in the cart) is only computed with website_sale_product_page in the context -->
                                                 <t t-set="show_add_to_cart" t-value="not combination_info.get('prevent_sale') and not combination_info.get('is_sold_out')"/>
                                                 <div id="add_to_cart_wrap" t-attf-class="{{'d-inline-flex' if show_add_to_cart else 'd-none'}} align-items-center mb-2 me-auto">
@@ -1370,8 +1382,8 @@
                                                 </t>
                                             </div>
                                         </form>
-                                        <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
-                                        <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
+                                        <p role="status" t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
+                                        <p role="status" t-else="" class="alert alert-warning">This product has no valid combination.</p>
                                         <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
                                         <div id="product_documents" t-if="product_documents" class="row">
                                             <u class="h5">Documents</u>

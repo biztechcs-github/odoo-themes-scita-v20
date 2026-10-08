@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="scita_smart_commerce.HotspotsOption">
+    <BuilderRow label.translate="Hotspots"
+                tooltip.translate="Product dots on this image: click Add hotspot, then click where the product is">
+        <BuilderButton type="'success'" action="'scitaHotspotsAdd'" preview="false">
+            Add hotspot
+        </BuilderButton>
+        <span t-if="this.domState.count" class="ms-2 text-nowrap small opacity-75">
+            <t t-out="this.domState.count"/>
+        </span>
+    </BuilderRow>
+    <BuilderRow t-if="this.domState.count" label.translate="Hotspot style" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem action="'scitaHotspotsStyle'" actionParam="''">Plus</BuilderSelectItem>
+            <BuilderSelectItem action="'scitaHotspotsStyle'" actionParam="'o_scita_hotspots_number'">Number</BuilderSelectItem>
+            <BuilderSelectItem action="'scitaHotspotsStyle'" actionParam="'o_scita_hotspots_dot'">Dot</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="scita_smart_commerce.HotspotOption">
+    <BuilderRow label.translate="Product">
+        <BuilderMany2One
+            action="'scitaHotspotProduct'"
+            model="'product.template'"
+            domain="[['is_published', '=', true], ['sale_ok', '=', true]]"
+            defaultMessage.translate="Choose a product"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Position" tooltip.translate="From the left and from the top, in % of the image. Or drag the hotspot.">
+        <BuilderNumberInput title.translate="From the left (%)" action="'scitaHotspotPosition'" actionParam="'left'" min="2" max="98" step="0.5"/>
+        <BuilderNumberInput title.translate="From the top (%)" action="'scitaHotspotPosition'" actionParam="'top'" min="2" max="98" step="0.5"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <!-- any image of the page content (not the header/footer, product pages or dynamic blocks); a
+         linked image only when it is the whole link (the hotspots then go around the link) -->
+    <xpath expr="//t[@id='image_options']" position="inside">
+        <scita_hotspots_option
+            selector="#wrap img"
+            exclude="a > img:not(:only-child), a :not(a) img, [data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .oe_img_hotspot img, .o_scita_hotspot_card img, .s_image_gallery img"/>
+    </xpath>
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <!-- any block with a background image (banners, carousel slides...) -->
+        <scita_hotspots_bg_option selector="#wrap .oe_img_bg" exclude="[data-oe-type] .oe_img_bg"/>
+        <scita_hotspot_option selector=".o_scita_hotspots > .o_scita_hotspot" title="Hotspot"/>
+    </xpath>
+</t>
+
+</templates>

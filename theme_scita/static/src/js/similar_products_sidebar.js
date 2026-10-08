@@ -33,7 +33,7 @@ publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
                             ${prod.description_ecommerce ? `<div class="desc">${prod.description_ecommerce}</div>` : ''}
                             ${prod.sku && prod.sku !== 'false' ? `<div class="sku"><b>SKU: </b>: ${prod.sku}</div>` : ''}
                             <div class="rating_count">⭐ ${prod.rating_count} | ${prod.rating_avg}</div>
-                            <div class="price">
+                            ${prod.price === null ? '' : `<div class="price">
                                 <span class="oe_price">${formatCurrency(prod.price, currency)}</span>
                                 ${
                                     prod.compare_price && prod.compare_price > prod.price
@@ -42,7 +42,7 @@ publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
                                         </del>`
                                         : ''
                                 }
-                            </div>
+                            </div>`}
                         </div>
                     </div>
                 `;

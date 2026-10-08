@@ -170,6 +170,13 @@ a.btn.request_for_quote_button#request_for_quote_button {
     border-radius: 6px;
     background-color: $primary;
     color: $light-color;
+    // Default hover style / style 1: the product snippets' rules (deal of the day, product
+    // snippet 1, trending products...) set the text to $primary below 992px, on this primary
+    // background: the label was invisible on phones. Styles 2-5 draw an outline button there
+    // (white background, primary text), so they keep their own colour.
+    @if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' {
+        color: $light-color !important;
+    }
     font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
@@ -178,7 +185,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     &:hover, &:focus {
         background-color: transparent;
         border-color: $primary;
-        color: $primary;
+        color: $primary !important;
     }
 }
 
@@ -201,7 +208,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
         border: 1px solid transparent;
         border-radius: 40px;
         background-color: $light-grey-color;
-        color: $gray-900;
+        color: $gray-900 !important; // over the white of the general rule above
         font-size: 16px !important; // global #request_for_quote_button sets 14px !important
         font-weight: 700;
         text-transform: capitalize;
@@ -210,7 +217,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
         &:hover, &:focus {
             background-color: transparent;
             border-color: $secondary;
-            color: $gray-900;
+            color: $gray-900 !important;
         }
     }
 }
@@ -482,4 +489,68 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
 .sr-only,
 .sr-only-focusable:not(:focus):not(:focus-within) {
     @include visually-hidden();
+}
+
+// Deals of the day page (/deals-of-the-day): the columns of a row stretch to the tallest card
+// (a name on two lines); make each card fill its column so the borders line up
+#sct_deal_of_day_page .product-detail > .list-items {
+    display: flex;
+    flex-direction: column;
+
+    > .cs-product {
+        flex: 1 1 auto;
+    }
+}
+// Its hover buttons box spans the card's name and price, even while invisible: clicks on the
+// product name went to the box. Only the buttons take clicks (once shown, or on touch screens).
+#sct_deal_of_day_page .cs-product .sct-hover-info {
+    pointer-events: none;
+}
+#sct_deal_of_day_page .cs-product:hover .sct-hover-info .btn {
+    pointer-events: auto;
+}
+@media (hover: none) {
+    #sct_deal_of_day_page .cs-product .sct-hover-info .btn {
+        pointer-events: auto;
+    }
+}
+
+// Shop cards below 992px: Odoo hides the "buttons on hover" bar there and leaves it
+// pointer-events: none; Scita shows it as a row under the price, so the buttons could be seen
+// but not tapped. Bento also keeps them transparent until hover (styles 3-5 had only "Add to
+// cart" visible).
+@media (max-width: 991.98px) {
+    #products_grid .o_wsale_products_opt_actions_onhover .o_wsale_product_btn {
+        pointer-events: auto;
+    }
+    #products_grid .o_wsale_products_opt_design_bento.o_wsale_products_opt_actions_onhover .o_wsale_product_btn .btn {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+// Shop cards, phones/tablets: the action buttons sit side by side in Scita's row. Odoo's
+// "buttons on hover" design squares the secondary ones (aspect-ratio: 1), so each took its own
+// width as height (heart 34px, eye 31px, cart 30px), and Odoo 20's heart icon has a 20px box.
+// Same height for all: their padding + a 16px icon.
+@media (max-width: 1199.98px) {
+    #products_grid .o_wsale_product_btn .btn {
+        aspect-ratio: auto;
+
+        > :is(.oi, .lni, .fa) {
+            display: block;
+            height: 16px;
+            line-height: 16px;
+        }
+    }
+}
+
+// Editor > Mobile "1 product per row": Odoo renders off-screen product tiles lazily
+// (content-visibility: auto) with a placeholder height. Scita's card (button row under the
+// price) is taller than that placeholder, and with one large card per row the grid kept the short
+// row: the bottom of the buttons was cut off. Lay these cards out normally.
+@media (max-width: 767.98px) {
+    #products_grid .oe_product.sct_col_single .oe_product_cart {
+        content-visibility: visible;
+    }
 }

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.scita.smart.commerce</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="website_info_settings" position="after">
+                <block title="Scita Smart Commerce" id="scita_smart_commerce_settings" invisible="not website_id">
+                    <setting id="scita_ai_provider_setting" string="AI Provider"
+                             help="Used by the shopping assistant, visual search and AI comparison. Your own API key; usage is billed by the provider.">
+                        <div class="content-group mt-2">
+                            <div class="row">
+                                <label for="scita_ai_provider" class="col-lg-4 o_light_label"/>
+                                <field name="scita_ai_provider"/>
+                            </div>
+                            <div class="alert alert-warning mt-2" role="alert" invisible="not scita_ai_missing_package">
+                                The Python package for this provider is not installed on the server, so AI features will not work.
+                                Install it with <code>pip install <field name="scita_ai_missing_package" class="d-inline"/></code> and restart Odoo.
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_model" class="col-lg-4 o_light_label"/>
+                                <field name="scita_ai_model"/>
+                            </div>
+                            <div class="row" groups="base.group_system">
+                                <label for="scita_ai_api_key" class="col-lg-4 o_light_label"/>
+                                <field name="scita_ai_api_key" password="True"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_daily_limit" class="col-lg-4 o_light_label"/>
+                                <field name="scita_ai_daily_limit"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_ip_daily_limit" class="col-lg-4 o_light_label"/>
+                                <field name="scita_ai_ip_daily_limit"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_site_daily_limit" class="col-lg-4 o_light_label"/>
+                                <field name="scita_ai_site_daily_limit"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="scita_assistant_setting" help="Chat bubble that answers product questions, recommends products and adds them to the cart.">
+                        <field name="scita_assistant_enabled"/>
+                        <div class="content-group mt-2" invisible="not scita_assistant_enabled">
+                            <div class="row">
+                                <label for="scita_assistant_name" class="col-lg-4 o_light_label"/>
+                                <field name="scita_assistant_name"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_assistant_welcome" class="col-lg-4 o_light_label"/>
+                                <field name="scita_assistant_welcome"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="scita_visual_search_setting" help="Shoppers upload a photo and see visually similar products.">
+                        <field name="scita_visual_search_enabled"/>
+                    </setting>
+                    <setting id="scita_compare_ai_setting" help="On the comparison page, explain the differences between the selected products in plain language.">
+                        <field name="scita_compare_ai_enabled"/>
+                    </setting>
+                    <setting id="scita_price_alert_setting" help="A &quot;Notify me when the price drops&quot; link on product pages: shoppers get one email when the product gets cheaper.">
+                        <field name="scita_price_alert_enabled"/>
+                        <div class="content-group" invisible="not scita_price_alert_enabled">
+                            <div class="row mt-2">
+                                <label for="scita_price_alert_default_type" string="Preselected choice" class="col-lg-5 o_light_label"/>
+                                <field name="scita_price_alert_default_type" class="col-lg-7"/>
+                            </div>
+                            <div class="row">
+                                <label for="scita_price_alert_default_percent" string="Preselected discount" class="col-lg-5 o_light_label"/>
+                                <div class="col-lg-7"><field name="scita_price_alert_default_percent" class="oe_inline"/> %</div>
+                            </div>
+                            <div class="row">
+                                <label for="scita_price_alert_expiry_days" string="Alert lifetime" class="col-lg-5 o_light_label"/>
+                                <div class="col-lg-7"><field name="scita_price_alert_expiry_days" class="oe_inline"/> days (0 = never expires)</div>
+                            </div>
+                            <div class="row">
+                                <label for="scita_price_alert_retention_days" string="Delete closed alerts after" class="col-lg-5 o_light_label"/>
+                                <div class="col-lg-7"><field name="scita_price_alert_retention_days" class="oe_inline"/> days (0 = keep)</div>
+                            </div>
+                            <div class="mt-1">
+                                <field name="scita_price_alert_skip_sold_out" class="oe_inline"/>
+                                <label for="scita_price_alert_skip_sold_out" string="Wait while sold out" class="o_light_label"/>
+                            </div>
+                            <div>
+                                <field name="scita_price_alert_guest_confirm" class="oe_inline"/>
+                                <label for="scita_price_alert_guest_confirm" string="Guests confirm by email (recommended)" class="o_light_label"/>
+                            </div>
+                            <div class="mt-2">
+                                <button name="%(scita_smart_commerce.action_scita_price_alert)d" type="action" string="Price Alerts" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="scita_free_shipping_bar_setting" help="Cart and mini-cart progress bar towards the free-delivery threshold of your delivery methods.">
+                        <field name="scita_free_shipping_bar_enabled"/>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

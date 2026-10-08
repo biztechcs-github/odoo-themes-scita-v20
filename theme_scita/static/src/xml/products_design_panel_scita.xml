@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Shop page > Products Design > Design: Scita's "Product Hover Style" (Theme tab) places and
+         styles the product buttons of the shop grid. Odoo's settings for the same thing had no
+         effect there (button "Style") or only half of one ("Inline / On Hover", wishlist
+         "Inline / Fixed"), so they are not offered on the shop page. The show/hide buttons
+         (cart, compare, wishlist) stay. The product blocks keep them all. -->
+    <t t-inherit="website_sale.ProductsDesignPanel" t-inherit-mode="extension">
+        <!-- Buttons: Inline / On Hover -->
+        <xpath expr="//BuilderRow[@id=&quot;'o_wsale_buttons_opt'&quot;]/BuilderSelect" position="attributes">
+            <attribute name="t-if">(isOnHoverAvailable || this.isActiveItem('wsale_design_bento_catalog')) and this.props.recordName !== 'shop_opt_products_design_classes'</attribute>
+        </xpath>
+        <xpath expr="//BuilderRow[@id=&quot;'o_wsale_buttons_opt'&quot;]/div[@t-else]" position="attributes">
+            <attribute name="t-else"/>
+            <attribute name="t-elif">this.props.recordName !== 'shop_opt_products_design_classes'</attribute>
+        </xpath>
+        <!-- Wishlist: Inline / Fixed / Fixed - On Hover (Odoo shows this row on the shop page only) -->
+        <xpath expr="//BuilderRow[@label.translate='Wishlist']/BuilderSelect" position="replace"/>
+        <xpath expr="//BuilderRow[@label.translate='Wishlist']/div[@t-else]" position="replace"/>
+        <!-- Text alignment: each hover style has its own (centred / left); Colors and Overlay:
+             Scita's cards and hover bars are drawn on a light card, a dark preset left the text
+             unreadable -->
+        <xpath expr="//BuilderRow[@label.translate='Alignment']" position="attributes">
+            <attribute name="t-if">anyCatalog and this.props.recordName !== 'shop_opt_products_design_classes'</attribute>
+        </xpath>
+        <xpath expr="//BuilderRow[@label.translate='Colors']" position="attributes">
+            <attribute name="t-if">this.props.recordName !== 'shop_opt_products_design_classes'</attribute>
+        </xpath>
+        <xpath expr="//BuilderRow[@label.translate='Overlay']" position="attributes">
+            <attribute name="t-if">(this.isActiveItem('wsale_design_showcase_list') || catalogBento) and this.props.recordName !== 'shop_opt_products_design_classes'</attribute>
+        </xpath>
+        <!-- Style: Subtle / Promote / Theme colors -->
+        <xpath expr="//BuilderRow[@label.translate='Style']" position="attributes">
+            <attribute name="t-if">this.props.recordName !== 'shop_opt_products_design_classes'</attribute>
+        </xpath>
+    </t>
+</templates>

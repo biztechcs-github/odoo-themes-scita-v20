@@ -1,0 +1,20 @@
+// "View in 3D" button and 3D / AR viewer
+.o_scita_ar_modal .o_scita_ar_stage {
+    height: 70vh;
+    max-height: 560px;
+    background: var(--o-color-3, #f3f2f2);
+}
+.o_scita_model_viewer {
+    --poster-color: transparent;
+    display: block;
+}
+.o_scita_ar_activate {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.o_scita_ar_btn_icon {
+    font-size: 1.1em;
+    margin-right: 0.25rem;
+}

@@ -2041,7 +2041,9 @@
 #product_detail {
 	#product_details {
 		.js_product {
-			.css_quantity {
+			// :not(.d-none): website_sale hides the quantity and the price with d-none
+			// (zero price + "prevent sale", hidden price); never force them back
+			.css_quantity:not(.d-none) {
 				margin-bottom: 0 !important;
 				margin-right: 15px !important;
 				display: inline-flex !important;
@@ -2051,7 +2053,7 @@
 					margin-right: 10px !important;
 				}
 			}
-			.product_price {
+			.product_price:not(.d-none) {
 				display: block !important;
 				width: 100% !important;
 				margin-bottom: 15px !important;
@@ -2289,18 +2291,48 @@
 				grid-template-columns: repeat(var(--columns, 4), minmax(0, 1fr));
 			}
 
-			&[data-ppr="3"]{
-				@include min1200{
-					grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+			// Products per row (editor > Display): Odoo puts it on #o_wsale_container. Scita cards
+			// take one column each, while Odoo doubles its columns for 5 per row (--columns: 10,
+			// for cards spanning 2): give the grid explicit columns so that never leaks in.
+			@for $ppr from 2 through 5 {
+				#o_wsale_container[data-ppr="#{$ppr}"] & {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+
+					@include min992{
+						grid-template-columns: repeat(#{min($ppr, 3)}, minmax(0, 1fr));
+					}
+					@include min1200{
+						grid-template-columns: repeat(#{$ppr}, minmax(0, 1fr));
+					}
+					// editor > Mobile: one product per row
+					&:has(> .oe_product.sct_col_single){
+						@media (max-width: 767.98px){
+							grid-template-columns: minmax(0, 1fr);
+						}
+					}
 				}
 			}
-			&[data-ppr="2"]{
-				grid-template-columns: repeat(var(--columns, 2), minmax(0, 1fr));
+			// editor > product Size: a product can be made wider / taller than the others
+			@include min992{
+				.oe_product{
+					grid-row: span var(--o-wsale-products-grid-product-col-height, 1);
+				}
+				@for $span from 2 through 3 {
+					.oe_product[data-colspan="#{$span}"]{
+						grid-column: span #{$span};
+					}
+				}
+				.oe_product[data-colspan="4"]{
+					grid-column: span 3;
+
+					@include min1200{
+						grid-column: span 4;
+					}
+				}
 			}
 
 			.oe_product{
 				margin: 7.5px;
-				grid-row: auto;
 
 				.o_wsale_product_grid_wrapper{
 					border: 1px solid rgba($black, 0.1);
@@ -2315,7 +2347,8 @@
 						.oe_product_image{
 							img{
 								object-fit: scale-down;
-								transform: none;
+								// Products Design > Image hover effect (zoom in / out) works on it
+								transform: var(--o-wsale-card-img-transform);
 							}
 						}
 						.o_wsale_product_information{
@@ -3220,7 +3253,8 @@
 								align-items: flex-start !important;
 
 								&:has(#out_of_stock_message:empty){
-									display: none;
+									// !important: the element also has Bootstrap's d-flex (display: flex !important)
+									display: none !important;
 								}
 								
 								.o_add_wishlist_dyn {
@@ -3559,7 +3593,9 @@
 
 
 
-.o_wsale_layout_list{
+// list designs: Odoo 18 put o_wsale_layout_list on #products_grid, Odoo 19+ puts
+// o_wsale_products_opt_layout_list on the inner grid
+#products_grid:has(.o_wsale_products_opt_layout_list){
 	.oe_product{
 		.o_wsale_product_grid_wrapper {
 			.oe_product_cart {

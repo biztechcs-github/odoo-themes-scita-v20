@@ -22,7 +22,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn" data-bs-dismiss="modal" id="cancel">Cancel</button>
-                        <button class="btn btn-danger" data-bs-dismiss="modal" id="set_map_data">Apply</button>
+                        <button class="btn btn-danger" id="set_map_data">Apply</button>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn" data-bs-dismiss="modal" id="cancel">Cancel</button>
-                        <button class="btn btn-danger" data-bs-dismiss="modal" id="set_map_data_content">Apply</button>
+                        <button class="btn btn-danger" id="set_map_data_content">Apply</button>
                     </div>
                 </div>
             </div>

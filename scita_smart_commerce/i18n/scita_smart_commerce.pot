@@ -1,0 +1,2705 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* scita_smart_commerce
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 13:27+0000\n"
+"PO-Revision-Date: 2026-10-05 13:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: scita_smart_commerce
+#: model:ir.module.module,description:base.module_scita_smart_commerce
+msgid ""
+"\n"
+"Smart commerce add-on for Theme Scita (Odoo 20):\n"
+"\n"
+"* AI Shopping Assistant: chat bubble that answers product questions, recommends\n"
+"  catalogue items and can add them to the cart.\n"
+"* AI Visual Search: find visually similar products from a photo.\n"
+"* Product Comparison 2.0: AI explanation of the differences between compared products.\n"
+"* Price Drop Alerts: shoppers pick \"any drop\", \"at least N% off\" or their own price and\n"
+"  get one email when it happens (re-checked as soon as a price changes, waits while sold\n"
+"  out), then decide to keep watching; managed from My Account > Price Alerts.\n"
+"* Product hotspots on any image of any block (banners, carousels, image blocks): added by\n"
+"  clicking on the image in the website editor, with a live product card and a\n"
+"  \"view in your room\" 3D/AR viewer.\n"
+"* Smart free-shipping progress bar in the cart and mini-cart.\n"
+"\n"
+"The AI features use the shop owner's own API key (Anthropic Claude by default,\n"
+"OpenAI or Google Gemini selectable) configured in Website settings.\n"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid ""
+"\"Photos of every side\" needs the free \"numpy\" Python package on the "
+"server. Ask your administrator to install it (pip install numpy) and restart"
+" Odoo."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "%(checked)s waiting alerts checked, %(notified)s shoppers emailed."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid ""
+"%(field)s is larger than 25 MB; shoppers would wait too long. Please "
+"compress it (e.g. with gltf-transform or Reality Converter)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid "%(field)s must be %(kind)s."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid ""
+"%(field)s: this is a photo, not a 3D model. Use the \"Create from a photo\" "
+"button above to turn it into a real-size AR cut-out, or upload %(kind)s made"
+" with a 3D tool (e.g. a phone scanning app, or the manufacturer's 3D file)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "%(side)s: %(problem)s"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "%(sizes)s cm %(shape)s"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "%(sizes)s cm 3D shape carved from %(count)s photos"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "%(sizes)s cm box, from %(count)s photos"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid "%s cm"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "%s similar products"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "(change)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__width_cm
+msgid "0: worked out from the photo's proportions."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid "3D / AR"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid ""
+"3D / AR model created: %s. Shoppers now see \"View in 3D\" on the product "
+"page."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_model_glb
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_model_glb
+msgid "3D Model (GLB)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_model_glb_filename
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_model_glb_filename
+msgid "3D Model Filename"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid "3D model"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__multi_shape
+msgid "3D shape"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid ""
+"<b>Create from a photo</b> turns one product photo into a real-size cut-out\n"
+"                                   (flat card or thin box): great for wall art, mirrors, TVs, doors and size checks.\n"
+"                                   For a full walk-around 3D model, upload a .glb: scan the product with a phone\n"
+"                                   app (e.g. Polycam, Reality Composer) or ask the manufacturer for its 3D file."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:mail.template,body_html:scita_smart_commerce.mail_template_price_alert_confirm
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-family: Arial, sans-serif; color: #212529;\">\n"
+"    <p>Hello,</p>\n"
+"    <p>\n"
+"        Someone (hopefully you) asked us to email this address when the price of\n"
+"        <strong t-out=\"object.product_id.display_name or ''\">Product</strong>\n"
+"        <t t-out=\"object._scita_condition_text() or ''\">reaches $ 90.00 or less</t>.\n"
+"    </p>\n"
+"    <p style=\"margin: 24px 0;\">\n"
+"        <a t-att-href=\"object._scita_confirm_url()\" style=\"background-color: #875A7B; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px;\">\n"
+"            Confirm my price alert\n"
+"        </a>\n"
+"    </p>\n"
+"    <p style=\"font-size: 12px; color: #6c757d;\">\n"
+"        If you did not ask for this, just ignore this email: without confirmation the alert is deleted after 7 days\n"
+"        and you will not hear from us again.\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:mail.template,body_html:scita_smart_commerce.mail_template_price_alert
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-family: Arial, sans-serif; color: #212529;\">\n"
+"    <t t-set=\"saving\" t-value=\"object._scita_saving()\"/>\n"
+"    <t t-set=\"stock_left\" t-value=\"object._scita_stock_left()\"/>\n"
+"    <p>Hello,</p>\n"
+"    <p>\n"
+"        Good news: the product you are watching just got cheaper.\n"
+"    </p>\n"
+"    <table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%; max-width: 560px; border: 1px solid #dee2e6; border-radius: 8px; margin: 16px 0;\">\n"
+"        <tr>\n"
+"            <td t-if=\"object.product_id.image_128\" style=\"padding: 16px; width: 140px; vertical-align: top;\">\n"
+"                <img t-attf-src=\"{{ object.website_id.get_base_url() }}/web/image/product.product/{{ object.product_id.id }}/image_256\" alt=\"\" style=\"width: 120px; height: 120px; object-fit: contain; border-radius: 8px;\"/>\n"
+"            </td>\n"
+"            <td t-attf-style=\"padding: {{ '16px 16px 16px 0' if object.product_id.image_128 else '16px' }}; vertical-align: top;\">\n"
+"                <div style=\"font-size: 16px; font-weight: bold; margin-bottom: 8px;\" t-out=\"object.product_id.display_name or ''\">Product</div>\n"
+"                <div>\n"
+"                    <span t-if=\"saving[0]\" style=\"text-decoration: line-through; color: #6c757d; margin-right: 8px;\" t-out=\"object._scita_format(object.price_at_creation) or ''\">$ 100.00</span>\n"
+"                    <span style=\"font-size: 22px; font-weight: bold; color: #198754;\" t-out=\"object._scita_format(object.last_price) or ''\">$ 90.00</span>\n"
+"                </div>\n"
+"                <div t-if=\"saving[0]\" style=\"margin-top: 4px; color: #198754;\">\n"
+"                    You save <strong t-out=\"object._scita_format(saving[0]) or ''\">$ 10.00</strong>\n"
+"                    (<t t-out=\"saving[1]\">10</t>%)\n"
+"                </div>\n"
+"                <div t-if=\"stock_left\" style=\"margin-top: 8px; color: #dc3545; font-weight: bold;\">\n"
+"                    Only <t t-out=\"stock_left\">3</t> left at this price\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"    <p style=\"margin: 24px 0;\">\n"
+"        <a t-att-href=\"object._scita_product_url()\" style=\"background-color: #875A7B; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;\">\n"
+"            Buy now at <t t-out=\"object._scita_format(object.last_price) or ''\">$ 90.00</t>\n"
+"        </a>\n"
+"    </p>\n"
+"    <p style=\"font-size: 12px; color: #6c757d;\">\n"
+"        You asked us to email you when the price <t t-out=\"object._scita_condition_text() or ''\">drops</t>.\n"
+"        Prices can change at any time. This alert is now done:\n"
+"        <a t-att-href=\"object._scita_rearm_url()\" style=\"color: #875A7B;\">keep watching for a lower price</a>\n"
+"        or <a t-att-href=\"object._scita_unsubscribe_url()\" style=\"color: #6c757d;\">stop this alert</a>.\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid ""
+"<i class=\"fa fa-bell-o me-1\" role=\"img\" aria-hidden=\"true\"/>\n"
+"                    <span>Notify me when the price drops</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "<span aria-hidden=\"true\">·</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_ar_button
+msgid ""
+"<span class=\"o_scita_ar_btn_icon\" aria-hidden=\"true\">⬡</span>\n"
+"                        <span class=\"o_scita_ar_btn_label\">View in 3D</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.compare_ai_explain
+msgid ""
+"<span class=\"o_scita_compare_ai_spinner spinner-border spinner-border-sm me-1 d-none\" role=\"status\" aria-hidden=\"true\"/>\n"
+"                        Explain the differences"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "<span><strong>You've unlocked free delivery!</strong></span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"A \"Notify me when the price drops\" link on product pages: shoppers get one"
+" email when the product gets cheaper."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_price_alert_default_type__percent
+msgid "A percentage off"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_price_alert_default_type__target
+msgid "A price of their own"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_expiry_days
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_expiry_days
+msgid "A waiting alert stops after this many days. 0 means it never expires."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_api_key
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_api_key
+msgid "AI API Key"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_model
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_model
+msgid "AI Model"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_compare_ai_enabled
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_compare_ai_enabled
+msgid "AI Product Comparison"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_provider
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_provider
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "AI Provider"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_assistant_enabled
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_assistant_enabled
+msgid "AI Shopping Assistant"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.actions.act_window,name:scita_smart_commerce.scita_ai_usage_action
+#: model:ir.ui.menu,name:scita_smart_commerce.scita_ai_usage_menu
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_pivot
+msgid "AI Usage"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_visual_search_enabled
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_visual_search_enabled
+msgid "AI Visual Search"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
+msgid "AI answers can contain mistakes. Check product pages before buying."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_ip_daily_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_ip_daily_limit
+msgid "AI requests per IP address per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_daily_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_daily_limit
+msgid "AI requests per visitor per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_site_daily_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_site_daily_limit
+msgid "AI requests per website per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.module.module,summary:base.module_scita_smart_commerce
+msgid ""
+"AI shopping assistant, visual search, AI comparison, price alerts, product "
+"hotspots on any image with 3D/AR and a free-shipping progress bar for Theme "
+"Scita"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+msgid ""
+"AI-generated summary based only on our product information. Please check the"
+" details before buying."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_placement
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_placement
+msgid "AR Placement"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_scale
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_scale
+msgid "AR Size"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "AR supports products up to 10 m."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__access_token
+msgid "Access Token"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "Add"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Add a photo of the front of the product first."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Add a photo of the product first."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Add hotspot"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "Add one of these to get there:"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+msgid "Add to cart"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "Add {{0}} to cart"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.js:0
+msgid "Added ✓"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_expiry_days
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_expiry_days
+msgid "Alert Lifetime (days)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Alert lifetime"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid ""
+"Almost done! Check %(email)s and confirm the alert: we'll email you when the"
+" price %(condition)s."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_ai_provider__anthropic
+msgid "Anthropic Claude"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__alert_type__any
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_price_alert_default_type__any
+msgid "Any price drop"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__multi_shape__carved
+msgid "Any shape (carved from the outlines)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
+msgid "Ask about our products..."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_assistant_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_assistant_name
+msgid "Assistant Name"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_assistant_welcome
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_assistant_welcome
+msgid "Assistant Welcome Message"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__bg_method__auto
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__multi_shape__auto
+msgid "Automatic"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__multi_shape
+msgid ""
+"Automatic: a box when every photo shows a rectangular product (cabinet, "
+"boxed goods, appliance), else a shape carved from the outlines (lamp, vase, "
+"chair, sofa). Hollows no photo shows (inside of a bowl) stay filled."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__bg_method
+msgid ""
+"Automatic: keeps the transparent background of a PNG cut-out, else uses the "
+"AI remover when the \"rembg\" package is installed, else the built-in plain-"
+"background remover."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__avg_current_price
+msgid "Avg. Last Checked Price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__avg_price_at_creation
+msgid "Avg. Price When Subscribed"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__avg_requested_discount
+msgid "Avg. Requested Discount (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__avg_target_price
+msgid "Avg. Target Price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__state__pending
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Awaiting Confirmation"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_back
+msgid "Back"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Back photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "Back to the product"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__bg_method
+msgid "Background"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+msgid "Best for"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_model_glb
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_model_glb
+msgid ""
+"Binary glTF (.glb) model shown in the 3D viewer and used for AR on Android "
+"(Scene Viewer / WebXR). Aim for under 5 MB: compressed textures, one mesh."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_bottom
+msgid "Bottom"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Bottom photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__multi_shape__box
+msgid "Box (a photo on each face)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Cancel Alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__state__cancelled
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Cancelled"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"Cart and mini-cart progress bar towards the free-delivery threshold of your "
+"delivery methods."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Change"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"Chat bubble that answers product questions, recommends products and adds "
+"them to the cart."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
+msgid "Check %(email)s to confirm your price alert."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_list
+msgid "Check Now"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_list
+msgid ""
+"Check the prices of the selected waiting alerts (all waiting alerts if none "
+"is selected) now and email the shoppers whose price is reached."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Choose a product"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "Choose options"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_plugin.js:0
+msgid "Click where the hotspot goes (Esc to cancel)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Close"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__company_id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__company_id
+msgid "Company"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Confirm"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "Confirm by email"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "Continue shopping"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Create 3D model"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+#: model:ir.model,name:scita_smart_commerce.model_scita_ar_photo_wizard
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Create a 3D / AR model from a photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,website_form_label:scita_smart_commerce.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid "Create from a photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_list
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Created"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_from_photo
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_from_photo
+msgid "Created From Photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__create_uid
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__create_uid
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__create_uid
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid "Created from a photo:"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__create_date
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__create_date
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__create_date
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__currency_id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__cutout
+msgid "Cut-out preview"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__date
+msgid "Date"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_search
+msgid "Day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Delete closed alerts after"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_default_percent
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_default_percent
+msgid ""
+"Discount proposed in the form for \"a percentage off\" (and used to suggest "
+"a price of their own)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Discount you are waiting for"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_partner__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_stock_move__display_name
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_skip_sold_out
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_skip_sold_out
+msgid ""
+"Do not email a price drop while the product is sold out: the shopper is "
+"emailed once it is back in stock, if the price is still low enough."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid "Done! We'll email %(email)s when the price %(condition)s."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Dot"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "Drag to rotate, pinch to zoom, or place it in your room."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "Drag to rotate, pinch to zoom. AR is not available on this device."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__email
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Email"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__email_normalized
+msgid "Email Normalized"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Email me when the price…"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Enter the real height of the product (in cm)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid ""
+"Enter the real width, height and depth of the product: they line the photos "
+"up."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__state__expired
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Expired"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__expiry_date
+msgid "Expires On"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__feature
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_search
+msgid "Feature"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__fiscal_position_id
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__shape__flat
+msgid "Flat card"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__shape
+msgid ""
+"Flat card: one upright panel (posters, mirrors, TVs, doors). Thin box: adds "
+"depth and sides (cabinets, boxed goods, furniture)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid ""
+"Follow the price again from today's price, as the shopper's \"keep "
+"watching\" link does"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_price_alert__drop_percent
+msgid "For \"Percentage off\" alerts: how much cheaper the product must get."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_free_shipping_bar_enabled
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_free_shipping_bar_enabled
+msgid "Free Shipping Progress Bar"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__photo_back
+msgid "From behind, straight on. Without it, the front photo is used."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__photo_top
+msgid ""
+"From straight above, with the front of the product at the bottom of the "
+"photo."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "From the left (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid ""
+"From the left and from the top, in % of the image. Or drag the hotspot."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "From the top (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__photo_bottom
+msgid ""
+"From underneath, with the front of the product at the bottom of the photo. "
+"Rarely needed."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Front photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.compare_ai_explain
+msgid ""
+"Get a plain-language summary of the real differences, based only on our "
+"product information."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_ai_provider__gemini
+msgid "Google Gemini"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_guest_confirm
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_guest_confirm
+msgid "Guests Confirm by Email"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Guests confirm by email (recommended)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_site_daily_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_site_daily_limit
+msgid ""
+"Hard cap on all AI requests of this website per day (all features and "
+"visitors). 0 means unlimited."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_has_ar
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_has_ar
+msgid "Has 3D / AR Model"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__has_uploaded_model
+msgid "Has Uploaded Model"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ai_usage__visitor_key
+msgid "Hashed session identifier, or \"ip:\" + hashed client IP"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/assistant.py:0
+msgid "Here is what I found in our catalogue."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_plugin.js:0
+msgid "Hotspot"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Hotspot style"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Hotspots"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_price_alert__requested_discount
+msgid "How far below the price at subscription time the shopper wants to buy."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid "How it is used"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_partner__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_stock_move__id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__id
+msgid "ID"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__input_tokens
+msgid "Input Tokens"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_list
+msgid "Input tokens"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "Invalid email address: %s"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/compare_ai.py:0
+msgid "Invalid product selection."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_compare_cache__result
+msgid "JSON explanation returned to the shop"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_retention_days
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_retention_days
+msgid "Keep Closed Alerts (days)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Keep Watching"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid ""
+"Keep models light (ideally under 5 MB, max 25 MB): real-world scale in metres,\n"
+"                                   compressed textures (1024 px), a single mesh where possible. Add a .usdz file for\n"
+"                                   the best result on iPhone; otherwise it is generated on the device. Replacing the\n"
+"                                   .glb removes the .usdz (it showed the previous model): upload the new one with it."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__bg_method__none
+msgid "Keep the photo as is"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "Keep watching"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "Keep watching the price?"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__key
+msgid "Key"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+msgid "Key differences"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__lang
+msgid "Lang"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_price_alert__lang
+msgid "Language of the notification email"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid ""
+"Larger than 10 m: the model is probably in centimetres or millimetres "
+"instead of metres. At real size, AR would show it far too big."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__last_check_date
+msgid "Last Check Date"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__last_price
+msgid "Last Checked Price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__write_uid
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__write_uid
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__write_uid
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__write_date
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__write_date
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__write_date
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "Last price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_left
+msgid "Left side"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Left side photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "Loading 3D model..."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Loading 3D viewer..."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "Looking for similar products…"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__max_requested_discount
+msgid "Max Requested Discount (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__mode
+msgid "Mode"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_size
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_size
+msgid "Model Size"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_model
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_model
+msgid "Model identifier sent to the provider, e.g. claude-opus-5-5."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__multi_available
+msgid "Multi Available"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "My price alerts"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
+msgid "New conversation"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.actions.act_window,help:scita_smart_commerce.scita_ai_usage_action
+msgid "No AI requests yet"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.actions.act_window,help:scita_smart_commerce.action_scita_price_alert
+msgid "No price alerts yet"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.actions.act_window,help:scita_smart_commerce.action_scita_price_alert_report
+msgid "No waiting price alerts"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "No, keep it"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "No, thanks"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+msgid "Not specified in our product information: %s"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.compare_ai_explain
+msgid "Not sure which one to pick?"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__state__notified
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Notified"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__notified_date
+msgid "Notified Date"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_retention_days
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_retention_days
+msgid ""
+"Notified, expired and stopped alerts (with the shopper's email) are deleted "
+"after this many days without change. 0 keeps them."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__alert_type
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Notify When"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Notify me"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Number"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__product_template__scita_ar_placement__wall
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__placement__wall
+msgid "On a wall"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"On the comparison page, explain the differences between the selected "
+"products in plain language."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__product_template__scita_ar_placement__floor
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__placement__floor
+msgid "On the floor"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "One email, then you decide whether to keep watching."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__mode__single
+msgid "One photo (real-size cut-out)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid ""
+"One photo has no depth: the product becomes a <b>real-size cut-out</b> (flat card or thin box)\n"
+"                    that shoppers can view in 3D and place in their room. Ideal for wall art, mirrors, TVs, doors,\n"
+"                    rugs hung on a wall, boxed goods and \"does it fit\" checks."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__mode
+msgid ""
+"One photo: a flat card or thin box. Photos of every side: a 3D model, either"
+" a box with a photo on each face, or a shape carved from the outlines of the"
+" product."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "Only salespeople can check price alerts."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_ai_provider__openai
+msgid "OpenAI"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_model_usdz
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_model_usdz
+msgid ""
+"Optional .usdz model for AR on iPhone / iPad (AR Quick Look). Without it, "
+"the viewer converts the GLB on the device, which is slower and less "
+"faithful."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Other sides"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+msgid "Out of stock"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__output_tokens
+msgid "Output Tokens"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_list
+msgid "Output tokens"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__alert_type__percent
+msgid "Percentage off"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo
+msgid "Photo (front)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__mode__multi
+msgid "Photos of every side (3D model)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__placement
+msgid "Place it"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__bg_method__simple
+msgid "Plain background (built-in)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "Please choose a discount between %(min)s%% and %(max)s%%."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "Please choose a photo."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "Please choose an image file."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "Please choose when we should email you."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:mail.template,subject:scita_smart_commerce.mail_template_price_alert_confirm
+msgid "Please confirm your price alert for {{ object.product_tmpl_id.name }}"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "Please enter a price above zero."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+#: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
+msgid "Please enter a valid email address."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+#: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
+msgid "Please enter the price you would pay."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/assistant.py:0
+msgid "Please type a question."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "Please use a JPEG, PNG, WEBP or GIF photo."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Plus"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid "Position"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_default_type
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_default_type
+msgid "Preselected Choice"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_default_percent
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_default_percent
+msgid "Preselected Discount (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Preselected choice"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Preselected discount"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Preview"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__preview_info
+msgid "Preview Info"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Price Alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ai_usage__feature__price_alert
+msgid "Price Alert Sign-ups"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.actions.act_window,name:scita_smart_commerce.action_scita_price_alert
+#: model:ir.ui.menu,name:scita_smart_commerce.menu_scita_price_alert
+#: model:portal.entry,name:scita_smart_commerce.portal_entry_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_breadcrumbs_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_price_alert
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_list
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Price Alerts"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_scita_price_alert
+msgid "Price Drop Alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_enabled
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_enabled
+msgid "Price Drop Alerts"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.actions.act_window,name:scita_smart_commerce.action_scita_price_alert_report
+#: model:ir.ui.menu,name:scita_smart_commerce.menu_scita_price_alert_report
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_report_view_graph
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_report_view_list
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_report_view_search
+msgid "Price Sensitivity"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_scita_price_alert_report
+msgid "Price Sensitivity Analysis"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__price_at_creation
+msgid "Price When Subscribed"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/website.py:0
+msgid "Price alert lifetimes cannot be negative."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "Price alert stopped"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid "Price alert stopped."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid "Price alerts are not available."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:mail.template,subject:scita_smart_commerce.mail_template_price_alert
+msgid ""
+"Price drop: {{ object.product_id.display_name }} is now {{ "
+"object._scita_format(object.last_price) }}"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "Price dropped"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+msgid "Price on request"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__pricelist_id
+msgid "Pricelist"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Prices"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+#: model:ir.model,name:scita_smart_commerce.model_product_template
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__product_tmpl_id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__product_tmpl_id
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Product"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ai_usage__feature__compare
+msgid "Product Comparison"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_product_template_attribute_value
+msgid "Product Template Attribute Value"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__product_tmpl_id
+msgid "Product Tmpl"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_product_product
+msgid "Product Variant"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
+msgid ""
+"Product dots on this image: click Add hotspot, then click where the product "
+"is"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.actions.act_window,help:scita_smart_commerce.action_scita_price_alert_report
+msgid ""
+"Products with many waiting alerts, or with a large requested discount, are the ones\n"
+"               shoppers want but find too expensive."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:portal.entry,description:scita_smart_commerce.portal_entry_price_alerts
+msgid "Products you are waiting to get cheaper"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "Progress towards free delivery"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_daily_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_daily_limit
+msgid ""
+"Protects your AI budget: each visitor (session) can make at most this many "
+"AI requests per feature per day. 0 means unlimited."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Reactivate"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__depth_cm
+msgid "Real depth (cm)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__height_cm
+msgid "Real height (cm)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid "Real size"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__product_template__scita_ar_scale__fixed
+msgid "Real size (fixed)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_scale
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_scale
+msgid ""
+"Real size: the model is shown at its true size and pinching does not resize "
+"it (the model must be in metres). Use it to let shoppers check that the "
+"product fits."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__width_cm
+msgid "Real width (cm)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__request_count
+msgid "Request Count"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+msgid "Request a quote"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__requested_discount
+msgid "Requested Discount (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_list
+msgid "Requests"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.actions.act_window,help:scita_smart_commerce.scita_ai_usage_action
+msgid ""
+"Requests and tokens used by the shopping assistant, visual search and AI comparison,\n"
+"               per day. Your AI provider bills you for these tokens."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__result
+msgid "Result"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_right
+msgid "Right side"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Right side photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_ip_daily_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_ip_daily_limit
+msgid ""
+"Same limit per network address, so clearing cookies does not reset it. Keep "
+"it higher than the per-visitor limit: shoppers of one office or mobile "
+"network share an address. 0 means unlimited."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_scita_compare_cache
+msgid "Scita AI Comparison Cache"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_scita_ai
+msgid "Scita AI Service"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_scita_ai_usage
+msgid "Scita AI Usage"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_size_warning
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_size_warning
+msgid "Scita Ar Size Warning"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_price_alert_count
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_price_alert_count
+msgid "Scita Price Alert Count"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.module.module,shortdesc:base.module_scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Scita Smart Commerce"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_button
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Search by photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "See all results"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/compare_ai.py:0
+msgid "Select between %(min)s and %(max)s products to compare."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
+msgid "Send"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_from_photo
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_from_photo
+msgid "Set when the 3D model was created from a product photo: its real size."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__shape
+msgid "Shape"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Shopper"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__product_template__scita_ar_scale__auto
+msgid "Shoppers can resize it"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.actions.act_window,help:scita_smart_commerce.action_scita_price_alert
+msgid ""
+"Shoppers subscribe from the product page: any price drop, a percentage off or a\n"
+"               price of their own. They get one email when it happens."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Shoppers upload a photo and see visually similar products."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ai_usage__feature__assistant
+msgid "Shopping Assistant"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_size
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_size
+msgid ""
+"Size of the 3D model as AR shows it at real size: check that it matches the "
+"product."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Sizes cannot be negative."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid ""
+"Smaller than 2 cm: the model is probably not in metres. At real size, AR "
+"would show it far too small."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/compare_ai.py:0
+msgid "Some of these products are not available."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
+msgid "Something went wrong, please try again."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/assistant.py:0
+msgid "Sorry, I can't help with that. Is there a product I can help you find?"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/assistant.py:0
+msgid "Sorry, I could not find an answer. Could you rephrase?"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__state
+msgid "State"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Status"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Stop"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "Stop the alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "Stop this price alert?"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "Stopped"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Take a photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid ""
+"Take each photo <b>straight on</b>, on a plain background, the product filling most of the\n"
+"                    photo; the <b>top</b> photo with the front of the product at the bottom. Front is required,\n"
+"                    the more sides the better. Box-shaped products get a photo on each face; other shapes are\n"
+"                    <b>carved from their outlines</b> (hollows such as the inside of a bowl stay filled)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__target_price
+msgid "Target Price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__alert_type__target
+msgid "Target price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_price_alert__fiscal_position_id
+msgid ""
+"Tax mapping of the shopper when they subscribed, so the price is checked the"
+" way they see it."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "The 3D viewer could not be loaded. Please try again later."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "The alert stays on for"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_price_alert__expiry_date
+msgid "The alert stops on this date if the price has not dropped by then."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+msgid "The assistant is typing"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid ""
+"The photos do not agree on the shape of the product: check that each one "
+"shows the side its field asks for (e.g. the top photo with the front of the "
+"product at the bottom)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid "The poster image shown while loading is the product image."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/website.py:0
+msgid "The preselected price alert discount must be between 1% and 90%."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "The price alert could not be found. It may already have been removed."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "The price alert could not be found. It may have been removed."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+msgid ""
+"The price alert could not be found. It may have expired or been cancelled."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "The price alert is stopped."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid ""
+"The product could not be cut out of its background: the built-in remover "
+"needs a plain, evenly lit background (a studio or white-wall photo), or a "
+"PNG with a transparent background. Use another photo, choose \"Keep the "
+"photo as is\", or ask your administrator to install the free \"rembg\" "
+"package for busy backgrounds."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__photo
+msgid ""
+"The product photographed from the front, straight on, ideally on a plain "
+"background (or a PNG with a transparent background). The product image is "
+"used by default."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__photo_left
+msgid ""
+"The product's left side, straight on (you stand on its left: its front is on"
+" your right)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__photo_right
+msgid "The product's right side, straight on (its front is on your left)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__height_cm
+msgid "The real height of the product: AR shows it at this size."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_price_alert__target_price
+msgid "The shopper is emailed when the price is at or below this amount."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/assistant.py:0
+msgid "The shopping assistant is not available right now."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.constraint,message:scita_smart_commerce.constraint_scita_price_alert_check_target_price
+msgid "The target price must be positive."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "There are no products to search yet."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ar_photo_wizard__shape__box
+msgid "Thin box"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__depth_cm
+msgid "Thin box only. 0: 10% of the smaller side."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "This 3D model could not be displayed."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_search
+msgid "This Month"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/compare_ai.py:0
+msgid "This feature is not available."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "This file is not a photo Odoo can read. Use a JPEG, PNG or WEBP image."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "This file is not a valid image."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "This link is not valid"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid ""
+"This mode needs the free <b>numpy</b> Python package on the server: ask your administrator\n"
+"                    to install it (<code>pip install numpy</code>) and restart Odoo."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "This photo is too large. Please use a photo under 5 MB."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "This photo is too large. Please use a smaller photo."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "This photo is too large. Use a photo under 40 megapixels."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
+msgid ""
+"This product already has an uploaded 3D model: creating one from a photo "
+"replaces it."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+#: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
+msgid "This product is not available."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid "Too many alerts from this browser today. Please try again tomorrow."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_top
+msgid "Top"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "Top photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Tracking"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Try another photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_model_usdz_filename
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_model_usdz_filename
+msgid "USDZ Filename"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Upload a photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid ""
+"Upload or snap a photo of what you are looking for and we will find similar "
+"products."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"Used by the shopping assistant, visual search and AI comparison. Your own "
+"API key; usage is billed by the provider."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__product_id
+msgid "Variant"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+msgid "View"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "View in 3D"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+msgid "View it in your room"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
+msgid "View product"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__visitor_key
+msgid "Visitor Key"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_guest_confirm
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_guest_confirm
+msgid ""
+"Visitors who are not signed in confirm their alert from an email first "
+"(double opt-in), so nobody can subscribe someone else. Recommended (GDPR)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_ai_usage__feature__visual_search
+msgid "Visual Search"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "Visual search is not available."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_skip_sold_out
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_skip_sold_out
+msgid "Wait While Sold Out"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
+msgid "Wait again for the same price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Wait while sold out"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__scita_price_alert__state__active
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Waiting"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__alert_count
+msgid "Waiting Alerts"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__drop_percent
+msgid "Wanted Discount (%)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "Watch again"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "Watching"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/visual_search.py:0
+msgid "We could not analyse this photo. Please try another one."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/compare_ai.py:0
+msgid "We could not compare these products right now."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid ""
+"We couldn't find similar products. Try another photo or browse the shop."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "We keep watching the price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "We keep watching the price for you."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "We see:"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "We will stop watching the price of"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "We'll email"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid "We'll email you when the price drops."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "We'll email you when the price of"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid "We'll follow"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model,name:scita_smart_commerce.model_website
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__website_id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_compare_cache__website_id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__website_id
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__website_id
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_search
+msgid "Website"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_default_type
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_default_type
+msgid ""
+"What the \"Notify me when the price drops\" form proposes first. Shoppers "
+"can still pick another option."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_placement
+#: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_placement
+msgid ""
+"Where AR puts the model in the shopper's room: wall art, mirrors and TVs go "
+"on a wall, the rest stands on the floor."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
+msgid ""
+"With a .glb model, the product page and the image hotspots show a\n"
+"                                   <b>View in 3D</b> button; on phones that support AR it becomes\n"
+"                                   <b>View it in your room</b> (Android: Scene Viewer / WebXR, iPhone: AR Quick Look)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/price_alert.py:0
+msgid "You already have the maximum number of price alerts."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid ""
+"You have no price alerts yet. On a product page, click <strong>Notify me "
+"when the price drops</strong>."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "You will no longer receive price alerts for"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
+msgid "You're watching this price: we'll email you when it %(condition)s."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Your photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "Your photo is only used for this search and is not stored."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "Your price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+msgid "Your price alert is on"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "Your price must be below the current price (%s)."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
+msgid "Your question"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid "a USDZ (.usdz) file"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid "a binary glTF (.glb) file"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
+msgid ""
+"again from today's price\n"
+"                            and email you when it gets cheaper."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "back"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "bottom"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "days (0 = keep)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "days (0 = never expires)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "days."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "drops below %s"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "drops by at least"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "drops, by any amount"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.actions.server,name:scita_smart_commerce.ir_cron_scita_price_alert_ir_actions_server
+msgid "eCommerce: Check price drop alerts"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:mail.template,name:scita_smart_commerce.mail_template_price_alert_confirm
+msgid "eCommerce: Confirm price drop alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:mail.template,name:scita_smart_commerce.mail_template_price_alert
+msgid "eCommerce: Price drop alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_unsubscribed
+msgid "for you."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_model_usdz
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_model_usdz
+msgid "iOS AR Model (USDZ)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "is at least %(percent)s%% cheaper (%(price)s or less)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "left"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
+msgid "more for <strong>free delivery</strong>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/price_alert.py:0
+msgid "reaches %s or less"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "reaches my price"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "right"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/product_template.py:0
+msgid "scita_ar_model_usdz"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
+msgid "top"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
+msgid "until"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
+msgid "you@example.com"
+msgstr ""

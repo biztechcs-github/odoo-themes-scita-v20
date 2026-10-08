@@ -107,13 +107,14 @@
 
     <template id="product_details_categories" name="cat list">
         <li class="view-category-item">
-            <i class="fa fa-plus" data-bs-toggle="collapse" t-att-data-bs-target="'#collapse_category'+str(category.id)" t-if="category.child_id"/>
+            <t t-set="sct_children" t-value="category.child_id._scita_on_website()"/>
+            <i class="fa fa-plus" data-bs-toggle="collapse" t-att-data-bs-target="'#collapse_category'+str(category.id)" t-if="sct_children"/>
             <a t-att-href="'/shop/category/%s' % slug(category)">
                 <span class="ab_categ_name" t-field="category.name"/>
             </a>
-            <div class="collapse" t-att-id="'collapse_category'+str(category.id)" t-if="category.child_id">
-                <ul class="nav nav-pills flex-column nav-hierarchy" t-if="category.child_id">
-                    <t t-as="category" t-foreach="category.child_id">
+            <div class="collapse" t-att-id="'collapse_category'+str(category.id)" t-if="sct_children">
+                <ul class="nav nav-pills flex-column nav-hierarchy">
+                    <t t-as="category" t-foreach="sct_children">
                         <t t-call="theme_scita.product_details_categories"/>
                     </t>
                 </ul>

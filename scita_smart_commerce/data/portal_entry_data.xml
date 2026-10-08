@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- My Account card, shown once the shopper has a waiting price alert -->
+    <record id="portal_entry_price_alerts" model="portal.entry">
+        <field name="name">Price Alerts</field>
+        <field name="description">Products you are waiting to get cheaper</field>
+        <field name="url">/my/price-alerts</field>
+        <field name="image" type="bytes" file="scita_smart_commerce/static/src/img/price_alert.svg"/>
+        <field name="placeholder_count">scita_price_alert_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="65"/>
+    </record>
+</odoo>

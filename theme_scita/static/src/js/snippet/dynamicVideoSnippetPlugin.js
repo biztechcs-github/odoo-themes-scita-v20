@@ -16,6 +16,19 @@ async function openVideoBannerModal(snippetEl) {
 
     // Bootstrap modal
     const myModal = new Modal(modalEl);
+
+    // Esc closes it like the editor's own dialogs: the focus stays in the editor, so Bootstrap's
+    // keyboard handling (on the modal itself) never sees the key. Consumed, or the editor would
+    // also take it (Esc = fullscreen).
+    const closeOnEscape = (ev) => {
+        if (ev.key === "Escape" && modalEl.classList.contains("show")) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            myModal.hide();
+        }
+    };
+    document.addEventListener("keydown", closeOnEscape, true);
+    modalEl.addEventListener("hidden.bs.modal", () => document.removeEventListener("keydown", closeOnEscape, true));
     myModal.show();
 
     const videoUrlInput = modalEl.querySelector("#video-url");
@@ -27,7 +40,28 @@ async function openVideoBannerModal(snippetEl) {
 
     // Submit handler
     submitBtn.addEventListener("click", () => {
-        const videoUrl = videoUrlInput.value;
+        const videoUrl = videoUrlInput.value.trim();
+        // an empty / non-http(s) address gave a banner with no video: ask again instead
+        let valid = false;
+        try {
+            valid = ["http:", "https:"].includes(new URL(videoUrl).protocol);
+        } catch {
+            valid = false;
+        }
+        let feedback = videoUrlInput.parentElement.querySelector(".o_scita_video_feedback");
+        if (!valid) {
+            videoUrlInput.classList.add("is-invalid");
+            if (!feedback) {
+                feedback = document.createElement("div");
+                feedback.className = "invalid-feedback d-block o_scita_video_feedback";
+                feedback.textContent = _t("Enter the address of the video, e.g. https://example.com/video.mp4");
+                videoUrlInput.after(feedback);
+            }
+            videoUrlInput.focus();
+            return;
+        }
+        videoUrlInput.classList.remove("is-invalid");
+        feedback?.remove();
         snippetEl.setAttribute("data-video-url", videoUrl);
 
         // Use the original placeholder template structure to maintain consistency

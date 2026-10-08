@@ -4,6 +4,8 @@
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
+from odoo.exceptions import MissingError
+from odoo.fields import Domain
 from odoo.addons.website_sale.controllers import main
 
 
@@ -34,6 +36,25 @@ class ProductPublicCategory(models.Model):
         string="Align Category Content",
         default="center",
     )
+
+    def _scita_on_website(self):
+        """The records the current website may show: those without a website or on this one
+        (Scita blocks read their products from configurations shared by all websites)."""
+        website = self.env.website
+        if not website:
+            return self
+        domain = website.website_domain()
+        if 'company_id' in self._fields:
+            # and of the website's company (products of another company can't be sold here)
+            domain &= Domain('company_id', 'in', [False, website.company_id.id])
+        # read as superuser: a visitor may not even read a record of another website.
+        # Records of a relation (menus, sliders: rendered on every page) are prefetched, so
+        # filter them directly; exists() (one query per call) only when an id was deleted.
+        try:
+            kept = self.sudo().filtered_domain(domain)
+        except MissingError:
+            kept = self.exists().sudo().filtered_domain(domain)
+        return kept.with_env(self.env)  # keeps the prefetch of the whole menu tree
 
     @api.onchange('attributes_ids')
     def onchange_website_attributes_ids(self):
@@ -95,6 +116,25 @@ class ProductTemplate(models.Model):
         translate=True,
     )
 
+    def _scita_on_website(self):
+        """The records the current website may show: those without a website or on this one
+        (Scita blocks read their products from configurations shared by all websites)."""
+        website = self.env.website
+        if not website:
+            return self
+        domain = website.website_domain()
+        if 'company_id' in self._fields:
+            # and of the website's company (products of another company can't be sold here)
+            domain &= Domain('company_id', 'in', [False, website.company_id.id])
+        # read as superuser: a visitor may not even read a record of another website.
+        # Records of a relation (menus, sliders: rendered on every page) are prefetched, so
+        # filter them directly; exists() (one query per call) only when an id was deleted.
+        try:
+            kept = self.sudo().filtered_domain(domain)
+        except MissingError:
+            kept = self.exists().sudo().filtered_domain(domain)
+        return kept.with_env(self.env)  # keeps the prefetch of the whole menu tree
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         """Hide price on the search bar results"""
         results_data = super()._search_render_results(
@@ -143,15 +183,15 @@ class ProductTemplate(models.Model):
         return search_details
 
     def _get_product_variant(self, attrib_value):
-        variant_id = []
-        product_variant_id = self.env['product.product'].search([
-            ('product_tmpl_id', '=', self.id),
-            ('product_template_attribute_value_ids', 'in', attrib_value.id)])
-        if product_variant_id:
-            for j in product_variant_id:
-                if j.image_512:
-                    variant_id.append(j.id)
-        return variant_id
+        """Ids of the variants with `attrib_value` that have an image (their own or the
+        template's, as product.product.image_512). Called for every swatch of every
+        product card: reads the prefetched variants instead of one search per swatch,
+        and reads a variant's own image only when the template has none."""
+        variants = self.product_variant_ids.filtered(
+            lambda variant: attrib_value in variant.product_template_attribute_value_ids)
+        if self.image_512:
+            return variants.ids
+        return [variant.id for variant in variants if variant.image_variant_512]
     
     quote_request = fields.Boolean(string="Request Quote",
                                     help="Hides the price and 'Add to Cart' button, so customers must request a quote by contacting the seller.")
@@ -175,10 +215,35 @@ class ProductTemplate(models.Model):
         combination_info['quote_request'] = self.quote_request
         return combination_info
 
+    def _scita_bulk_prices(self, variant, pricelist):
+        """Bulk-buy tiers of this product for `pricelist`: one dict per minimum quantity
+        (>= 2) with the unit price at that quantity, as Odoo prices it (fixed, percentage,
+        discount or formula rule, taxes as the website shows them).
+
+        :return: [{'min_quantity': int, 'fixed_price': float}] sorted by quantity
+        """
+        self.ensure_one()
+        if not pricelist:
+            return []
+        rules = pricelist.item_ids.filtered(
+            lambda r: r.product_tmpl_id == self and r.min_quantity and r.min_quantity >= 2
+            and (not r.product_id or (variant and r.product_id == variant))
+        )
+        tiers = {}
+        for quantity in sorted({int(r.min_quantity) for r in rules}):
+            info = self._get_combination_info(
+                product_id=variant.id if variant else False, add_qty=quantity, pricelist=pricelist)
+            tiers[quantity] = info['price']
+        return [{'min_quantity': quantity, 'fixed_price': price} for quantity, price in tiers.items()]
+
     def _website_show_quick_add(self, product=None):
         """Hide the quick add to cart option on website if quote_request is enabled."""
         # Odoo 20 passes the variant (product.product calls it with `self`)
-        if self.quote_request:
+        if self.quote_request or self.website_hide_price:
+            return False
+        # no price shown (login to see price, prices hidden): no quick "Add to Cart" either
+        website = self.env.website
+        if website and website._sct_hide_line_price(False):
             return False
         return super()._website_show_quick_add(product=product)
 

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product page: "Notify me when the price drops". Hooked on the core CTA wrapper (after
+         #add_to_cart_wrap) so it works whatever the active Scita product page layout is. -->
+    <template id="price_alert_product_block" inherit_id="website_sale.cta_wrapper" name="Scita Price Drop Alert">
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="after">
+            <t t-set="scita_pa_price" t-value="combination_info and combination_info.get('price') or 0"/>
+            <div t-if="combination_info and product
+                        and website.scita_price_alert_enabled
+                        and not combination_info.get('prevent_sale')
+                        and not combination_info.get('hide_price')
+                        and scita_pa_price &gt; 0
+                        and not website._scita_hide_price(product)"
+                 class="o_scita_price_alert w-100"
+                 t-att-data-product-id="product_variant.id if product_variant else combination_info.get('product_id')"
+                 t-att-data-signed-in="'1' if not request.env.user._is_public() else None">
+                <t t-set="scita_pa_currency" t-value="combination_info['currency']"/>
+                <t t-set="scita_pa_type" t-value="website.scita_price_alert_default_type"/>
+                <t t-set="scita_pa_percent" t-value="website.scita_price_alert_default_percent or 10"/>
+                <t t-set="scita_pa_percents" t-value="sorted(set([5, 10, 15, 20, 25, 30, 40, 50, scita_pa_percent]))"/>
+                <t t-set="scita_pa_user_email" t-value="not request.env.user._is_public() and request.env.user.email or ''"/>
+                <t t-set="scita_pa_uid" t-value="product.id"/>
+
+                <!-- signed-in shopper already following this variant -->
+                <div class="o_scita_price_alert_watching d-none small rounded p-2 mt-1">
+                    <i class="fa fa-bell me-1" role="img" aria-hidden="true"/>
+                    <span class="o_scita_price_alert_watching_text"/>
+                    <span class="text-nowrap">
+                        <button type="button" class="btn btn-link btn-sm p-0 ms-1 align-baseline o_scita_price_alert_change">Change</button>
+                        <span aria-hidden="true">·</span>
+                        <button type="button" class="btn btn-link btn-sm p-0 align-baseline o_scita_price_alert_stop">Stop</button>
+                    </span>
+                </div>
+
+                <button type="button"
+                        class="btn btn-link px-0 o_scita_price_alert_toggle text-decoration-none"
+                        aria-expanded="false"
+                        t-attf-aria-controls="o_scita_price_alert_form_#{scita_pa_uid}">
+                    <i class="fa fa-bell-o me-1" role="img" aria-hidden="true"/>
+                    <span>Notify me when the price drops</span>
+                </button>
+                <form t-attf-id="o_scita_price_alert_form_#{scita_pa_uid}"
+                      class="o_scita_price_alert_form d-none border rounded p-3 mt-2"
+                      novalidate="novalidate">
+                    <fieldset class="mb-2">
+                        <legend class="small fw-semibold mb-2">Email me when the price…</legend>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="alert_type" value="any"
+                                   t-attf-id="o_scita_pa_any_#{scita_pa_uid}" t-att-checked="scita_pa_type == 'any' or None"/>
+                            <label class="form-check-label small" t-attf-for="o_scita_pa_any_#{scita_pa_uid}">
+                                drops, by any amount
+                            </label>
+                        </div>
+                        <div class="form-check mb-1 d-flex flex-wrap align-items-center gap-2">
+                            <input class="form-check-input" type="radio" name="alert_type" value="percent"
+                                   t-attf-id="o_scita_pa_percent_#{scita_pa_uid}" t-att-checked="scita_pa_type == 'percent' or None"/>
+                            <label class="form-check-label small" t-attf-for="o_scita_pa_percent_#{scita_pa_uid}">
+                                drops by at least
+                            </label>
+                            <select name="drop_percent" class="form-select form-select-sm w-auto o_scita_price_alert_percent"
+                                    aria-label="Discount you are waiting for">
+                                <t t-foreach="scita_pa_percents" t-as="pct">
+                                    <option t-att-value="pct" t-att-selected="pct == scita_pa_percent or None"><t t-out="pct"/>%</option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="form-check d-flex flex-wrap align-items-center gap-2">
+                            <input class="form-check-input" type="radio" name="alert_type" value="target"
+                                   t-attf-id="o_scita_pa_target_type_#{scita_pa_uid}" t-att-checked="scita_pa_type == 'target' or None"/>
+                            <label class="form-check-label small" t-attf-for="o_scita_pa_target_type_#{scita_pa_uid}">
+                                reaches my price
+                            </label>
+                            <div class="input-group input-group-sm w-auto">
+                                <span class="input-group-text" t-out="scita_pa_currency.symbol"/>
+                                <input type="number" name="target_price" class="form-control o_scita_price_alert_target"
+                                       min="0" t-att-step="scita_pa_currency.rounding"
+                                       t-attf-id="o_scita_pa_target_#{scita_pa_uid}"
+                                       aria-label="Your price"
+                                       t-att-value="'%.*f' % (scita_pa_currency.decimal_places, scita_pa_currency.round(scita_pa_price * (100 - scita_pa_percent) / 100))"
+                                       t-att-max="scita_pa_price"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="row g-2 align-items-end">
+                        <div t-attf-class="col-12 col-sm-8 o_scita_price_alert_email_col #{'d-none' if scita_pa_user_email else ''}">
+                            <label class="form-label small mb-1" t-attf-for="o_scita_pa_email_#{scita_pa_uid}">Email</label>
+                            <input type="email" name="email" class="form-control form-control-sm" required="required"
+                                   autocomplete="email" t-attf-id="o_scita_pa_email_#{scita_pa_uid}"
+                                   t-att-value="scita_pa_user_email"
+                                   placeholder="you@example.com"/>
+                        </div>
+                        <div t-if="scita_pa_user_email" class="col-12 col-sm-8 small text-muted o_scita_price_alert_email_info">
+                            We'll email <strong t-out="scita_pa_user_email"/>
+                            <button type="button" class="btn btn-link btn-sm p-0 align-baseline o_scita_price_alert_other_email">(change)</button>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <button type="submit" class="btn btn-primary btn-sm w-100 o_scita_price_alert_submit">Notify me</button>
+                        </div>
+                    </div>
+                    <!-- honeypot: hidden from humans, bots fill it -->
+                    <div class="d-none" aria-hidden="true">
+                        <label>Website <input type="text" name="website_url" tabindex="-1" autocomplete="off"/></label>
+                    </div>
+                    <div class="o_scita_price_alert_message small mt-2" role="status" aria-live="polite"/>
+                    <p class="o_scita_price_alert_note small text-muted mt-2 mb-0">
+                        <t t-if="website.scita_price_alert_expiry_days">
+                            The alert stays on for <t t-out="website.scita_price_alert_expiry_days"/> days.
+                        </t>
+                        One email, then you decide whether to keep watching.
+                        <a t-if="scita_pa_user_email" href="/my/price-alerts">My price alerts</a>
+                    </p>
+                </form>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="price_alert_unsubscribed" name="Price Alert Unsubscribed">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="container py-5 text-center">
+                    <t t-if="valid and done">
+                        <h2>Price alert stopped</h2>
+                        <p class="text-muted">
+                            You will no longer receive price alerts for
+                            <strong t-out="alert.product_id.display_name"/>.
+                        </p>
+                        <a class="btn btn-primary" t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url">Back to the product</a>
+                    </t>
+                    <t t-elif="valid">
+                        <h2>Stop this price alert?</h2>
+                        <p class="text-muted">
+                            We will stop watching the price of <strong t-out="alert.product_id.display_name"/> for you.
+                        </p>
+                        <form method="post" t-attf-action="/scita/price_alert/unsubscribe/#{alert.id}/#{token}">
+                            <button type="submit" class="btn btn-primary">Stop the alert</button>
+                            <a class="btn btn-link" t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url">No, keep it</a>
+                        </form>
+                    </t>
+                    <t t-else="">
+                        <h2>This link is not valid</h2>
+                        <p class="text-muted">The price alert could not be found. It may already have been removed.</p>
+                        <a class="btn btn-primary" href="/shop">Continue shopping</a>
+                    </t>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="price_alert_confirmed" name="Price Alert Confirmed">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="container py-5 text-center">
+                    <t t-if="valid and pending">
+                        <h2>Confirm your price alert</h2>
+                        <p class="text-muted">
+                            We'll email you when the price of <strong t-out="alert.product_tmpl_id.name"/>
+                            <t t-out="alert._scita_condition_text()"/>.
+                        </p>
+                        <form method="post" t-attf-action="/scita/price_alert/confirm/#{alert.id}/#{token}">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="btn btn-primary">Confirm the alert</button>
+                            <a class="btn btn-link" t-att-href="alert.product_tmpl_id.website_url">No, thanks</a>
+                        </form>
+                    </t>
+                    <t t-elif="valid">
+                        <h2>Your price alert is on</h2>
+                        <p class="text-muted">
+                            We'll email you when the price of <strong t-out="alert.product_tmpl_id.name"/>
+                            <t t-out="alert._scita_condition_text()"/>.
+                        </p>
+                        <a class="btn btn-primary" t-att-href="alert.product_tmpl_id.website_url">Back to the product</a>
+                    </t>
+                    <t t-else="">
+                        <h2>This link is not valid</h2>
+                        <p class="text-muted">The price alert could not be found. It may have expired or been cancelled.</p>
+                        <a class="btn btn-primary" href="/shop">Continue shopping</a>
+                    </t>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="price_alert_rearm" name="Price Alert: Keep Watching">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="container py-5 text-center">
+                    <t t-if="valid and done">
+                        <h2>We keep watching the price</h2>
+                        <p class="text-muted">
+                            We'll email you when the price of <strong t-out="alert.product_tmpl_id.name"/>
+                            <t t-out="alert._scita_condition_text()"/>.
+                        </p>
+                        <a class="btn btn-primary" t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url">Back to the product</a>
+                    </t>
+                    <t t-elif="valid">
+                        <h2>Keep watching the price?</h2>
+                        <p class="text-muted">
+                            We'll follow <strong t-out="alert.product_tmpl_id.name"/> again from today's price
+                            and email you when it gets cheaper.
+                        </p>
+                        <form method="post" t-attf-action="/scita/price_alert/rearm/#{alert.id}/#{token}">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="btn btn-primary">Keep watching</button>
+                            <a class="btn btn-link" t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url">No, thanks</a>
+                        </form>
+                    </t>
+                    <t t-else="">
+                        <h2>This link is not valid</h2>
+                        <p class="text-muted">The price alert could not be found. It may have been removed.</p>
+                        <a class="btn btn-primary" href="/shop">Continue shopping</a>
+                    </t>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- My Account > Price Alerts -->
+    <template id="portal_breadcrumbs_price_alerts" inherit_id="portal.portal_breadcrumbs" name="Price Alerts Breadcrumb">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'scita_price_alerts'" class="breadcrumb-item active">Price Alerts</li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_price_alerts" name="My Price Alerts">
+        <t t-call="portal.portal_layout">
+            <div t-if="message == 'stopped'" class="alert alert-info mt-3" role="status">The price alert is stopped.</div>
+            <div t-if="message == 'watching'" class="alert alert-success mt-3" role="status">We keep watching the price for you.</div>
+            <div role="status" t-if="not alerts" class="alert alert-light mt-3">
+                You have no price alerts yet. On a product page, click <strong>Notify me when the price drops</strong>.
+            </div>
+            <div t-else="" class="table-responsive mt-3">
+                <table class="table table-sm align-middle o_scita_portal_price_alerts">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Email me when the price…</th>
+                            <th class="text-end">Last price</th>
+                            <th>Status</th>
+                            <th/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="alerts" t-as="alert">
+                            <td>
+                                <a t-att-href="alert.product_id.website_url or alert.product_tmpl_id.website_url" class="d-flex align-items-center gap-2 text-reset">
+                                    <img t-attf-src="/web/image/product.product/#{alert.product_id.id}/image_128" alt=""
+                                         class="rounded" style="width: 48px; height: 48px; object-fit: contain;" loading="lazy"/>
+                                    <span t-out="alert.product_id.display_name"/>
+                                </a>
+                            </td>
+                            <td class="small" t-out="alert._scita_condition_text()"/>
+                            <td class="text-end text-nowrap">
+                                <t t-if="alert.last_price" t-out="alert._scita_format(alert.last_price)"/>
+                            </td>
+                            <td>
+                                <span t-attf-class="badge #{'text-bg-info' if alert.state == 'active' else 'text-bg-warning' if alert.state == 'pending' else 'text-bg-success' if alert.state == 'notified' else 'text-bg-light'}">
+                                    <t t-if="alert.state == 'active'">Watching</t>
+                                    <t t-elif="alert.state == 'pending'">Confirm by email</t>
+                                    <t t-elif="alert.state == 'notified'">Price dropped</t>
+                                    <t t-elif="alert.state == 'expired'">Expired</t>
+                                    <t t-else="">Stopped</t>
+                                </span>
+                                <div t-if="alert.state == 'active' and alert.expiry_date" class="small text-muted">
+                                    until <t t-out="alert.expiry_date" t-options="{'widget': 'date'}"/>
+                                </div>
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <form method="post" class="d-inline" t-attf-action="/my/price-alerts/#{alert.id}/#{'stop' if alert.state in ('pending', 'active') else 'watch'}">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button t-if="alert.state in ('pending', 'active')" type="submit" class="btn btn-sm btn-outline-secondary">Stop</button>
+                                    <button t-else="" type="submit" class="btn btn-sm btn-outline-primary">Watch again</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

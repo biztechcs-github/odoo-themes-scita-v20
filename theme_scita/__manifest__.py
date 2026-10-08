@@ -61,6 +61,7 @@ theme for ecommerce store
 Shop by category
 publish unpublish product
     ''',
+    'uninstall_hook': 'uninstall_hook',
     'depends': [
         'sale_management',
         'website_sale',
@@ -124,7 +125,7 @@ publish unpublish product
         'views/shop_page_attribute.xml',
         'views/bulk_buy_product_discount.xml',
         'views/snippets/snippets.xml',  
-        'views/snippets/test_snippet.xml',
+        'views/snippets/scita_snippets.xml',
         'views/image_hotspot_views.xml',
         'views/playground_template.xml',
         'views/brand_template.xml',
@@ -203,6 +204,7 @@ publish unpublish product
             # the lazyloader only scans script[data-src] once, on window load.
             'theme_scita/static/src/js/shop_attribute.js',
             'theme_scita/static/src/js/product_details.js',
+            'theme_scita/static/src/js/reviews_tab.js',
             'theme_scita/static/src/js/see_more_brand.js',
             'theme_scita/static/src/js/header.js',
             'theme_scita/static/src/js/bulk_price_btn.js',
@@ -324,6 +326,10 @@ publish unpublish product
         'website.website_builder_assets': [
           # Odoo 20 "Add/Remove Slide" need Bootstrap 5 carousel indicators (old pages have <li>)
           'theme_scita/static/src/js/carousel_indicators_compat.js',
+          # product page "Tags" option: no crash when the page has no product id
+          'theme_scita/static/src/xml/product_tags_option_guard.xml',
+          # shop Products Design: hide the button settings Scita's hover styles replace
+          'theme_scita/static/src/xml/products_design_panel_scita.xml',
           # Odoo 20 saves image width/height attributes as inline px styles: restore them
           'theme_scita/static/src/js/img_size_attrs_plugin.js',
           # Scita block styles in the "Insert a block" previews

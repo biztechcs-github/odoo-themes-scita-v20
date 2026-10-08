@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_scita_price_alert" model="ir.cron">
+        <field name="name">eCommerce: Check price drop alerts</field>
+        <field name="model_id" ref="scita_smart_commerce.model_scita_price_alert"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_price_alerts()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+    </record>
+
+    <record id="mail_template_price_alert" model="mail.template">
+        <field name="name">eCommerce: Price drop alert</field>
+        <field name="model_id" ref="scita_smart_commerce.model_scita_price_alert"/>
+        <field name="subject">Price drop: {{ object.product_id.display_name }} is now {{ object._scita_format(object.last_price) }}</field>
+        <field name="email_from">{{ (object.website_id.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-family: Arial, sans-serif; color: #212529;">
+    <t t-set="saving" t-value="object._scita_saving()"/>
+    <t t-set="stock_left" t-value="object._scita_stock_left()"/>
+    <p>Hello,</p>
+    <p>
+        Good news: the product you are watching just got cheaper.
+    </p>
+    <table cellpadding="0" cellspacing="0" style="width: 100%; max-width: 560px; border: 1px solid #dee2e6; border-radius: 8px; margin: 16px 0;">
+        <tr>
+            <td t-if="object.product_id.image_128" style="padding: 16px; width: 140px; vertical-align: top;">
+                <img t-attf-src="{{ object.website_id.get_base_url() }}/web/image/product.product/{{ object.product_id.id }}/image_256"
+                     alt="" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;"/>
+            </td>
+            <td t-attf-style="padding: {{ '16px 16px 16px 0' if object.product_id.image_128 else '16px' }}; vertical-align: top;">
+                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;" t-out="object.product_id.display_name or ''">Product</div>
+                <div>
+                    <span t-if="saving[0]" style="text-decoration: line-through; color: #6c757d; margin-right: 8px;"
+                          t-out="object._scita_format(object.price_at_creation) or ''">$ 100.00</span>
+                    <span style="font-size: 22px; font-weight: bold; color: #198754;"
+                          t-out="object._scita_format(object.last_price) or ''">$ 90.00</span>
+                </div>
+                <div t-if="saving[0]" style="margin-top: 4px; color: #198754;">
+                    You save <strong t-out="object._scita_format(saving[0]) or ''">$ 10.00</strong>
+                    (<t t-out="saving[1]">10</t>%)
+                </div>
+                <div t-if="stock_left" style="margin-top: 8px; color: #dc3545; font-weight: bold;">
+                    Only <t t-out="stock_left">3</t> left at this price
+                </div>
+            </td>
+        </tr>
+    </table>
+    <p style="margin: 24px 0;">
+        <a t-att-href="object._scita_product_url()"
+           style="background-color: #875A7B; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Buy now at <t t-out="object._scita_format(object.last_price) or ''">$ 90.00</t>
+        </a>
+    </p>
+    <p style="font-size: 12px; color: #6c757d;">
+        You asked us to email you when the price <t t-out="object._scita_condition_text() or ''">drops</t>.
+        Prices can change at any time. This alert is now done:
+        <a t-att-href="object._scita_rearm_url()" style="color: #875A7B;">keep watching for a lower price</a>
+        or <a t-att-href="object._scita_unsubscribe_url()" style="color: #6c757d;">stop this alert</a>.
+    </p>
+</div>
+        </field>
+    </record>
+
+    <record id="mail_template_price_alert_confirm" model="mail.template">
+        <field name="name">eCommerce: Confirm price drop alert</field>
+        <field name="model_id" ref="scita_smart_commerce.model_scita_price_alert"/>
+        <field name="subject">Please confirm your price alert for {{ object.product_tmpl_id.name }}</field>
+        <field name="email_from">{{ (object.website_id.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-family: Arial, sans-serif; color: #212529;">
+    <p>Hello,</p>
+    <p>
+        Someone (hopefully you) asked us to email this address when the price of
+        <strong t-out="object.product_id.display_name or ''">Product</strong>
+        <t t-out="object._scita_condition_text() or ''">reaches $ 90.00 or less</t>.
+    </p>
+    <p style="margin: 24px 0;">
+        <a t-att-href="object._scita_confirm_url()"
+           style="background-color: #875A7B; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+            Confirm my price alert
+        </a>
+    </p>
+    <p style="font-size: 12px; color: #6c757d;">
+        If you did not ask for this, just ignore this email: without confirmation the alert is deleted after 7 days
+        and you will not hear from us again.
+    </p>
+</div>
+        </field>
+    </record>
+</odoo>

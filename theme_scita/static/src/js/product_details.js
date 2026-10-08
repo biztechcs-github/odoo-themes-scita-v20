@@ -16,9 +16,40 @@
  * patch the product configurator would reopen on every add to cart.
  */
 
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { AddToCart } from "@website_sale/interactions/add_to_cart";
+import { ProductPage } from "@website_sale/interactions/product_page";
+
+// SKU line (Settings > "Display product reference"): show the reference of the variant the
+// customer picks, as Scita did up to 18 (19's handler for it was never called).
+patch(ProductPage.prototype, {
+    async _onChangeCombination(ev, parent, combination) {
+        await super._onChangeCombination(...arguments);
+        const scope = parent.closest(".modal-content, #product_detail, main") || document;
+        const skuWrap = scope.querySelector(".sct-sku-display-div");
+        if (!skuWrap || skuWrap.dataset.show !== "1" || !combination.product_id) {
+            return;
+        }
+        // Fast variant clicks: only the latest answer may write the SKU.
+        const requestId = (this._skuRequest = (this._skuRequest || 0) + 1);
+        const data = await rpc("/shop/variant_change", { pro_id: combination.product_id });
+        if (requestId !== this._skuRequest) {
+            return;
+        }
+        skuWrap.replaceChildren();
+        if (data.default_code) {
+            const line = document.createElement("p");
+            line.className = "sct-sku-display";
+            const code = document.createElement("span");
+            code.className = "sct-default-code";
+            code.textContent = data.default_code;
+            line.append(_t("SKU: "), code);
+            skuWrap.append(line);
+        }
+    },
+});
 
 patch(AddToCart.prototype, {
     addToCart(ev) {

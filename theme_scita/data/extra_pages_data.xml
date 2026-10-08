@@ -181,41 +181,41 @@
                                                 </ul>
                                             </div>
                                             <div class="col-md-6 sct-right-side">
-                                                <form action="/website_form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
+                                                <form action="/website/form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
                                                     <div class="mb-3 row form-field o_website_form_required_custom py-2">
                                                         <div class="col-12">
-                                                            <input type="text" placeholder="Name*" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                                                            <input type="text" placeholder="Name*" class="form-control o_website_form_input s_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field py-2">
                                                         <div class="col-12">
-                                                            <input type="text" placeholder="Phone" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
+                                                            <input type="text" placeholder="Phone" class="form-control o_website_form_input s_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field o_website_form_required_custom py-2">
                                                         <div class="col-12">
-                                                            <input type="email" placeholder="Email*" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
+                                                            <input type="email" placeholder="Email*" class="form-control o_website_form_input s_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field py-2">
                                                         <div class="col-12">
-                                                            <input type="text" placeholder="Your Company" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
+                                                            <input type="text" placeholder="Your Company" class="form-control o_website_form_input s_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field o_website_form_required py-2">
                                                         <div class="col-12">
-                                                            <input type="text" placeholder="Subject*" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                                                            <input type="text" placeholder="Subject*" class="form-control o_website_form_input s_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field o_website_form_required_custom py-2">
                                                         <div class="col-12">
-                                                            <textarea class="form-control o_website_form_input" placeholder="Your Question*" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
+                                                            <textarea class="form-control o_website_form_input s_website_form_input" placeholder="Your Question*" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field d-none py-2">
                                                             <div class="col-12">
                                                                 <label class="col-form-label" for="email_to">Email To</label>
-                                                                <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                                                                <input type="hidden" class="form-control o_website_form_input s_website_form_input" name="email_to" t-att-value="res_company.email"/>
                                                             </div>
                                                         </div>
                                                     <div class="mb-3 row py-2">
@@ -255,33 +255,33 @@
                                         </div>
                                         <div class="row justify-content-between bottom-row">
                                             <div class="col-md-7 sct-left">
-                                                <form action="/website_form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
+                                                <form action="/website/form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="mb-3 form-field o_website_form_required_custom">
-                                                                <label class="col-form-label" for="contact_name">Your Name</label>
+                                                                <label class="col-form-label" for="contact_name_cu2">Your Name</label>
                                                                 <div class="data">
-                                                                    <input type="text" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                                                                    <input type="text" class="form-control o_website_form_input s_website_form_input" id="contact_name_cu2" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3 form-field">
-                                                                <label class="col-form-label" for="phone">Phone Number</label>
+                                                                <label class="col-form-label" for="phone_cu2">Phone Number</label>
                                                                 <div class="data">
-                                                                    <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
+                                                                    <input type="text" class="form-control o_website_form_input s_website_form_input" id="phone_cu2" name="phone" t-att-value="request.params.get('phone', '')" />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="mb-3 form-field o_website_form_required_custom">
-                                                                <label class="col-form-label" for="email_from">Email</label>
+                                                                <label class="col-form-label" for="email_from_cu2">Email</label>
                                                                 <div class="data">
-                                                                    <input type="email" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
+                                                                    <input type="email" class="form-control o_website_form_input s_website_form_input" id="email_from_cu2" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3 form-field">
-                                                                <label class="col-form-label" for="partner_name">Your Company</label>
+                                                                <label class="col-form-label" for="partner_name_cu2">Your Company</label>
                                                                 <div class="data">
-                                                                    <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
+                                                                    <input type="text" class="form-control o_website_form_input s_website_form_input" id="partner_name_cu2" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -289,24 +289,24 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="mb-3 form-field o_website_form_required">
-                                                                <label class="col-form-label" for="name">Subject</label>
+                                                                <label class="col-form-label" for="name_cu2">Subject</label>
                                                                 <div class="data">
-                                                                    <input type="text" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                                                                    <input type="text" class="form-control o_website_form_input s_website_form_input" id="name_cu2" name="name" required="" t-att-value="request.params.get('name', '')" />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 py-2">
                                                             <div class="mb-3 form-field o_website_form_required_custom">
-                                                                <label class="col-form-label" for="description">Your Question</label>
+                                                                <label class="col-form-label" for="description_cu2">Your Question</label>
                                                                 <div class="data">
-                                                                    <textarea class="form-control o_website_form_input" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
+                                                                    <textarea class="form-control o_website_form_input s_website_form_input" id="description_cu2" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field d-none">
                                                             <div class="col-md-12">
-                                                                <label class="col-form-label" for="email_to">Email To</label>
-                                                                <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                                                                <label class="col-form-label" for="email_to_cu2">Email To</label>
+                                                                <input type="hidden" class="form-control o_website_form_input s_website_form_input" id="email_to_cu2" name="email_to" t-att-value="res_company.email"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -446,29 +446,29 @@
                                         </div>
                                         <div class="row bottom-row">
                                             <div class="col-md-12">
-                                                <form action="/website_form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
+                                                <form action="/website/form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="mb-3 form-field o_website_form_required_custom py-2">
                                                                 <div class="data">
-                                                                    <input type="text" placeholder="Name*" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                                                                    <input type="text" placeholder="Name*" class="form-control o_website_form_input s_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3 form-field py-2">
                                                                 <div class="data">
-                                                                    <input type="text" placeholder="Phone" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
+                                                                    <input type="text" placeholder="Phone" class="form-control o_website_form_input s_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="mb-3 form-field o_website_form_required_custom py-2">
                                                                 <div class="data">
-                                                                    <input type="email" placeholder="Email*" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
+                                                                    <input type="email" placeholder="Email*" class="form-control o_website_form_input s_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3 form-field py-2">
                                                                 <div class="data">
-                                                                    <input type="text" placeholder="Your Company" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
+                                                                    <input type="text" placeholder="Your Company" class="form-control o_website_form_input s_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -477,21 +477,21 @@
                                                         <div class="col-md-12">
                                                             <div class="mb-3 form-field o_website_form_required py-2">
                                                                 <div class="data">
-                                                                    <input type="text" placeholder="Subject*" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                                                                    <input type="text" placeholder="Subject*" class="form-control o_website_form_input s_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="mb-3 form-field o_website_form_required_custom py-2">
                                                                 <div class="data">
-                                                                    <textarea class="form-control o_website_form_input"  placeholder="Your Question*" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
+                                                                    <textarea class="form-control o_website_form_input s_website_form_input"  placeholder="Your Question*" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field d-none py-2">
                                                             <div class="col-md-12">
                                                                 <label class="col-form-label" for="email_to">Email To</label>
-                                                                <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                                                                <input type="hidden" class="form-control o_website_form_input s_website_form_input" name="email_to" t-att-value="res_company.email"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -536,49 +536,49 @@
                                         </div>
                                         <div class="row middle-row">
                                             <div class="col-md-12">
-                                                <form action="/website_form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
+                                                <form action="/website/form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
                                                     <div class="mb-3 row form-field o_website_form_required_custom py-2">
-                                                        <label class="col-lg-3 col-md-4 col-form-label" for="contact_name">Your Name</label>
+                                                        <label class="col-lg-3 col-md-4 col-form-label" for="contact_name_cu4">Your Name</label>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <input type="text" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                                                            <input type="text" class="form-control o_website_form_input s_website_form_input" id="contact_name_cu4" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field py-2">
-                                                        <label class="col-lg-3 col-md-4 col-form-label" for="phone">Phone Number</label>
+                                                        <label class="col-lg-3 col-md-4 col-form-label" for="phone_cu4">Phone Number</label>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
+                                                            <input type="text" class="form-control o_website_form_input s_website_form_input" id="phone_cu4" name="phone" t-att-value="request.params.get('phone', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field o_website_form_required_custom py-2">
-                                                        <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Email</label>
+                                                        <label class="col-lg-3 col-md-4 col-form-label" for="email_from_cu4">Email</label>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <input type="email" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
+                                                            <input type="email" class="form-control o_website_form_input s_website_form_input" id="email_from_cu4" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field py-2">
-                                                        <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Your Company</label>
+                                                        <label class="col-lg-3 col-md-4 col-form-label" for="partner_name_cu4">Your Company</label>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
+                                                            <input type="text" class="form-control o_website_form_input s_website_form_input" id="partner_name_cu4" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field o_website_form_required py-2">
-                                                        <label class="col-lg-3 col-md-4 col-form-label" for="name">Subject</label>
+                                                        <label class="col-lg-3 col-md-4 col-form-label" for="name_cu4">Subject</label>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <input type="text" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                                                            <input type="text" class="form-control o_website_form_input s_website_form_input" id="name_cu4" name="name" required="" t-att-value="request.params.get('name', '')" />
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field o_website_form_required_custom py-2">
-                                                        <label class="col-lg-3 col-md-4 col-form-label" for="description">Your Question</label>
+                                                        <label class="col-lg-3 col-md-4 col-form-label" for="description_cu4">Your Question</label>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <textarea class="form-control o_website_form_input" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
+                                                            <textarea class="form-control o_website_form_input s_website_form_input" id="description_cu4" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row form-field d-none py-2">
                                                         <div class="col-lg-3 col-md-4">
-                                                            <label class="col-form-label" for="email_to">Email To</label>
+                                                            <label class="col-form-label" for="email_to_cu4">Email To</label>
                                                         </div>
                                                         <div class="col-lg-7 col-md-8">
-                                                            <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                                                            <input type="hidden" class="form-control o_website_form_input s_website_form_input" id="email_to_cu4" name="email_to" t-att-value="res_company.email"/>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row py-2">
@@ -685,41 +685,41 @@
                                             </div>
                                             <div class="col-md-6 sct-right">
                                                 <div class="sct-box">
-                                                    <form action="/website_form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
+                                                    <form action="/website/form/" method="post" t-att-data-model_name="'crm.lead' if request.env['ir.module.module'].sudo().search([('name', '=', 'website_crm'),('state','=','installed')]) else 'mail.mail'" data-success_page="/contactus-thank-you" class="s_website_form container-fluid" enctype="multipart/form-data" data-editable-form="false">
                                                         <div class="mb-3 row form-field o_website_form_required_custom py-2">
                                                             <div class="col-12">
-                                                                <input type="text" placeholder="Name*" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                                                                <input type="text" placeholder="Name*" class="form-control o_website_form_input s_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field py-2">
                                                             <div class="col-12">
-                                                                <input type="text" placeholder="Phone" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
+                                                                <input type="text" placeholder="Phone" class="form-control o_website_form_input s_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field o_website_form_required_custom py-2">
                                                             <div class="col-12">
-                                                                <input type="email" placeholder="Email*" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
+                                                                <input type="email" placeholder="Email*" class="form-control o_website_form_input s_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field py-2">
                                                             <div class="col-12">
-                                                                <input type="text" placeholder="Your Company" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
+                                                                <input type="text" placeholder="Your Company" class="form-control o_website_form_input s_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field o_website_form_required py-2">
                                                             <div class="col-12">
-                                                                <input type="text" placeholder="Subject*" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                                                                <input type="text" placeholder="Subject*" class="form-control o_website_form_input s_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field o_website_form_required_custom py-2">
                                                             <div class="col-12">
-                                                                <textarea class="form-control o_website_form_input" placeholder="Your Question*" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
+                                                                <textarea class="form-control o_website_form_input s_website_form_input" placeholder="Your Question*" name="description" required=""><t t-out="request.params.get('description', '')"/></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row form-field d-none py-2">
                                                             <div class="col-12">
                                                                 <label class="col-form-label" for="email_to">Email To</label>
-                                                                <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                                                                <input type="hidden" class="form-control o_website_form_input s_website_form_input" name="email_to" t-att-value="res_company.email"/>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row py-2">

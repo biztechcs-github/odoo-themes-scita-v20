@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="compare_ai_explain" inherit_id="website_sale.product_compare" name="Scita AI Comparison">
+        <xpath expr="//div[@id='o_comparelist_table']/.." position="after">
+            <section t-if="website.scita_compare_ai_enabled and website._scita_ai_ready() and 2 &lt;= len(products) &lt;= 4"
+                     class="o_scita_compare_ai my-4 p-3 p-md-4 rounded border"
+                     t-att-data-product-ids="products.ids">
+                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+                    <div>
+                        <h2 class="h5 mb-1">Not sure which one to pick?</h2>
+                        <p class="small text-muted mb-0">Get a plain-language summary of the real differences, based only on our product information.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary o_scita_compare_ai_btn flex-shrink-0">
+                        <span class="o_scita_compare_ai_spinner spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"/>
+                        Explain the differences
+                    </button>
+                </div>
+                <div class="o_scita_compare_ai_result mt-3" aria-live="polite"/>
+            </section>
+        </xpath>
+    </template>
+</odoo>

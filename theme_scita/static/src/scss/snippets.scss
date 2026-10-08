@@ -1171,12 +1171,15 @@ body #wrapwrap{
    deliberate - it pins the intrinsic ratio of images this theme ships and
    never touches a photo the customer uploaded in their place.
 
-   width+max-width reproduces what .img-fluid already did (fill the container,
-   never upscale past natural size) while giving aspect-ratio a width to
-   resolve against, which is what actually reserves the box before load. */
+   width: min(100%, natural) reproduces what .img-fluid already did (fill the
+   container, never upscale past natural size) while giving aspect-ratio a
+   width to resolve against, which is what actually reserves the box before
+   load. It is a width, not a max-width: blocks whose own CSS stretches the
+   image (`width: 100%` + object-fit, e.g. Retail Deal of the Day, Portfolio)
+   override it and fill their box again, a max-width cap shrank them. */
 @mixin scita-placeholder-ratio($w, $h) {
-	width: 100%;
-	max-width: #{$w}px;
+	width: unquote("min(100%, #{$w}px)"); // CSS min(), not Sass min()
+	max-width: 100%;
 	height: auto;
 	aspect-ratio: #{$w} / #{$h};
 }
@@ -1224,4 +1227,11 @@ img[src$="/testimonial-quote.png"]   { @include scita-placeholder-ratio(376, 363
 	@media (min-width: 992px) {
 		min-height: var(--scita-dealslider-reserve-lg, 746px);
 	}
+}
+
+// Dynamic Scita blocks show an editor placeholder (sample screenshot) until their data is
+// loaded. On the live site a block that is not configured (or whose configuration was
+// deleted) gets no data, so it would keep showing that fake sample to visitors: hide it.
+body:not(.editor_enable) #wrapwrap section:has(.category-slider-placeholder) {
+    display: none !important;
 }

@@ -3,6 +3,7 @@
 
 from . import theme_custom
 from . import website
+from . import scita_pages
 from . import res_config
 from . import sliders
 from . import product_category

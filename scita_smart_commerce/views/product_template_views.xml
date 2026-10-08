@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_scita_ar" model="ir.ui.view">
+        <field name="name">product.template.form.scita.ar</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <page name="website_sale" position="after">
+                <page string="3D / AR" name="scita_ar" invisible="not sale_ok">
+                    <group>
+                        <group string="3D model">
+                            <div colspan="2" class="mb-2">
+                                <button name="action_scita_ar_from_photo" type="object" class="btn btn-secondary"
+                                        groups="product.group_product_manager"
+                                        icon="view_in_ar" string="Create from a photo"/>
+                                <span class="text-muted ms-2" invisible="not scita_ar_from_photo">
+                                    Created from a photo: <field name="scita_ar_from_photo" class="oe_inline"/>
+                                </span>
+                            </div>
+                            <field name="scita_ar_model_glb" filename="scita_ar_model_glb_filename"/>
+                            <field name="scita_ar_model_glb_filename" invisible="1"/>
+                            <field name="scita_ar_model_usdz" filename="scita_ar_model_usdz_filename"/>
+                            <field name="scita_ar_model_usdz_filename" invisible="1"/>
+                            <field name="scita_has_ar" invisible="1"/>
+                            <field name="scita_ar_size" invisible="not scita_ar_size"/>
+                            <div colspan="2" class="alert alert-warning py-2 mb-2" role="alert" invisible="not scita_ar_size_warning">
+                                <field name="scita_ar_size_warning"/>
+                            </div>
+                            <field name="scita_ar_placement" widget="radio" invisible="not scita_has_ar"/>
+                            <field name="scita_ar_scale" widget="radio" invisible="not scita_has_ar"/>
+                        </group>
+                        <group string="How it is used">
+                            <div class="text-muted" colspan="2">
+                                <p><b>Create from a photo</b> turns one product photo into a real-size cut-out
+                                   (flat card or thin box): great for wall art, mirrors, TVs, doors and size checks.
+                                   For a full walk-around 3D model, upload a .glb: scan the product with a phone
+                                   app (e.g. Polycam, Reality Composer) or ask the manufacturer for its 3D file.</p>
+                                <p>With a .glb model, the product page and the image hotspots show a
+                                   <b>View in 3D</b> button; on phones that support AR it becomes
+                                   <b>View it in your room</b> (Android: Scene Viewer / WebXR, iPhone: AR Quick Look).</p>
+                                <p>Keep models light (ideally under 5 MB, max 25 MB): real-world scale in metres,
+                                   compressed textures (1024 px), a single mesh where possible. Add a .usdz file for
+                                   the best result on iPhone; otherwise it is generated on the device. Replacing the
+                                   .glb removes the .usdz (it showed the previous model): upload the new one with it.</p>
+                                <p>The poster image shown while loading is the product image.</p>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

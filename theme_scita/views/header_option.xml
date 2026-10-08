@@ -84,6 +84,8 @@
 
             <!-- Mobile header content -->
         </xpath>
+        <!-- Odoo 20 adds its own pricelist selector here as well: keep Scita's only -->
+        <xpath expr="//t[@t-call='website_sale.placeholder_header_pricelist_selector']" position="replace"/>
     </template>
     <template id="scita_header_all_category_mobile" name="Scita Header All Category For Mobile" inherit_id="website.template_header_mobile" active='False'>
         <xpath expr="//t[@t-call='website.navbar_nav']" position="before">
@@ -807,7 +809,10 @@
     <template  id="custom_option_header_brand_logo" inherit_id="website.option_header_brand_logo">
         <xpath expr="//a" position="replace">
             <a href="/" t-attf-class="navbar-brand logo #{_link_class}">
-                <span t-field="website.header_logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+                <!-- Scita's own header logo (Settings) or, while none is uploaded, the website logo:
+                     an empty header logo showed a camera placeholder to visitors -->
+                <span t-if="website.header_logo" t-field="website.header_logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+                <span t-else="" t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
             </a>
         </xpath>
     </template>

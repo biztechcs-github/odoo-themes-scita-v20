@@ -113,7 +113,8 @@
                     </div>  
                 </div>
             </t>
-            <div class='col-md-12' t-if="not client_details">
+            <!-- setup hint: for website editors only, visitors just see no logos -->
+            <div class='col-md-12' t-if="not client_details and request.env.user.has_group('website.group_website_restricted_editor')">
                 <div class="sct_client_not">
                     <div class="block-title">
                         <p class='sct_simple_class'>No clients added . For configuring, please goto admin section Sales menu than goto Customers and select the customer/client open that specific record and you will see a checkbox 'Add to client slider' enable that option and that record will be visible.</p>

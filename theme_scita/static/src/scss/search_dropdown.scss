@@ -261,3 +261,17 @@
         }
     }
 }
+
+// Shop title "Search results for '<term>'" and the "No results for '<term>'" message:
+// a long unbroken term must wrap, not scroll #wrapwrap sideways
+.o_wsale_category_title {
+    min-width: 0;
+    flex-wrap: wrap;
+}
+.o_wsale_category_title strong,
+.o_wsale_category_title .badge,
+.o_wsale_empty_products_grid {
+    overflow-wrap: anywhere;
+    white-space: normal;
+    min-width: 0;
+}

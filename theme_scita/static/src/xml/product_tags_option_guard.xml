@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Odoo 20's product page "Tags" option gives the product id it finds in the page to
+         <ModelMany2Many recordId>, which only accepts a number: when the page has none (no
+         variant id rendered yet, buttons hidden by Scita's hide-price / request-a-quote...),
+         opening the editor crashed with "Invalid component props (ModelMany2Many)". Only show
+         the row when a product was found. -->
+    <t t-inherit="website_sale.ProductTemplateOption" t-inherit-mode="extension">
+        <xpath expr="//BuilderRow[ModelMany2Many]" position="attributes">
+            <attribute name="t-if">this.domState.productId</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="website_sale.ProductVariantOption" t-inherit-mode="extension">
+        <xpath expr="//BuilderRow[ModelMany2Many]" position="attributes">
+            <attribute name="t-if">this.domState.productId</attribute>
+        </xpath>
+    </t>
+</templates>

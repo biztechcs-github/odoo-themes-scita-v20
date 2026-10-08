@@ -5048,6 +5048,12 @@
 	}
 }
 
+// Odoo's Grid layout keeps the box laid over the image but stacks the items in page order,
+// image on top of the text. Keep Scita's order while the items have the z-index Odoo gave them
+// (Bring to front / Send to back change it, and the user's choice then applies).
+.about_us_v_3 .o_grid_mode > .sct_info_inner.o_grid_item[style*="z-index: 1;"] {
+	z-index: 3 !important;
+}
 /*about snippet 2 end*/
 /*about snippet 3*/
 .about_us_v_4 {

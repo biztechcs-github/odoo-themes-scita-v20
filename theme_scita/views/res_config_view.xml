@@ -59,7 +59,9 @@
                     </setting>
                 </block>
                 <!-- Multiple Product Image customizations -->
-                <block class="row d-flex flex-column" title="Multiple Product Image Customizations" id="mulitple_product_image_customization">
+                <!-- Hidden: these drove the "unitegallery" product image slider, removed in 18.0. The
+                     product page images are set in the website editor (Product Page > Images). -->
+                <block class="row d-flex flex-column" title="Multiple Product Image Customizations" id="mulitple_product_image_customization" invisible="1">
                     <setting id="product_no_extra_options">
                         <field name="no_extra_options"/>
                     </setting>

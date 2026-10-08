@@ -2,8 +2,29 @@
 
 import publicWidget from '@theme_scita/js/compat/public_widget';
 import { patch } from '@web/core/utils/patch';
-import { AddToCart } from '@website_sale/interactions/add_to_cart';
 import { ProductPage } from '@website_sale/interactions/product_page';
+
+// The quantity input is the only state: a tier button just fills it in. The price shown and
+// the quantity added to the cart then come from Odoo as for any quantity (the server prices
+// the bulk tiers, see controllers/bulk_buy_product_discount.py). A remembered tier used to
+// override both, so after "Buy 6" a quantity of 2 still showed the 6-unit price and added 6.
+
+/**
+ * Highlight the tier that applies to the quantity in the input: the largest minimum
+ * quantity not above it (none below the first tier).
+ */
+function highlightBulkTier(productEl) {
+    const qty = parseFloat(productEl.querySelector('input[name="add_qty"]')?.value) || 1;
+    let best = null;
+    for (const btn of productEl.querySelectorAll('.o_bulk_price_btn')) {
+        btn.classList.remove('active');
+        const min = parseFloat(btn.getAttribute('qty')) || 0;
+        if (min <= qty && (!best || min > parseFloat(best.getAttribute('qty')))) {
+            best = btn;
+        }
+    }
+    best?.classList.add('active');
+}
 
 publicWidget.registry.BulkPriceButtonWidget = publicWidget.Widget.extend({
     selector: '.js_product',
@@ -11,46 +32,22 @@ publicWidget.registry.BulkPriceButtonWidget = publicWidget.Widget.extend({
 
     _onBulkPriceClick: function (ev) {
         ev.preventDefault();
-        $(".o_bulk_price_btn").removeClass("active");
-        const $btn = $(ev.currentTarget).addClass("active");
-        const qty = parseInt($btn.attr('qty')) || 1;
-        const price = parseFloat($btn.attr('price')) || 0;
-        const $parent = $btn.closest('.js_product');
-        const el = $parent[0];
-
-        // Store the active bulk selection so _onChangeCombination can restore it
-        el.dataset.bulkActiveQty = qty;
-        el.dataset.bulkActivePrice = price;
-
-        // Set qty input
-        const $qtyInput = $parent.find('input[name="add_qty"]');
-        $qtyInput.val(qty);
-
-        // Immediately update price display (preserve .oe_currency_value DOM structure)
+        const btn = ev.currentTarget;
+        const el = btn.closest('.js_product');
+        const qtyInput = el.querySelector('input[name="add_qty"]');
+        if (!qtyInput) {
+            return;
+        }
+        qtyInput.value = parseInt(btn.getAttribute('qty')) || 1;
+        highlightBulkTier(el);
+        // show the tier price right away; Odoo's combination update confirms it
+        const price = parseFloat(btn.getAttribute('price'));
         const currencyVal = el.querySelector('.oe_price .oe_currency_value');
-        if (currencyVal) {
+        if (currencyVal && !isNaN(price)) {
             currencyVal.textContent = price.toFixed(2);
         }
-
-        // Trigger Odoo's _getCombinationInfo so the dialog also gets the correct price.
-        // The server-side controller overrides combination.price with the bulk price,
-        // so _onChangeCombination will confirm the correct price.
-        $qtyInput.trigger('change');
-        const variantEl = el.querySelector('ul[data-attribute-exclusions]');
-        if (variantEl) {
-            variantEl.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    },
-});
-
-// Odoo 20: the quantity sent to the cart comes from AddToCart, so the active
-// bulk quantity is injected there (19 did this in WebsiteSale._updateRootProduct).
-patch(AddToCart.prototype, {
-    _getOptionalParams(el) {
-        const params = super._getOptionalParams(el);
-        const jsProduct = el?.closest?.('.js_product') ?? el;
-        const activeQty = parseInt(jsProduct?.dataset?.bulkActiveQty) || 0;
-        return activeQty >= 2 ? { ...params, quantity: activeQty } : params;
+        // Odoo listens to `change` on the input: it re-prices the combination for this quantity
+        qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
     },
 });
 
@@ -64,35 +61,15 @@ patch(ProductPage.prototype, {
 
         const bulkPrices = combination.bulk_prices || [];
         const wrapper = bulkSection.querySelector('.o_bulk_price_wrapper');
-
-        // Detect actual variant switch (product_id changed)
-        const newProductId = combination.product_id;
-        const prevProductId = parent.dataset.bulkLastProductId
-            ? parseInt(parent.dataset.bulkLastProductId) : null;
-        const variantChanged = prevProductId && newProductId && newProductId !== prevProductId;
-        if (newProductId) {
-            parent.dataset.bulkLastProductId = newProductId;
-        }
-
-        // On a real variant change, clear the stored bulk selection
-        if (variantChanged) {
-            delete parent.dataset.bulkActiveQty;
-            delete parent.dataset.bulkActivePrice;
-        }
-
-        const activeQty = parseInt(parent.dataset.bulkActiveQty) || 0;
-        const activePrice = parseFloat(parent.dataset.bulkActivePrice) || 0;
-
         if (!bulkPrices.length || !wrapper) {
             bulkSection.classList.add('d-none');
             return;
         }
-
         bulkSection.classList.remove('d-none');
 
-        // Rebuild buttons, re-applying active class if same variant
+        // the tiers depend on the variant: rebuild them, then highlight the one in use
         wrapper.innerHTML = bulkPrices.map(rule =>
-            `<a class="btn btn-outline-primary o_bulk_price_btn${(!variantChanged && activeQty === rule.min_quantity) ? ' active' : ''}"
+            `<a class="btn btn-outline-primary o_bulk_price_btn"
                  qty="${rule.min_quantity}"
                  price="${rule.fixed_price}"
                  href="#">
@@ -102,15 +79,6 @@ patch(ProductPage.prototype, {
                 / Unit
             </a>`
         ).join('');
-
-        // Restore bulk price after super._onChangeCombination may have overwritten it.
-        // (The server controller now also overrides combination.price, so this is a
-        //  safety net in case the pricelist computation path differs.)
-        if (!variantChanged && activeQty > 0 && activePrice > 0) {
-            const currencyVal = parent.querySelector('.oe_price .oe_currency_value');
-            if (currencyVal) {
-                currencyVal.textContent = activePrice.toFixed(2);
-            }
-        }
+        highlightBulkTier(parent);
     },
 });

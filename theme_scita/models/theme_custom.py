@@ -16,6 +16,12 @@ class ThemeNew(models.AbstractModel):
         self.disable_view('website_sale.product_add_to_compare')
         self.disable_view('website_sale.search')
         self.disable_view('website_sale.ecom_show_extra_fields')
+        # Product hover style 1 is Scita's default: save it explicitly so the editor's Theme
+        # tab shows it as selected instead of an empty "None"
+        self.env['website.assets'].make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss',
+            {'prod-hover-style': "'prod_hover_style_1'"},
+        )
 
 
 # The views each "Scita Header N" item of the editor's header template picker enables

@@ -4,6 +4,7 @@ import { rpc } from '@web/core/network/rpc';
 import wSaleUtils from "@theme_scita/js/compat/website_sale_utils";
 import publicWidget from '@theme_scita/js/compat/public_widget';
 import wishlistUtils from '@website_sale/js/wishlist_utils';
+import { formatFloat } from '@web/core/utils/numbers';
 
 odoo.define('theme_scita.quick_view', [], function (require) {
     'use strict';
@@ -24,6 +25,9 @@ odoo.define('theme_scita.quick_view', [], function (require) {
             const element = ev.currentTarget;
             const product_id = $(element).attr('data-id');
             rpc('/theme_scita/shop/quick_view', { product_id }).then((data) => {
+                if (!data) {
+                    return;
+                }
                 $("#shop_quick_view_modal").html(data).modal("show");
 
                 $(".quick_cover").css("display", "block");
@@ -139,11 +143,22 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                 });
 
                 //------------------------------------------------------------------
-                // Variant Change
+                // Variant Change: any attribute (size pills, radios, selects). Colour
+                // swatches go through _onMouseEnterSwatch (click), which does the same.
+                // Odoo's product page interaction does not run in this modal: without
+                // this, choosing another size kept the first variant (its name, image,
+                // price, and the product added to the cart).
                 //------------------------------------------------------------------
-                $("#shop_quick_view_modal").off("change", "[data-attribute_exclusions]").on("change", "[data-attribute_exclusions]", function (ev) {
-                    $(ev.currentTarget).closest("form").trigger("change");
-                });
+                $("#shop_quick_view_modal").off("change.scitaVariant").on(
+                    "change.scitaVariant",
+                    "input.js_variant_change, select.js_variant_change",
+                    (ev) => {
+                        if (ev.target.closest(".css_attribute_color")) {
+                            return;
+                        }
+                        this._updateCombination($(ev.target).closest(".js_main_product, #product_detail"));
+                    }
+                );
 
                 // Highlight active swatch
                 $("#shop_quick_view_modal").off("change", ".list-inline-item .css_attribute_color").on("change", ".list-inline-item .css_attribute_color", function (ev) {
@@ -154,7 +169,10 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                 $('#shop_quick_view_modal').find('span.attribute_value').each(function () {
                     const $span = $(this);
                     if ($span.closest('li[name="variant_attribute"]').length) {
-                        $span.hide();
+                        // Odoo 20 wraps the value in "<span class="text-muted"> - value</span>":
+                        // hide the dash with it, or the label read "Color -"
+                        const $wrap = $span.parent(".text-muted");
+                        ($wrap.length ? $wrap : $span).hide();
                     }
                 });
             });
@@ -166,37 +184,51 @@ odoo.define('theme_scita.quick_view', [], function (require) {
 
             $product.find('.css_attribute_color').removeClass("active");
             $swatch.addClass("active");
-            // Odoo 20 product pages have no product_template_id input and handle swatch
+            await this._updateCombination($product);
+        },
+
+        /**
+         * Load the selected combination (quick view modal / Scita product blocks) and show
+         * it: product added to the cart, name, price and image. The variant's own image when
+         * it has one, the product's main image otherwise (product.product image_1920).
+         */
+        _updateCombination: async function ($product) {
+            // Odoo 20 product pages have no product_template_id input and handle variant
             // changes themselves (ProductPage); only act where the Scita inputs exist
             // (quick view modal / Scita product blocks), otherwise the RPC gets a null template.
             const templateId = parseInt($product.find('input[name="product_template_id"]').val());
             if (!templateId) {
                 return;
             }
-            const combination = wSaleUtils.getSelectedAttributeValues($product[0]);
-            // Fetch variant info from Odoo
+            const requestId = (this._combinationRequest = (this._combinationRequest || 0) + 1);
             const combinationInfo = await rpc('/website_sale/get_combination_info', {
                 product_template_id: templateId,
                 product_id: parseInt($product.find('input[name="product_id"]').val()),
-                combination: combination,
+                combination: wSaleUtils.getSelectedAttributeValues($product[0]),
                 add_qty: parseInt($product.find('input[name="add_qty"]').val()) || 1,
             });
-            if (combinationInfo.product_id) {
-                $product.find('input[name="product_id"]').val(combinationInfo.product_id);
-                
+            if (requestId !== this._combinationRequest) {
+                return; // the shopper changed the selection again meanwhile
             }
-         
+            const possible = combinationInfo.is_combination_possible !== false;
+            $product.toggleClass('css_not_available', !possible);
+            $product.find('#add_to_cart, .js_check_product').toggleClass('disabled', !possible);
+            if (!possible || !combinationInfo.product_id) {
+                return;
+            }
+            $product.find('input[name="product_id"]').val(combinationInfo.product_id);
             if (combinationInfo.display_name) {
                 $product.find('.product_detail_name').text(combinationInfo.display_name);
             }
-            if (combinationInfo.price) {
-                $product.find('.oe_price .oe_currency_value').text(combinationInfo.price);
+            if (typeof combinationInfo.price === 'number') {
+                $product.find('.oe_price .oe_currency_value').text(
+                    formatFloat(combinationInfo.price, { digits: [69, 2] })
+                );
             }
-            if (combinationInfo.product_id) {
-                const newImageUrl = `/web/image/product.product/${combinationInfo.product_id}/image_1920`;
-                const $modal = $('.modal.show');
-                $modal.find('.product_detail_img').attr('src', newImageUrl);
-            }
+            const $scope = $product.closest('.modal').length ? $product.closest('.modal') : $product;
+            $scope.find('.product_detail_img').attr(
+                'src', `/web/image/product.product/${combinationInfo.product_id}/image_1920`
+            );
         },
 
 
@@ -206,9 +238,14 @@ odoo.define('theme_scita.quick_view', [], function (require) {
         // Cart View Modal
         //----------------------------------------------------------------------
         cartViewData: function (ev) {
+            // the button sits in a <form action="/shop/cart/update">: never submit it
+            ev.preventDefault();
             const element = ev.currentTarget;
             const product_id = $(element).attr('data-id');
             rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
+                if (!data) {
+                    return;
+                }
                 $("#shop_cart_view_modal").html(data).modal("show");
             });
         },

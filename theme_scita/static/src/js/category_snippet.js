@@ -16,6 +16,19 @@ async function openCategorySliderModal(snippetEl) {
     document.body.appendChild(modalEl);
 
     const myModal = new Modal(modalEl);
+
+    // Esc closes it like the editor's own dialogs: the focus stays in the editor, so Bootstrap's
+    // keyboard handling (on the modal itself) never sees the key. Consumed, or the editor would
+    // also take it (Esc = fullscreen).
+    const closeOnEscape = (ev) => {
+        if (ev.key === "Escape" && modalEl.classList.contains("show")) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            myModal.hide();
+        }
+    };
+    document.addEventListener("keydown", closeOnEscape, true);
+    modalEl.addEventListener("hidden.bs.modal", () => document.removeEventListener("keydown", closeOnEscape, true));
     myModal.show();
 
     const sliderTypeSelect = modalEl.querySelector("#slider_type");

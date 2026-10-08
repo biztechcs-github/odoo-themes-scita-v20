@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Price alerts ================= -->
+    <record id="scita_price_alert_view_list" model="ir.ui.view">
+        <field name="name">scita.price.alert.list</field>
+        <field name="model">scita.price.alert</field>
+        <field name="arch" type="xml">
+            <list string="Price Alerts" decoration-muted="state in ('cancelled', 'expired')" decoration-success="state == 'notified'">
+                <header>
+                    <button name="action_check_now" type="object" string="Check Now" display="always"
+                            help="Check the prices of the selected waiting alerts (all waiting alerts if none is selected) now and email the shoppers whose price is reached."/>
+                </header>
+                <field name="create_date" string="Created" widget="date"/>
+                <field name="email"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="product_tmpl_id"/>
+                <field name="product_id" optional="hide"/>
+                <field name="alert_type" optional="show"/>
+                <field name="price_at_creation"/>
+                <field name="target_price"/>
+                <field name="requested_discount" widget="float" digits="[16, 1]" optional="show"/>
+                <field name="last_price" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="state" widget="badge" decoration-info="state == 'active'" decoration-warning="state == 'pending'"
+                       decoration-success="state == 'notified'"/>
+                <field name="notified_date" optional="hide"/>
+                <field name="expiry_date" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="scita_price_alert_view_form" model="ir.ui.view">
+        <field name="name">scita.price.alert.form</field>
+        <field name="model">scita.price.alert</field>
+        <field name="arch" type="xml">
+            <form string="Price Alert">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" invisible="state != 'pending'"/>
+                    <button name="action_check_now" type="object" string="Check Now" invisible="state != 'active'"/>
+                    <button name="action_cancel" type="object" string="Cancel Alert" invisible="state not in ('active', 'pending')"/>
+                    <button name="action_reactivate" type="object" string="Reactivate" invisible="state in ('active', 'pending')"
+                            help="Wait again for the same price"/>
+                    <button name="action_keep_watching" type="object" string="Keep Watching" invisible="state in ('active', 'pending')"
+                            help="Follow the price again from today's price, as the shopper's &quot;keep watching&quot; link does"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,active,notified"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Shopper">
+                            <field name="email"/>
+                            <field name="partner_id"/>
+                            <field name="lang"/>
+                        </group>
+                        <group string="Product">
+                            <field name="product_tmpl_id"/>
+                            <field name="product_id"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
+                            <field name="pricelist_id"/>
+                            <field name="fiscal_position_id"/>
+                        </group>
+                        <group string="Prices">
+                            <field name="currency_id" invisible="True"/>
+                            <field name="alert_type"/>
+                            <field name="drop_percent" invisible="alert_type != 'percent'"/>
+                            <field name="price_at_creation"/>
+                            <field name="target_price"/>
+                            <field name="requested_discount" widget="float" digits="[16, 1]"/>
+                        </group>
+                        <group string="Tracking">
+                            <field name="last_price"/>
+                            <field name="last_check_date"/>
+                            <field name="notified_date"/>
+                            <field name="expiry_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="scita_price_alert_view_search" model="ir.ui.view">
+        <field name="name">scita.price.alert.search</field>
+        <field name="model">scita.price.alert</field>
+        <field name="arch" type="xml">
+            <search string="Price Alerts">
+                <field name="email"/>
+                <field name="product_tmpl_id"/>
+                <field name="partner_id"/>
+                <filter name="filter_pending" string="Awaiting Confirmation" domain="[('state', '=', 'pending')]"/>
+                <filter name="filter_active" string="Waiting" domain="[('state', '=', 'active')]"/>
+                <filter name="filter_notified" string="Notified" domain="[('state', '=', 'notified')]"/>
+                <filter name="filter_expired" string="Expired" domain="[('state', '=', 'expired')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="filter_create_date" string="Created" date="create_date"/>
+                <group>
+                    <filter name="groupby_product" string="Product" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_type" string="Notify When" context="{'group_by': 'alert_type'}"/>
+                    <filter name="groupby_website" string="Website" context="{'group_by': 'website_id'}"
+                            groups="website.group_multi_website"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_scita_price_alert" model="ir.actions.act_window">
+        <field name="name">Price Alerts</field>
+        <field name="res_model">scita.price.alert</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="scita_price_alert_view_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No price alerts yet</p>
+            <p>Shoppers subscribe from the product page: any price drop, a percentage off or a
+               price of their own. They get one email when it happens.</p>
+        </field>
+    </record>
+
+    <!-- ================= Price sensitivity analysis ================= -->
+    <record id="scita_price_alert_report_view_pivot" model="ir.ui.view">
+        <field name="name">scita.price.alert.report.pivot</field>
+        <field name="model">scita.price.alert.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Price Sensitivity" disable_linking="True">
+                <field name="product_tmpl_id" type="row"/>
+                <field name="alert_count" type="measure"/>
+                <field name="avg_current_price" type="measure"/>
+                <field name="avg_target_price" type="measure"/>
+                <field name="avg_requested_discount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="scita_price_alert_report_view_graph" model="ir.ui.view">
+        <field name="name">scita.price.alert.report.graph</field>
+        <field name="model">scita.price.alert.report</field>
+        <field name="arch" type="xml">
+            <graph string="Price Sensitivity" type="bar" order="desc">
+                <field name="product_tmpl_id"/>
+                <field name="alert_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="scita_price_alert_report_view_list" model="ir.ui.view">
+        <field name="name">scita.price.alert.report.list</field>
+        <field name="model">scita.price.alert.report</field>
+        <field name="arch" type="xml">
+            <list string="Price Sensitivity" default_order="alert_count desc">
+                <field name="product_tmpl_id"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="alert_count"/>
+                <field name="avg_price_at_creation" optional="hide"/>
+                <field name="avg_current_price"/>
+                <field name="avg_target_price"/>
+                <field name="avg_requested_discount" widget="float" digits="[16, 1]"/>
+                <field name="max_requested_discount" widget="float" digits="[16, 1]" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="scita_price_alert_report_view_search" model="ir.ui.view">
+        <field name="name">scita.price.alert.report.search</field>
+        <field name="model">scita.price.alert.report</field>
+        <field name="arch" type="xml">
+            <search string="Price Sensitivity">
+                <field name="product_tmpl_id"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_scita_price_alert_report" model="ir.actions.act_window">
+        <field name="name">Price Sensitivity</field>
+        <field name="res_model">scita.price.alert.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" ref="scita_price_alert_report_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No waiting price alerts</p>
+            <p>Products with many waiting alerts, or with a large requested discount, are the ones
+               shoppers want but find too expensive.</p>
+        </field>
+    </record>
+
+    <!-- ================= Product form smart button ================= -->
+    <record id="product_template_form_view_price_alert" model="ir.ui.view">
+        <field name="name">product.template.form.scita.price.alert</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_scita_view_price_alerts" type="object" class="oe_stat_button"
+                        icon="fa-bell-o" groups="sales_team.group_sale_salesman"
+                        invisible="not scita_price_alert_count">
+                    <field name="scita_price_alert_count" widget="statinfo" string="Price Alerts"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- ================= Menus ================= -->
+    <menuitem id="menu_scita_price_alert"
+              name="Price Alerts"
+              parent="website_sale.menu_catalog"
+              action="action_scita_price_alert"
+              groups="sales_team.group_sale_salesman"
+              sequence="90"/>
+    <menuitem id="menu_scita_price_alert_report"
+              name="Price Sensitivity"
+              parent="website.menu_reporting"
+              action="action_scita_price_alert_report"
+              groups="sales_team.group_sale_salesman"
+              sequence="40"/>
+</odoo>

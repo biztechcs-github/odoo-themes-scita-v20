@@ -283,7 +283,7 @@
                </t>
             </t>
             <t t-else=''>
-               <t t-install="mass_mailing" string="Newsletter Snippet 1" t-thumbnail="/theme_scita/static/src/img/snippet_icon/Our-Newsletter.svg"/>
+               <t t-install="mass_mailing" group="scita_newsletter" string="Newsletter Snippet 1" t-thumbnail="/theme_scita/static/src/img/snippet_icon/Our-Newsletter.svg"/>
             </t>
             <t t-if="request.env['ir.module.module'].sudo().search([('name', '=', 'mass_mailing'),('state','=','installed')])">
                <t t-snippet="theme_scita.retail_sign_up_newsletter" string="Retail Newsletter" group="scita_newsletter">
@@ -291,7 +291,7 @@
                </t>
             </t>
             <t t-else=''>
-               <t t-install="mass_mailing" string="Newsletter Snippet 2" t-thumbnail="/theme_scita/static/src/img/snippet_icon/Our-Newsletter-1.svg"/>
+               <t t-install="mass_mailing" group="scita_newsletter" string="Newsletter Snippet 2" t-thumbnail="/theme_scita/static/src/img/snippet_icon/Our-Newsletter-1.svg"/>
             </t>
             <t t-if="request.env['ir.module.module'].sudo().search([('name', '=', 'mass_mailing'),('state','=','installed')])">
                <t t-snippet="theme_scita.newsletter_varient_5" string="Newsletter Variant 5" group="scita_newsletter">
@@ -299,7 +299,7 @@
                </t>
             </t>
             <t t-else=''>
-               <t t-install="mass_mailing" string="Newsletter Snippet 3" t-thumbnail="/theme_scita/static/src/img/snippet_icon/Our-Newsletter-2.svg"/>
+               <t t-install="mass_mailing" group="scita_newsletter" string="Newsletter Snippet 3" t-thumbnail="/theme_scita/static/src/img/snippet_icon/Our-Newsletter-2.svg"/>
             </t>
             
             <!-- Statistics Snippets -->

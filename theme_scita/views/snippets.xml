@@ -581,7 +581,7 @@
                     </t>
                     <t t-else="">
                         <div class="col-12">
-                            <div class="alert alert-info text-center">
+                            <div role="status" class="alert alert-info text-center">
                                 <p>No products configured. Please configure products in the snippet options.</p>
                             </div>
                         </div>
@@ -901,7 +901,7 @@
                     </t>
                     <t t-else="">
                         <div class="col-12">
-                            <div class="alert alert-info text-center">
+                            <div role="status" class="alert alert-info text-center">
                                 <p>No products configured. Please configure products in the snippet options.</p>
                             </div>
                         </div>
@@ -1037,7 +1037,7 @@
                                 <span class="icon-heart"/>
                             </a>
                         </t>
-                        <button class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id">
+                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id">
                             <span class="lni lni-cart-1"/>
                         </button>
                     </form>
@@ -1188,7 +1188,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1198,7 +1198,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1211,7 +1211,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1221,7 +1221,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1231,7 +1231,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_3_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_3_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1244,7 +1244,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1254,7 +1254,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1264,7 +1264,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_3_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_3_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1274,7 +1274,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_4_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_4_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1287,7 +1287,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1297,7 +1297,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1307,7 +1307,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_3_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_3_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1317,7 +1317,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_4_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_4_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
@@ -1327,7 +1327,7 @@
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection5-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
                                                  t-if="slider_details">
-                                                <t t-foreach="slider_details.collection_5_ids" t-as="product">
+                                                <t t-foreach="slider_details.collection_5_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
                                                 </t>
                                             </div>
