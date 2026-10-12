@@ -2466,8 +2466,23 @@ $(document).ready(function(){
                     'video_url': video_url,
                 }).then(function(data) {
                     if (data) {
+                        // the block keeps its height until the video knows its size (a video
+                        // without metadata is 150px high: the page under it moved up, then down)
+                        var targetEl = self.$target[0];
+                        targetEl.style.minHeight = targetEl.offsetHeight + 'px';
                         self.$target.empty().append(data);
                         self.$target.removeClass('o_hidden');
+                        var videoEl = targetEl.querySelector('video');
+                        var release = function () {
+                            targetEl.style.minHeight = '';
+                        };
+                        if (videoEl && videoEl.readyState < 1) {
+                            videoEl.addEventListener('loadedmetadata', release, { once: true });
+                            videoEl.addEventListener('error', release, { once: true });
+                            setTimeout(release, 10000);
+                        } else {
+                            release();
+                        }
                     }
                 });
             }

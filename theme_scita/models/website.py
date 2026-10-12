@@ -5,6 +5,7 @@ import re
 
 import werkzeug
 from lxml import etree
+from markupsafe import Markup
 from odoo import models, api, fields
 from odoo.fields import Domain
 from odoo.http import request
@@ -98,6 +99,10 @@ class WebsiteMenu(models.Model):
             self.is_service_menu = True
         else:
             self.is_service_menu = False
+
+
+# a block that is not one of Odoo's (s_...), or one of Scita's named like them
+_SCITA_BLOCK_RE = re.compile(r'data-snippet="(?!s_(?!theme_scita|appjetty))')
 
 
 class website(models.Model):
@@ -380,6 +385,9 @@ class website(models.Model):
         """
         try:
             self.ensure_one()
+            if main_object is not None and getattr(main_object, '_name', None) == 'product.template':
+                request._scita_lcp_href = False  # its main image is eager-loaded by ir_qweb.py
+                return False
             if main_object is None or 'arch' not in getattr(main_object, '_fields', {}):
                 return False
             arch = main_object.sudo().arch
@@ -417,6 +425,35 @@ class website(models.Model):
             return href
         except Exception:  # noqa: BLE001
             return False
+
+    def _scita_page_has_theme_blocks(self, main_object):
+        """A website page using Scita blocks: their styles (theme_scita.assets_snippet_product_css)
+        are then loaded render-blocking. Loaded after the first paint, as on other pages, the
+        blocks at the top of the page were laid out unstyled first, then moved (layout shift).
+        Odoo's own blocks are all named s_..."""
+        if not main_object or main_object._name != 'website.page':
+            return False
+        arch = main_object.sudo().view_id.arch_db or ''
+        return bool(_SCITA_BLOCK_RE.search(arch))
+
+    def _scita_product_snippet_rows_css(self):
+        """Rows of cards of each "Multi Product Snippet 1" configuration (2, 3 and 4 cards per
+        row), as CSS variables on the blocks using it: their placeholder reserves the height the
+        products will take (snippets.scss), the page then does not move when they load."""
+        self.ensure_one()
+        return Markup(self._scita_product_snippet_rows_css_cached(self.id))
+
+    @api.ormcache('website_id')
+    def _scita_product_snippet_rows_css_cached(self, website_id):
+        rules = []
+        configs = self.env['product.snippet.configuration'].sudo().with_context(
+            website_id=website_id).search([])
+        for config in configs:
+            count = len(config.collection_of_products.filtered('is_published')._scita_on_website())
+            if count:
+                rules.append('section[data-multi-cat-slider-type="%d"]{--sct-r2:%d;--sct-r3:%d;--sct-r4:%d}' % (
+                    config.id, -(-count // 2), -(-count // 3), -(-count // 4)))
+        return ''.join(rules)
 
     def _scita_google_font_css_hrefs(self):
         """Hrefs of the locally-hosted Google-font stylesheets, for preloading.

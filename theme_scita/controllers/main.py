@@ -853,14 +853,21 @@ class ScitaShop(WebsiteSale):
         # products per category, sub-categories included (as 'child_of'), in a few queries
         # instead of one search_count per category on every shop page
         category_counts = dict.fromkeys(Category.search(request.env.website.website_domain()).ids, 0)
-        for tmpl in request.env['product.template'].search([('public_categ_ids', '!=', False)]):
-            for cat_id in {
-                int(cat_id)
-                for categ in tmpl.public_categ_ids.sudo()
-                for cat_id in (categ.parent_path or '').split('/') if cat_id
-            }:
+        # one SQL aggregate (each product counted once per category it is in or under) instead of
+        # reading every product and its categories in Python on each shop page
+        template_ids = request.env['product.template'].search([('public_categ_ids', '!=', False)]).ids
+        if template_ids and category_counts:
+            request.env.cr.execute("""
+                SELECT ancestor::int, count(DISTINCT rel.product_template_id)
+                  FROM product_public_category_product_template_rel rel
+                  JOIN product_public_category categ ON categ.id = rel.product_public_category_id,
+                       unnest(string_to_array(rtrim(categ.parent_path, '/'), '/')) AS ancestor
+                 WHERE rel.product_template_id = ANY(%s)
+              GROUP BY ancestor
+            """, [template_ids])
+            for cat_id, count in request.env.cr.fetchall():
                 if cat_id in category_counts:
-                    category_counts[cat_id] += 1
+                    category_counts[cat_id] = count
         # Scita templates read attribute filters as [[attribute_id, value_id], ...]
         attrib_values = values.get('attrib_values') or {}
         scita_attrib_values = [
@@ -875,6 +882,8 @@ class ScitaShop(WebsiteSale):
             'scita_attrib_values': scita_attrib_values or False,
             'is_show_more_button': values.get('search_count', 0) > values.get('ppr', 4),
         })
+        # product images of the listing: half the screen wide on phones (ir_qweb.py)
+        request._scita_shop_grid = not request.env.website.is_view_active('website_sale.products_mobile_cols_single')  # False: 1 per row
         return res
 
         

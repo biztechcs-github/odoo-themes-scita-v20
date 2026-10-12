@@ -6,6 +6,10 @@
   font-style: normal;
   /* Icon font - see the note in fonts/line-icons.css for why this is block. */
   font-display: block !important;
+  /* Only its own glyphs (the older private-use icons). Odoo 20's odoo_ui_icons of the same
+     name draws its icons from letters: without the range every page downloaded this file first
+     for them, found nothing, then downloaded Odoo's. */
+  unicode-range: U+E800-E87C;
 }
 
 .o_theme_customize_color_theme {background:$primary !important;}
@@ -63,8 +67,12 @@ ul{
 a.dropdown-item {
 	white-space: nowrap !important;
 }
+// --sct-w: the image's own width, set when the page is rendered for theme images that have no
+// size in their markup (ir_qweb.py). With it the image takes its room before it has loaded (with
+// `width: auto` alone it had none, then pushed the content under it down); it is the width
+// `auto` gives once loaded, so nothing else changes. Rules of the blocks setting a width win.
 img {
-	width: auto;
+	width: var(--sct-w, auto);
 	max-width: 100%;
 	height: auto;
 }
@@ -1906,8 +1914,11 @@ body header .navbar-expand-lg .navbar-collapse {
 		}
 	}
 }
-.sct-cst-pro-page {
-	#oe_structure_website_sale_product_2 {
+// Odoo's "Drag blocks here to add them on all products" area below the description: hidden only
+// while empty outside the editor (no stray gap); hiding it always left nowhere to drop a block
+// below the description tabs, and blocks put there never showed
+.sct-cst-pro-page:not(.editor_enable) {
+	#oe_structure_website_sale_product_2:empty {
 		display: none;
 	}
 }
@@ -2888,4 +2899,24 @@ common search for categories and products (22/05/2025)
         object-fit: scale-down;
         padding: 5px;
     }
+}
+// Off the first screen: the footer (below the fold) and the closed mobile menu are not drawn
+// until needed. Laid out anyway, their icons made the browser download Odoo's two icon fonts
+// (~77KB) while the first screen was still loading.
+body:not(.editor_enable) #wrapwrap {
+	> footer {
+		content-visibility: auto;
+		contain-intrinsic-size: auto 900px;
+	}
+	.offcanvas:not(.show):not(.showing):not(.hiding) {
+		content-visibility: hidden;
+	}
+}
+
+// Scita's search icon image (header_option.xml, height="20") also replaces the icon of the
+// product page's mobile search button, where the global img rule (height: auto) showed it at
+// its natural 48px: keep it at the 20px it is drawn for
+.o_search_btn img[src*="sct_search_icon"] {
+	width: 20px;
+	height: 20px;
 }

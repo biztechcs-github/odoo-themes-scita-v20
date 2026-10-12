@@ -60,11 +60,22 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                         ev.preventDefault();
 
                         const form = wSaleUtils.getClosestProductForm(ev.currentTarget);
-                        const product_id = parseInt(form.querySelector("input[name=product_id]").value);
+                        let product_id = parseInt(form.querySelector("input[name=product_id]").value);
                         const quantityInput = form.querySelector("input[name=add_qty]");
                         const quantity = parseFloat(quantityInput?.value || 1);
 
                         try {
+                            // a combination of "create variants dynamically" attributes has no
+                            // variant until it is bought: create it, as Odoo's cart does
+                            if (!product_id) {
+                                product_id = await rpc("/sale/create_product_variant", {
+                                    product_template_id: parseInt(form.querySelector("input[name=product_template_id]").value),
+                                    product_template_attribute_value_ids: wSaleUtils.getSelectedAttributeValues(form),
+                                });
+                                if (!product_id) {
+                                    return;
+                                }
+                            }
                             // Step 1: Add or update cart line via custom controller
                             const response = await rpc("/custom/cart/add_or_update", {
                                 product_id: product_id,
@@ -213,10 +224,13 @@ odoo.define('theme_scita.quick_view', [], function (require) {
             const possible = combinationInfo.is_combination_possible !== false;
             $product.toggleClass('css_not_available', !possible);
             $product.find('#add_to_cart, .js_check_product').toggleClass('disabled', !possible);
-            if (!possible || !combinationInfo.product_id) {
+            if (!possible) {
                 return;
             }
-            $product.find('input[name="product_id"]').val(combinationInfo.product_id);
+            // product_id is false for a combination whose variant is not created yet
+            // ("create variants dynamically"): add to cart creates it. Keeping the previous
+            // variant's id here added that variant to the cart instead.
+            $product.find('input[name="product_id"]').val(combinationInfo.product_id || '');
             if (combinationInfo.display_name) {
                 $product.find('.product_detail_name').text(combinationInfo.display_name);
             }
@@ -226,9 +240,22 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                 );
             }
             const $scope = $product.closest('.modal').length ? $product.closest('.modal') : $product;
-            $scope.find('.product_detail_img').attr(
-                'src', `/web/image/product.product/${combinationInfo.product_id}/image_1920`
-            );
+            // as on the product page: Add to Cart, or Contact Us when this combination can't be
+            // sold (e.g. priced 0 with "Prevent sale of zero priced products")
+            const canBuy = !combinationInfo.prevent_sale && !combinationInfo.is_sold_out;
+            $scope.find('#add_to_cart_wrap, #add_to_cart_wrap .css_quantity')
+                .toggleClass('d-inline-flex', canBuy).toggleClass('d-none', !canBuy);
+            $scope.find('#contact_us_wrapper')
+                .toggleClass('d-flex', !!combinationInfo.prevent_sale)
+                .toggleClass('d-none', !combinationInfo.prevent_sale);
+            // the price block starts hidden when the variant shown first has no price (hide_price,
+            // e.g. priced 0 and not sold): show it again for a combination that has one
+            $scope.find('.product_price')
+                .toggleClass('d-inline-block', !combinationInfo.hide_price)
+                .toggleClass('d-none', !!combinationInfo.hide_price);
+            $scope.find('.product_detail_img').attr('src', combinationInfo.product_id
+                ? `/web/image/product.product/${combinationInfo.product_id}/image_1920`
+                : `/web/image/product.template/${templateId}/image_1920`);
         },
 
 

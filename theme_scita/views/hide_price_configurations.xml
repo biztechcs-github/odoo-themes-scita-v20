@@ -391,6 +391,7 @@
                 website and website.website_show_price 
                 and not deal_product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
+                and not combination_info.get('prevent_sale')
             </attribute>
         </xpath>
 
@@ -435,6 +436,7 @@
                 website and website.website_show_price 
                 and not product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
+                and not combination_info.get('prevent_sale')
             </attribute>
         </xpath>
 
@@ -479,6 +481,7 @@
                 website and website.website_show_price 
                 and not product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
+                and not combination_info.get('prevent_sale')
             </attribute>
         </xpath>
 

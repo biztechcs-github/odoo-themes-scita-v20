@@ -6025,3 +6025,9 @@ header #o_main_nav .menu_right ul li + li.o_no_autohide_item {
     //     }
     // }
 }
+
+// Pricelist dropdown (all Scita headers): the menu is as wide as its button (width: 100% above),
+// which cut longer names such as "Public Pricelist": at least as wide as its longest item
+header .o_pricelist_dropdown .dropdown-menu {
+    min-width: max-content;
+}

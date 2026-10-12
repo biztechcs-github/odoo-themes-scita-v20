@@ -151,7 +151,14 @@ publish unpublish product
     'currency': 'EUR',
     'installable': True,
     'assets': {
+        # Odoo's lazy JS (web.assets_frontend_lazy) starts loading once the first screen is drawn,
+        # not on window load (static/src/js/lazyloader_deferred.js)
+        'web.assets_frontend_minimal': [
+            ('replace', 'web/static/src/public/lazyloader.js', 'theme_scita/static/src/js/lazyloader_deferred.js'),
+        ],
         'web.assets_frontend': [
+            # in web.assets_frontend_minimal (above), loaded before this bundle
+            ('remove', 'theme_scita/static/src/js/lazyloader_deferred.js'),
             'theme_scita/static/src/css/owl.carousel.css',
             'theme_scita/static/src/fonts/line-icons.css',
             # Odoo 20 removed FontAwesome from the website: ship 4.7 (as Odoo 19 did) before the subset
@@ -197,6 +204,8 @@ publish unpublish product
             # only acts on #pg_carousel_category (the /snippet_studio playground)
             'theme_scita/static/src/js/pg_slider.js',
             'theme_scita/static/src/js/scita_fronted.js',
+            'theme_scita/static/src/js/countdown_dom.js',
+            'theme_scita/static/src/js/dynamic_block_empty.js',
             'theme_scita/static/src/js/timer_fronted.js',
             'theme_scita/static/src/js/new_scita_frontend.js',
             # Needed by product markup that arrives after page load through the
@@ -278,6 +287,21 @@ publish unpublish product
             'theme_scita/static/src/scss/mixins.scss',
             'theme_scita/static/src/scss/product_snippets.scss',
             'theme_scita/static/src/scss/content_snippets_deferred.scss',
+        ],
+        # Shop listing / product page styles. Asynchronous on most pages (their product cards
+        # arrive after load), but render-blocking under /shop, where they style what is on screen
+        # at first paint: applied late, the page title, grid and product page reflowed once it
+        # arrived (0.9+ layout shift on mobile Lighthouse). Split out of the bundle above and kept
+        # in the same <link> order (see theme_scita_async_snippet_css), so the cascade is unchanged.
+        'theme_scita.assets_shop_css': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            'theme_scita/static/src/scss/variable.scss',
+            'theme_scita/static/src/scss/mixins.scss',
             # 127 KiB raw, the single largest theme file. Everything it styles
             # is a product card / shop listing, which is below the fold on
             # every layout this theme ships (the hero is what's above it), and
@@ -290,6 +314,17 @@ publish unpublish product
             'theme_scita/static/src/scss/product_style.scss',
             # product page CTA row layout; must come after product_style.scss
             'theme_scita/static/src/scss/product_cta_layout.scss',
+        ],
+        # rest of the asynchronous styles, after the shop ones as before the split
+        'theme_scita.assets_snippet_extra_css': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            'theme_scita/static/src/scss/variable.scss',
+            'theme_scita/static/src/scss/mixins.scss',
             'theme_scita/static/src/scss/megamenu_style.scss',
             'theme_scita/static/src/scss/footer/footer_styles.scss',
             # 605 Lineicons glyphs shipped, ~7 actually used anywhere in this
@@ -332,6 +367,8 @@ publish unpublish product
           'theme_scita/static/src/xml/products_design_panel_scita.xml',
           # Odoo 20 saves image width/height attributes as inline px styles: restore them
           'theme_scita/static/src/js/img_size_attrs_plugin.js',
+          # never save the live site's loading / empty markers of dynamic blocks
+          'theme_scita/static/src/js/dynamic_block_save_plugin.js',
           # Scita block styles in the "Insert a block" previews
           'theme_scita/static/src/js/snippet_preview_css_plugin.js',
           'theme_scita/static/src/xml/scita_header_option.xml',

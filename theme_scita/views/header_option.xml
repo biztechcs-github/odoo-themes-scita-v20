@@ -79,7 +79,7 @@
         <xpath expr="//t[@t-call='website.placeholder_header_language_selector']" position="before">
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-            <t t-call="website_sale.pricelist_selector" _div_classes.f="dropdown me-3 mb-3" navClass.f="l">
+            <t t-call="website_sale.pricelist_selector" _div_classes.f="o_pricelist_dropdown dropdown me-3 mb-3" navClass.f="l">
             </t>
 
             <!-- Mobile header content -->
@@ -104,7 +104,7 @@
                         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                         <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                         <t t-out='sct_price_list'/>
-                        <t t-call="website_sale.pricelist_selector" t-if="_sct_price_list" _div_classes.f="dropdown me-3 d-lg-inline mb-3">
+                        <t t-call="website_sale.pricelist_selector" t-if="_sct_price_list" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
                         </t>
                         <t t-call="website.placeholder_header_language_selector" t-if="_sct_lang_list" _btn_class.f="btn-outline-secondary d-flex align-items-center w-100 px-2" _txt_class.f="me-auto small" _flag_class.f="me-2" _div_classes.f="dropup mb-3" _dropdown_menu_class.f="w-100">
                         </t>
@@ -316,7 +316,7 @@
                                     <li>
                                         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                                         <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-                                        <t t-call="website_sale.pricelist_selector" navClass.f="l" _div_classes.f="dropdown me-3 d-lg-inline mb-3">
+                                        <t t-call="website_sale.pricelist_selector" navClass.f="l" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
                                         </t>
                                     </li>
                                     <t t-call="website.placeholder_header_language_selector" _btn_class.f="btn-outline-secondary d-flex align-items-center w-100 px-2" _txt_class.f="me-auto small" _flag_class.f="me-2" _div_classes.f="dropup mb-3" _dropdown_menu_class.f="w-100">
@@ -450,7 +450,7 @@
                                     <li>
                                         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                                         <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-                                        <t t-call="website_sale.pricelist_selector" navClass.f="l" _div_classes.f="dropdown me-3 d-lg-inline mb-3">
+                                        <t t-call="website_sale.pricelist_selector" navClass.f="l" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
                                         </t>
                                     </li>
                                     <t t-call="website.placeholder_header_language_selector" _btn_class.f="btn-outline-secondary d-flex align-items-center w-100 px-2" _txt_class.f="me-auto small" _flag_class.f="me-2" _div_classes.f="dropup mb-3" _dropdown_menu_class.f="w-100">
@@ -549,7 +549,7 @@
                             </t>
                             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                                 <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-                                <t t-call="website_sale.pricelist_selector" _div_classes.f="dropdown me-3">
+                                <t t-call="website_sale.pricelist_selector" _div_classes.f="o_pricelist_dropdown dropdown me-3">
                                 </t>
                         </ul>
                         <ul class="list-inline d-flex justify-content-end align-items-center sct-cart-list">

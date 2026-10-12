@@ -390,7 +390,7 @@
 	}
 	.add_cart_div {
 		position: relative;
-		.cart_view_sct_btn{
+		:is(.cart_view_sct_btn, .sct-contact-us-btn){
 			background-color: #F0F0F0;
 			border-radius: 40px;
 			position: relative;
@@ -628,7 +628,7 @@
 									}
 								}
 								.add_cart_div{
-									.cart_view_sct_btn{
+									:is(.cart_view_sct_btn, .sct-contact-us-btn){
 										background-color: transparent;
 										border-color: $secondary;
 									}
@@ -904,7 +904,7 @@
 								}
 							}
 							.add_cart_div{
-								.cart_view_sct_btn{
+								:is(.cart_view_sct_btn, .sct-contact-us-btn){
 									background-color: $light-color;
 									border-color: $secondary;
 								}
@@ -3247,7 +3247,7 @@
 								.add_cart_div {
 									margin-top: auto;
 									position: relative;
-									.cart_view_sct_btn {
+									:is(.cart_view_sct_btn, .sct-contact-us-btn) {
 										background-color: #F0F0F0;
 										border-radius: 40px;
 										position: relative;

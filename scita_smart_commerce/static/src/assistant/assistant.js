@@ -139,7 +139,7 @@ export class ScitaAssistant extends Interaction {
                 frame = requestAnimationFrame(update);
             }
         };
-        update();
+        schedule(); // next frame: measuring now, while the page starts, forced a restyle
         const scrollingEl = document.querySelector("#wrapwrap");
         this.addListener(window, "resize", schedule, { passive: true });
         this.addListener(window, "scroll", schedule, { passive: true });
@@ -222,6 +222,9 @@ export class ScitaAssistant extends Interaction {
     }
 
     scrollToBottom() {
+        if (this.panel.classList.contains("d-none")) {
+            return; // closed: nothing to scroll (open() scrolls), and reading the height forces a layout
+        }
         this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
     }
 

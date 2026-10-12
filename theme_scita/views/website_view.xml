@@ -124,35 +124,19 @@
              adding a second one. -->
         <!-- theme_scita_fonts_preconnect: dropped in 20, core website.font_links only preconnects when Google fonts are used -->
 
-        <!-- Keep this preload. It is tempting to drop it: a preload is fetched at
-             High priority, so Lineicons (67 KB) and Odoo's fontawesome (78 KB)
-             do compete with the 18.8 KB LCP image on a throttled connection.
-             Measured on 3007scita, dropping both made things worse, not better -
-             FCP went 2.76s -> 3.60s across three runs - because the icon fonts
-             use font-display: block, so first paint waits for them either way.
-             Preloading is what stops that wait being long. If the preloads are
-             ever removed, font-display must go back to swap in the same change. -->
-        <!-- Odoo preloads the full 77KB fontawesome-webfont.woff2 in
-             web.frontend_layout. That is High-priority bandwidth taken from
-             the 14KB LCP hero image, and static/src/css/fontawesome-subset.css
-             now serves the glyphs this theme uses from a 4.6KB file instead,
-             so preload that rather than the original. The full file is still
-             reachable through core's own un-ranged @font-face if a page uses a
-             glyph outside the subset - see that CSS file for the mechanism. -->
-        <template id="theme_scita_preload_fontawesome_subset" inherit_id="web.frontend_layout" name="Preload FontAwesome Subset">
-            <xpath expr="//head" position="inside">
-                <link rel="preload" href="/theme_scita/static/src/fonts/fontawesome-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+        <!-- No font preloads (Odoo's two icon fonts and Scita's FontAwesome / Lineicons subsets).
+             Odoo 19 measurements kept them (first paint waited for the icon fonts either way), but
+             under Odoo 20 / Lighthouse 13 the four preloads held the page's first paint back about
+             one more second on mobile, for every page that is not tiny (shop listing, categories,
+             home; 2026-10-08, medians of 3: category 60 -> 71, shop 51 -> 58, home 57 -> 60). The
+             fonts are small subsets requested as soon as the CSS is parsed, and still load (all 200). -->
+        <template id="theme_scita_no_font_preloads" inherit_id="web.frontend_layout" name="Scita: no font preloads" priority="99">
+            <!-- websites using another theme keep Odoo's preloads -->
+            <xpath expr="//t[@t-call-assets='web.material_symbols_outlined']" position="attributes">
+                <attribute name="t-if">not (request and request.env.website and request.env.website._scita_theme_active())</attribute>
             </xpath>
-        </template>
-
-        <template id="theme_scita_preload_icon_font" inherit_id="website.layout" name="Preload Icon Font">
-            <xpath expr="//head" position="inside">
-                <!-- The 1.2KB subset, not the 66KB full file: a preload is
-                     High priority, so what is preloaded here is taken out of
-                     the same budget the LCP hero image needs. Every other
-                     Lineicon still resolves through the complementary
-                     unicode-range in line-icons-deferred.css. -->
-                <link rel="preload" href="/theme_scita/static/src/fonts/Lineicons-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+            <xpath expr="//t[@t-call-assets='web.odoo_ui_icons']" position="attributes">
+                <attribute name="t-if">not (request and request.env.website and request.env.website._scita_theme_active())</attribute>
             </xpath>
         </template>
 
@@ -187,12 +171,37 @@
             </xpath>
         </template>
 
+        <!-- Rows of products of each "Multi Product Snippet 1" configuration, for the height its
+             placeholder reserves until the products are loaded (snippets.scss) -->
+        <template id="theme_scita_product_snippet_rows" inherit_id="website.layout" name="Scita Product Snippet Rows">
+            <xpath expr="//head" position="inside">
+                <t t-set="scita_snippet_rows_css" t-value="website._scita_product_snippet_rows_css() if website else ''"/>
+                <style t-if="scita_snippet_rows_css" t-out="scita_snippet_rows_css"/>
+            </xpath>
+        </template>
+
+        <!-- Product page body class, server-side: product_details.js added it after load, and the
+             product page rules keyed on it (e.g. its top margin) then moved the page down. -->
+        <template id="theme_scita_product_page_body_class" inherit_id="website.layout" name="Scita Product Page Body Class">
+            <xpath expr="//t[@t-set='body_classname']" position="after">
+                <t t-if="main_object and main_object._name == 'product.template'" t-set="body_classname" t-valuef="{{body_classname}} sct-cst-pro-page"/>
+            </xpath>
+        </template>
+
         <template id="theme_scita_async_snippet_css" inherit_id="website.layout" name="Async Snippet Product CSS">
             <xpath expr="//head" position="inside">
-                <t t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true" media="print"/>
+                <!-- block styles: render-blocking on website pages made with Scita blocks (blocks at
+                     the top of such a page reflowed when they arrived), asynchronous elsewhere -->
+                <t t-if="website and website._scita_page_has_theme_blocks(main_object)" t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true"/>
+                <t t-else="" t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true" media="print"/>
+                <!-- shop / product styles: render-blocking under /shop (on screen at first paint there,
+                     a late apply reflowed the page), asynchronous elsewhere. Same link order either way. -->
+                <t t-if="request and request.httprequest.path.startswith('/shop')" t-call-assets="theme_scita.assets_shop_css" t-js="false" t-css="true"/>
+                <t t-else="" t-call-assets="theme_scita.assets_shop_css" t-js="false" t-css="true" media="print"/>
+                <t t-call-assets="theme_scita.assets_snippet_extra_css" t-js="false" t-css="true" media="print"/>
                 <script type="text/javascript">
                     (function () {
-                        var sel = 'link[rel="stylesheet"][media="print"][href*="assets_snippet_product_css"]';
+                        var sel = 'link[rel="stylesheet"][media="print"][href*="theme_scita.assets_"]';
                         Array.prototype.forEach.call(document.querySelectorAll(sel), function (link) {
                             if (link.sheet) {
                                 link.media = 'all';

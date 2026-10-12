@@ -548,6 +548,14 @@
 		.o_wsale_products_grid_table_wrapper {
 			margin: 0 -7.5px;
 		}
+		// Odoo's "Grid" design takes the padding off #products_grid below 992px (its cells reach
+		// the screen edges): the negative margin above then put the grid 7.5px past both edges
+		// and the page scrolled sideways
+		@media (max-width: 991.98px) {
+			.o_wsale_products_grid_table_wrapper:has(> .o_wsale_products_opt_design_grid) {
+				margin: 0;
+			}
+		}
 		&.list-view-box {
 			.sct_list_box{
 				margin-left: 0;
@@ -1849,7 +1857,7 @@
 
 .product_price{
 	.ajax_cart_template {
-		.cart_view_sct_btn{
+		:is(.cart_view_sct_btn, .sct-contact-us-btn){
 			margin: 0;
 		}
 	}
@@ -2341,6 +2349,9 @@
 					
 					.oe_product_cart{
 						background-color: $light-color;
+						// the text colour of Odoo's card colour option (Products Design > Colors, e.g.
+						// white for a dark preset) made the price white on this white card
+						--o-wsale-card-color: #{$body-color};
 						border: 0;
 						height: 100%;
 

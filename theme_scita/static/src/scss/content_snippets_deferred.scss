@@ -292,21 +292,22 @@
 	}
 }
 
+// transform instead of top/bottom: no restyle and layout of the page on every frame
 @keyframes adv_animation {
 	0%{
-		top: 0;
+		transform: translateY(0);
 	}
 	100%{
-		top: 15px;
+		transform: translateY(15px);
 	}
 }
 
 @keyframes adv_animation_odd {
 	0%{
-		bottom: 0;
+		transform: translateY(0);
 	}
 	100%{
-		bottom: 15px;
+		transform: translateY(-15px);
 	}
 }
 
@@ -7015,12 +7016,14 @@
 		@media (max-width: 767px){
 			margin:10px 0;
 		}
+		// moved with transform, not `bottom`: animating `bottom` restyled and laid out the page
+		// on every frame (~60 times a second) on phones
 		@keyframes MoveUpDown1 {
           0%, 100% {
-            bottom: 0;
+            transform: translateY(0);
           }
           50% {
-            bottom: 20px;
+            transform: translateY(-20px);
           }
         }
 	}

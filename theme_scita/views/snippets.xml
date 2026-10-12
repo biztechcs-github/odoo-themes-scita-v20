@@ -274,10 +274,13 @@
                         <div class='cart_wrapper add_cart_div ajax_cart_template'>
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden"/>
-                                <button class="button btn btn-cart js_add_cart a-submit cart_view_sct_btn" t-att-data-id="product.id"  t-att-data-template-id="product.id">
+                                <button t-if="not combination_info.get('prevent_sale')" class="button btn btn-cart js_add_cart a-submit cart_view_sct_btn" t-att-data-id="product.id"  t-att-data-template-id="product.id">
                                     ADD
                                 </button>
-                                <div class="dropdown-plus">
+                                <!-- can't be sold online (e.g. priced 0 with "Prevent sale of zero priced products"): Contact Us, as on the shop page -->
+                                <a t-if="combination_info.get('prevent_sale') and not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))" t-att-href="website._get_contact_us_url(product.display_name)"
+                                   class="button btn btn-cart sct-contact-us-btn" title="Contact Us"><span class="add_to_cart_text">Contact Us</span></a>
+                                <div class="dropdown-plus" t-if="not combination_info.get('prevent_sale')">
                                     <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                         <i class="fa fa-plus"/>
                                     </span>
@@ -541,12 +544,15 @@
                                                 <input name="product_id"
                                                     t-att-value="product.product_variant_id.id"
                                                     type="hidden"/>
-                                                <button class="button btn btn-cart js_add_cart cart_view_sct_btn"
+                                                <button t-if="not combination_info.get('prevent_sale')" class="button btn btn-cart js_add_cart cart_view_sct_btn"
                                                         t-att-data-id="product.id"
                                                         t-att-data-template-id="product.id">
                                                     <span class="lni lni-cart-1 cart_icon"/>
                                                     <span class="add_to_cart_text">Add to cart</span>
                                                 </button>
+                                                <!-- can't be sold online (e.g. priced 0 with "Prevent sale of zero priced products"): Contact Us, as on the shop page -->
+                                                <a t-if="combination_info.get('prevent_sale') and not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))" t-att-href="website._get_contact_us_url(product.display_name)"
+                                                   class="button btn btn-cart sct-contact-us-btn" title="Contact Us"><span class="lni lni-envelope-1 cart_icon"/><span class="add_to_cart_text">Contact Us</span></a>
                                                 <div class='sct-feature-wrap'>
                                                     <button type="button" role="button" class="btn scita_cstm_btn quick_view_sct_btn qbtn"
                                                             title="Quick View" t-att-data-id="product.id">
@@ -869,10 +875,13 @@
                         <div class='cart_wrapper add_cart_div ajax_cart_template'>
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden"/>
-                                <button class="button btn btn-cart js_add_cart a-submit cart_view_sct_btn" t-att-data-id="product.id"  t-att-data-template-id="product.id">
+                                <button t-if="not combination_info.get('prevent_sale')" class="button btn btn-cart js_add_cart a-submit cart_view_sct_btn" t-att-data-id="product.id"  t-att-data-template-id="product.id">
                                     ADD
                                 </button>
-                                <div class="dropdown-plus">
+                                <!-- can't be sold online (e.g. priced 0 with "Prevent sale of zero priced products"): Contact Us, as on the shop page -->
+                                <a t-if="combination_info.get('prevent_sale') and not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))" t-att-href="website._get_contact_us_url(product.display_name)"
+                                   class="button btn btn-cart sct-contact-us-btn" title="Contact Us"><span class="add_to_cart_text">Contact Us</span></a>
+                                <div class="dropdown-plus" t-if="not combination_info.get('prevent_sale')">
                                     <span class="btn btn-link float_left js_add_cart_json" title="Add">
                                         <i class="fa fa-plus"/>
                                     </span>
@@ -1037,9 +1046,12 @@
                                 <span class="icon-heart"/>
                             </a>
                         </t>
-                        <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id">
+                        <button t-if="not combination_info.get('prevent_sale')" type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id">
                             <span class="lni lni-cart-1"/>
                         </button>
+                        <!-- can't be sold online (e.g. priced 0 with "Prevent sale of zero priced products"): Contact Us, as on the shop page -->
+                        <a t-if="combination_info.get('prevent_sale') and not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))" t-att-href="website._get_contact_us_url(product.display_name)"
+                           class="button btn btn-cart sct-contact-us-btn" title="Contact Us"><span class="lni lni-envelope-1 cart_icon"/><span class="add_to_cart_text">Contact Us</span></a>
                     </form>
                 </div>
             </div>

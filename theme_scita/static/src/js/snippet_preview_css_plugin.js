@@ -12,7 +12,11 @@ class ScitaSnippetPreviewCssPlugin extends Plugin {
     static id = "scitaSnippetPreviewCss";
 
     resources = {
-        snippet_preview_dialog_bundles: ["theme_scita.assets_snippet_product_css"],
+        snippet_preview_dialog_bundles: [
+            "theme_scita.assets_snippet_product_css",
+            "theme_scita.assets_shop_css",
+            "theme_scita.assets_snippet_extra_css",
+        ],
     };
 }
 

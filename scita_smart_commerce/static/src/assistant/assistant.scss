@@ -340,3 +340,18 @@
 body.editor_enable .o_scita_assistant {
     display: none !important;
 }
+
+// Theme Scita's mobile bottom navigation (below 768px): room for it from the first paint, the JS
+// then measures the exact height (58-61px). On phones that JS loads at the first interaction.
+@media (max-width: 767.98px) {
+    #wrapwrap > .ab-mob-view ~ .o_scita_assistant {
+        --scita-assistant-lift: 60px;
+    }
+}
+
+// An off-canvas panel is open (mobile menu, shop filters): the closed assistant button was drawn
+// over it (same z-index, later in the page) and covered its items. It steps aside, as Scita's
+// mobile bottom navigation does.
+body:has(.offcanvas.show, .offcanvas.showing) .o_scita_assistant:not(.o_scita_assistant_is_open) {
+    display: none;
+}

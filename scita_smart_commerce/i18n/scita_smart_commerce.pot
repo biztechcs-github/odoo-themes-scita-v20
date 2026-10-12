@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 20.0\n"
+"Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 13:27+0000\n"
-"PO-Revision-Date: 2026-10-05 13:27+0000\n"
+"POT-Creation-Date: 2026-10-08 13:35+0000\n"
+"PO-Revision-Date: 2026-10-08 13:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -112,6 +112,12 @@ msgid "%s similar products"
 msgstr ""
 
 #. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid "(Only staff see this: %s)"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
 msgid "(change)"
 msgstr ""
@@ -119,6 +125,12 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model:ir.model.fields,help:scita_smart_commerce.field_scita_ar_photo_wizard__width_cm
 msgid "0: worked out from the photo's proportions."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "1 similar product"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -172,7 +184,7 @@ msgid ""
 "    <p>Hello,</p>\n"
 "    <p>\n"
 "        Someone (hopefully you) asked us to email this address when the price of\n"
-"        <strong t-out=\"object.product_id.display_name or ''\">Product</strong>\n"
+"        <strong t-out=\"object._scita_product_name()\">Product</strong>\n"
 "        <t t-out=\"object._scita_condition_text() or ''\">reaches $ 90.00 or less</t>.\n"
 "    </p>\n"
 "    <p style=\"margin: 24px 0;\">\n"
@@ -204,7 +216,7 @@ msgid ""
 "                <img t-attf-src=\"{{ object.website_id.get_base_url() }}/web/image/product.product/{{ object.product_id.id }}/image_256\" alt=\"\" style=\"width: 120px; height: 120px; object-fit: contain; border-radius: 8px;\"/>\n"
 "            </td>\n"
 "            <td t-attf-style=\"padding: {{ '16px 16px 16px 0' if object.product_id.image_128 else '16px' }}; vertical-align: top;\">\n"
-"                <div style=\"font-size: 16px; font-weight: bold; margin-bottom: 8px;\" t-out=\"object.product_id.display_name or ''\">Product</div>\n"
+"                <div style=\"font-size: 16px; font-weight: bold; margin-bottom: 8px;\" t-out=\"object._scita_product_name()\">Product</div>\n"
 "                <div>\n"
 "                    <span t-if=\"saving[0]\" style=\"text-decoration: line-through; color: #6c757d; margin-right: 8px;\" t-out=\"object._scita_format(object.price_at_creation) or ''\">$ 100.00</span>\n"
 "                    <span style=\"font-size: 22px; font-weight: bold; color: #198754;\" t-out=\"object._scita_format(object.last_price) or ''\">$ 90.00</span>\n"
@@ -476,6 +488,11 @@ msgid "Any shape (carved from the outlines)"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_visual_search_scope__similar
+msgid "Anything similar"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
 msgid "Ask about our products..."
 msgstr ""
@@ -694,6 +711,16 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
 msgid "Confirm by email"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+msgid "Confirm the alert"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
+msgid "Confirm your price alert"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1205,6 +1232,17 @@ msgid "Last price"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_visual_search_exclude_services
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_visual_search_exclude_services
+msgid "Leave Out Services"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Leave out services"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_left
 msgid "Left side"
 msgstr ""
@@ -1231,6 +1269,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
 msgid "Looking for similar products…"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_visual_search_match
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_visual_search_match
+msgid "Match Photos On"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Match photos on"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1266,8 +1315,24 @@ msgid "My price alerts"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_visual_search_match__name_description
+msgid "Name and sales description"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_visual_search_match__all
+msgid "Name, description, tags and attributes"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
 msgid "New conversation"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+msgid "Next products"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1291,6 +1356,7 @@ msgid "No, keep it"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_confirmed
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_rearm
 msgid "No, thanks"
 msgstr ""
@@ -1340,6 +1406,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/hotspots/builder/hotspots_option.xml:0
 msgid "Number"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_visual_search_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_visual_search_limit
+msgid "Number of Results"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Number of results"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1572,6 +1649,12 @@ msgid "Preview Info"
 msgstr ""
 
 #. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+msgid "Previous products"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_price_alert_view_form
 msgid "Price Alert"
 msgstr ""
@@ -1650,7 +1733,7 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model:mail.template,subject:scita_smart_commerce.mail_template_price_alert
 msgid ""
-"Price drop: {{ object.product_id.display_name }} is now {{ "
+"Price drop: {{ object._scita_product_name() }} is now {{ "
 "object._scita_format(object.last_price) }}"
 msgstr ""
 
@@ -1718,6 +1801,11 @@ msgstr ""
 msgid ""
 "Product dots on this image: click Add hotspot, then click where the product "
 "is"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_visual_search_match__name
+msgid "Product name"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1818,6 +1906,13 @@ msgid "Result"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_visual_search_scope
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_visual_search_scope
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Results"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo_right
 msgid "Right side"
 msgstr ""
@@ -1826,6 +1921,26 @@ msgstr ""
 #. odoo-python
 #: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
 msgid "Right side photo"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_visual_search_scope__category
+msgid "Same category only"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_visual_search_scope
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_visual_search_scope
+msgid ""
+"Same category only: a chair photo shows chairs and nothing else. Same kind "
+"first: products of the photo's kind; other similar products only when there "
+"are none. Anything similar: every product sharing a colour, material or "
+"style, best matches first."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_visual_search_scope__kind
+msgid "Same kind first"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1853,6 +1968,11 @@ msgid "Scita AI Usage"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_missing_package
+msgid "Scita Ai Missing Package"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_size_warning
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_size_warning
 msgid "Scita Ar Size Warning"
@@ -1871,6 +1991,8 @@ msgid "Scita Smart Commerce"
 msgstr ""
 
 #. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/search_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_button
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
 msgid "Search by photo"
@@ -1890,6 +2012,14 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
 msgid "Send"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_visual_search_exclude_services
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_visual_search_exclude_services
+msgid ""
+"Services (assembly, delivery, warranty...) never look like a photo: do not "
+"list them."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2059,6 +2189,13 @@ msgid "The 3D viewer could not be loaded. Please try again later."
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"The Python package for this provider is not installed on the server, so AI features will not work.\n"
+"                                Install it with"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
 msgid "The alert stays on for"
 msgstr ""
@@ -2192,6 +2329,12 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_search
 msgid "This Month"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid "This feature is not available right now."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2367,6 +2510,12 @@ msgid "Visual search is not available."
 msgstr ""
 
 #. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/website.py:0
+msgid "Visual search shows between 1 and 48 results."
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_price_alert_skip_sold_out
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_price_alert_skip_sold_out
 msgid "Wait While Sold Out"
@@ -2425,6 +2574,18 @@ msgstr ""
 #: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
 msgid ""
 "We couldn't find similar products. Try another photo or browse the shop."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "We don't have this product. %s related products:"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
+msgid "We don't have this product. 1 related product:"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2495,6 +2656,14 @@ msgstr ""
 msgid ""
 "Where AR puts the model in the shopper's room: wall art, mirrors and TVs go "
 "on a wall, the rest stands on the floor."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_visual_search_match
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_visual_search_match
+msgid ""
+"Which product information the words found in the photo (type, colour, "
+"material, style) are compared with. Categories are always used."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2577,6 +2746,11 @@ msgstr ""
 msgid ""
 "again from today's price\n"
 "                            and email you when it gets cheaper."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "and restart Odoo."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2663,6 +2837,11 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
 msgid "more for <strong>free delivery</strong>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "pip install"
 msgstr ""
 
 #. module: scita_smart_commerce

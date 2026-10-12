@@ -221,11 +221,15 @@ span[name="hidden_ptavs_count"] {
                                     box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
                                     padding: 7px;
                                     aspect-ratio: inherit;
-                                    transform: translateX(-50%);
+                                    // centred with `translate`, not `transform`: Odoo's hover rules
+                                    // set transform (Bento: scale(1)) and dropped the centring, the
+                                    // button then stuck out of the card on the right
+                                    translate: -50% 0;
                                     left: 50%;
 
                                     @media (max-width: 991px) {
                                         transform: none;
+                                        translate: none;
                                     }
 
                                     @media (min-width: 768px) {
@@ -460,7 +464,7 @@ span[name="hidden_ptavs_count"] {
                         @media (min-width: 992px) {
                             .o_wsale_product_sub{
                                 .o_wsale_product_btn{
-                                    .o_add_wishlist, .quick_view_sct_btn, .o_add_compare{
+                                    :is(.o_add_wishlist, .quick_view_sct_btn, .o_add_compare) {
                                         transform: translateX(0);
                                     }
                                 }
@@ -630,11 +634,11 @@ span[name="hidden_ptavs_count"] {
     }
 
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
-            .cst_btm_row, .lns-inner{
-                .cst_sct_right_side, .psb-inner{
-                    .cst_category-slider-section, .tab-content{
-                        .cat_list, .owl-item{
+        :is(.product_category_scita, .fashion_featured_product_1) {
+            :is(.cst_btm_row, .lns-inner) {
+                :is(.cst_sct_right_side, .psb-inner) {
+                    :is(.cst_category-slider-section, .tab-content) {
+                        :is(.cat_list, .owl-item) {
                             .cs-product{
                                 overflow: hidden;
                                 .pwd-desc{
@@ -870,8 +874,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product{
                     position: relative;
                     overflow: hidden;
@@ -987,7 +991,7 @@ span[name="hidden_ptavs_count"] {
                                     color: $light-color;
                                 }
 
-                                &.cart_view_sct_btn, &.login-price-btn{
+                                &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     @include min992{
                                         margin: 0 auto;
                                         box-shadow: none;
@@ -1068,7 +1072,7 @@ span[name="hidden_ptavs_count"] {
                                     @include min992{
                                         transform: translate(0px, 0px);
                                         
-                                        &.cart_view_sct_btn, &.login-price-btn{
+                                        &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                             transform: translate(50%, 0px);
                                         }
                                     }
@@ -1415,11 +1419,15 @@ span[name="hidden_ptavs_count"] {
                                     box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
                                     padding: 7px;
                                     aspect-ratio: inherit;
-                                    transform: translateX(-50%);
+                                    // centred with `translate`, not `transform`: Odoo's hover rules
+                                    // set transform (Bento: scale(1)) and dropped the centring, the
+                                    // button then stuck out of the card on the right
+                                    translate: -50% 0;
                                     left: 50%;
 
                                     @media (max-width: 991px) {
                                         transform: none;
+                                        translate: none;
                                     }
 
                                     @media (min-width: 768px) {
@@ -1657,7 +1665,7 @@ span[name="hidden_ptavs_count"] {
                         @media (min-width: 992px) {
                             .o_wsale_product_sub{
                                 .o_wsale_product_btn{
-                                    .o_add_wishlist, .quick_view_sct_btn, .o_add_compare{
+                                    :is(.o_add_wishlist, .quick_view_sct_btn, .o_add_compare) {
                                         transform: translateX(0);
                                     }
                                 }
@@ -1833,11 +1841,11 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
-            .cst_btm_row, .lns-inner{
-                .cst_sct_right_side, .psb-inner{
-                    .cst_category-slider-section, .tab-content{
-                        .cat_list, .owl-item{
+        :is(.product_category_scita, .fashion_featured_product_1) {
+            :is(.cst_btm_row, .lns-inner) {
+                :is(.cst_sct_right_side, .psb-inner) {
+                    :is(.cst_category-slider-section, .tab-content) {
+                        :is(.cat_list, .owl-item) {
                             .cs-product{
                                 .pwd-desc{
                                     .pwp-info{
@@ -2076,8 +2084,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product{
                     position: relative;
 
@@ -2174,7 +2182,7 @@ span[name="hidden_ptavs_count"] {
                                     color: $light-color;
                                 }
 
-                                &.cart_view_sct_btn, &.login-price-btn{
+                                &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     @include min992{
                                         margin: 0 auto;
                                         box-shadow: none;
@@ -2259,7 +2267,7 @@ span[name="hidden_ptavs_count"] {
                                     @include min992{
                                         transform: translate(0px, 0px);
                                         
-                                        &.cart_view_sct_btn, &.login-price-btn{
+                                        &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                             transform: translate(-50%, 0px);
                                         }
                                     }
@@ -2855,7 +2863,7 @@ span[name="hidden_ptavs_count"] {
                             opacity: 1;
                             transition: all 0.5s ease;
                         }   
-                        .product_price, .o_wsale_product_information_text, .out_of_stock_message_23{
+                        :is(.product_price, .o_wsale_product_information_text, .out_of_stock_message_23) {
                             -webkit-filter: blur(2px);
                             filter: blur(2px);
                             @media (max-width: 1199px){
@@ -2894,7 +2902,7 @@ span[name="hidden_ptavs_count"] {
                         .o_wsale_product_information {
                             text-align: left;
 
-                            .product_price, .o_wsale_product_information_text, .out_of_stock_message_23{
+                            :is(.product_price, .o_wsale_product_information_text, .out_of_stock_message_23) {
                                 filter: blur(0);
                             }
             
@@ -2990,7 +2998,7 @@ span[name="hidden_ptavs_count"] {
     }
     
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
+        :is(.product_category_scita, .fashion_featured_product_1) {
             .cs-product{
                 overflow: hidden;
                 .pwd-desc {
@@ -3119,18 +3127,18 @@ span[name="hidden_ptavs_count"] {
                                     font-size: 16px;
                                 }
                             }
-                            &.cart_view_sct_btn{
+                            &:is(.cart_view_sct_btn, .sct-contact-us-btn){
                                 .add_to_cart_text{
                                     display: none;
                                 }
                             }
 
-                            .lni, .fa{
+                            :is(.lni, .fa) {
                                 @include transition(all, 0.3s, ease-in);
                             }
 
                             &:hover{
-                                .lni, .fa{
+                                :is(.lni, .fa) {
                                     transform: scale(1.1);
                                 }
                             }
@@ -3144,7 +3152,7 @@ span[name="hidden_ptavs_count"] {
                                         transition: all 0.3s ease-in;
                                     }
                         .pwp-info{
-                            .sct_cat_content, .pink-box, .price, .pwpi-title{
+                            :is(.sct_cat_content, .pink-box, .price, .pwpi-title) {
                                 filter: blur(2px);
                             }
                             .sct-hover-info{
@@ -3164,11 +3172,11 @@ span[name="hidden_ptavs_count"] {
         position: relative !important;
     }
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
-            .cst_btm_row, .lns-inner{
-                .cst_sct_right_side, .psb-inner{
-                    .cst_category-slider-section, .tab-content{
-                        .cat_list, .owl-item{
+        :is(.product_category_scita, .fashion_featured_product_1) {
+            :is(.cst_btm_row, .lns-inner) {
+                :is(.cst_sct_right_side, .psb-inner) {
+                    :is(.cst_category-slider-section, .tab-content) {
+                        :is(.cat_list, .owl-item) {
                             .cs-product{
                                 .pwp-info{
                                     .sct-hover-info{
@@ -3270,8 +3278,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product{
                     height: 100%;
                     @include flex;
@@ -3420,18 +3428,18 @@ span[name="hidden_ptavs_count"] {
                                         font-size: 18px;
                                     }
                                 }
-                                &.cart_view_sct_btn{
+                                &:is(.cart_view_sct_btn, .sct-contact-us-btn){
                                     .add_to_cart_text{
                                         display: none;
                                     }
                                 }
 
-                                .lni, .fa{
+                                :is(.lni, .fa) {
                                     @include transition(all, 0.3s, ease-in);
                                 }
 
                                 &:hover{
-                                    .lni, .fa{
+                                    :is(.lni, .fa) {
                                         transform: scale(1.1);
                                     }
                                 }
@@ -3445,7 +3453,7 @@ span[name="hidden_ptavs_count"] {
                                         transition: all 0.3s ease-in;
                                     }
                             .pwp-info{
-                                .sct_cat_content, .ratings, .price, .pwpi-title{
+                                :is(.sct_cat_content, .ratings, .price, .pwpi-title) {
                                     filter: blur(2px);
                                 }
                             }
@@ -3562,14 +3570,14 @@ span[name="hidden_ptavs_count"] {
                                                 flex: unset !important;
                                                 
                                             }
-                                            .lni, .fa {
+                                            :is(.lni, .fa) {
                                                  transition: all 0.3s ease;
                                                  @media (max-width:767px) {
                                                     font-size: 20px;
                                                  }
                                             }
                                             &:hover {
-                                                .lni, .fa {
+                                                :is(.lni, .fa) {
                                                     transform: scale(1.1);
                                                     transition: all 0.3se ease;
                                                 }
@@ -3610,7 +3618,7 @@ span[name="hidden_ptavs_count"] {
     // clamped them to 32px wide while this effect makes them 37px tall - ovals, next to a
     // round 37px cart button. Take the width from the height instead, whatever the snippet.
     @include min992 {
-        .cs-product .sct-hover-info > .btn.btn:not(.cart_view_sct_btn, .js_add_cart, .login-price-btn) {
+        .cs-product .sct-hover-info > .btn.btn:not(:is(.cart_view_sct_btn, .sct-contact-us-btn), .js_add_cart, .login-price-btn) {
             aspect-ratio: 1 / 1;
             width: auto;
             min-width: 0;
@@ -3983,7 +3991,7 @@ span[name="hidden_ptavs_count"] {
         height: 100%;
     }
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
+        :is(.product_category_scita, .fashion_featured_product_1) {
             .cs-product{
                 overflow: hidden;
                 .o_wsale_product_request_quote {
@@ -4090,7 +4098,7 @@ span[name="hidden_ptavs_count"] {
                                     font-size: 16px;
                                 }
                             }
-                            &.cart_view_sct_btn{
+                            &:is(.cart_view_sct_btn, .sct-contact-us-btn){
                                 .add_to_cart_text{
                                     display: none;
                                 }
@@ -4121,11 +4129,11 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
-            .cst_btm_row, .lns-inner{
-                .cst_sct_right_side, .psb-inner{
-                    .cst_category-slider-section, .tab-content{
-                        .cat_list, .owl-item{
+        :is(.product_category_scita, .fashion_featured_product_1) {
+            :is(.cst_btm_row, .lns-inner) {
+                :is(.cst_sct_right_side, .psb-inner) {
+                    :is(.cst_category-slider-section, .tab-content) {
+                        :is(.cat_list, .owl-item) {
                             .cs-product{
                                 .pwp-info{
                                     .sct-hover-info{
@@ -4235,8 +4243,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product{
                     height: 100%;
                     @include flex;
@@ -4310,7 +4318,7 @@ span[name="hidden_ptavs_count"] {
                                         display: flex;
                                     }
                                 }
-                                &.cart_view_sct_btn{
+                                &:is(.cart_view_sct_btn, .sct-contact-us-btn){
                                     .add_to_cart_text{
                                         display: none;
                                     }
@@ -5088,7 +5096,7 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
+        :is(.product_category_scita, .fashion_featured_product_1) {
             li {
                 overflow: hidden;
             }
@@ -5307,8 +5315,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product{
                     height: 100%;
                     @include flex;
@@ -5379,7 +5387,7 @@ span[name="hidden_ptavs_count"] {
                                     box-shadow: none;
                                 }
 
-                                &.cart_view_sct_btn, &.login-price-btn{
+                                &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     // keep "Add to cart" on one line: the flex row shrank it to its
                                     // min-width, it wrapped to 3 lines and covered rating / price
                                     flex-shrink: 0;
@@ -5472,8 +5480,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day {
-     .deal_day_wrap, .tab_content_inner, .content{
-        .deal_day_bottom_inner, .owl-item, .grid_product {
+     :is(.deal_day_wrap, .tab_content_inner, .content) {
+        :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
             .cs-product{
                 .o_wsale_product_request_quote {
                     position: relative;
@@ -5910,11 +5918,15 @@ span[name="hidden_ptavs_count"] {
                                     box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
                                     padding: 7px;
                                     aspect-ratio: inherit;
-                                    transform: translateX(-50%);
+                                    // centred with `translate`, not `transform`: Odoo's hover rules
+                                    // set transform (Bento: scale(1)) and dropped the centring, the
+                                    // button then stuck out of the card on the right
+                                    translate: -50% 0;
                                     left: 50%;
 
                                     @media (max-width: 991px) {
                                         transform: none;
+                                        translate: none;
                                     }
 
                                     @media (min-width: 768px) {
@@ -6149,7 +6161,7 @@ span[name="hidden_ptavs_count"] {
                         @media (min-width: 992px) {
                             .o_wsale_product_sub{
                                 .o_wsale_product_btn{
-                                    .o_add_wishlist, .quick_view_sct_btn, .o_add_compare{
+                                    :is(.o_add_wishlist, .quick_view_sct_btn, .o_add_compare) {
                                         transform: translateX(0);
                                     }
                                 }
@@ -6319,11 +6331,11 @@ span[name="hidden_ptavs_count"] {
     }
 
     .s_custom_img_category_slider.multi_product_and_category_slider, .fashion_multi_category_slider{
-        .product_category_scita, .fashion_featured_product_1{
-            .cst_btm_row, .lns-inner{
-                .cst_sct_right_side, .psb-inner{
-                    .cst_category-slider-section, .tab-content{
-                        .cat_list, .owl-item{
+        :is(.product_category_scita, .fashion_featured_product_1) {
+            :is(.cst_btm_row, .lns-inner) {
+                :is(.cst_sct_right_side, .psb-inner) {
+                    :is(.cst_category-slider-section, .tab-content) {
+                        :is(.cat_list, .owl-item) {
                             .cs-product{
                                 .pwd-desc{
                                     .pwp-info{
@@ -6524,8 +6536,8 @@ span[name="hidden_ptavs_count"] {
         }
     }
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product{
                     position: relative;
 
@@ -6595,7 +6607,7 @@ span[name="hidden_ptavs_count"] {
                                     color: $light-color;
                                 }
 
-                                &.cart_view_sct_btn, &.login-price-btn{
+                                &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     @include min992{
                                         margin: 0 auto;
                                         box-shadow: none;
@@ -6676,7 +6688,7 @@ span[name="hidden_ptavs_count"] {
                                     @include min992{
                                         transform: translate(0px, 0px);
                                         
-                                        &.cart_view_sct_btn, &.login-price-btn{
+                                        &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                             transform: translate(50%, 0px);
                                         }
                                     }
@@ -6697,8 +6709,8 @@ span[name="hidden_ptavs_count"] {
     // Not for the fashion multi-category slider: there it stays visible in place
     // of the ADD pill (product_card_equal_height.scss).
     .oe_deal_of_the_day.s_theme_scita_deal_of_the_day, .theme_scita_trending_products, .sct_product_snippet_1{
-        .deal_day_wrap, .tab_content_inner, .content{
-            .deal_day_bottom_inner, .owl-item, .grid_product{
+        :is(.deal_day_wrap, .tab_content_inner, .content) {
+            :is(.deal_day_bottom_inner, .owl-item, .grid_product) {
                 .cs-product:has(.o_wsale_product_request_quote){
                     overflow: hidden;
                     .pwd-desc{
@@ -6930,7 +6942,7 @@ span[name="hidden_ptavs_count"] {
             }
         }
     }
-    .oe_deal_of_the_day, .sct_product_snippet_1 {
+    :is(.oe_deal_of_the_day, .sct_product_snippet_1) {
         .cs-product {
             &:hover {
                 .pwd-desc .login-price-btn {
@@ -6966,7 +6978,7 @@ span[name="hidden_ptavs_count"] {
             }
         }
     }
-    .oe_deal_of_the_day, .sct_product_snippet_1 {
+    :is(.oe_deal_of_the_day, .sct_product_snippet_1) {
         .cs-product {
             &:hover {
                 .pwd-desc .login-price-btn {
@@ -7198,6 +7210,9 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
         .o_wsale_product_sub {
             display: flex !important;
             flex-direction: column;
+            // hover styles 3-5 make it wrap: in a short row (Grid list design) the price then
+            // wrapped into a second column, past the right edge of the card
+            flex-wrap: nowrap;
             align-items: flex-start !important;
             justify-content: flex-start !important;
             gap: 10px;
@@ -7235,12 +7250,30 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
                 visibility: visible !important;
                 margin: 0 !important;
             }
+            // phones: the text column is ~110px, three 40px buttons wrapped the last one (quick
+            // view) under the cart. They share the row instead (40px at most, as above).
+            @include media-breakpoint-down(sm) {
+                flex-wrap: nowrap;
+                gap: 6px;
+                width: 100%;
+
+                .btn {
+                    flex: 1 1 0 !important;
+                    width: auto !important;
+                    min-width: 0 !important;
+                    max-width: 40px !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+            }
             // the list rules give the buttons a transparent background: hover styles that draw
             // light icons on a dark bar (style 3) left them white on white
             .btn:not(.a-submit):not(.o_in_wishlist) {
                 color: $body-color !important;
 
-                :is(i, .oi, .fa, [class*="lni"]) {
+                // the glyph too: some hover styles colour the icon's ::before white on hover
+                :is(i, .oi, .fa, [class*="lni"]),
+                :is(i, .oi, .fa, [class*="lni"])::before {
                     color: inherit !important;
                 }
             }
@@ -7381,7 +7414,7 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
         }
         .oe_product_cart {
             &:hover, &:has(:focus-visible) {
-                .o_wsale_product_action_row, .btn {
+                :is(.o_wsale_product_action_row, .btn) {
                     pointer-events: auto;
                 }
                 .o_wsale_product_action_row .btn {
@@ -7409,6 +7442,7 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
             position: static !important;
             left: auto !important;
             transform: none !important;
+            translate: none !important; // the absolute layout centres it with `translate`
             margin: 6px auto 0 !important;
         }
     }
@@ -7570,6 +7604,16 @@ $sct-btn: '.o_wsale_product_btn .btn';
             }
         }
     }
+}
+
+// The product cards hide what sits past their edges with overflow: hidden, a box the browser can
+// still scroll (scrolling an element into view, a text selection drag...). Once scrolled, the
+// card stayed shifted up: the image lost its top margin and the corner tag was cut off.
+// overflow: clip cuts the same way and never scrolls.
+#products_grid .oe_product :is(.o_wsale_product_grid_wrapper, .oe_product_image),
+#products_grid .o_wsale_products_opt_design_bento .oe_product .oe_product_cart,
+.cs-product:is(*, .o_carousel_product_card), .cs-product .cs-img {
+    overflow: clip !important;
 }
 
 // An Odoo ribbon and a Scita tag set on the same top corner were drawn on top of each other.
@@ -7755,9 +7799,76 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
     white-space: nowrap;
 }
 
+// Scita product blocks below 768px: "Add to cart" shows only its icon (each hover style hides
+// the text there), round like the compare / wishlist / quick view buttons next to it. Not in
+// hover style 3, whose buttons are the segments of one bar.
+@if o-website-value('prod-hover-style') != 'prod_hover_style_3' {
+@media (max-width: 767.98px) {
+    .cs-product .sct-hover-info .btn:is(.cart_view_sct_btn, .sct-contact-us-btn) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 50% !important;
+        background: $white !important;
+        color: $body-color !important;
+        box-shadow: 0 2px 10px rgba($black, .12) !important;
+
+        > .add_to_cart_text {
+            display: none !important;
+        }
+        > .cart_icon {
+            display: block !important;
+            line-height: 1;
+            transform: translateY(.17em);
+        }
+    }
+}
+}
+
+// Hover style 3 draws the block buttons as dark circles with light icons (like its cart button,
+// from 992px): the round white buttons below took over their size and colour, which left dark
+// icons on the dark circles, or narrow white buttons next to the round cart one
+@if o-website-value('prod-hover-style') == 'prod_hover_style_3' {
+    @include media-breakpoint-up(lg) {
+        .cs-product .sct-hover-info .sct-feature-wrap {
+            flex: 0 0 auto !important;
+            width: auto !important;
+            max-width: none !important;
+        }
+        .cs-product .sct-hover-info .btn.btn:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn, .scita_cstm_btn:has(> .lni-eye)) {
+            width: 37px !important;
+            height: 37px !important;
+            flex: 0 0 auto !important;
+            max-width: none !important;
+            background: #34222f !important;
+            color: $white !important;
+            box-shadow: none !important;
+
+            &:hover, &:focus-visible {
+                background: $primary !important;
+                color: color-contrast($primary) !important;
+            }
+            // one icon size in all the blocks (some drew the eye / heart at 16px next to a 20px
+            // cart, the thin eye then looked small and off)
+            > .lni {
+                font-size: 20px !important;
+            }
+            > .fa-exchange {
+                font-size: 18px !important;
+            }
+        }
+    }
+}
+
 // Scita product blocks: compare / wishlist / quick view are round white buttons with a soft
-// shadow, as on the shop page (each hover style still places them)
-.cs-product .btn:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn) {
+// shadow, as on the shop page (each hover style still places them). The static preview blocks
+// (playground_preview.xml) draw quick view as a plain scita_cstm_btn with the eye icon.
+@mixin sct-round-block-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7802,4 +7913,85 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
         transform: none;
         font-size: .82em;
     }
+}
+.cs-product .btn:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn, .scita_cstm_btn:has(> .lni-eye)) {
+    // hover style 3: below 992px the buttons are the segments of one bar under the image
+    // (its own rules); round white ovals there broke the bar
+    @if o-website-value('prod-hover-style') == 'prod_hover_style_3' {
+        @media (min-width: 992px) {
+            @include sct-round-block-btn;
+        }
+    } @else {
+        @include sct-round-block-btn;
+    }
+}
+
+// Icons of the round action buttons (shop cards and product blocks, every hover style), drawn as
+// vector masks of the very same glyphs (Lineicons cart / eye / heart / envelope, FontAwesome exchange and
+// filled heart, Material Symbols swap_horiz: outlines taken from the font files, each centred in
+// a one-em square at the font's own scale) instead of font text. Text glyphs are snapped to whole
+// pixels while the round button is drawn at its exact, often fractional, position: depending on
+// the screen, zoom and where the card sits, the icons ended up to ~1.5px off centre. A mask is
+// placed exactly like the circle, so the icon stays centred everywhere.
+$sct-icon-cart: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22-3.05556 -253 256 256%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M25 221Q21 221 19.0 219.0Q17 217 17.0 213.5Q17 210 19.0 207.5Q21 205 25 205H37Q40 205 42.5 203.0Q45 201 45 198L59 103Q60 94 66.5 88.5Q73 83 82 83H193Q196 83 198.5 85.0Q201 87 201.0 90.5Q201 94 198.5 96.5Q196 99 193 99H82Q79 99 77.0 101.0Q75 103 74 106L73 115H189Q197 115 203.5 119.5Q210 124 212 132L232 198Q234 201 231.5 204.5Q229 208 225 208H59Q56 214 50.0 217.5Q44 221 37 221ZM62 192H214L197 136Q196 134 194.0 132.5Q192 131 189 131H71ZM83 67Q75 67 69.5 61.5Q64 56 64.0 48.0Q64 40 69.5 34.5Q75 29 83.0 29.0Q91 29 96.5 34.5Q102 40 102.0 48.0Q102 56 96.5 61.5Q91 67 83 67ZM155 48Q155 56 160.5 61.5Q166 67 174.0 67.0Q182 67 187.5 61.5Q193 56 193.0 48.0Q193 40 187.5 34.5Q182 29 174.0 29.0Q166 29 160.5 34.5Q155 40 155 48Z%22/%3E%3C/svg%3E");
+$sct-icon-eye: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220.25 -256 256 256%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M128 175Q109 175 95.5 161.0Q82 147 82.0 128.0Q82 109 95.5 95.0Q109 81 128.5 81.0Q148 81 161.5 95.0Q175 109 175.0 128.0Q175 147 161.5 161.0Q148 175 128 175ZM98 128Q98 141 107.0 150.0Q116 159 128.5 159.0Q141 159 150.0 150.0Q159 141 159.0 128.0Q159 115 150.0 106.0Q141 97 128.5 97.0Q116 97 107.0 106.0Q98 115 98 128ZM128 208Q94 208 66.0 189.5Q38 171 25 141Q18 128 25 115Q38 85 66.0 66.5Q94 48 128.0 48.0Q162 48 190.0 66.5Q218 85 232 115Q238 128 232 141Q218 171 190.0 189.5Q162 208 128 208ZM39 135Q51 161 75.0 176.5Q99 192 128.0 192.0Q157 192 181.5 176.5Q206 161 217 135Q221 128 217 121Q206 95 181.5 79.5Q157 64 128.0 64.0Q99 64 75.0 79.5Q51 95 39 121Q36 128 39 135Z%22/%3E%3C/svg%3E");
+$sct-icon-heart: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 -259.5 256 256%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M126 205 128 203 130 205Q142 217 157.5 221.0Q173 225 189.0 221.0Q205 217 216.5 205.0Q228 193 232.5 177.5Q237 162 232.5 146.0Q228 130 217 118L145 47Q138 40 128.0 40.0Q118 40 111 47L39 118Q28 130 23.5 146.0Q19 162 23.5 177.5Q28 193 39.5 205.0Q51 217 67.0 221.0Q83 225 98.5 221.0Q114 217 126 205ZM115 194Q102 207 83.0 207.0Q64 207 50.5 194.0Q37 181 37.0 162.0Q37 143 51 130L122 58Q125 56 128.0 56.0Q131 56 134 58L205 130Q219 143 219.0 162.0Q219 181 205.5 194.0Q192 207 173.0 207.0Q154 207 141 194L134 186Q131 184 128.0 184.0Q125 184 122 186Z%22/%3E%3C/svg%3E");
+$sct-icon-heart-full: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 -1536 1792 1792%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M852 -110 228 492Q218 500 200.5 518.0Q183 536 145.0 583.5Q107 631 77.0 681.0Q47 731 23.5 802.0Q0 873 0 940Q0 1160 127.0 1284.0Q254 1408 478 1408Q540 1408 604.5 1386.5Q669 1365 724.5 1328.5Q780 1292 820.0 1260.0Q860 1228 896 1192Q932 1228 972.0 1260.0Q1012 1292 1067.5 1328.5Q1123 1365 1187.5 1386.5Q1252 1408 1314 1408Q1538 1408 1665.0 1284.0Q1792 1160 1792 940Q1792 719 1563 490L940 -110Q922 -128 896.0 -128.0Q870 -128 852 -110Z%22/%3E%3C/svg%3E");
+$sct-icon-exchange: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 -1472 1792 1792%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M1792 352V160Q1792 147 1782.5 137.5Q1773 128 1760 128H384V-64Q384 -77 374.5 -86.5Q365 -96 352 -96Q340 -96 328 -86L9 234Q0 243 0 256Q0 270 9 279L329 599Q338 608 352 608Q365 608 374.5 598.5Q384 589 384 576V384H1760Q1773 384 1782.5 374.5Q1792 365 1792 352ZM1783 873 1463 553Q1454 544 1440 544Q1427 544 1417.5 553.5Q1408 563 1408 576V768H32Q19 768 9.5 777.5Q0 787 0 800V992Q0 1005 9.5 1014.5Q19 1024 32 1024H1408V1216Q1408 1230 1417.0 1239.0Q1426 1248 1440 1248Q1452 1248 1464 1238L1783 919Q1792 910 1792.0 896.0Q1792 882 1783 873Z%22/%3E%3C/svg%3E");
+$sct-icon-swap: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 -850 960 960%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M240 -14 0 226 240 466 307 398 184 274H528V178H184L307 54ZM720 274 653 342 776 466H432V562H776L653 686L720 754L960 514Z%22/%3E%3C/svg%3E");
+$sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 -256 256 256%22%3E%3Cpath transform=%22scale%281,-1%29%22 d=%22M235 189V72Q235 62 228.0 55.0Q221 48 211 48H45Q35 48 28.0 55.0Q21 62 21 72V190Q21 197 26.5 202.5Q32 208 40 208H216Q224 208 229.5 202.5Q235 197 235 189ZM37 169V72Q37 69 39.5 66.5Q42 64 45 64H211Q214 64 216.5 66.5Q219 69 219 72V169L142 115Q136 111 128.0 111.0Q120 111 114 115ZM219 190Q219 192 216 192H40Q37 192 37.0 190.0Q37 188 38 187L123 128Q125 127 128.0 127.0Q131 127 133 128L218 187Q219 188 219 189Z%22/%3E%3C/svg%3E");
+:is(.cs-product .sct-hover-info, #products_grid .o_wsale_product_btn) .btn {
+    > :is(.lni, .fa, .oi) {
+        display: block !important;
+        flex: 0 0 auto !important; // no content of its own: a narrow button shrank it (Showcase heart)
+        width: 1em !important;
+        height: 1em !important;
+        line-height: 1 !important;
+        transform: none !important;
+
+        &::before {
+            content: "" !important;
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: currentColor;
+            -webkit-mask: var(--sct-icon) center / 100% 100% no-repeat;
+            mask: var(--sct-icon) center / 100% 100% no-repeat;
+        }
+    }
+    > .lni-cart-1 { --sct-icon: #{$sct-icon-cart}; }
+    > .lni-eye { --sct-icon: #{$sct-icon-eye}; }
+    > .fa-exchange { --sct-icon: #{$sct-icon-exchange}; }
+    // Contact Us (a product that can't be sold online): Lineicons envelope; Odoo's own buttons use its mail icon
+    > :is(.lni-envelope-1, .oi[data-icon="mail"]) { --sct-icon: #{$sct-icon-envelope}; }
+    &.o_add_compare > .oi { --sct-icon: #{$sct-icon-swap}; }
+    &.o_add_wishlist > :is(.lni-heart, .oi) { --sct-icon: #{$sct-icon-heart}; }
+    // already in the wishlist: the filled heart
+    &.o_add_wishlist:is([disabled], .disabled, .o_in_wishlist) > :is(.lni-heart, .oi) { --sct-icon: #{$sct-icon-heart-full}; }
+}
+
+
+// Contact Us in Add to Cart's place (shop grid, product blocks): one line like Add to Cart's label
+.sct-contact-us-btn > .add_to_cart_text {
+    white-space: nowrap;
+}
+
+// Envelope before "Contact Us" on the product page, like the cart before "Add to Cart" (the vector mask of the product cards' envelope, so it never waits for the icon font)
+.sct-icon-mail {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: .4em;
+    vertical-align: -.125em;
+    order: -1; // first in the (flex) product page button, where it is added after the label
+    flex: 0 0 auto;
+    background-color: currentColor;
+    -webkit-mask: #{$sct-icon-envelope} center / 100% 100% no-repeat;
+    mask: #{$sct-icon-envelope} center / 100% 100% no-repeat;
+}
+
+// Product page / quick view: prices hidden by Scita (login to see price, hidden prices, Request
+// Quote), its own button stands for the product instead of Contact Us
+#contact_us_wrapper[data-sct-price-hidden] {
+    display: none !important;
 }

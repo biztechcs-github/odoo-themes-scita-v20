@@ -236,10 +236,19 @@ export class ScitaVisualSearchButton extends Interaction {
         if (!this.submit) {
             return;
         }
-        this.sync();
-        const observer = new ResizeObserver(() => this.sync());
+        // in the next frame, not while the page starts: reading the computed style then made
+        // the browser restyle the whole page each time (~250ms on a mid-range phone)
+        const observer = new ResizeObserver(() => this.scheduleSync());
         observer.observe(this.el.parentElement);
-        this.registerCleanup(() => observer.disconnect());
+        this.registerCleanup(() => {
+            observer.disconnect();
+            cancelAnimationFrame(this.syncFrame);
+        });
+    }
+
+    scheduleSync() {
+        cancelAnimationFrame(this.syncFrame);
+        this.syncFrame = requestAnimationFrame(() => this.sync());
     }
 
     sync() {
@@ -247,9 +256,12 @@ export class ScitaVisualSearchButton extends Interaction {
             return; // hidden: computed colours of a hidden box are not reliable
         }
         const style = getComputedStyle(this.submit);
-        for (const prop of COPIED_STYLES) {
-            this.el.style[prop] = style[prop];
-        }
+        const values = COPIED_STYLES.map((prop) => style[prop]); // all reads before any write
+        COPIED_STYLES.forEach((prop, i) => {
+            if (this.el.style[prop] !== values[i]) {
+                this.el.style[prop] = values[i];
+            }
+        });
     }
 }
 

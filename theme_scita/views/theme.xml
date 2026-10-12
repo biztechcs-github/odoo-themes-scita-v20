@@ -86,9 +86,12 @@
         </xpath>
     </template>
 
+    <!-- A category can limit the colours offered in its filter (attributes_ids_values); when it
+         selects no value of this attribute, all its colours are offered, as for the other
+         attributes (the filter used to be empty then). -->
     <template id="biztech_website_product_brands_color" inherit_id="website_sale.filter_color_attributes">
         <xpath expr="//t[@t-foreach='pavs_per_attribute[a]']" position="attributes">
-            <attribute name="t-if">category and v in category.attributes_ids_values or not category</attribute>
+            <attribute name="t-if">not category or v in category.attributes_ids_values or a not in category.attributes_ids_values.attribute_id</attribute>
         </xpath>
     </template>
     <template id="brand_o_wsale_offcanvas" inherit_id="website_sale.o_wsale_offcanvas" name="Offcanvas">
@@ -1361,7 +1364,7 @@
                                                         </button>
                                                     </t>
                                                 </div>
-                                          <div id="contact_us_wrapper"
+                                          <div id="contact_us_wrapper" t-att-data-sct-price-hidden="'1' if (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public()))) else None"
                                                 t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes} {{'d-flex' if combination_info.get('prevent_sale') else 'd-none'}}">
                                                 <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                                                     <div class="container">

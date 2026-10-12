@@ -56,7 +56,7 @@
 // Give them one fixed square size with the icon centred. Not the cart / login
 // buttons in the same row: those carry text, and the 32px basis squeezed
 // "Add to cart" onto three lines (Effect Style 5).
-.cs-product .sct-hover-info > .btn:not(.cart_view_sct_btn, .js_add_cart, .login-price-btn) {
+.cs-product .sct-hover-info > .btn:not(:is(.cart_view_sct_btn, .sct-contact-us-btn), .js_add_cart, .login-price-btn) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -133,6 +133,12 @@
 // at different heights depending on title / description length. Align it to the card bottom.
 .o_wishlist_table .o_wishlist_item .o_wsale_product_sub {
     justify-content: flex-end !important;
+}
+
+// Wishlist page: Odoo's remove button sits in the top-right corner of the card, where Scita's
+// right-hand product labels (Sale, New...) are too: it covered them. It moves below the label.
+.o_wishlist_table .o_wishlist_item:has(.img_lbl.right) .o_wish_rm {
+    top: 62px !important;
 }
 
 // Odoo 20 draws the "already in wishlist" heart with its own icon font
@@ -553,4 +559,22 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
     #products_grid .oe_product.sct_col_single .oe_product_cart {
         content-visibility: visible;
     }
+}
+
+// Odoo lays every shop card out lazily (content-visibility: auto) with no placeholder size, so
+// at first layout all cards are 0px tall: the footer shows on screen, then the cards take their
+// height and push it away (0.14-0.3 layout shift on mobile Lighthouse, plain Odoo too). A page
+// holds ~20 cards, cheap to lay out normally.
+#products_grid .oe_product_cart {
+    content-visibility: visible;
+}
+
+// Product page brand logo: only capped at 40px tall, it took no room until it had loaded, then
+// moved the product details down (layout shift). A 40px box from the start; scale-down keeps
+// smaller logos at their own size (as before) and taller ones capped at 40px (as before).
+#product_detail .sct-brand-display .sct-brand-logo {
+    height: 40px;
+    width: auto;
+    object-fit: scale-down;
+    object-position: left center;
 }

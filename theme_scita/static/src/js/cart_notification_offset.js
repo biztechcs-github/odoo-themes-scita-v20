@@ -19,7 +19,7 @@ patch(CartNotificationContainer.prototype, {
             if (frame === null) {
                 frame = requestAnimationFrame(() => {
                     frame = null;
-                    this._adaptToHeaderChange();
+                    this._scitaMeasureHeader();
                 });
             }
         };
@@ -33,10 +33,23 @@ patch(CartNotificationContainer.prototype, {
             if (frame !== null) {
                 cancelAnimationFrame(frame);
             }
+            cancelAnimationFrame(this._scitaAdaptFrame);
         });
     },
 
+    // measured in the next frame: Odoo calls this when the page starts, and measuring right
+    // then made the browser lay the page out an extra time
     _adaptToHeaderChange() {
+        if (this._scitaAdaptFrame) {
+            return;
+        }
+        this._scitaAdaptFrame = requestAnimationFrame(() => {
+            this._scitaAdaptFrame = null;
+            this._scitaMeasureHeader();
+        });
+    },
+
+    _scitaMeasureHeader() {
         let position = 0;
         for (const el of document.querySelectorAll(".o_top_fixed_element")) {
             const { height, top } = el.getBoundingClientRect();

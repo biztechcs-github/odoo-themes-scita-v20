@@ -1229,9 +1229,87 @@ img[src$="/testimonial-quote.png"]   { @include scita-placeholder-ratio(376, 363
 	}
 }
 
+/* Same idea for more dynamic blocks: while a block still shows its placeholder, its section keeps
+   the height it will have once loaded (the widget replaces the section's whole content, title
+   included, so the section is what is sized). Heights measured on the demo content from 360 to
+   1920px wide. The video banner follows the screen width; the sliders change with the cards per
+   row. Without it the placeholder art (a sample screenshot of another height) was swapped for the
+   content and moved everything under it. A narrow :has(): only these few sections are checked. */
+body:not(.editor_enable) #wrapwrap {
+    // a fixed height (min = max: Odoo forces `height: auto !important` on sections on phones):
+    // its placeholder art is taller than the loaded video
+    section[data-snippet="dynamic_video_banner"]:has(.category-slider-placeholder) {
+        min-height: 53.5vw;
+        max-height: 53.5vw;
+        overflow: hidden;
+        @media (min-width: 992px) {
+            min-height: 52.4vw;
+            max-height: 52.4vw;
+        }
+    }
+    section[data-snippet="theme_scita_trending_products_snippet"]:has(.category-slider-placeholder) {
+        min-height: 579px;
+        @media (min-width: 992px) {
+            min-height: 540px;
+        }
+        @media (min-width: 1200px) {
+            min-height: 660px;
+        }
+    }
+    section[data-snippet="deal_of_day_banner_6"]:has(.category-slider-placeholder) {
+        min-height: 929px;
+        @media (min-width: 576px) {
+            min-height: 909px;
+        }
+        @media (min-width: 992px) {
+            min-height: 612px;
+        }
+        @media (min-width: 1200px) {
+            min-height: 675px;
+        }
+    }
+    section[data-snippet="sct_product_snippet_2"]:has(.category-slider-placeholder) {
+        min-height: 878px;
+        @media (min-width: 768px) {
+            min-height: 904px;
+        }
+        @media (min-width: 992px) {
+            min-height: 560px;
+        }
+        @media (min-width: 1200px) {
+            min-height: 572px;
+        }
+    }
+    // rows of cards come from the block's configuration (--sct-r2/3/4: rows at 2, 3 and 4 cards
+    // per row, see website._scita_product_snippet_rows_css); row heights measured
+    section[data-snippet="sct_product_snippet_1"]:has(.category-slider-placeholder) {
+        min-height: calc(85px + var(--sct-r2, 1) * 368px);
+        @media (min-width: 768px) {
+            min-height: calc(71px + var(--sct-r3, 1) * 421px);
+        }
+        @media (min-width: 992px) {
+            min-height: calc(76px + var(--sct-r4, 1) * (419px + (100vw - 992px) * 0.222));
+        }
+        @media (min-width: 1200px) {
+            min-height: calc(98px + var(--sct-r4, 1) * 512px);
+        }
+        @media (min-width: 1400px) {
+            min-height: calc(102px + var(--sct-r4, 1) * 556px);
+        }
+        @media (min-width: 1601px) {
+            min-height: calc(102px + var(--sct-r4, 1) * 581px);
+        }
+    }
+}
+
 // Dynamic Scita blocks show an editor placeholder (sample screenshot) until their data is
-// loaded. On the live site a block that is not configured (or whose configuration was
-// deleted) gets no data, so it would keep showing that fake sample to visitors: hide it.
-body:not(.editor_enable) #wrapwrap section:has(.category-slider-placeholder) {
+// loaded. Visitors never see that fake sample, but it keeps its space while the data loads (a
+// block hidden until then grew from 0px and pushed the page down). Blocks that got no data (not
+// configured, configuration deleted...) are hidden once the page's requests are done
+// (dynamic_block_empty.js). No :has() here: on <section> it made every DOM change re-check them.
+body:not(.editor_enable) #wrapwrap .category-slider-placeholder {
+    visibility: hidden;
+}
+body:not(.editor_enable) #wrapwrap section.o_scita_dyn_empty {
     display: none !important;
 }

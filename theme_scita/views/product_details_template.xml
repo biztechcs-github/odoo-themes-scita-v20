@@ -77,12 +77,19 @@
                 <!-- Scita's Add to wishlist / Compare are added in here too: only the cart button
                      depends on the product being sellable, so they stay on sold-out / Contact Us pages -->
                 <div class='sct-price-option'>
-                    <div class="sct-add-to-cart-mob" t-if="not combination_info.get('prevent_sale') and (not request.env.user._is_public() and website.add_to_cart or not website.add_to_cart)">
+                    <!-- Always rendered: Odoo 20 reads the product ids from this button on every
+                         variant change (a product that can't be sold, e.g. priced 0 with "Prevent
+                         sale of zero priced products", sent no product and the server failed).
+                         While the variant can't be sold, core puts .d-none on #add_to_cart_wrap and
+                         product_cta_layout.scss hides this block; Scita's "Hide Add Cart Button"
+                         (visitors) hides the button itself. -->
+                    <div class="sct-add-to-cart-mob">
+                        <t t-set="sct_cart_btn_hidden" t-value="website.add_to_cart and request.env.user._is_public()"/>
                         <button
                             name="add_to_cart"
                             type="button"
                             id="add_to_cart"
-                            class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block"
+                            t-attf-class="btn btn-primary btn-lg mt16 js_check_product a-submit #{'d-none' if sct_cart_btn_hidden else 'd-block d-sm-inline-block'}"
                             data-action="add_to_cart"
                             data-animation-selector=".o_wsale_product_images"
                             t-att-data-product-category-id="product.public_categ_ids.ids and product.public_categ_ids.ids[0]"
@@ -96,6 +103,18 @@
                 </div>
             </div>
             <div class='sct-other-desciption'></div>
+        </xpath>
+    </template>
+    <!-- Contact Us (product that can't be sold online) in Add to Cart's place: the envelope used
+         for Contact Us everywhere in Scita, as Add to Cart shows the cart -->
+    <template id="theme_scita_contact_us_icon" inherit_id="website_sale.cta_wrapper" name="Product Details Contact Us icon">
+        <xpath expr="//div[@id='contact_us_wrapper']/a" position="inside">
+            <i class="sct-icon-mail" role="presentation"/>
+        </xpath>
+        <!-- prices hidden by Scita: its Login to see price / Request Quote button stands instead
+             (a class, not d-none: core toggles d-none / d-flex on every variant change) -->
+        <xpath expr="//div[@id='contact_us_wrapper']" position="attributes">
+            <attribute name="t-att-data-sct-price-hidden">'1' if (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public()))) else None</attribute>
         </xpath>
     </template>
     <template id="theme_scita_stock_notification_in_cta" inherit_id="website_sale.cta_wrapper" name="Product Details Notify me form in the CTA row">
@@ -208,6 +227,20 @@
         <xpath expr="//button[@name='add_to_cart']//i" position="attributes">
             <attribute name='class'>lni lni-cart-1</attribute>
         </xpath>
+        <!-- Contact Us (product that can't be sold online) in Add to Cart's place: drawn like it,
+             with the envelope used for Contact Us everywhere in Scita -->
+        <xpath expr="//t[contains(@t-elif, '_prevent_product_sale')]/a" position="attributes">
+            <attribute name="class">btn a-submit sct-contact-us-btn</attribute>
+            <!-- prices hidden by Scita (login to see price, hidden prices, Request Quote): Scita's
+                 own action stands for the product, as on every other card -->
+            <attribute name="t-if">not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))</attribute>
+        </xpath>
+        <xpath expr="//t[contains(@t-elif, '_prevent_product_sale')]/a//span[hasclass('o_label')]" position="replace">
+            <span class="add_to_cart_text">Contact Us</span>
+        </xpath>
+        <xpath expr="//t[contains(@t-elif, '_prevent_product_sale')]/a//i" position="attributes">
+            <attribute name="class">lni lni-envelope-1</attribute>
+        </xpath>
     </template>
     <!-- Scita's wishlist / compare buttons are the default (the theme disables Odoo's on install,
          see theme_custom.py). When Odoo's own button is enabled from the editor ("Actions"), it
@@ -215,7 +248,7 @@
     <template id="product_add_to_compare" inherit_id="theme_scita.theme_scita_product_details_add_to_cart" name="Add to comparison in product page">
         <xpath expr="//div[hasclass('sct-add-to-cart-mob')]" position="after">
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-            <a aria-label="Compare" class="btn btn-xs o_add_compare o_add_compare_dyn" data-action="o_comparelist" role="button" t-att-data-product-product-id="product_variant.id" t-if="product_variant and not is_view_active('website_sale.product_add_to_compare')" title="Compare" type="button">
+            <a aria-label="Compare" class="btn btn-xs o_add_compare o_add_compare_dyn" data-action="o_comparelist" role="button" t-att-data-product-product-id="product_variant.id" t-att-data-product-id="product_variant.id" t-att-data-product-template-id="product.id" t-if="product_variant and not is_view_active('website_sale.product_add_to_compare')" title="Compare" type="button">
                 <span class="fa fa-exchange"/>
                 <span class='sct_icon_text'>Compare</span>
             </a>
@@ -398,20 +431,6 @@ Wishlist
             </div> -->
         </xpath>
     </template>
-    <!-- Settings > "Brand display in product page": the product's Scita brand under its name, as its
-         logo or its name (the name when the brand has no logo), linking to the shop of that brand -->
-    <template id="product_details_brand_display" inherit_id="theme_scita.custom_product_tags_inline_display" name="Product Brand">
-        <xpath expr="//h1[hasclass('sct-prod-name')]" position="after">
-            <t t-set="sct_brand" t-value="website.is_brand_display and product.product_brand_id"/>
-            <div t-if="sct_brand" class="sct-brand-display mb-2">
-                <a t-attf-href="/shop?brand={{sct_brand.id}}" t-att-title="sct_brand.name">
-                    <img t-if="website.brand_display_option == 'logo' and sct_brand.image" class="sct-brand-logo img-fluid"
-                         style="max-height: 40px;" t-att-src="website.image_url(sct_brand, 'image')" t-att-alt="sct_brand.name"/>
-                    <span t-else="" class="sct-brand-name">Brand: <t t-out="sct_brand.name"/></span>
-                </a>
-            </div>
-        </xpath>
-    </template>
     <template id="product_details_sku_change_as_per_variant" inherit_id="theme_scita.custom_product_tags_inline_display" name="Product Info">
         <xpath expr="//div[hasclass('sct-sku-display-div')]" position="replace">
             <!-- Settings > "Display product reference" (per website), the reference of the variant
@@ -505,6 +524,20 @@ Wishlist
                     </p>
                 </t>
             </t>
+        </xpath>
+    </template>
+    <!-- Settings > "Brand display in product page": the product's Scita brand under its tags, as its
+         logo or its name (the name when the brand has no logo), linking to the shop of that brand -->
+    <template id="product_details_brand_display" inherit_id="theme_scita.scita_tag" name="Product Brand">
+        <xpath expr="//small" position="before">
+            <t t-set="sct_brand" t-value="website.is_brand_display and product.product_brand_id"/>
+            <div t-if="sct_brand" class="sct-brand-display mt-2 mb-2">
+                <a t-attf-href="/shop?brand={{sct_brand.id}}" t-att-title="sct_brand.name">
+                    <img t-if="website.brand_display_option == 'logo' and sct_brand.image" class="sct-brand-logo img-fluid"
+                         style="max-height: 40px;" t-att-src="website.image_url(sct_brand, 'image')" t-att-alt="sct_brand.name"/>
+                    <span t-else="" class="sct-brand-name">Brand: <t t-out="sct_brand.name"/></span>
+                </a>
+            </div>
         </xpath>
     </template>
     <template id="theme_scita_remove_empty_price_section"

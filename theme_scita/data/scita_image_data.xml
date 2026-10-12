@@ -33,9 +33,9 @@
         </record>
         <record id="theme_scita.sct_banner_slider_1_image_3" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_banner_slider_1_image_3.jpg</field>
+            <field name="name">sct_banner_slider_1_image_3.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/header-1-slide-1b.jpg</field>
+            <field name="url">/theme_scita/static/src/img/header-1-slide-1b.webp</field>
         </record>
         <record id="theme_scita.sct_banner_slider_2_image_1" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -69,9 +69,9 @@
         </record>
         <record id="theme_scita.sct_banner_slider_3_image_3" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_banner_slider_3_image_3.jpg</field>
+            <field name="name">sct_banner_slider_3_image_3.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/header-3-slide-1b.jpg</field>
+            <field name="url">/theme_scita/static/src/img/header-3-slide-1b.webp</field>
         </record>
         <record id="theme_scita.sct_banner_slider_4_image_1" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -81,9 +81,9 @@
         </record>
         <record id="theme_scita.sct_banner_slider_4_image_2" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_banner_slider_4_image_2.jpg</field>
+            <field name="name">sct_banner_slider_4_image_2.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/header-4-slide-1a.jpg</field>
+            <field name="url">/theme_scita/static/src/img/header-4-slide-1a.webp</field>
         </record>
         <record id="theme_scita.sct_banner_slider_4_image_3" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -141,9 +141,9 @@
         </record>
         <record id="theme_scita.sct_banner_slider_7_image_2" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_banner_slider_7_image_2.jpg</field>
+            <field name="name">sct_banner_slider_7_image_2.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/fashion/home-banner-object.png</field>
+            <field name="url">/theme_scita/static/src/img/fashion/home-banner-object.webp</field>
         </record>
         <record id="theme_scita.sct_banner_slider_8_image" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -177,9 +177,9 @@
         </record>
         <record id="theme_scita.sct_content_snippet_4" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_content_snippet_4.jpg</field>
+            <field name="name">sct_content_snippet_4.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/service_v_13_mid.png</field>
+            <field name="url">/theme_scita/static/src/img/service_v_13_mid.webp</field>
         </record>
         <record id="theme_scita.sct_category_snippet_1_kids" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -291,9 +291,9 @@
         </record>
         <record id="theme_scita.sct_how_it_work_snippet_2" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_how_it_work_snippet_2.jpg</field>
+            <field name="name">sct_how_it_work_snippet_2.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/fashion/fashion-nl-bg.jpg</field>
+            <field name="url">/theme_scita/static/src/img/fashion/fashion-nl-bg.webp</field>
         </record>
         <record id="theme_scita.sct_how_it_work_snippet_3" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -429,9 +429,9 @@
         </record>
         <record id="theme_scita.sct_adveertis_snippet_2_img_5" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_adveertis_snippet_2_img_5.jpg</field>
+            <field name="name">sct_adveertis_snippet_2_img_5.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/fashion/adsb-5.jpg</field>
+            <field name="url">/theme_scita/static/src/img/fashion/adsb-5.webp</field>
         </record>
         <record id="theme_scita.sct_adveertis_snippet_2_img_4" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -741,9 +741,9 @@
         </record>
         <record id="theme_scita.sct_testinomail_slider_4_img_2" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_testinomail_slider_4_img_2.jpg</field>
+            <field name="name">sct_testinomail_slider_4_img_2.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/it/testimonial-bg.jpg</field>
+            <field name="url">/theme_scita/static/src/img/it/testimonial-bg.webp</field>
         </record>
         <record id="theme_scita.sct_testinomail_slider_1_img_1" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -801,9 +801,9 @@
         </record>
         <record id="theme_scita.sct_industry_fashion_brand_3" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_industry_fashion_brand_2.jpg</field>
+            <field name="name">sct_industry_fashion_brand_2.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/fashion/brand-3.jpg</field>
+            <field name="url">/theme_scita/static/src/img/fashion/brand-3.webp</field>
         </record>
         <record id="theme_scita.sct_industry_fashion_brand_obj_3" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -3283,15 +3283,15 @@
         </record>
         <record id="theme_scita.sct_fresh_bakery_products" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_fresh_bakery_products.jpg</field>
+            <field name="name">sct_fresh_bakery_products.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/grocery/fresh-bakery-products.jpg</field>
+            <field name="url">/theme_scita/static/src/img/grocery/fresh-bakery-products.webp</field>
         </record>
         <record id="theme_scita.sct_healthy_breakfast" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">sct_healthy_breakfast.jpg</field>
+            <field name="name">sct_healthy_breakfast.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/grocery/healthy-breakfast.jpg</field>
+            <field name="url">/theme_scita/static/src/img/grocery/healthy-breakfast.webp</field>
         </record>
         <record id="theme_scita.sct_fresh_vegetables" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -3422,9 +3422,9 @@
         </record>
         <record id="theme_scita.sct_banner_snippet_6" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">banner-image.png</field>
+            <field name="name">banner-image.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/automobile/banner-image.png</field>
+            <field name="url">/theme_scita/static/src/img/automobile/banner-image.webp</field>
         </record>
         <record id="theme_scita.sct_banner_image2_bg_image" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -3434,9 +3434,9 @@
         </record>
         <record id="theme_scita.sct_banner_image_2" model="ir.attachment">
             <field name="public" eval="True"/>
-            <field name="name">banner-image_2.png</field>
+            <field name="name">banner-image_2.webp</field>
             <field name="type">url</field>
-            <field name="url">/theme_scita/static/src/img/automobile/banner-image_2.png</field>
+            <field name="url">/theme_scita/static/src/img/automobile/banner-image_2.webp</field>
         </record>
         <!-- Automobile Snippet End -->
 

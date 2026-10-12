@@ -143,6 +143,34 @@ function makeInteraction(name, WidgetClass) {
         }
 
         start() {
+            // Dynamic blocks (still showing their editor placeholder) fetch their data and build
+            // their slider when they come near the screen, not all at page load: a home page
+            // made of such blocks fired every request and carousel set-up at once (blocking
+            // time, bandwidth taken from the first screen). Not in the editor.
+            if (!this._scitaEditMode && this.el.querySelector(".category-slider-placeholder")) {
+                const sectionEl = this.el.closest("section") || this.el;
+                sectionEl.classList.add("o_scita_dyn_wait");
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        if (entries.some((entry) => entry.isIntersecting)) {
+                            observer.disconnect();
+                            sectionEl.classList.remove("o_scita_dyn_wait");
+                            this._startWidget();
+                        }
+                    },
+                    { rootMargin: "800px 0px" }
+                );
+                observer.observe(this.el);
+                this.registerCleanup(() => {
+                    observer.disconnect();
+                    sectionEl.classList.remove("o_scita_dyn_wait"); // e.g. the editor starts
+                });
+                return;
+            }
+            this._startWidget();
+        }
+
+        _startWidget() {
             const result = this.widget.start();
             if (result && typeof result.catch === "function") {
                 result.catch((error) => console.error(`theme_scita: ${name} failed to start`, error));

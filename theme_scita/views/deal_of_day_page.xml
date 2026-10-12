@@ -99,7 +99,10 @@
 		                                                                    <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
 		                                                                    <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="lni lni-heart"></span></a>
 		                                                                </t>
-		                                                                <button type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id"><span class="lni lni-cart-1"></span></button>
+		                                                                <button t-if="not combination_info.get('prevent_sale')" type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id"><span class="lni lni-cart-1"></span></button>
+		                                                                <!-- can't be sold online (e.g. priced 0 with "Prevent sale of zero priced products"): Contact Us, as on the shop page -->
+		                                                                <a t-if="combination_info.get('prevent_sale') and not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))" t-att-href="website._get_contact_us_url(product.display_name)"
+		                                                                   class="button btn btn-cart sct-contact-us-btn" title="Contact Us"><span class="lni lni-envelope-1 cart_icon"/><span class="add_to_cart_text">Contact Us</span></a>
 		                                                            </form>
 		                                                        </div>
 		                                                    </div>
