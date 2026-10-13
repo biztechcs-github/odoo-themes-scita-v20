@@ -7,7 +7,7 @@ and only hidden on websites that don't use Theme Scita."""
 from odoo import api, models
 
 # menus Scita adds under the main menu (copied by Odoo into every website's menu)
-SCITA_MENU_URLS = ('/extra-pages', '/allcategories')
+SCITA_MENU_URLS = ('/extra-pages', '/allcategories', '/brands')
 
 
 class Website(models.Model):
@@ -25,6 +25,24 @@ class Website(models.Model):
         return frozenset(self.env['ir.model.data'].sudo().search([
             ('module', '=', 'theme_scita'), ('model', '=', 'website.page'),
         ]).mapped('res_id'))
+
+    @api.model
+    def _scita_ensure_brands_menu(self):
+        """Add "Brands" (/brands) to the default main menu, which new websites copy, and to
+        every website's menu, where none links to /brands yet (a site may have added its own)."""
+        Menu = self.env['website.menu'].sudo()
+
+        def has_brands(root):
+            return any(menu.url == '/brands' for menu in Menu.search([('id', 'child_of', root.id)]))
+
+        values = {'name': 'Brands', 'url': '/brands', 'sequence': 48}
+        main_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        if main_menu and not has_brands(main_menu):
+            # website_id given (empty): only this default menu, no copy per website
+            Menu.create(dict(values, parent_id=main_menu.id, website_id=False))
+        for website in self.sudo().search([]):
+            if website.menu_id and not has_brands(website.menu_id):
+                Menu.create(dict(values, parent_id=website.menu_id.id, website_id=website.id))
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
         # sitemap.xml, link dialogs and the page search of websites without Scita

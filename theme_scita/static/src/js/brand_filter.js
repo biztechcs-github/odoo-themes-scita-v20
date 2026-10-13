@@ -20,6 +20,13 @@ publicWidget.registry.brandFilterWidget = publicWidget.Widget.extend({
 
     let activeLetter = "all"; // Default
 
+    // "No brand matches your search" when the search / letter leaves no card
+    const emptyMessage = document.getElementById("brandEmpty");
+    const updateEmpty = () => {
+        const anyShown = [...brandCards].some((card) => card.style.display !== "none");
+        emptyMessage?.classList.toggle("d-none", anyShown);
+    };
+
     buttons.forEach((btn) => {
             btn.addEventListener("click", function () {
                 const clickedLetter = this.dataset.letter;
@@ -37,6 +44,7 @@ publicWidget.registry.brandFilterWidget = publicWidget.Widget.extend({
 
                     // Clear search input
                     searchInput.value = "";
+                    updateEmpty();
                     return;
                 }
 
@@ -55,6 +63,7 @@ publicWidget.registry.brandFilterWidget = publicWidget.Widget.extend({
 
                 // Clear search input
                 searchInput.value = "";
+                updateEmpty();
             });
         });
 
@@ -68,6 +77,7 @@ publicWidget.registry.brandFilterWidget = publicWidget.Widget.extend({
 
         // Remove active state from all letter buttons
         buttons.forEach((b) => b.classList.remove("active"));
+        updateEmpty();
     });
 
     return Promise.resolve();

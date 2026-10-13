@@ -2893,11 +2893,203 @@ common search for categories and products (22/05/2025)
     margin-top: 0 !important;
 }
 
-.brand-card {
-    img {
-        aspect-ratio: 1 / 1;
-        object-fit: scale-down;
-        padding: 5px;
+// /brands: "Our Brands" page (brand_template.xml) - header with search, letter chips, brand tiles
+.sct-brands-page {
+    .sct-brands-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px 32px;
+        margin-bottom: 24px;
+    }
+    .sct-brands-title {
+        font-weight: 700;
+    }
+    .sct-brands-subtitle {
+        color: rgba($body-color, .65);
+    }
+    .sct-brands-search {
+        position: relative;
+        flex: 0 1 360px;
+        min-width: 220px;
+
+        > .fa {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: rgba($body-color, .45);
+            pointer-events: none;
+        }
+        .form-control {
+            height: 46px;
+            padding-left: 44px;
+            border-radius: 50px;
+            border-color: rgba($black, .12);
+            background: $white;
+
+            &:focus {
+                border-color: $primary;
+                box-shadow: 0 0 0 3px rgba($primary, .15);
+            }
+        }
+        @media (max-width: 575.98px) {
+            flex-basis: 100%;
+        }
+    }
+
+    // letter chips: a single scrollable row on phones instead of four wrapped lines
+    .sct-brands-letters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 32px;
+
+        @media (max-width: 767.98px) {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+        }
+        .btn {
+            flex: 0 0 auto;
+            min-width: 38px;
+            height: 38px;
+            padding: 0 10px;
+            border-radius: 50px;
+            border: 1px solid rgba($primary, .35);
+            background: $white;
+            color: $primary;
+            font-weight: 600;
+            line-height: 36px;
+            transition: background-color .2s, color .2s, border-color .2s;
+
+            &:hover:not(:disabled) {
+                border-color: $primary;
+                background: rgba($primary, .08);
+            }
+            &.active {
+                border-color: $primary;
+                background: $primary;
+                color: color-contrast($primary);
+            }
+            &[data-letter="all"] {
+                padding: 0 16px;
+            }
+            // letters without brands
+            &.sct-letter-empty,
+            &:disabled {
+                border-color: transparent;
+                background: transparent;
+                color: rgba($body-color, .3);
+                opacity: 1;
+            }
+        }
+    }
+
+    .sct-brands-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 24px;
+
+        @media (max-width: 575.98px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+    }
+    .sct-brand-tile {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border: 1px solid rgba($black, .08);
+        border-radius: 14px;
+        background: $white;
+        overflow: hidden;
+        color: $body-color;
+        text-decoration: none;
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-4px);
+            border-color: rgba($primary, .35);
+            box-shadow: 0 12px 28px rgba($black, .10);
+
+            .sct-brand-logo img {
+                transform: scale(1.05);
+            }
+            .sct-brand-cta {
+                color: $primary;
+                gap: 10px;
+            }
+        }
+    }
+    .sct-brand-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 4 / 3;
+        padding: 18px;
+        // white like most logos' own background, divided from the text below
+        background: $white;
+        border-bottom: 1px solid rgba($black, .06);
+
+        img {
+            // never enlarged past its own size: small logos stayed blurry when stretched
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform .3s ease;
+        }
+    }
+    // brand without a logo
+    .sct-brand-initials {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: $primary;
+        color: color-contrast($primary);
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: .5px;
+    }
+    .sct-brand-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 14px 12px 16px;
+        text-align: center;
+    }
+    .sct-brand-name {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    .sct-brand-count {
+        font-size: 13px;
+        color: rgba($body-color, .6);
+    }
+    .sct-brand-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba($body-color, .75);
+        transition: color .2s, gap .2s;
+    }
+    .sct-brands-empty {
+        padding: 40px 0;
+        text-align: center;
+        color: rgba($body-color, .6);
     }
 }
 // Off the first screen: the footer (below the fold) and the closed mobile menu are not drawn

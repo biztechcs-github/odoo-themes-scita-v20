@@ -1,57 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+  <!-- "Brands" in the main menu (after Shop By Category and Extra Pages), added where it is
+       missing only: a site may already have its own Brands menu. Runs on install and update;
+       hidden on websites without Scita (models/scita_pages.py) -->
+  <function model="website" name="_scita_ensure_brands_menu"/>
+
   <template id="brand_template" name="Brand Listing Page">
     <t t-call="website.layout">
       <!-- #wrap + oe_structure: drop areas for the website editor (without them every
            block was disabled on this page) -->
-      <div id="wrap">
-      <div class="oe_structure oe_empty" id="oe_structure_scita_brands_1"/>
-      <div class="container py-4">
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <h2 class="mb-0">Our Brands</h2>
-        <!-- Search Box -->
-        <input type="text" class="form-control w-50" placeholder="Search Brand" id="brandSearch" />
-      </div>
+      <div id="wrap" class="sct-brands-page">
+        <div class="oe_structure oe_empty" id="oe_structure_scita_brands_1"/>
+        <div class="container py-4 py-lg-5">
+          <!-- Title, brand count and search -->
+          <div class="sct-brands-head">
+            <div>
+              <h2 class="sct-brands-title mb-1">Our Brands</h2>
+              <p class="sct-brands-subtitle mb-0">
+                Shop the brands you love<t t-if="brands"> -
+                  <t t-out="len(brands)"/> <t t-if="len(brands) == 1">brand</t><t t-else="">brands</t></t>
+              </p>
+            </div>
+            <div class="sct-brands-search">
+              <i class="fa fa-search" role="presentation"/>
+              <input type="text" class="form-control" placeholder="Search brand" aria-label="Search brand" id="brandSearch"/>
+            </div>
+          </div>
 
-      <!-- Filter Buttons -->
-        <div class="d-flex flex-wrap gap-1 mb-3 sct_brand_filter" id="brand_filter">
-          <button class="btn btn-outline-secondary active" data-letter="all">ALL</button>
-          <t t-foreach="('ABCDEFGHIJKLMNOPQRSTUVWXYZ')" t-as="letter">
+          <!-- Filter by first letter (letters without brands are disabled) -->
+          <div class="sct_brand_filter sct-brands-letters" id="brand_filter" role="group" aria-label="Filter brands by letter">
+            <button type="button" class="btn active" data-letter="all">All</button>
+            <t t-foreach="('ABCDEFGHIJKLMNOPQRSTUVWXYZ')" t-as="letter">
               <t t-set="is_active" t-value="letter.lower() in available_letters"/>
-              <button class="btn"
-                      t-attf-class="btn btn-outline-#{'primary' if is_active else 'secondary'}"
+              <button type="button"
+                      t-attf-class="btn #{'' if is_active else 'sct-letter-empty'}"
                       t-att-disabled="not is_active and 'disabled' or False"
                       t-att-data-letter="letter.lower()">
-                  <span t-out="letter" class="fw-bold"/>
+                <t t-out="letter"/>
               </button>
-          </t>
-        </div>
+            </t>
+          </div>
 
-        <!-- Brand Cards -->
-        <div class="row" id="brandGrid">
-          <t t-foreach="brands" t-as="brand">
-            <div class="col-6 col-md-3 col-xl-2 mb-4 brand-card"
-                t-att-data-letter="brand['name'][0].lower() if brand['name'] else ''"
-                t-att-data-name="brand['name'].lower() if brand['name'] else ''"
-                t-att-data-id="brand['id']">
-                <a t-att-href="brand['website_url']">
-                    <div class="card text-center h-100">
-                        <img t-att-src="brand['image_url']" alt="" width="40"/>
-                        <div class="card-body">
-                            <strong><t t-out="brand['name']"/></strong><br/>
-                            <t t-foreach="product_count" t-as="item">
-                                <t t-if="item['brand_id'] == brand['id']">
-                                    <t t-out="item['count']"/> products
-                                </t>
-                            </t>
-                        </div>
-                    </div>
+          <!-- Brand cards -->
+          <div class="sct-brands-grid" id="brandGrid">
+            <t t-foreach="brands" t-as="brand">
+              <t t-set="brand_count" t-value="sum(item['count'] for item in product_count if item['brand_id'] == brand['id'])"/>
+              <t t-set="brand_words" t-value="(brand['name'] or '').split()"/>
+              <div class="brand-card"
+                   t-att-data-letter="brand['name'][0].lower() if brand['name'] else ''"
+                   t-att-data-name="brand['name'].lower() if brand['name'] else ''"
+                   t-att-data-id="brand['id']">
+                <a class="sct-brand-tile" t-att-href="brand['website_url']" t-att-title="brand['name']">
+                  <span class="sct-brand-logo">
+                    <img t-if="brand.get('has_image', True)" t-att-src="brand['image_url']" t-att-alt="brand['name']" loading="lazy"/>
+                    <span t-else="" class="sct-brand-initials" t-out="''.join(word[0] for word in brand_words[:2]).upper()"/>
+                  </span>
+                  <span class="sct-brand-info">
+                    <span class="sct-brand-name" t-out="brand['name']"/>
+                    <span class="sct-brand-count">
+                      <t t-out="brand_count"/> <t t-if="brand_count == 1">product</t><t t-else="">products</t>
+                    </span>
+                    <span class="sct-brand-cta">Shop now <i class="fa fa-angle-right" role="presentation"/></span>
+                  </span>
                 </a>
-            </div>
-        </t>
+              </div>
+            </t>
+          </div>
+          <p class="sct-brands-empty d-none" id="brandEmpty">No brand matches your search.</p>
+          <p t-if="not brands" class="sct-brands-empty">No brands to show yet.</p>
         </div>
-      </div>
-      <div class="oe_structure oe_empty" id="oe_structure_scita_brands_2"/>
+        <div class="oe_structure oe_empty" id="oe_structure_scita_brands_2"/>
       </div>
     </t>
   </template>

@@ -735,7 +735,7 @@ class ScitaSliderSettings(http.Controller):
                                    'name': record.name})
         return slider_options
 
-    @http.route(['/deals-of-the-day'], type="http", auth="public", website=True)
+    @http.route(['/deals-of-the-day'], type="http", auth="public", website=True, sitemap=True)
     def products(self, **post):
         product = request.env['product.template'].search(
             [('deal_product', '=', True), ("website_id", "in", (False, request.env.website.id))])
@@ -1563,7 +1563,7 @@ class PWASupport(http.Controller):
         return request.render("theme_scita.playground_template", {})
     
     # For display brands
-    @http.route('/brands', type='http', auth='public', website=True)
+    @http.route('/brands', type='http', auth='public', website=True, sitemap=True)
     def show_brands(self):
     # Find the 'Brand' attribute
         brand_attr = request.env['product.attribute'].sudo().search([('name', '=', 'Brand')], limit=1)
@@ -1599,7 +1599,9 @@ class PWASupport(http.Controller):
                         'id': brand.id,
                         'name': brand.name,
                         'website_url': f"/shop?{_brand_filter_query(brand)}",
-                        'image_url': f"/web/image/product.attribute.value/{brand.id}/image"
+                        'image_url': f"/web/image/product.attribute.value/{brand.id}/image",
+                        # no logo: the page shows the brand's initials instead of a placeholder
+                        'has_image': bool(brand.image),
                     })
 
                     # Add product count info

@@ -224,7 +224,7 @@ publish unpublish product
             'theme_scita/static/src/js/lazy_load_button.js',
             'theme_scita/static/src/js/mobile_view.js',
             'theme_scita/static/src/js/snippet_preview.js',
-            'theme_scita/static/src/js/feather_init.js',
+            'theme_scita/static/src/js/brand_filter.js',
             'theme_scita/static/src/js/theme_wishlist_fix.js',
             'theme_scita/static/src/js/product_comparison_extend.js',
             'theme_scita/static/src/js/compare_mini_sticky.js',
