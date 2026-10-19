@@ -3664,6 +3664,17 @@
 	}
 }
 
+// Grid (list): Odoo puts the price and the buttons in columns right of the text, each with a
+// divider line and an indent. Scita stacks them under the name: no divider, no indent.
+#products_grid .o_wsale_products_grid_table.o_wsale_products_opt_layout_list.o_wsale_products_opt_design_grid .oe_product_cart {
+	.product_price {
+		padding-left: 0;
+	}
+	:is(.product_price, .o_wsale_product_btn)::before {
+		content: none;
+	}
+}
+
 .multirange-wrapper{
 	.range-with-input{
 		&.ghost{

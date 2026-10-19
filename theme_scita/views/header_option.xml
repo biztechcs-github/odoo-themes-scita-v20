@@ -644,7 +644,21 @@
                                                     <!-- Request Quote: the "7x" line above already shows the quantity; hide the box
                                                          (kept in the DOM: the trash button reads its hidden input) -->
                                                     <div t-attf-class="css_quantity input-group input-group-sm #{'d-none' if sct_hide_line_price else ''}">
-                                                        <t t-if="line._is_sellable() and not sct_hide_line_price">
+                                                        <!-- Free product reward: same box, buttons disabled, quantity read-only -->
+                                                        <t t-if="line.reward_id.reward_type == 'product' and not sct_hide_line_price">
+                                                            <span class="btn btn-link disabled" aria-disabled="true" title="Free product: the quantity can't be changed">
+                                                                <i class="fa fa-minus"/>
+                                                            </span>
+                                                            <input type="text" readonly="readonly"
+                                                                class="scita_js_quantity form-control quantity text-center"
+                                                                t-att-data-line-id="line.id"
+                                                                t-att-data-product-id="line.product_id.id"
+                                                                t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                                                            <span class="btn btn-link disabled" aria-disabled="true" title="Free product: the quantity can't be changed">
+                                                                <i class="fa fa-plus"/>
+                                                            </span>
+                                                        </t>
+                                                        <t t-elif="line._is_sellable() and not sct_hide_line_price">
                                                             <!-- Minus -->
                                                             <a href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
                                                                 <i class="fa fa-minus"/>

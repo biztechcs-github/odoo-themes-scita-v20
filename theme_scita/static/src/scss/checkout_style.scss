@@ -547,7 +547,8 @@ body #wrapwrap.o_portal {
 		.oe_website_sale_gift_card{
 			form{
 				.alert{
-					margin-bottom: 0;
+					// room for the scissors icon (top: -21px) above each coupon
+					margin: 24px 0 12px;
 					border: 2px dotted $primary;
 					position: relative;
 					background-color: rgba($secondary , 0.2);

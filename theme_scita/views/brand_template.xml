@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <!-- "Brands" in the main menu (after Shop By Category and Extra Pages), added where it is
-       missing only: a site may already have its own Brands menu. Runs on install and update;
-       hidden on websites without Scita (models/scita_pages.py) -->
-  <function model="website" name="_scita_ensure_brands_menu"/>
+       missing only: a site may already have its own Brands menu. Hidden on websites without
+       Scita (models/scita_pages.py). noupdate: runs on install only, so a Brands entry a
+       shop removed from its menu does not come back with every module update -->
+  <data noupdate="1">
+    <function model="website" name="_scita_ensure_brands_menu"/>
+  </data>
 
   <template id="brand_template" name="Brand Listing Page">
     <t t-call="website.layout">

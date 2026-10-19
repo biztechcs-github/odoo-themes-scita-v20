@@ -229,8 +229,8 @@
             </attribute>
         </xpath>
 
-        <!-- 🧱 Hide price block or main product section -->
-        <xpath expr="//div[hasclass('js_main_product')]//div" position="attributes">
+        <!-- 🧱 Hide the price block (not the first div: that is the description) -->
+        <xpath expr="//div[hasclass('js_main_product')]/div[t[@t-call='website_sale.product_price']]" position="attributes">
             <attribute name="t-if">
                 website 
                 and website.website_show_price 

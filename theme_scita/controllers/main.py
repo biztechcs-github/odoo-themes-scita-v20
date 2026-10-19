@@ -63,15 +63,17 @@ class WebsiteAutocomplate(Website):
             results.extend(category_matches)
 
         else:
-            brand_attr = request.env['product.attribute'].sudo().search([('name', '=', 'Brand')], limit=1)
+            # every "Brand" attribute: Odoo 20 ships its own (product.pa_brand) and a database
+            # upgraded from 19 also keeps the shop's own one
+            brand_attr = request.env['product.attribute'].sudo().search([('name', '=', 'Brand')])
             if brand_attr:
                 possible_brands = request.env['product.attribute.value'].sudo().search([
-                    ('attribute_id', '=', brand_attr.id),
+                    ('attribute_id', 'in', brand_attr.ids),
                     ('name', 'ilike', term)
                 ], limit=limit)
                 # only brands of products this website sells
                 sold_brand_ids = set(request.env['product.template.attribute.line'].sudo().search([
-                    ('attribute_id', '=', brand_attr.id), ('value_ids', 'in', possible_brands.ids),
+                    ('attribute_id', 'in', brand_attr.ids), ('value_ids', 'in', possible_brands.ids),
                     ('product_tmpl_id', 'any', Domain('is_published', '=', True) & Domain('sale_ok', '=', True)
                      & website.website_domain()),
                 ]).value_ids.ids)
@@ -1565,22 +1567,23 @@ class PWASupport(http.Controller):
     # For display brands
     @http.route('/brands', type='http', auth='public', website=True, sitemap=True)
     def show_brands(self):
-    # Find the 'Brand' attribute
-        brand_attr = request.env['product.attribute'].sudo().search([('name', '=', 'Brand')], limit=1)
+        # every "Brand" attribute: Odoo 20 ships its own (product.pa_brand) and a database
+        # upgraded from 19 also keeps the shop's own one
+        brand_attr = request.env['product.attribute'].sudo().search([('name', '=', 'Brand')])
         brands = []
         product_count = []
         available_letters = set()
 
         if brand_attr:
             brand_values = request.env['product.attribute.value'].sudo().search([
-                ('attribute_id', '=', brand_attr.id)
+                ('attribute_id', 'in', brand_attr.ids)
             ], order="name asc")
 
             for brand in brand_values:
                 # Count products with this brand
                 # products of this brand that this website sells
                 count = request.env['product.template.attribute.line'].sudo().search_count([
-                    ('attribute_id', '=', brand_attr.id),
+                    ('attribute_id', '=', brand.attribute_id.id),
                     ('value_ids', 'in', [brand.id]),
                     ('product_tmpl_id', 'any', Domain('is_published', '=', True) & Domain('sale_ok', '=', True)
                      & request.env.website.website_domain()),
@@ -1614,7 +1617,7 @@ class PWASupport(http.Controller):
             'brands': brands,
             'available_letters': sorted(available_letters),
             'product_count': product_count,
-            'brand_attr_id': brand_attr.id if brand_attr else None,
+            'brand_attr_id': brand_attr[:1].id or None,
         })
 
     # Request For Quote

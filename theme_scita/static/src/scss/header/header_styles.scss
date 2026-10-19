@@ -6031,3 +6031,14 @@ header #o_main_nav .menu_right ul li + li.o_no_autohide_item {
 header .o_pricelist_dropdown .dropdown-menu {
     min-width: max-content;
 }
+
+// Phone bottom bar: the whole round button is the tap target, not only the icon + label link
+// inside it (a tap on the button's edge did nothing for Bag / Help / My Account).
+.ab-mob-view .ab-icons .btn-link {
+    position: relative;
+    > a::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+    }
+}
