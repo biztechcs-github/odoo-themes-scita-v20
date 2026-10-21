@@ -8018,3 +8018,47 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
 #products_grid .oe_product .o_wsale_product_information_text > .oe_subdescription_wrapper {
     order: 2;
 }
+
+// Hover style 3, list designs (Products Design > list), phones and desktop: its buttons are drawn
+// as the segments of one bar (a right border as divider, no gap), but in a list card that bar has
+// no background: on phones the cart was a filled square next to a plain heart, a lone divider line
+// and a plain eye; on desktop the three touched and the eye had no right border. Separate outlined
+// buttons instead, the cart filled, as in the other hover styles.
+@if o-website-value('prod-hover-style') == 'prod_hover_style_3' {
+    #products_grid .o_wsale_products_grid_table.o_wsale_products_opt_layout_list .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_btn {
+        flex-wrap: nowrap !important;
+
+        .o_wsale_product_action_row {
+            display: flex;
+        }
+        .btn {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px !important;
+            height: 34px !important;
+            padding: 0 8px !important;
+            margin: 0 6px 0 0 !important;
+            border: 1px solid #8e8989 !important;
+            border-radius: 6px !important;
+        }
+        > .btn:last-child {
+            margin-right: 0 !important;
+        }
+        // phones: the text column of a list card is ~120px wide, three 34px buttons fit
+        @media (max-width: 767.98px) {
+            .btn {
+                width: 34px !important;
+                min-width: 34px !important;
+                padding: 0 !important;
+                margin-right: 4px !important;
+            }
+            > .btn:last-child {
+                margin-right: 0 !important;
+            }
+        }
+        .btn:is(.a-submit, .sct-contact-us-btn) {
+            border-color: $primary !important;
+        }
+    }
+}

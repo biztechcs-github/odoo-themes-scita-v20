@@ -96,7 +96,7 @@
                             t-att-data-product-id="product_variant.id"
                             t-att-data-product-template-id="product.id"
                             t-att-data-product-type="product.type"
-                            t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                            t-att-data-show-quantity="is_view_active('website_sale.product_quantity') or is_view_active('theme_scita.theme_scita_product_quantity')"
                         >
                             <i class="lni lni-cart-1"></i> Add to Cart</button>
                     </div>
@@ -105,6 +105,36 @@
             <div class='sct-other-desciption'></div>
         </xpath>
     </template>
+    <!-- Scita's quantity selector on the product page. Scita turns Odoo's own one
+         (website_sale.product_quantity) off when the theme is applied, which left the product page
+         without a quantity box and the cart lines without their -/+ buttons. This one shows instead,
+         with Odoo's markup (Odoo's script runs the -/+ buttons, Scita's styles apply); when Odoo's
+         "Quantity" option is turned on again in the editor, only Odoo's is shown. Not on websites
+         without Scita, nor for the products whose price is hidden (as hide_PDP_quantity_template). -->
+    <template id="theme_scita_product_quantity" inherit_id="website_sale.cta_wrapper" name="Scita Select Quantity">
+        <div id="add_to_cart_wrap" position="inside">
+            <t t-if="website and website._scita_theme_active() and not is_view_active('website_sale.product_quantity')
+                      and not (not website.website_show_price or product.website_hide_price
+                               or (website.login_see_price and request.env.user._is_public()))">
+                <div t-attf-class="css_quantity sct-product-quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
+                     contenteditable="false">
+                    <t t-set="minus_button_title"><t t-if="combination_info.get('minimum_qty_reached_message')" t-out="combination_info['minimum_qty_reached_message']"/><t t-else="">Remove one</t></t>
+                    <button name="minus_button" class="btn btn-link pe-2 border-0"
+                            t-att-aria-label="minus_button_title" t-att-title="minus_button_title"
+                            t-att-data-min-qty-message="combination_info.get('minimum_qty_reached_message')">
+                        <i class="oi text-600" data-icon="remove"/>
+                    </button>
+                    <t t-set="minimum_qty" t-value="combination_info.get('minimum_qty') or 1"/>
+                    <input type="text" class="form-control quantity text-center border-0"
+                           t-att-data-min="minimum_qty" name="add_qty" t-att-value="minimum_qty" aria-label="Quantity"/>
+                    <button class="btn btn-link ps-2 border-0" aria-label="Add one" title="Add one">
+                        <i class="oi text-600" data-icon="add"/>
+                    </button>
+                </div>
+            </t>
+        </div>
+    </template>
+
     <!-- Contact Us (product that can't be sold online) in Add to Cart's place: the envelope used
          for Contact Us everywhere in Scita, as Add to Cart shows the cart -->
     <template id="theme_scita_contact_us_icon" inherit_id="website_sale.cta_wrapper" name="Product Details Contact Us icon">
