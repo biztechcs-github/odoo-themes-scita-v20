@@ -34,9 +34,13 @@ publicWidget.registry.BulkPriceButtonWidget = publicWidget.Widget.extend({
         ev.preventDefault();
         const btn = ev.currentTarget;
         const el = btn.closest('.js_product');
-        const qtyInput = el.querySelector('input[name="add_qty"]');
+        let qtyInput = el.querySelector('input[name="add_qty"]');
         if (!qtyInput) {
-            return;
+            // no quantity selector (Scita turns Odoo's off on install): the tier quantity goes in
+            // a hidden field, the one Odoo's Add to Cart reads (else the click did nothing)
+            qtyInput = document.createElement('input');
+            Object.assign(qtyInput, { type: 'hidden', name: 'add_qty', value: '1' });
+            el.prepend(qtyInput);
         }
         qtyInput.value = parseInt(btn.getAttribute('qty')) || 1;
         highlightBulkTier(el);

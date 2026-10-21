@@ -2965,7 +2965,8 @@ common search for categories and products (22/05/2025)
             line-height: 36px;
             transition: background-color .2s, color .2s, border-color .2s;
 
-            &:hover:not(:disabled) {
+            // not the active chip: its text is white, the light hover background hid it
+            &:hover:not(:disabled):not(.active) {
                 border-color: $primary;
                 background: rgba($primary, .08);
             }
@@ -3111,4 +3112,10 @@ body:not(.editor_enable) #wrapwrap {
 .o_search_btn img[src*="sct_search_icon"] {
 	width: 20px;
 	height: 20px;
+}
+
+// Deal / product block cards: the cart (or envelope) icon touched the button label
+.s_add_to_cart_btn .cart_icon + .add_to_cart_text,
+.sct-contact-us-btn .cart_icon + .add_to_cart_text {
+    margin-left: 4px;
 }

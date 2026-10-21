@@ -498,7 +498,8 @@ body #wrapwrap.o_portal {
 							.btn-link {
 								padding: 5px 10px;
 								background-color: #ffffff;
-								color: #F0CDA8;
+								// the theme colour (a fixed light peach was barely visible on white, whatever the palette)
+								color: $primary;
 								border-radius: 50px;
 							}
 							input {

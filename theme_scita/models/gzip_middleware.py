@@ -28,10 +28,12 @@ _logger = logging.getLogger(__name__)
 
 # Compressing the frontend bundles costs real CPU on every single hit
 # (measured: 26ms for the 2.1MB stylesheet, 65ms for the 2.7MB script), and
-# that lands squarely in front of first paint. Asset URLs carry a content hash
-# (/web/assets/<id>/<hash>/name.min.css), so a hit is immutable by
-# construction and safe to keep. Bounded so a long-running worker cannot grow
-# without limit.
+# that lands squarely in front of first paint, so compressed asset bundles are
+# kept. The key is the URL *and* the ETag Odoo sends for the bundle (a checksum
+# of its content): the URL alone is not enough, as Odoo can rebuild a bundle
+# under the same URL (e.g. after missing filestore files are restored) and one
+# server can serve several databases whose bundles share a URL. Bounded so a
+# long-running worker cannot grow without limit.
 _ASSET_URL_PREFIX = '/web/assets/'
 _CACHE_MAX_ENTRIES = 24
 _cache = OrderedDict()
@@ -59,8 +61,6 @@ COMPRESSIBLE_TYPES = frozenset((
     'image/svg+xml',
 ))
 MIN_SIZE_TO_COMPRESS = 1024
-# headers that belong to the one request being answered, never to a cached copy
-_PER_CLIENT_HEADERS = frozenset(('set-cookie',))
 
 _patched = False
 
@@ -96,19 +96,13 @@ def _patch_gzip_compression():
             return original_call(self, environ, start_response)
 
         path = environ.get('PATH_INFO', '')
-        # Only plain GETs of content-hashed asset URLs are served from / stored in the
-        # cache: a HEAD has no body to replay and a Range request expects a part of it.
+        # Only plain GETs of asset bundles are served from / stored in the cache:
+        # a HEAD has no body to replay and a Range request expects a part of it.
         cacheable = (
             path.startswith(_ASSET_URL_PREFIX)
             and environ.get('REQUEST_METHOD') == 'GET'
             and not environ.get('HTTP_RANGE')
         )
-        if cacheable:
-            hit = _cache_get(path)
-            if hit is not None:
-                cached_status, cached_headers, cached_body = hit
-                start_response(cached_status, list(cached_headers), None)
-                return [cached_body]
 
         captured = {}
 
@@ -148,17 +142,32 @@ def _patch_gzip_compression():
             start_response(captured.get('status'), headers, captured.get('exc_info'))
             return _passthrough(head, iterator, app_iter)
 
-        try:
-            body = b''.join(head) + b''.join(iterator)
-        finally:
+        # Only a plain 200 with an ETag is cached - a 304 or a redirect must never be
+        # replayed as a body. Odoo still answers the request (session, access, the
+        # current ETag), so a hit only skips reading and compressing the body.
+        etag = header_dict.get('etag')
+        cache_key = (path, etag) if cacheable and etag and captured['status'].startswith('200') else None
+        compressed = _cache_get(cache_key) if cache_key else None
+        if compressed is not None:
             if hasattr(app_iter, 'close'):
                 app_iter.close()
+        else:
+            try:
+                body = b''.join(head) + b''.join(iterator)
+            finally:
+                if hasattr(app_iter, 'close'):
+                    app_iter.close()
 
-        if len(body) < MIN_SIZE_TO_COMPRESS:
-            start_response(captured['status'], headers, captured.get('exc_info'))
-            return [body]
+            if len(body) < MIN_SIZE_TO_COMPRESS:
+                start_response(captured['status'], headers, captured.get('exc_info'))
+                return [body]
 
-        compressed = gzip.compress(body, compresslevel=6)
+            compressed = gzip.compress(body, compresslevel=6)
+            if cache_key:
+                _cache_put(cache_key, compressed)
+
+        # headers come from this response every time, so a visitor never gets
+        # another visitor's Set-Cookie (session) from a cached copy
         new_headers = [
             (k, v) for k, v in headers
             if k.lower() not in ('content-length', 'vary')
@@ -170,17 +179,6 @@ def _patch_gzip_compression():
         new_headers.append(('Content-Encoding', 'gzip'))
         new_headers.append(('Content-Length', str(len(compressed))))
         new_headers.append(('Vary', ', '.join(vary_values)))
-
-        # Only content-hashed asset URLs are cached, and only on a plain 200 -
-        # a 304 or a redirect must never be replayed as a body. Per-visitor headers
-        # are never stored: the response carries this visitor's session cookie
-        # (Set-Cookie: session_id=...), and replaying it gave every later visitor
-        # that same session - sharing it, and logging signed-in users out.
-        if cacheable and captured['status'].startswith('200') and compressed:
-            shared_headers = [
-                (k, v) for k, v in new_headers if k.lower() not in _PER_CLIENT_HEADERS
-            ]
-            _cache_put(path, (captured['status'], shared_headers, compressed))
 
         start_response(captured['status'], new_headers, captured.get('exc_info'))
         return [compressed]

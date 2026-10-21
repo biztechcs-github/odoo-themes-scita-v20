@@ -2966,12 +2966,12 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .o_wsale_product_btn {
+                                order: var(--o-wsale-card-btns-order, 8); // after the price, as in hover styles 1 and 2
                                 justify-content: flex-start;
                                 margin: 10px 0 0;
                                 position: static;
                                 opacity: 1;
                                 background: transparent;
-                                order: 1;
 
                                 .btn{
                                     margin: 0 0 5px;
@@ -3961,12 +3961,12 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .o_wsale_product_btn {
+                                order: var(--o-wsale-card-btns-order, 8); // after the price, as in hover styles 1 and 2
                                 justify-content: flex-start;
                                 margin: 10px 0 0;
                                 position: static;
                                 opacity: 1;
                                 background: transparent;
-                                order: 1;
 
                                 .btn{
                                     margin: 0 5px 5px;
@@ -5053,12 +5053,12 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .o_wsale_product_btn {
+                                order: var(--o-wsale-card-btns-order, 8); // after the price, as in hover styles 1 and 2
                                 justify-content: flex-start;
                                 margin: 10px 0 0;
                                 position: static;
                                 opacity: 1;
                                 background: transparent;
-                                order: 1;
                                 transform: translate(0);
                                 padding: 0;
 
@@ -8010,4 +8010,11 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
             position: static;
         }
     }
+}
+
+// Odoo 20 puts the product description in .o_wsale_product_information_text with order 0:
+// hover styles 3 to 5 give the title order 1 (after the ratings), so the description came
+// first. Keep it right after the title, as in hover styles 1 and 2.
+#products_grid .oe_product .o_wsale_product_information_text > .oe_subdescription_wrapper {
+    order: 2;
 }

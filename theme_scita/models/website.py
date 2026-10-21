@@ -333,6 +333,13 @@ class website(models.Model):
                 and user.partner_id.website_show_price
             )
 
+    def _prevent_product_sale(self, product_or_template, is_zero_price_product):
+        # "Request Quote" products are not sold online: their price is hidden (product_category.py)
+        # and Odoo shows its Contact Us button (styled by Scita) in Add to Cart's place
+        if product_or_template.quote_request:
+            return True
+        return super()._prevent_product_sale(product_or_template, is_zero_price_product)
+
     def _sct_hide_line_price(self, line):
         """Cart / checkout: hide this order line's price (Request Quote or login to see price)."""
         self.ensure_one()

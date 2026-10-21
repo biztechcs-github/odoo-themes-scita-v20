@@ -64,6 +64,10 @@
             }
         }
     }
+    // on a photo (banner slides, image backgrounds) the transparent hover left the text on the picture
+    :is(.oe_img_bg, .carousel-item, [style*="background-image"]) .btn-primary:hover{
+        background-color: $light-color;
+    }
 }
 @if o-website-value('btn-style-template') == 'btn_style_3' {
     .btn-secondary{

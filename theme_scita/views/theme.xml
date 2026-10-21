@@ -1339,7 +1339,7 @@
                                                            class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="product.group_show_uom_price">
                                                     </small>
                                                 </div>
-                                                <t t-placeholder="select">
+                                                <t>
                                                     <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                                     <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
                                                     <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
