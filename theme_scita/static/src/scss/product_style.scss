@@ -3811,3 +3811,14 @@
 		}
 	}
 }
+// Deals of the Day page: the product picture keeps the 220x270 box its width/height attributes
+// give it. With `width: auto` the box took the loaded image's own proportions instead (most are
+// not 220x270), each card changed height as its picture arrived and moved the footer (layout
+// shift 0.3 on mobile Lighthouse). Shown the same way, centred in the box.
+#sct_deal_of_day_page .cs-product .pwp-img img.front {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    aspect-ratio: 220 / 270;
+    object-fit: contain;
+}

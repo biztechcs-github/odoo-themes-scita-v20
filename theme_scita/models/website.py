@@ -433,6 +433,17 @@ class website(models.Model):
         except Exception:  # noqa: BLE001
             return False
 
+    def _scita_path_startswith(self, *prefixes):
+        """The current URL path, without its language prefix (/ar/shop -> /shop), starts with
+        one of `prefixes`: which pages get the shop / block styles render-blocking."""
+        if not request:
+            return False
+        path = request.httprequest.path or '/'
+        parts = path.split('/', 2)
+        if len(parts) > 1 and parts[1] and parts[1] in self.language_ids.mapped('url_code'):
+            path = '/' + (parts[2] if len(parts) > 2 else '')
+        return path.startswith(prefixes)
+
     def _scita_page_has_theme_blocks(self, main_object):
         """A website page using Scita blocks: their styles (theme_scita.assets_snippet_product_css)
         are then loaded render-blocking. Loaded after the first paint, as on other pages, the
@@ -486,6 +497,14 @@ class website(models.Model):
         hard-coded. Any failure returns an empty list: a performance hint must
         never be able to break a page.
         """
+        return list(self._scita_google_font_css_hrefs_cached())
+
+    @api.model
+    @api.ormcache(cache='assets')
+    def _scita_google_font_css_hrefs_cached(self):
+        """The lookup above, once: a LIKE on ir.attachment's name scans the whole table, on every
+        page of the site (~9ms). Fonts are only added or removed through the website's style
+        customisations, which clear the 'assets' cache."""
         try:
             attachments = self.env['ir.attachment'].sudo().search([
                 ('name', 'like', '% (google-font)'),
@@ -497,9 +516,9 @@ class website(models.Model):
                 if not font_name:
                     continue
                 hrefs.append('/web/content/%s/google-font-%s' % (attachment.id, font_name))
-            return hrefs
+            return tuple(hrefs)
         except Exception:  # noqa: BLE001
-            return []
+            return ()
 
 
 class WebsiteSnippetFilter(models.Model):

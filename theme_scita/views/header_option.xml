@@ -541,7 +541,7 @@
                         <t t-call="website.placeholder_header_search_box" _layout.f="modal" _simple_button_layout="True" _simple_button_classes.f="o_navlink_background text-reset p-0" _input_classes.f="border border-end-0 p-3" _submit_classes.f="border border-start-0 px-4 bg-o-color-4">
                         </t>
                     </ul>
-                     <t t-call="website.placeholder_header_brand" t-valuef="m-auto" _link_class.f="m-0 col-lg-4">
+                     <t t-call="website.placeholder_header_brand" _link_class.f="m-0 col-lg-4">
                     </t>
                     <div class="col-lg-4 menu_right justify-content-lg-end">
                         <ul class="currency-lang-ul d-flex align-items-center">

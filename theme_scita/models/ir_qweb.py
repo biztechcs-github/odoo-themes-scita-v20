@@ -49,6 +49,19 @@ def _is_icon_sized(atts):
 class IrQweb(models.AbstractModel):
     _inherit = 'ir.qweb'
 
+    def _render(self, template, values=None, **options):
+        # The page's LCP image is chosen in <head> (website._scita_lcp_preload_href), but Odoo
+        # renders the page body (the t-call content) before the layout's <head>: the body's
+        # images then reached the "first image" fallback below, and with a CSS-background hero
+        # the first <img> further down the page (the home page's "Our story" picture) was made
+        # eager + fetchpriority=high, competing with the hero. Decide it before rendering.
+        if (request and values and not hasattr(request, '_scita_lcp_href')
+                and values.get('main_object') is not None and not self.env.context.get('inherit_branding')):
+            website = self.env.website
+            if website:
+                website._scita_lcp_preload_href(values['main_object'])
+        return super()._render(template, values, **options)
+
     def _post_processing_att(self, tagName, atts):
         atts = super()._post_processing_att(tagName, atts)
 

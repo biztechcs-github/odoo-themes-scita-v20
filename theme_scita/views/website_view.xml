@@ -192,11 +192,12 @@
             <xpath expr="//head" position="inside">
                 <!-- block styles: render-blocking on website pages made with Scita blocks (blocks at
                      the top of such a page reflowed when they arrived), asynchronous elsewhere -->
-                <t t-if="website and website._scita_page_has_theme_blocks(main_object)" t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true"/>
+                <t t-if="website and (website._scita_page_has_theme_blocks(main_object) or website._scita_path_startswith('/deals-of-the-day'))" t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true"/>
                 <t t-else="" t-call-assets="theme_scita.assets_snippet_product_css" t-js="false" t-css="true" media="print"/>
-                <!-- shop / product styles: render-blocking under /shop (on screen at first paint there,
-                     a late apply reflowed the page), asynchronous elsewhere. Same link order either way. -->
-                <t t-if="request and request.httprequest.path.startswith('/shop')" t-call-assets="theme_scita.assets_shop_css" t-js="false" t-css="true"/>
+                <!-- shop / product styles: render-blocking under /shop and on the Scita pages built from
+                     them (All Categories, Deals of the Day: their whole content moved when they
+                     arrived, layout shift 0.9-1.0), asynchronous elsewhere. Same link order either way. -->
+                <t t-if="website and website._scita_path_startswith('/shop', '/allcategories', '/deals-of-the-day')" t-call-assets="theme_scita.assets_shop_css" t-js="false" t-css="true"/>
                 <t t-else="" t-call-assets="theme_scita.assets_shop_css" t-js="false" t-css="true" media="print"/>
                 <t t-call-assets="theme_scita.assets_snippet_extra_css" t-js="false" t-css="true" media="print"/>
                 <script type="text/javascript">

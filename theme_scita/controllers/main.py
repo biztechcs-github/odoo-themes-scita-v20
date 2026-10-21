@@ -846,11 +846,6 @@ class ScitaShop(WebsiteSale):
 
     def _get_additional_shop_values(self, values, **kwargs):
         res = super()._get_additional_shop_values(values, **kwargs)
-        products = values.get('products') or request.env['product.template']
-        prod_available = {
-            prod.id: {'free_qty': int(sum(prod.product_variant_ids.sudo().mapped('free_qty')))}
-            for prod in products
-        }
         Category = request.env['product.public.category']
         # products per category, sub-categories included (as 'child_of'), in a few queries
         # instead of one search_count per category on every shop page
@@ -879,7 +874,6 @@ class ScitaShop(WebsiteSale):
         ] if isinstance(attrib_values, dict) else attrib_values
         res.update({
             'brand_set': set(self._get_brand_filter_ids()),
-            'prod_available': prod_available,
             'result': category_counts,
             'scita_attrib_values': scita_attrib_values or False,
             'is_show_more_button': values.get('search_count', 0) > values.get('ppr', 4),

@@ -569,6 +569,17 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
     content-visibility: visible;
 }
 
+// Phones (two cards per row): lazy again, but with a placeholder height close to a real card
+// (332-350px), so the footer stays below them. Off-screen cards are then not laid out before the
+// page has painted, and their images (2 per card with a secondary image, ~40 per page) no longer
+// download ahead of it (mobile Lighthouse counted them in the LCP: shop 62).
+@media (max-width: 767.98px) {
+    #products_grid .oe_product:not(.sct_col_single) .oe_product_cart {
+        content-visibility: auto;
+        contain-intrinsic-block-size: auto 340px;
+    }
+}
+
 // Product page brand logo: only capped at 40px tall, it took no room until it had loaded, then
 // moved the product details down (layout shift). A 40px box from the start; scale-down keeps
 // smaller logos at their own size (as before) and taller ones capped at 40px (as before).

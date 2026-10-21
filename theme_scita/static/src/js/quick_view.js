@@ -83,6 +83,12 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                             });
 
                             if (response.error) {
+                                // products this shortcut must not add (a combo needs its items
+                                // chosen): open the product page, where Odoo configures them
+                                const templateId = form.querySelector("input[name=product_template_id]")?.value;
+                                if (templateId) {
+                                    window.location.href = `/shop/${templateId}`;
+                                }
                                 return;
                             }
 

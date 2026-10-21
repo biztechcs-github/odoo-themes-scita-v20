@@ -41,7 +41,7 @@
 																<div t-if="product and product.product_style_tag_id.style=='style5'" t-att-class="'img_lbl %s' % product.product_style_tag_id.style +' %s'% product.product_style_tag_id.position" t-att-style="'background-color:%s' % product.product_style_tag_id.color_code">
 									                                <span t-att-style="'color:%s' % product.product_style_tag_id.font_color_code" t-out="product.product_style_tag_id.name"/>
 									                            </div>
-		                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+		                                                        <a t-att-href="product.website_url">
 		                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" width="220" height="270" loading="lazy" t-att-src="website.image_url(product, 'image_1920','220x270')"/>
 		                                                        </a>
 		                                                    </div>
@@ -70,7 +70,7 @@
 		                                                        </div>
 		                                                        <div class="pwp-info">
 		                                                            <h3 class="pwpi-title">
-		                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+		                                                                <a t-att-href="product.website_url">
 		                                                                    <span t-field='product.name'/>
 		                                                                </a>
 		                                                            </h3>

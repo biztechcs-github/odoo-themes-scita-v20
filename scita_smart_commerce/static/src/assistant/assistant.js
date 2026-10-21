@@ -127,7 +127,8 @@ export class ScitaAssistant extends Interaction {
                     continue;
                 }
                 const rect = bar.getBoundingClientRect();
-                if (!rect.height || rect.top >= viewportHeight || rect.bottom < viewportHeight - 2) {
+                // floating bars count too: Scita's mobile navigation sits 10px above the edge
+                if (!rect.height || rect.top >= viewportHeight || rect.bottom < viewportHeight - 24) {
                     continue; // not showing at the bottom edge right now
                 }
                 lift = Math.max(lift, viewportHeight - rect.top);
