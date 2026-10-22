@@ -9,6 +9,7 @@ const HISTORY_KEY = "scita_assistant_history";
 const BOTTOM_BARS = [
     ".o_wsale_comparison_bottom_bar",
     ".ab-mob-view", // Theme Scita's mobile bottom navigation
+    ".mobile-deive-popup", // Theme Scita's "add to home screen" hint (iPhone)
     "#website_cookies_bar .modal-dialog, .o_cookies_bar_toggle",
     ".fixed-bottom",
     ".sticky-bottom",
@@ -117,7 +118,7 @@ export class ScitaAssistant extends Interaction {
         const update = () => {
             frame = null;
             const viewportHeight = window.innerHeight;
-            let lift = 0;
+            const rects = [];
             for (const bar of document.querySelectorAll(BOTTOM_BARS)) {
                 if (bar.closest(".o_scita_assistant, .modal") || !bar.offsetParent && getComputedStyle(bar).position !== "fixed") {
                     continue;
@@ -127,11 +128,20 @@ export class ScitaAssistant extends Interaction {
                     continue;
                 }
                 const rect = bar.getBoundingClientRect();
-                // floating bars count too: Scita's mobile navigation sits 10px above the edge
-                if (!rect.height || rect.top >= viewportHeight || rect.bottom < viewportHeight - 24) {
-                    continue; // not showing at the bottom edge right now
+                if (rect.height && rect.top < viewportHeight) {
+                    rects.push(rect);
                 }
-                lift = Math.max(lift, viewportHeight - rect.top);
+            }
+            // from the bottom up: a bar counts when it reaches the button's area at the bottom
+            // of the screen (button 56px + its 20px offset), or the top of a bar below it (the
+            // comparison bar stacked on Scita's mobile navigation covered the open assistant on
+            // phones; it also stops a little above the edge at the end of a short page).
+            rects.sort((a, b) => b.bottom - a.bottom);
+            let lift = 0;
+            for (const rect of rects) {
+                if (rect.bottom >= viewportHeight - lift - 84) {
+                    lift = Math.max(lift, viewportHeight - rect.top);
+                }
             }
             this.el.style.setProperty("--scita-assistant-lift", `${Math.round(lift)}px`);
         };
@@ -158,6 +168,37 @@ export class ScitaAssistant extends Interaction {
         }
         const observer = new ResizeObserver(schedule);
         observer.observe(document.body);
+        // bars drawn after the page (Odoo's comparison bar is a component mounted later) or
+        // resized (its product list unfolded): neither resizes the page
+        const barObserver = new ResizeObserver(schedule);
+        const watchNewBars = (nodes) => {
+            for (const node of nodes) {
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    continue;
+                }
+                const bars = node.matches(BOTTOM_BARS) ? [node] : node.querySelectorAll(BOTTOM_BARS);
+                if (bars.length) {
+                    bars.forEach((bar) => barObserver.observe(bar));
+                    schedule();
+                }
+            }
+        };
+        watchNewBars([document.body]);
+        const barMutations = new MutationObserver((records) => {
+            for (const record of records) {
+                watchNewBars(record.addedNodes);
+                const barRemoved = [...record.removedNodes].some((node) => node.nodeType === Node.ELEMENT_NODE
+                    && (node.matches(BOTTOM_BARS) || node.querySelector(BOTTOM_BARS)));
+                if (barRemoved) {
+                    schedule();
+                }
+            }
+        });
+        barMutations.observe(document.getElementById("wrapwrap") || document.body, { childList: true, subtree: true });
+        this.registerCleanup(() => {
+            barObserver.disconnect();
+            barMutations.disconnect();
+        });
         // a stylesheet switched on (media="print" -> "all") or a bar added to the page
         const mutations = new MutationObserver(schedule);
         mutations.observe(document.head, { childList: true, subtree: true, attributes: true, attributeFilter: ["media"] });

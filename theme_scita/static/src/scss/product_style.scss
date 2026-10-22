@@ -1496,9 +1496,8 @@
 /*Mobile filters design*/
 .sct_shop_box {
 	@media (max-width: 767px) {
-		.dropdown_sorty_by {
-			display: none;
-		}
+		// the sort menu stays on phones: it was hidden for a bottom sort bar (.sct_btm_mobile)
+		// that no template has any more, leaving phones with no way to sort
 		.sct_btm_mobile {
 			position: fixed;
 		    z-index: 999;
@@ -2132,14 +2131,19 @@
 			}
 		}
 	}
+	// Odoo 20: the sort menu shares a small row with the "Filters" button (below 992px); a fixed
+	// 25% width squeezed "Sort By: Featured" onto three lines and stretched the button to that
+	// height. Its own width on one line, the two centred on the row.
+	.o_wsale_products_header_dropdown_wrap{
+		align-items: center;
+	}
 	.o_sortby_dropdown{
-		@media (max-width: 1199px) {
-			flex: 0 0 25%;
-			max-width: 25%;
-		}
+		flex: 0 1 auto;
+		max-width: none;
 		.dropdown-toggle{
 			padding-left: 0;
 			margin-left: 0;
+			white-space: nowrap;
 		}
 	}
 	.o_wsale_apply_layout{

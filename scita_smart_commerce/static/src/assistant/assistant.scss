@@ -1,8 +1,26 @@
+// The theme colour (or another one) darkened in small steps until text / icons of that colour
+// read on $bg (4.5:1). Computed when the website's styles are built, as Odoo does for its
+// buttons: they are rebuilt with the theme colour. Strong colours are left as they are.
+@function scita-readable-on($color, $bg, $min: 4.5) {
+    $result: $color;
+    $steps: 0;
+    @while contrast-ratio($bg, $result) < $min and $steps < 20 {
+        $result: mix(#000, $result, 10%);
+        $steps: $steps + 1;
+    }
+    @return $result;
+}
+
 // Floating AI shopping assistant. Bottom-left: Scita's back-to-top button and the
 // product comparison bar live bottom-right / along the bottom edge.
 .o_scita_assistant {
     --scita-assistant-bg: var(--o-color-4, #fff);
     --scita-assistant-accent: var(--o-color-1, #{$primary});
+    // text / icons on the theme colour: black or white, whichever reads (as on Odoo's buttons;
+    // white on a yellow or pale theme colour could not be read)
+    --scita-assistant-on-accent: #{color-contrast($primary)};
+    // the theme colour as text / icons on white
+    --scita-assistant-accent-text: #{scita-readable-on($primary, #fff)};
     position: fixed;
     left: 20px;
     // --scita-assistant-lift: height of the bars pinned to the bottom of the screen (JS)
@@ -18,14 +36,14 @@
         align-items: center;
         justify-content: center;
         background: var(--scita-assistant-accent);
-        color: #fff;
+        color: var(--scita-assistant-on-accent);
         border: 0;
         transition: transform 0.2s ease;
 
         &:hover,
         &:focus-visible {
             transform: scale(1.06);
-            color: #fff;
+            color: var(--scita-assistant-on-accent);
         }
     }
 
@@ -60,10 +78,10 @@
         justify-content: space-between;
         padding: 10px 12px 10px 16px;
         background: var(--scita-assistant-accent);
-        color: #fff;
+        color: var(--scita-assistant-on-accent);
 
         .btn-link {
-            color: #fff;
+            color: var(--scita-assistant-on-accent);
             text-decoration: none;
             font-size: 1rem;
         }
@@ -109,7 +127,7 @@
 
         .o_scita_assistant_bubble {
             background: var(--scita-assistant-accent);
-            color: #fff;
+            color: var(--scita-assistant-on-accent);
             border-bottom-right-radius: 4px;
             white-space: pre-wrap;
         }
@@ -191,7 +209,7 @@
         border: 1px solid rgba(0, 0, 0, 0.12);
         border-radius: 50%;
         background: #fff;
-        color: var(--scita-assistant-accent);
+        color: var(--scita-assistant-accent-text);
         font-size: 22px;
         line-height: 26px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -354,4 +372,22 @@ body.editor_enable .o_scita_assistant {
 // mobile bottom navigation does.
 body:has(.offcanvas.show, .offcanvas.showing) .o_scita_assistant:not(.o_scita_assistant_is_open) {
     display: none;
+}
+
+// The open chat goes above Odoo's comparison bar (z-index 1055, the modals' level), which covered
+// it where the bar stops mid-screen at the end of a short page. Back under the modals as soon
+// as one opens (product options opened from the chat, quick view...), backdrop included.
+.o_scita_assistant.o_scita_assistant_is_open {
+    z-index: 1056;
+}
+body.modal-open .o_scita_assistant {
+    z-index: 1045;
+}
+
+// Phones: the open chat takes the full width; Theme Scita's back-to-top arrow (z-index 999999)
+// was drawn over its corner
+@media (max-width: 575.98px) {
+    body:has(.o_scita_assistant_is_open) .cd-top {
+        display: none !important;
+    }
 }

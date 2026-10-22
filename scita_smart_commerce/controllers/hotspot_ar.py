@@ -70,7 +70,21 @@ class ScitaHotspotAr(http.Controller):
             'can_add_to_cart': can_add,
             'has_ar': product.scita_has_ar,
             'ar': product._scita_ar_urls(),
+            # for the 3D viewer
+            'category': product.public_categ_ids.filtered(
+                lambda categ: categ.website_id in (website, website.browse()))[:1].name or '',
+            'dimensions': self._ar_dimensions(product),
         }
+
+    def _ar_dimensions(self, product):
+        """[{label, value}] of the 3D model's size in cm, left out when 0 (photo cut-outs are flat)."""
+        if not product.scita_ar_dimensions:
+            return []
+        width, height, depth = product.scita_ar_dimensions.split(',')
+        labels = {'width': request.env._('Width'), 'depth': request.env._('Depth'), 'height': request.env._('Height')}
+        values = {'width': width, 'depth': depth, 'height': height}
+        return [{'label': labels[key], 'value': request.env._('%s cm', values[key])}
+                for key in ('width', 'depth', 'height') if float(values[key]) > 0]
 
     # not readonly: the pricelist price computation may write the website's session pricelist
     @http.route('/scita/hotspots/products', type='jsonrpc', auth='public', website=True)

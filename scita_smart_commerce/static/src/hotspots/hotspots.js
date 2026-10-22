@@ -198,12 +198,16 @@ export class ScitaHotspots extends Interaction {
             this.closeCard(true);
         } else if (target.matches(".o_scita_hotspot_card_ar")) {
             await openArViewer({
+                id: product.id,
                 name: product.name,
                 glb: product.ar.glb,
                 usdz: product.ar.usdz,
                 poster: product.image_url,
                 placement: product.ar.placement,
                 scale: product.ar.scale,
+            }, {
+                info: product,
+                addToCart: (button) => this.addToCart(button, product),
             });
         } else {
             await this.addToCart(target, product);

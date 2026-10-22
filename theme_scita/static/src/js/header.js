@@ -186,13 +186,56 @@ $(document).ready(function() {
     offset_opacity = 1200,
     scroll_top_duration = 700,
     $back_to_top = $('.cd-top');
+    // Odoo's comparison bar (products being compared) sticks to the bottom of the screen, or
+    // stops mid-screen at the end of a short page: when the arrow would cover it (and its
+    // "Compare" button), the arrow goes just above it
+    var placeAboveCompareBar = function () {
+        var arrow = $back_to_top[0];
+        if (!arrow) {
+            return;
+        }
+        arrow.style.bottom = '';
+        var bar = document.querySelector('.o_wsale_comparison_bottom_bar');
+        if (!bar || !arrow.classList.contains('cd-is-visible')) {
+            return;
+        }
+        var barRect = bar.getBoundingClientRect();
+        var arrowRect = arrow.getBoundingClientRect();
+        if (barRect.height && arrowRect.bottom > barRect.top && arrowRect.top < barRect.bottom) {
+            arrow.style.bottom = (window.innerHeight - barRect.top + 10) + 'px';
+        }
+    };
     //hide or show the "back to top" link
     $('#wrapwrap').on('scroll',function() {
         ($(this).scrollTop() > offset) ? $back_to_top.addClass('cd-is-visible'): $back_to_top.removeClass('cd-is-visible cd-fade-out');
         if ($(this).scrollTop() > offset_opacity) {
             $back_to_top.addClass('cd-fade-out');
         }
+        placeAboveCompareBar();
     });
+    $(window).on('resize', placeAboveCompareBar);
+    // the comparison bar is drawn after the page (an Odoo component) and grows when its product
+    // list unfolds: place the arrow again then, not only on scroll
+    if ($back_to_top.length && window.MutationObserver && window.ResizeObserver) {
+        var barResize = new ResizeObserver(placeAboveCompareBar);
+        var isBar = function (node) {
+            return node.nodeType === Node.ELEMENT_NODE && (node.matches('.o_wsale_comparison_bottom_bar')
+                || node.querySelector('.o_wsale_comparison_bottom_bar'));
+        };
+        new MutationObserver(function (records) {
+            for (var i = 0; i < records.length; i++) {
+                var added = Array.prototype.some.call(records[i].addedNodes, isBar);
+                if (added || Array.prototype.some.call(records[i].removedNodes, isBar)) {
+                    var bar = document.querySelector('.o_wsale_comparison_bottom_bar');
+                    if (bar) {
+                        barResize.observe(bar);
+                    }
+                    placeAboveCompareBar();
+                    return;
+                }
+            }
+        }).observe(document.getElementById('wrapwrap') || document.body, {childList: true, subtree: true});
+    }
     $back_to_top.on('click', function(event) {
         event.preventDefault();
         // the page scrolls inside #wrapwrap (comman.scss), not body/html

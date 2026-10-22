@@ -18,16 +18,24 @@ export class ScitaProductArButton extends Interaction {
         this.label = arButtonLabel(await detectArSupport());
     }
 
+    start() {
+        // reached from the viewer's QR code (scanned on a desktop): open it on this phone
+        if (new URLSearchParams(window.location.search).has("scita_3d")) {
+            this.onClick();
+        }
+    }
+
     onClick() {
         const data = this.el.dataset;
         openArViewer({
+            id: parseInt(data.productId) || undefined,
             name: data.name,
             glb: data.glb,
             usdz: data.usdz || undefined,
             poster: data.poster,
             placement: data.placement,
             scale: data.scale,
-        });
+        }, { onProductPage: true });
     }
 }
 

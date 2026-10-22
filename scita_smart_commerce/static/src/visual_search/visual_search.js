@@ -42,9 +42,17 @@ export class ScitaVisualSearch extends Interaction {
         _document: { "t-on-click.capture": this.onDocumentClick },
         ".o_scita_vs_file": { "t-on-change": this.locked(this.onFileChange, true) },
         ".o_scita_vs_reset": { "t-on-click": this.reset },
+        // drag and drop a photo on the picker
+        ".o_scita_vs_drop": {
+            "t-on-dragover": this.onDragOver,
+            "t-on-dragleave": this.onDragLeave,
+            "t-on-drop": this.locked(this.onDrop, true),
+            "t-att-class": () => ({ o_scita_vs_dragging: this.dragging }),
+        },
     };
 
     setup() {
+        this.dragging = false;
         this.picker = this.el.querySelector(".o_scita_vs_picker");
         this.preview = this.el.querySelector(".o_scita_vs_preview");
         this.previewImg = this.el.querySelector(".o_scita_vs_preview_img");
@@ -88,11 +96,37 @@ export class ScitaVisualSearch extends Interaction {
         this.error.classList.toggle("d-none", !message);
     }
 
+    onDragOver(ev) {
+        if ([...(ev.dataTransfer?.types || [])].includes("Files")) {
+            ev.preventDefault(); // allows the drop
+            ev.dataTransfer.dropEffect = "copy";
+            this.dragging = true;
+        }
+    }
+
+    onDragLeave(ev) {
+        if (!ev.currentTarget.contains(ev.relatedTarget)) {
+            this.dragging = false;
+        }
+    }
+
+    async onDrop(ev) {
+        ev.preventDefault(); // else the browser opens the image
+        this.dragging = false;
+        const file = ev.dataTransfer?.files?.[0];
+        if (file) {
+            await this.processFile(file);
+        }
+    }
+
     async onFileChange(ev) {
         const file = ev.currentTarget.files && ev.currentTarget.files[0];
-        if (!file) {
-            return;
+        if (file) {
+            await this.processFile(file);
         }
+    }
+
+    async processFile(file) {
         if (!file.type.startsWith("image/")) {
             this.showError(_t("Please choose an image file."));
             return;
@@ -112,6 +146,12 @@ export class ScitaVisualSearch extends Interaction {
         this.chips.replaceChildren();
         this.footer.classList.add("d-none");
         this.setStatus(_t("Looking for similar products…"), true);
+        this.results.replaceChildren(...Array.from({ length: 4 }, () => {
+            const placeholder = document.createElement("div");
+            placeholder.className = "o_scita_vs_card o_scita_vs_card_loading";
+            placeholder.setAttribute("aria-hidden", "true");
+            return placeholder;
+        }));
 
         let result;
         try {
@@ -120,6 +160,7 @@ export class ScitaVisualSearch extends Interaction {
             result = { error: _t("Something went wrong. Please try again.") };
         }
         this.setStatus("", false);
+        this.results.replaceChildren();
         if (result.error) {
             this.showError(result.error);
             return;
@@ -148,12 +189,12 @@ export class ScitaVisualSearch extends Interaction {
             return;
         }
         const label = document.createElement("span");
-        label.className = "small text-muted me-1";
+        label.className = "o_scita_vs_chips_label";
         label.textContent = _t("We see:");
         this.chips.append(label);
         for (const chip of chips) {
             const el = document.createElement("span");
-            el.className = "badge rounded-pill text-bg-light border";
+            el.className = "o_scita_vs_chip";
             el.textContent = chip;
             this.chips.append(el);
         }
@@ -165,38 +206,35 @@ export class ScitaVisualSearch extends Interaction {
             return;
         }
         for (const product of products) {
-            const col = document.createElement("div");
-            col.className = "col";
             const card = document.createElement("a");
-            card.className = "card h-100 text-decoration-none text-reset o_scita_vs_card";
+            card.className = "o_scita_vs_card";
             card.href = product.url;
+            const media = document.createElement("span");
+            media.className = "o_scita_vs_card_img";
             const img = document.createElement("img");
-            img.className = "card-img-top object-fit-contain p-2";
             img.loading = "lazy";
             img.alt = product.name;
             img.src = product.image;
-            img.style.aspectRatio = "1 / 1";
-            const body = document.createElement("div");
-            body.className = "card-body p-2";
-            const name = document.createElement("div");
-            name.className = "small fw-bold text-truncate";
+            media.append(img);
+            const body = document.createElement("span");
+            body.className = "o_scita_vs_card_body";
+            const name = document.createElement("span");
+            name.className = "o_scita_vs_card_name";
             name.textContent = product.name;
             body.append(name);
             if (product.price) {
-                const price = document.createElement("div");
-                price.className = "small";
+                const price = document.createElement("span");
+                price.className = "o_scita_vs_card_price";
                 price.textContent = product.price;
                 if (product.compare_price) {
                     const del = document.createElement("del");
-                    del.className = "text-muted ms-1";
                     del.textContent = product.compare_price;
                     price.append(del);
                 }
                 body.append(price);
             }
-            card.append(img, body);
-            col.append(card);
-            this.results.append(col);
+            card.append(media, body);
+            this.results.append(card);
         }
         if (!exact) {
             // nothing of the photo's kind in the shop: say so, these are only related products

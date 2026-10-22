@@ -15,49 +15,77 @@
         </xpath>
     </template>
 
-    <!-- One modal per page, opened by any camera button -->
+    <!-- One modal per page, opened by any camera button. Same look as the 3D viewer: a warm
+         window with a floating close button. Two states: the photo picker (drop zone + "how
+         it works"), then the photo with what was recognised beside the similar products.
+         Full screen on phones. -->
     <template id="visual_search_modal" inherit_id="website.layout" name="Scita Visual Search Modal">
         <xpath expr="//div[@id='wrapwrap']" position="inside">
             <div t-if="website and website.scita_visual_search_enabled and website._scita_ai_ready()"
                  id="o_scita_visual_search_modal" class="modal fade o_scita_visual_search_modal"
                  tabindex="-1" aria-labelledby="o_scita_vs_title" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-md-down">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="o_scita_vs_title">Search by photo</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
-                        </div>
-                        <div class="modal-body">
-                            <div class="o_scita_vs_picker text-center py-4 px-3 rounded border border-2 border-dashed">
-                                <i class="oi fs-1 text-muted" data-icon="photo_camera" role="img" aria-hidden="true"/>
-                                <p class="mt-2 mb-3">Upload or snap a photo of what you are looking for and we will find similar products.</p>
-                                <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                    <label class="btn btn-primary mb-0">
-                                        Upload a photo
-                                        <input type="file" accept="image/*" class="d-none o_scita_vs_file"/>
-                                    </label>
-                                    <label class="btn btn-outline-primary mb-0 d-lg-none">
-                                        Take a photo
-                                        <input type="file" accept="image/*" capture="environment" class="d-none o_scita_vs_file"/>
-                                    </label>
-                                </div>
-                                <p class="small text-muted mt-3 mb-0">Your photo is only used for this search and is not stored.</p>
-                            </div>
-                            <div class="o_scita_vs_preview d-none">
-                                <div class="d-flex flex-column flex-sm-row gap-3 align-items-sm-center">
-                                    <img class="o_scita_vs_preview_img rounded border" alt="Your photo"/>
-                                    <div class="flex-grow-1">
-                                        <div class="o_scita_vs_status small text-muted" role="status" aria-live="polite"/>
-                                        <div class="o_scita_vs_chips d-flex flex-wrap gap-1 mt-2"/>
-                                        <button type="button" class="btn btn-link px-0 mt-2 o_scita_vs_reset">Try another photo</button>
+                        <button type="button" class="o_scita_vs_close" data-bs-dismiss="modal" aria-label="Close" title="Close">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                        </button>
+                        <div class="o_scita_vs_body">
+                            <div class="o_scita_vs_picker">
+                                <div class="o_scita_vs_drop">
+                                    <span class="o_scita_vs_drop_icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.3l1.4-2h5.6l1.4 2h2.3A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/></svg>
+                                    </span>
+                                    <h2 class="o_scita_vs_title" id="o_scita_vs_title">Search by photo</h2>
+                                    <p class="o_scita_vs_lead">Upload or snap a photo of what you are looking for and we will find similar products.</p>
+                                    <div class="o_scita_vs_actions">
+                                        <label class="btn btn-primary o_scita_vs_upload">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5M5 19h14"/></svg>
+                                            <span>Upload a photo</span>
+                                            <input type="file" accept="image/*" class="d-none o_scita_vs_file"/>
+                                        </label>
+                                        <label class="btn btn-outline-primary o_scita_vs_upload d-lg-none">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.3l1.4-2h5.6l1.4 2h2.3A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/></svg>
+                                            <span>Take a photo</span>
+                                            <input type="file" accept="image/*" capture="environment" class="d-none o_scita_vs_file"/>
+                                        </label>
                                     </div>
+                                    <p class="o_scita_vs_drop_hint">or drop an image here</p>
                                 </div>
+                                <aside class="o_scita_vs_how">
+                                    <h3>How it works</h3>
+                                    <ol>
+                                        <li>
+                                            <strong>Snap or upload</strong>
+                                            <span>A photo of a product you like: in a shop, a magazine or a friend's home.</span>
+                                        </li>
+                                        <li>
+                                            <strong>We read the photo</strong>
+                                            <span>Its kind of product, colour, material and style.</span>
+                                        </li>
+                                        <li>
+                                            <strong>Shop similar products</strong>
+                                            <span>The closest matches from our catalogue, ready to add to your cart.</span>
+                                        </li>
+                                    </ol>
+                                    <p class="o_scita_vs_privacy">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                                        <span>Your photo is only used for this search and is not stored.</span>
+                                    </p>
+                                </aside>
                             </div>
-                            <div class="o_scita_vs_error alert alert-warning d-none mt-3 mb-0" role="alert"/>
-                            <div class="o_scita_vs_results row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 mt-1"/>
-                        </div>
-                        <div class="modal-footer o_scita_vs_footer d-none">
-                            <a class="btn btn-secondary o_scita_vs_all" href="/shop">See all results</a>
+                            <div class="o_scita_vs_error d-none" role="alert"/>
+                            <div class="o_scita_vs_preview d-none">
+                                <aside class="o_scita_vs_side">
+                                    <img class="o_scita_vs_preview_img" alt="Your photo"/>
+                                    <div class="o_scita_vs_status" role="status" aria-live="polite"/>
+                                    <div class="o_scita_vs_chips"/>
+                                    <div class="o_scita_vs_side_actions">
+                                        <a class="btn btn-primary o_scita_vs_all o_scita_vs_footer d-none" href="/shop">See all results</a>
+                                        <button type="button" class="btn btn-outline-primary o_scita_vs_reset">Try another photo</button>
+                                    </div>
+                                </aside>
+                                <div class="o_scita_vs_results"/>
+                            </div>
                         </div>
                     </div>
                 </div>

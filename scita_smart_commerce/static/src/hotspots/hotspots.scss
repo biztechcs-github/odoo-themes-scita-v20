@@ -1,6 +1,23 @@
+// The theme colour (or another one) darkened in small steps until text / icons of that colour
+// read on $bg (4.5:1). Computed when the website's styles are built, as Odoo does for its
+// buttons: they are rebuilt with the theme colour. Strong colours are left as they are.
+@function scita-readable-on($color, $bg, $min: 4.5) {
+    $result: $color;
+    $steps: 0;
+    @while contrast-ratio($bg, $result) < $min and $steps < 20 {
+        $result: mix(#000, $result, 10%);
+        $steps: $steps + 1;
+    }
+    @return $result;
+}
+
 // Product hotspots on any image (<img> wrapper, grid image cell or block with a background image)
 .o_scita_hotspots {
     --scita-hotspot-accent: var(--o-color-1, #{$primary});
+    // black or white on the theme colour, whichever reads (white on a pale theme colour did not)
+    --scita-hotspot-on-accent: #{color-contrast($primary)};
+    // the theme colour as text on the white card
+    --scita-hotspot-accent-text: #{scita-readable-on($primary, #fff)};
     --scita-hotspot-size: 30px;
     position: relative;
     counter-reset: scita-hotspot;
@@ -75,7 +92,7 @@ span.o_scita_hotspots {
     &.o_scita_hotspot_active::after {
         transform: scale(1.15);
         background: var(--scita-hotspot-accent);
-        color: #fff;
+        color: var(--scita-hotspot-on-accent);
     }
     &:focus-visible {
         outline: none;
@@ -140,7 +157,7 @@ span.o_scita_hotspots {
         text-decoration: none;
 
         &:hover {
-            color: var(--scita-hotspot-accent);
+            color: var(--scita-hotspot-accent-text);
         }
     }
     .o_scita_hotspot_card_price {

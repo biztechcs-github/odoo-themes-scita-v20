@@ -3114,7 +3114,8 @@ body:not(.editor_enable) #wrapwrap {
 	height: 20px;
 }
 
-// Deal / product block cards: the cart (or envelope) icon touched the button label
+// Deal / product / trending block cards: the cart (or envelope) icon touched the button label
+.cart_view_sct_btn .cart_icon + .add_to_cart_text,
 .s_add_to_cart_btn .cart_icon + .add_to_cart_text,
 .sct-contact-us-btn .cart_icon + .add_to_cart_text {
     margin-left: 4px;

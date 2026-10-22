@@ -1,0 +1,357 @@
+// The theme colour (or another one) darkened in small steps until text / icons of that colour
+// read on $bg (4.5:1). Computed when the website's styles are built, as Odoo does for its
+// buttons: they are rebuilt with the theme colour. Strong colours are left as they are.
+@function scita-readable-on($color, $bg, $min: 4.5) {
+    $result: $color;
+    $steps: 0;
+    @while contrast-ratio($bg, $result) < $min and $steps < 20 {
+        $result: mix(#000, $result, 10%);
+        $steps: $steps + 1;
+    }
+    @return $result;
+}
+
+// AI comparison on the comparison page: same look as the 3D viewer and the photo search
+// (warm ground, white cards, round corners)
+.o_scita_compare_ai {
+    --scita-cmp-ground: #f5f2ee;
+    --scita-cmp-soft: #f1ebe4;
+    --scita-cmp-faint: #fbf8f4;
+    --scita-cmp-muted: #5c534b;
+    --scita-cmp-line: rgba(0, 0, 0, 0.08);
+    // theme colour readable as text / icons on the tinted ground (and so on white)
+    --scita-cmp-accent: #{scita-readable-on($primary, mix($primary, #f6f6f6, 8%))};
+
+    // Tints of the theme's main colour, mixed into light greys so they stay visible on white
+    // cards even with a very pale theme colour (with Scita's brown: warm beige and warm grey, as
+    // before), so they follow a theme in blue, green, black...: ground behind the content,
+    // soft for hover / selected states, faint for zebra rows and highlights, muted for
+    // secondary text (dark enough to read on all of them). Browsers without color-mix
+    // keep the fixed values above.
+    @supports (color: color-mix(in srgb, red, blue)) {
+        --scita-cmp-ground: color-mix(in srgb, var(--o-color-1, #{$primary}) 8%, #f6f6f6);
+        --scita-cmp-soft: color-mix(in srgb, var(--o-color-1, #{$primary}) 12%, #eeeeee);
+        --scita-cmp-faint: color-mix(in srgb, var(--o-color-1, #{$primary}) 4%, #fafafa);
+        --scita-cmp-muted: color-mix(in srgb, var(--o-color-1, #{$primary}) 20%, #474747);
+    }
+
+    padding: 24px;
+    border-radius: 20px;
+    background: var(--scita-cmp-ground);
+    color: #1f1b17;
+
+    svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linejoin: round;
+    }
+}
+
+.o_scita_compare_ai_head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.o_scita_compare_ai_icon {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--scita-cmp-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.o_scita_compare_ai_intro {
+    flex: 1 1 auto;
+    min-width: 0;
+    p {
+        margin: 2px 0 0;
+        font-size: 14px;
+        color: var(--scita-cmp-muted);
+    }
+}
+.o_scita_compare_ai_title {
+    margin: 0;
+    font-size: 22px;
+}
+.o_scita_compare_ai_btn {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding-inline: 22px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.o_scita_compare_ai_result:empty {
+    display: none;
+}
+.o_scita_compare_ai_result {
+    margin-top: 20px;
+}
+
+// while the AI answers
+.o_scita_compare_ai_loading {
+    padding: 20px;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.o_scita_compare_ai_loading_text {
+    margin: 0 0 4px;
+    font-weight: 500;
+    color: var(--scita-cmp-muted);
+}
+.o_scita_compare_ai_bar {
+    height: 14px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--scita-cmp-soft) 0%, var(--scita-cmp-faint) 50%, var(--scita-cmp-soft) 100%);
+    background-size: 200% 100%;
+    animation: o_scita_cmp_shimmer 1.4s ease-in-out infinite;
+    &:nth-child(odd) {
+        width: 70%;
+    }
+}
+@keyframes o_scita_cmp_shimmer {
+    from {
+        background-position: 100% 0;
+    }
+    to {
+        background-position: -100% 0;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .o_scita_compare_ai_bar {
+        animation: none;
+    }
+}
+
+.o_scita_compare_ai_error {
+    margin: 0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #fbe9e7;
+    color: #8a2a1c;
+    font-weight: 500;
+}
+
+.o_scita_compare_ai_answer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.o_scita_compare_ai_summary {
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 16px;
+    border-inline-start: 4px solid var(--o-color-1, #{$primary});
+    background: #fff;
+    font-size: 17px;
+    line-height: 1.5;
+}
+.o_scita_compare_ai_subtitle {
+    margin: 8px 0 0;
+    font-size: 18px;
+}
+
+// the comparison table: one column per product
+.o_scita_compare_ai_table_wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    background: #fff;
+}
+.o_scita_compare_ai_table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    th, td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--scita-cmp-line);
+        vertical-align: top;
+        font-size: 14px;
+        line-height: 1.45;
+        text-align: start;
+    }
+    tbody tr:last-child > * {
+        border-bottom: 0;
+    }
+    tbody tr:nth-child(even) > * {
+        background: var(--scita-cmp-faint);
+    }
+}
+.o_scita_compare_ai_corner {
+    width: 22%;
+}
+.o_scita_compare_ai_aspect {
+    font-weight: 600;
+    color: var(--scita-cmp-muted);
+}
+.o_scita_compare_ai_product {
+    font-weight: 400;
+}
+.o_scita_compare_ai_product_link {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: inherit;
+    text-decoration: none;
+    img {
+        width: 72px;
+        height: 72px;
+        border-radius: 12px;
+        object-fit: contain;
+        background: var(--scita-cmp-ground);
+    }
+    &:hover .o_scita_compare_ai_product_name {
+        text-decoration: underline;
+    }
+}
+.o_scita_compare_ai_product_name {
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.o_scita_compare_ai_price {
+    display: block;
+    margin-top: 4px;
+    font-weight: 600;
+    del {
+        margin-inline-start: 6px;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--scita-cmp-muted);
+    }
+}
+.o_scita_compare_ai_rating {
+    display: block;
+    font-size: 12px;
+    color: var(--scita-cmp-muted);
+}
+
+// "best for" cards
+.o_scita_compare_ai_best {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+.o_scita_compare_ai_best_card {
+    padding: 14px;
+    border-radius: 16px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: box-shadow 0.2s;
+    &:hover, &:focus-visible {
+        color: inherit;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+    img {
+        flex: 0 0 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        object-fit: contain;
+        background: var(--scita-cmp-ground);
+    }
+}
+.o_scita_compare_ai_best_text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    strong {
+        font-size: 14px;
+    }
+    span {
+        font-size: 13px;
+        line-height: 1.4;
+        color: var(--scita-cmp-muted);
+    }
+}
+
+.o_scita_compare_ai_footer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--scita-cmp-muted);
+}
+.o_scita_compare_ai_missing {
+    summary {
+        cursor: pointer;
+        width: fit-content;
+    }
+    ul {
+        margin: 6px 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    li {
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #fff;
+    }
+}
+.o_scita_compare_ai_note {
+    margin: 0;
+    font-style: italic;
+}
+
+// phones: header stacked, the table scrolls sideways with the aspects kept in sight
+@include media-breakpoint-down(md) {
+    .o_scita_compare_ai {
+        padding: 16px;
+    }
+    .o_scita_compare_ai_head {
+        flex-wrap: wrap;
+    }
+    .o_scita_compare_ai_intro {
+        flex-basis: calc(100% - 64px);
+    }
+    .o_scita_compare_ai_btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .o_scita_compare_ai_title {
+        font-size: 19px;
+    }
+    .o_scita_compare_ai_summary {
+        font-size: 15px;
+    }
+    .o_scita_compare_ai_table {
+        min-width: 0;
+        width: max-content;
+        table-layout: auto;
+        th, td {
+            min-width: 140px;
+            max-width: 180px;
+        }
+    }
+    .o_scita_compare_ai_aspect, .o_scita_compare_ai_corner {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        min-width: 96px !important;
+        max-width: 110px !important;
+        background: #fff;
+        box-shadow: 1px 0 0 var(--scita-cmp-line);
+    }
+}

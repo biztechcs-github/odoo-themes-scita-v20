@@ -114,6 +114,9 @@ class ProductTemplate(models.Model):
         'Model Size', compute='_compute_scita_ar_size', store=True,
         help='Size of the 3D model as AR shows it at real size: check that it matches the product.')
     scita_ar_size_warning = fields.Char(compute='_compute_scita_ar_size', store=True)
+    # "width,height,depth" in cm (glTF: x, y up, z), shown in the 3D viewer; not when the
+    # model does not seem to be in metres
+    scita_ar_dimensions = fields.Char(compute='_compute_scita_ar_size', store=True)
     scita_ar_from_photo = fields.Char(
         'Created From Photo', readonly=True, copy=False,
         help='Set when the 3D model was created from a product photo: its real size.')
@@ -155,6 +158,7 @@ class ProductTemplate(models.Model):
             if not size:
                 product.scita_ar_size = False
                 product.scita_ar_size_warning = False
+                product.scita_ar_dimensions = False
                 continue
             product.scita_ar_size = self.env._('%s cm', ' × '.join('%g' % round(v * 100, 1) for v in size))
             biggest = max(size)
@@ -168,6 +172,8 @@ class ProductTemplate(models.Model):
                     'it far too small.')
             else:
                 product.scita_ar_size_warning = False
+            product.scita_ar_dimensions = not product.scita_ar_size_warning and ','.join(
+                '%g' % round(v * 100) for v in size)
 
     def write(self, vals):
         if 'scita_ar_model_glb' in vals:

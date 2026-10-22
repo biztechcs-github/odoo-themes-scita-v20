@@ -1,28 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <!-- 3D / AR viewer modal (model-viewer is inserted into .o_scita_ar_stage) -->
+    <!-- 3D / AR viewer: the model (model-viewer is inserted into .o_scita_ar_stage) fills the
+         window, with its toolbar; the product panel (ArViewerPanel, once the product's data is
+         loaded) floats on it as a card. Full screen on phones, the card at the bottom. -->
     <t t-name="scita_smart_commerce.ArViewerModal">
         <div class="modal fade o_scita_ar_modal" tabindex="-1" role="dialog" aria-modal="true"
              t-att-aria-label="name">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" t-out="name"/>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
-                    </div>
-                    <div class="modal-body p-0">
-                        <div class="o_scita_ar_stage d-flex align-items-center justify-content-center">
-                            <div class="spinner-border text-primary" role="status"/>
+                    <div class="o_scita_ar_layout">
+                        <div class="o_scita_ar_view">
+                            <div class="o_scita_ar_hint">
+                                <span class="o_scita_ar_chip">
+                                    <t t-call="scita_smart_commerce.ArCubeIcon"/>
+                                    3D
+                                </span>
+                                <span class="o_scita_ar_status" aria-live="polite">Loading 3D viewer...</span>
+                            </div>
+                            <button type="button" class="o_scita_ar_close" data-bs-dismiss="modal" aria-label="Close" title="Close">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                            </button>
+                            <div class="o_scita_ar_stage">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <div class="o_scita_ar_toolbar d-none" role="toolbar" aria-label="3D view controls">
+                                <button type="button" class="o_scita_ar_tool active" data-action="rotate"
+                                        aria-pressed="true" aria-label="Auto-rotate" title="Auto-rotate">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg>
+                                </button>
+                                <button type="button" class="o_scita_ar_tool" data-action="zoom-out"
+                                        aria-label="Zoom out" title="Zoom out">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-4-4"/></svg>
+                                </button>
+                                <button type="button" class="o_scita_ar_tool" data-action="zoom-in"
+                                        aria-label="Zoom in" title="Zoom in">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M11 8v6M20 20l-4-4"/></svg>
+                                </button>
+                                <button type="button" class="o_scita_ar_tool" data-action="reset"
+                                        aria-label="Reset view" title="Reset view">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v5h5"/></svg>
+                                </button>
+                                <button type="button" class="o_scita_ar_tool" data-action="fullscreen"
+                                        aria-pressed="false" aria-label="Full screen" title="Full screen">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+                                </button>
+                            </div>
                         </div>
-                        <p class="o_scita_ar_status small text-muted text-center my-2" aria-live="polite">
-                            Loading 3D viewer...
-                        </p>
+                        <div class="o_scita_ar_panel">
+                            <span class="o_scita_ar_handle" aria-hidden="true"/>
+                            <div class="o_scita_ar_titles">
+                                <span class="o_scita_ar_category"/>
+                                <h2 class="o_scita_ar_name" t-out="name"/>
+                            </div>
+                            <div class="o_scita_ar_details"/>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </t>
 
+    <t t-name="scita_smart_commerce.ArCubeIcon">
+        <svg class="o_scita_ar_cube" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 20 7.4v9.2l-8 4.6-8-4.6V7.4z"/><path d="M4 7.4l8 4.6 8-4.6M12 12v9.2"/></svg>
+    </t>
+
+    <!-- The product panel's content. info: the product's card (/scita/hotspots/products), or
+         null when it could not be loaded (then only the AR part shows). -->
+    <t t-name="scita_smart_commerce.ArViewerPanel">
+        <div class="o_scita_ar_details_inner">
+            <div t-if="info and info.price" class="o_scita_ar_price">
+                <span class="o_scita_ar_price_main" t-out="info.price"/>
+                <del t-if="info.compare_price" class="o_scita_ar_price_old" t-out="info.compare_price"/>
+            </div>
+            <dl t-if="info and info.dimensions and info.dimensions.length" class="o_scita_ar_dims">
+                <div t-foreach="info.dimensions" t-as="dim" t-key="dim_index">
+                    <dt t-out="dim.label"/>
+                    <dd t-out="dim.value"/>
+                </div>
+            </dl>
+            <!-- AR: a button on phones / tablets that can place the model, else a QR code to
+                 continue on a phone (desktop) -->
+            <button t-if="arSupported" type="button" class="btn btn-primary o_scita_ar_room">
+                <t t-call="scita_smart_commerce.ArCubeIcon"/>
+                <span>View it in your room</span>
+            </button>
+            <div t-elif="qrUrl" class="o_scita_ar_qr">
+                <img t-att-src="qrUrl" width="96" height="96" alt="QR code to open this product on your phone" loading="lazy"/>
+                <div>
+                    <strong>See it in your room</strong>
+                    <span>Scan with your phone camera to place it in your space, at real size.</span>
+                </div>
+            </div>
+            <div class="o_scita_ar_actions">
+                <button t-if="cartMode" type="button"
+                        t-attf-class="btn o_scita_ar_cart #{arSupported ? 'btn-outline-primary' : 'btn-primary'}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11h11L21 8H6.2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+                    <span>Add to cart</span>
+                </button>
+                <p t-elif="info and !info.in_stock and !info.hide_price" class="o_scita_ar_note">Out of stock</p>
+                <a t-if="info and info.url and !onProductPage" t-att-href="info.url"
+                   t-attf-class="btn o_scita_ar_link #{cartMode ? 'btn-link' : 'btn-outline-primary'}">
+                    <t t-if="info.needs_options and info.in_stock and !info.hide_price">Choose options</t>
+                    <t t-else="">View full product details</t>
+                </a>
+            </div>
+        </div>
+    </t>
 
 </templates>

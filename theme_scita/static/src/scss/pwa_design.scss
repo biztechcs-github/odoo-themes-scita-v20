@@ -5,7 +5,8 @@
     padding: 10px;
     position: fixed;
     z-index: 11111111;
-    bottom: 60px;
+    // above the app bar (10px from the edge, 60px tall), which it covered by 10px
+    bottom: 80px;
     width: 90%;
     margin: auto;
     left: 0;

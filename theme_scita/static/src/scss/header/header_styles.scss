@@ -30,6 +30,20 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
     display: none !important;
 }
 
+// Odoo's comparison bar sticks to the bottom of the screen, where the app bar floats on phones
+// (10px from the edge, 60px tall): it covered the app bar. It sticks above it instead, and the
+// page keeps room for both under its last content.
+@media (max-width: 767.98px) {
+    body:has(.ab-mob-view) {
+        .o_wsale_comparison_bottom_bar {
+            bottom: 74px;
+        }
+        main:has(.o_wsale_comparison_bottom_bar) {
+            padding-bottom: calc(var(--o-wsale-comparison-bottom-bar-height, 80px) + 74px);
+        }
+    }
+}
+
 // scita pwa menu design
 .ab-mob-view {
     position: fixed;
