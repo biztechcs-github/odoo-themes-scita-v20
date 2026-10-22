@@ -3046,6 +3046,15 @@
                         }
                     }
                 }
+				// "End in :" on one line: its col-3 box (a quarter of the timer) was narrower than the label
+				.box_degit_wrapper{
+					flex: 0 0 auto;
+					width: auto;
+					margin-right: 10px;
+					.label_text{
+						white-space: nowrap;
+					}
+				}
             }
 			&.title_time_out{
 				.timer_counter_div{

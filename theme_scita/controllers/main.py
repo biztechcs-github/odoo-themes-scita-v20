@@ -1243,6 +1243,8 @@ class ScitaShop(WebsiteSale):
         try:
             ppg = int(ppg)
         except (ValueError, TypeError):
+            ppg = 0
+        if ppg <= 0:  # missing (False) or invalid: the pager divides by it
             ppg = website.shop_ppg or 20
 
         ppr = website.shop_ppr or 4

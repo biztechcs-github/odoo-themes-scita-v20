@@ -23,6 +23,20 @@ class ThemeNew(models.AbstractModel):
             {'prod-hover-style': "'prod_hover_style_1'"},
         )
 
+    @api.model
+    def _reset_default_config(self):
+        # Odoo resets the header / footer before it removes the old theme (any change of theme):
+        # Scita's header / footer options replace the same nodes as Odoo's default ones
+        # (//header//nav...), so enabling those while a Scita one is still active fails validation
+        website = self.env.website
+        if website:
+            self.env['ir.ui.view'].search([
+                ('website_id', '=', website.id),
+                '|', ('key', '=like', 'theme_scita.option_header_%'),
+                ('key', '=like', 'theme_scita.option_footer_%'),
+            ]).write({'active': False})
+        return super()._reset_default_config()
+
 
 # The views each "Scita Header N" item of the editor's header template picker enables
 # (static/src/xml/scita_header_option.xml); the editor only shows a header as selected when
