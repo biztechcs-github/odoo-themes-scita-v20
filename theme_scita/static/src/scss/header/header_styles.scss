@@ -1921,6 +1921,11 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                     .dropdown-menu {
                         >li {
                             line-height: 30px;
+
+                            // the 30px is for the list's own names, not a mega menu opened in it
+                            >.mega-dropdown-menu {
+                                line-height: $line-height-base;
+                            }
                         }
                     }
                 }
@@ -1942,6 +1947,12 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                     @include min992 {
                         line-height: 70px;
+
+                        // the 70px centres the bar's own links: mega menus inherited it and spread
+                        // their text lines 70px apart
+                        >.dropdown-menu {
+                            line-height: $line-height-base;
+                        }
                     }
 
                     @include min1440 {
@@ -3095,6 +3106,11 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                     .dropdown-menu {
                         >li {
                             line-height: 30px;
+
+                            // the 30px is for the list's own names, not a mega menu opened in it
+                            >.mega-dropdown-menu {
+                                line-height: $line-height-base;
+                            }
                         }
                     }
                 }
@@ -3687,6 +3703,24 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                     #o_main_nav {
                         padding: 15px;
+
+                        // search | logo | language, currency and icons: equal thirds left the
+                        // right part ~40px short below 1200px, it overflowed against the logo.
+                        // The right part takes the width it needs, the logo its own and the
+                        // search icon the rest (the logo stays within a few px of the centre).
+                        @include media-breakpoint-only(lg) {
+                            display: grid !important;
+                            grid-template-columns: minmax(0, 1fr) auto max-content;
+                            column-gap: 12px;
+
+                            > .col-lg-4 {
+                                width: auto;
+                                max-width: none;
+                            }
+                            > .navbar-brand {
+                                justify-self: center;
+                            }
+                        }
 
                         .header_search_modal {
                             a {
@@ -4964,6 +4998,17 @@ header {
                         transform: translateX(0) !important;
                         inset: auto auto auto 0 !important;
                         top: 100% !important;
+
+                        // centred in the box it is placed in: in headers 1, 2 and 4 that box is the
+                        // header's padded .container, and left: 0 put the panel 15px left of the logo
+                        // and the bar (the panel is as wide as the container's content). Not the
+                        // ones in the "+" list: they open in place (product_card_equal_height.scss)
+                        @include min992 {
+                            &:not(.o_extra_menu_items *) {
+                                left: 50% !important;
+                                transform: translateX(-50%) !important;
+                            }
+                        }
                     }
                 }
             }

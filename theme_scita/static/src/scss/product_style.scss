@@ -1704,6 +1704,8 @@
 				height: 37px;
 				border-radius: 50px;
 				padding: 9px 20px;
+				// the "Check" button sits over the end of the field: typed text stops before it
+				padding-inline-end: 120px;
 				transition: none;
 				
 				@include min1200{

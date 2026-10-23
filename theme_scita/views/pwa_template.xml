@@ -81,6 +81,8 @@ self.addEventListener('fetch', function(ev) {
             fetch(req).catch(function () {
                 return caches.open(PWA_CACHE_NAME).then(function (cache) {
                     return cache.match('/theme_scita/pwa/offline');
+                }).then(function (res) {
+                    return res || Response.error();
                 });
             })
         );
@@ -101,6 +103,9 @@ self.addEventListener('fetch', function(ev) {
         .catch(function() {
             return caches.open(PWA_CACHE_NAME).then(function(cache) {
                 return cache.match(req);
+            }).then(function (res) {
+                // aborted or offline with nothing cached: a plain network error, never undefined
+                return res || Response.error();
             });
         })
     );

@@ -891,7 +891,10 @@ class ScitaShop(WebsiteSale):
         if not qs or qs.lower() in '/allcategories':
             yield {'loc': '/allcategories'}
         Category = env['product.public.category']
-        for category in Category.search(env.website.website_domain()):
+        # only categories with sub-categories of this website have a page here (the others go to
+        # the shop, see below)
+        children = [('website_id', 'in', (False, env.website.id))]
+        for category in Category.search(env.website.website_domain() + [('child_id', 'any', children)]):
             loc = '/allcategories/category/%s' % env['ir.http']._slug(category)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
@@ -905,9 +908,13 @@ class ScitaShop(WebsiteSale):
         cat = {}
         shop_category = None
         if category:
-            if category.child_id:
-                child = category.child_id
-                cat.update({'pro': child})
+            website = request.env.website
+            # sub-categories of this website (another website's ones are not shown anywhere here)
+            children = category.child_id.filtered(lambda c: not c.website_id or c.website_id == website)
+            if not children:
+                # nothing to choose from: this page was empty, show the category's products
+                return request.redirect('/shop/category/%s' % request.env['ir.http']._slug(category))  # not 301: browsers would keep it after sub-categories are added
+            cat.update({'pro': children})
         else:
             shop_category = child_cat_ids = request.env['product.public.category'].sudo().search(
                 [('parent_id', '=', None), ("website_id", "in", (False, request.env.website.id))], order='name asc')

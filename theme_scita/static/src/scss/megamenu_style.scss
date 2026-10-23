@@ -160,6 +160,7 @@ header {
 								@include flex;
 								@include justify-align-content;
 								@include flexwrap;
+								align-content: flex-start; // image on top in every card, names level
 								width: 100%;
 								.prod_img {
 									display: block;
@@ -168,6 +169,15 @@ header {
 										width: 100px;
 										margin: auto;
 										padding: 5px;
+									}
+									// same box for every photo: tall and wide photos made the names
+									// start at different heights across a row
+									img {
+										display: block;
+										width: 80px;
+										height: 80px;
+										margin: auto;
+										object-fit: contain;
 									}
 								}
 								.categories {
@@ -220,6 +230,11 @@ header {
 				.letter-spacing {
 					font-size: 0;
 					p {
+						font-size: 15px;
+					}
+					// text typed in the menu form (service / banner content): the editor saves its
+					// lines as <div>, <p> or lists, which the font-size 0 above hid
+					.sub_menu_content, > div:not([class]), > ul, > ol {
 						font-size: 15px;
 					}
 					.inline-block {
@@ -455,6 +470,14 @@ header {
 			.inline-block {
 				.dropdown-header {
 					border-bottom: 1px solid fade-out($dark-color, 0.5);
+					// room for a two-line name, so a long one ("Cabinets & Consoles") does not push
+					// its image below the others in the row
+					// (one per row in the "+" list: not needed there)
+					&:not(.o_extra_menu_items *) {
+						display: flex;
+						align-items: flex-end;
+						min-height: 55px; // two lines of the 15px name (line-height 1.5) + its 10px padding
+					}
 					a {
 						padding-left: 0 !important;
 						@media (max-width: 767px){
@@ -667,6 +690,14 @@ header {
 						@media (max-width: 1023px){
 							margin-bottom:10px;
 						}
+						// one thumbnail shape whatever the photo's: a tall photo made a taller
+						// thumbnail and pushed its title below the others in the row
+						img {
+							width: 80px;
+							max-width: 100%;
+							aspect-ratio: 4 / 3;
+							object-fit: cover;
+						}
 					}
 					.page_info {
 						display: inline-block;
@@ -818,6 +849,23 @@ header .menu_style_2 .mega-dropdown-menu .inline-block .cat_img {
 	}
 }
 /*Mega menu hover img effect end*/
+
+// Phone / tablet menu: the panel has 12px side padding but its rows keep Scita's -15px gutter,
+// so they stuck out 3px on each side and the open mega menu scrolled sideways. Only column
+// padding is in those 3px.
+@media (max-width: 991.98px) {
+	header .li-mega-menu > .mega-dropdown-menu {
+		overflow-x: hidden;
+	}
+	// stacked blocks ran into each other: a section's last line into the next title, the
+	// banner text into the service list
+	header .menu_service_1 .link-thumb + .link-thumb {
+		margin-top: 15px;
+	}
+	header .menu_service_3 .banner_simple_desc {
+		margin-bottom: 15px;
+	}
+}
 
 // v 18.0 mega menu mobile css start here
 header{ 

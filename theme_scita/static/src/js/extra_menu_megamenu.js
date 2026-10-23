@@ -45,3 +45,16 @@ document.addEventListener("shown.bs.dropdown", (ev) => {
         listEl.scrollTop = top;
     }
 });
+
+// Opening or closing one of those mega menus changes the list's width (320px while one is
+// open). Bootstrap only places the list when "+" opens, so it kept its old spot and ran past
+// the right edge of the screen until the window was resized. Place it again.
+for (const type of ["shown.bs.dropdown", "hidden.bs.dropdown"]) {
+    document.addEventListener(type, (ev) => {
+        const itemEl = ev.target.closest?.(".o_extra_menu_items li.li-mega-menu");
+        const plusToggleEl = itemEl?.closest(".o_extra_menu_items").querySelector(":scope > .dropdown-toggle");
+        if (plusToggleEl) {
+            window.Dropdown?.getInstance(plusToggleEl)?.update();
+        }
+    });
+}

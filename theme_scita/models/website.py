@@ -7,6 +7,7 @@ import werkzeug
 from lxml import etree
 from markupsafe import Markup
 from odoo import models, api, fields
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -34,6 +35,7 @@ class WebsiteMenu(models.Model):
                                           string="Megamenu View Type")
     is_service_menu = fields.Boolean(
         string='Is service menu...?', default=False)
+    parent_megamenu_view_type = fields.Selection(related='parent_id.megamenu_view_type')
     is_service_content_menu = fields.Boolean(
         string='Is service content menu...?', default=False)
     megamenu_size = fields.Selection([('medium', 'Medium'),
@@ -64,7 +66,7 @@ class WebsiteMenu(models.Model):
 
     display_menu_footer = fields.Boolean(string="Display menu footer", default=False,
                                          help="For displaying footer in megamenu")
-    menu_footer = fields.Text(string="Footer content",
+    menu_footer = fields.Html(string="Footer content",
                               translate=True,
                               help="Footer name for megamenu")
     megamenu_product_ids = fields.Many2many("product.template", string="Products", domain=[
@@ -81,10 +83,10 @@ class WebsiteMenu(models.Model):
     menu_desc = fields.Text(string="Menu description",
                             translate=True,
                             help="Menu description")
-    service_content = fields.Text(string="Menu Content",
+    service_content = fields.Html(string="Menu Content",
                                   translate=True,
                                   help="sub menu")
-    banner_content = fields.Text(string="banner Content",
+    banner_content = fields.Html(string="banner Content",
                                  translate=True,
                                  help="Banner description")
     img_grid = fields.Boolean(
@@ -100,6 +102,40 @@ class WebsiteMenu(models.Model):
         else:
             self.is_service_menu = False
 
+    def _scita_pages_megamenu(self):
+        """ The Pages megamenu this menu is in (or is), else an empty recordset. """
+        menu = self
+        while menu:
+            if menu.is_megamenu and menu.megamenu_view_type == 'pages_megamenu':
+                return menu
+            menu = menu.parent_id
+        return self.browse()
+
+    @api.constrains("parent_id", "child_id", "is_mega_menu", "mega_menu_content")
+    def _validate_parent_menu(self):
+        # The Pages megamenu lists pages under group headings: top menu > megamenu > group > page,
+        # one level more than Odoo allows. Keep Odoo's rules for every other menu.
+        pages = self.filtered(lambda m: m.sudo()._scita_pages_megamenu())
+        super(WebsiteMenu, self - pages)._validate_parent_menu()
+        for record in pages.sudo():
+            megamenu = record._scita_pages_megamenu()
+            # the whole megamenu: moving it (or a group) also moves what is under it
+            for menu in self.sudo().search([('id', 'child_of', megamenu.id)]):
+                level = len(menu.parent_path.split('/')) - 1  # 1: the website's top menu
+                if (menu == megamenu and level != 2) or level > 4:
+                    raise UserError(self.env._("A Scita Pages megamenu sits in the menu bar and only holds groups and their pages."))
+                if menu.is_mega_menu:
+                    raise UserError(self.env._("A mega menu cannot have a parent or child menu."))
+
+    @api.constrains("is_megamenu", "megamenu_view_type")
+    def _check_pages_megamenu_type(self):
+        # only a Pages megamenu holds groups with pages: another type would leave a menu tree Odoo
+        # refuses, and the website's Edit Menu dialog could no longer save any menu
+        for record in self.sudo():
+            if record.child_id.child_id and not record._scita_pages_megamenu():
+                raise UserError(self.env._(
+                    "Menu \"%s\" holds groups with pages, which only a Pages megamenu can show. "
+                    "Move or remove those pages first.", record.name))
 
 # a block that is not one of Odoo's (s_...), or one of Scita's named like them
 _SCITA_BLOCK_RE = re.compile(r'data-snippet="(?!s_(?!theme_scita|appjetty))')

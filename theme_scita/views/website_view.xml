@@ -31,6 +31,7 @@
                             <field name="new_window"/>
                             <field name="parent_id"/>
                             <field name="is_service_menu" invisible='1'/>
+                            <field name="parent_megamenu_view_type" invisible='1'/>
                         </group>
                         <group invisible="parent_id == False or is_megamenu == True">
                             <label for='is_mega_menu' string='Odoo Megamenu?'/>
@@ -77,13 +78,13 @@
                               </group>
                             </page>
                             <page string="Service Configuration"
-                                invisible="megamenu_view_type not in ('service_page_megamenu') or is_service_menu == False">
+                                invisible="parent_megamenu_view_type != 'service_page_megamenu' and (megamenu_view_type != 'service_page_megamenu' or not is_service_menu)">
                                 <group>
                                     <field name="img_menu"/>
                                     <field name="menu_desc"/>
                                 </group>
                             </page>
-                            <page string="Service menu content" invisible="megamenu_view_type not in ('service_content_megamenu') or is_service_menu == False">
+                            <page string="Service menu content" invisible="parent_megamenu_view_type != 'service_content_megamenu' and (megamenu_view_type != 'service_content_megamenu' or not is_service_menu)">
                                 <group>
                                     <field name='service_content' widget="html"/>
                                 </group>
