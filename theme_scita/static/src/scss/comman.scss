@@ -883,6 +883,15 @@ body {
 									padding-left: 0;
 									padding-right: 0;
 								}
+								// stacked here: the space goes between the groups, not under each
+								// heading (25px under it, none before the next one)
+								.dropdown-header {
+									padding-bottom: 5px !important; // over header #o_main_nav's 20px
+									margin-bottom: 0;
+								}
+								+ .inline-block {
+									margin-top: 15px;
+								}
 							}
 						}
 					}

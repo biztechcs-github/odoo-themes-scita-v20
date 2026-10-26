@@ -268,9 +268,13 @@ header {
 								color:$primary !important;
 							}
 						}
+						// no extra gap in the menu bar: the links' own 5px padding (dropdown links)
+						// already spaces them, and with a 10px gap too the sub-menus were ~43px apart
+						// in headers 1, 2 and 5 against 32px in headers 3 and 4. The phone / tablet
+						// menu keeps its 5px.
 						+ .categories {
-							margin-top: 10px;
-							@media (max-width:1023px){
+							margin-top: 0;
+							@media (max-width: 991.98px) {
 								margin-top: 5px;
 							}
 						}
@@ -473,10 +477,17 @@ header {
 					// room for a two-line name, so a long one ("Cabinets & Consoles") does not push
 					// its image below the others in the row
 					// (one per row in the "+" list: not needed there)
+					// The room is on the name, not on the header: the header's own bottom padding
+					// differs between headers and took most of a fixed header height.
 					&:not(.o_extra_menu_items *) {
 						display: flex;
 						align-items: flex-end;
-						min-height: 55px; // two lines of the 15px name (line-height 1.5) + its 10px padding
+						> a {
+							display: flex;
+							align-items: flex-end;
+							line-height: 1.5;
+							min-height: calc(3em + 10px); // two lines + the link's 5px top and bottom padding
+						}
 					}
 					a {
 						padding-left: 0 !important;

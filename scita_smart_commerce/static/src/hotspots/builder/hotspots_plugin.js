@@ -34,6 +34,15 @@ export class ScitaHotspotsPlugin extends Plugin {
         },
         // hotspots are not text: no caret, no typing in them
         content_not_editable_selectors: SPOT,
+        // the open-card state of the website page is never saved (a saved one left a dot
+        // highlighted on every visit)
+        clean_for_save_processors: (root) => {
+            for (const spot of root.querySelectorAll(SPOT)) {
+                spot.classList.remove("o_scita_hotspot_active");
+                spot.removeAttribute("aria-expanded");
+            }
+            return root;
+        },
     };
 
     setup() {

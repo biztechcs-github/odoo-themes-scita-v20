@@ -737,7 +737,12 @@ class ScitaSliderSettings(http.Controller):
                                    'name': record.name})
         return slider_options
 
-    @http.route(['/deals-of-the-day'], type="http", auth="public", website=True, sitemap=True)
+    def sitemap_deals(env, rule, qs):  # noqa: N805
+        # Scita page: a 404 on websites using another theme, so listed only with the theme
+        if env.website and env.website._scita_theme_active() and (not qs or qs.lower() in '/deals-of-the-day'):
+            yield {'loc': '/deals-of-the-day'}
+
+    @http.route(['/deals-of-the-day'], type="http", auth="public", website=True, sitemap=sitemap_deals)
     def products(self, **post):
         product = request.env['product.template'].search(
             [('deal_product', '=', True), ("website_id", "in", (False, request.env.website.id))])
@@ -876,7 +881,9 @@ class ScitaShop(WebsiteSale):
             'brand_set': set(self._get_brand_filter_ids()),
             'result': category_counts,
             'scita_attrib_values': scita_attrib_values or False,
-            'is_show_more_button': values.get('search_count', 0) > values.get('ppr', 4),
+            # more products than one page (ppg), not one row (ppr): a category that fits on the
+            # page showed a "Load more" that loaded nothing
+            'is_show_more_button': values.get('search_count', 0) > values.get('ppg', 20),
         })
         # product images of the listing: half the screen wide on phones (ir_qweb.py)
         request._scita_shop_grid = not request.env.website.is_view_active('website_sale.products_mobile_cols_single')  # False: 1 per row
@@ -1568,7 +1575,12 @@ class PWASupport(http.Controller):
         return request.render("theme_scita.playground_template", {})
     
     # For display brands
-    @http.route('/brands', type='http', auth='public', website=True, sitemap=True)
+    def sitemap_brands(env, rule, qs):  # noqa: N805
+        # Scita page: a 404 on websites using another theme, so listed only with the theme
+        if env.website and env.website._scita_theme_active() and (not qs or qs.lower() in '/brands'):
+            yield {'loc': '/brands'}
+
+    @http.route('/brands', type='http', auth='public', website=True, sitemap=sitemap_brands)
     def show_brands(self):
         # every "Brand" attribute: Odoo 20 ships its own (product.pa_brand) and a database
         # upgraded from 19 also keeps the shop's own one

@@ -48,13 +48,16 @@ class ScitaHotspotAr(http.Controller):
                              or product.optional_product_ids)
         can_add = bool(not hide_price and in_stock and not needs_options and product._website_show_quick_add())
         if hide_price:
-            compare_price = ''
+            old_price = 0
         elif info.get('has_discounted_price'):
-            compare_price = format_amount(request.env, info['list_price'], currency)
+            old_price = info['list_price']
         elif info.get('compare_list_price') and info['compare_list_price'] > info['price']:
-            compare_price = format_amount(request.env, info['compare_list_price'], currency)
+            old_price = info['compare_list_price']
         else:
-            compare_price = ''
+            old_price = 0
+        compare_price = format_amount(request.env, old_price, currency) if old_price else ''
+        # "-15%" sale badge on the card
+        discount = max(0, round((1 - info['price'] / old_price) * 100)) if old_price else 0
         return {
             'id': product.id,
             'product_id': variant.id,
@@ -64,6 +67,7 @@ class ScitaHotspotAr(http.Controller):
             'image_url': '/web/image/product.template/%s/image_512' % product.id,
             'price': '' if hide_price else format_amount(request.env, info['price'], currency),
             'compare_price': compare_price,
+            'discount': discount,
             'hide_price': hide_price,
             'in_stock': in_stock,
             'needs_options': needs_options,

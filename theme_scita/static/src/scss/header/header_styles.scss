@@ -3121,6 +3121,12 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                     @include min1440 {
                         line-height: 52px;
+
+                        // the 52px centres the bar's own links: mega menus inherited it and spread
+                        // their text lines 52px apart
+                        >.dropdown-menu {
+                            line-height: $line-height-base;
+                        }
                     }
 
                     .megamenu_dropdown {
@@ -5508,6 +5514,12 @@ header {
         @include flexwrap;
         @include flex-column;
         min-height: 100dvh;
+        // exactly the screen: the lines scroll inside it, and if the totals, the free-delivery
+        // bar and the address still don't fit (short screens), the whole panel scrolls instead
+        // of cutting the bottom off
+        height: 100dvh;
+        flex-wrap: nowrap;
+        overflow-y: auto;
 
         .cart-header {
             @include flex;
@@ -5515,7 +5527,8 @@ header {
             @include content-sb;
             padding: 15px 20px;
             border-bottom: 1px solid rgba($dark-grey-color, 0.2);
-            flex: 0 0 100%;
+            // auto, not 100%: in the full-height column a 100% basis is the panel's height
+            flex: 0 0 auto;
             max-width: 100%;
 
             .cart-title {
@@ -5554,6 +5567,7 @@ header {
 
         .cart-content {
             flex: 1;
+            min-height: 0;
             @include flex;
             @include flex-column;
 
@@ -5564,18 +5578,17 @@ header {
 
             .cart-list-wrap {
                 flex: 1;
+                min-height: 0;
                 @include flex;
                 @include flex-column;
 
+                // takes what the totals, the free-delivery bar (scita_smart_commerce) and the
+                // address leave: a fixed "screen - 415px" cut the address off once they grew
                 .cart-item-list {
-                    max-height: calc(100dvh - 415px);
                     overflow: auto;
                     padding: 20px;
-                    flex: 1;
-
-                    @include min768 {
-                        max-height: calc(100dvh - 425px);
-                    }
+                    flex: 1 1 auto;
+                    min-height: 140px; // at least one line stays visible
 
                     .cart-item {
                         +.cart-item {

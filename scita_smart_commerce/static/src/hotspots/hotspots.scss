@@ -122,37 +122,113 @@ span.o_scita_hotspots {
 
 // ---------------------------------------------------------------- product card
 .o_scita_hotspot_card {
+    --scita-hotspot-card-radius: 16px;
     // !important: see .o_scita_hotspot (`.oe_img_bg > *` is relative)
     position: absolute !important;
     z-index: 6;
-    width: 330px;
+    width: 320px;
     max-width: calc(100vw - 2rem);
+    padding: 14px;
+    border-radius: var(--scita-hotspot-card-radius);
+    background: #fff;
+    color: #1f1f1f;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.08);
     line-height: $line-height-base;
     text-align: start;
     white-space: normal;
+    // `scale` / `translate` add to the transform that places the card next to its dot
+    animation: scita-hotspot-card-in 0.22s ease-out;
 
-    &.o_scita_hotspot_card_right { transform: translate(28px, -20%); }
-    &.o_scita_hotspot_card_left { transform: translate(calc(-100% - 28px), -20%); }
-    &.o_scita_hotspot_card_up.o_scita_hotspot_card_right { transform: translate(28px, -80%); }
-    &.o_scita_hotspot_card_up.o_scita_hotspot_card_left { transform: translate(calc(-100% - 28px), -80%); }
+    &.o_scita_hotspot_card_right { transform: translate(28px, -20%); transform-origin: 0 20%; }
+    &.o_scita_hotspot_card_left { transform: translate(calc(-100% - 28px), -20%); transform-origin: 100% 20%; }
+    &.o_scita_hotspot_card_up.o_scita_hotspot_card_right { transform: translate(28px, -80%); transform-origin: 0 80%; }
+    &.o_scita_hotspot_card_up.o_scita_hotspot_card_left { transform: translate(calc(-100% - 28px), -80%); transform-origin: 100% 80%; }
+
+    // pointer towards the dot
+    &::before {
+        content: "";
+        position: absolute;
+        top: 20%;
+        width: 14px;
+        height: 14px;
+        margin-top: -7px;
+        background: #fff;
+        transform: rotate(45deg);
+        border-radius: 2px;
+    }
+    &.o_scita_hotspot_card_up::before { top: 80%; }
+    &.o_scita_hotspot_card_right::before { left: -6px; box-shadow: -3px 3px 6px rgba(0, 0, 0, 0.06); }
+    &.o_scita_hotspot_card_left::before { right: -6px; box-shadow: 3px -3px 6px rgba(0, 0, 0, 0.06); }
 
     .o_scita_hotspot_card_close {
         position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        font-size: 0.65rem;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        border-radius: 50%;
+        background-color: #f2f2f2;
+        background-size: 9px;
+        opacity: 0.8;
+        transition: opacity 0.15s ease, background-color 0.15s ease;
+
+        &:hover,
+        &:focus-visible {
+            opacity: 1;
+            background-color: #e6e6e6;
+        }
     }
-    .o_scita_hotspot_card_img img {
-        width: 76px;
-        height: 76px;
-        object-fit: contain;
-        border-radius: $border-radius;
-        background: var(--o-color-4, #f7f7f7);
+    .o_scita_hotspot_card_body {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+    }
+    .o_scita_hotspot_card_img {
+        position: relative;
+        flex-shrink: 0;
+        display: block;
+        overflow: hidden;
+        border-radius: 12px;
+        background: var(--o-color-4, #f6f6f6);
+
+        img {
+            display: block;
+            width: 92px;
+            height: 92px;
+            object-fit: cover;
+            transition: transform 0.35s ease;
+        }
+        &:hover img {
+            transform: scale(1.06);
+        }
+    }
+    .o_scita_hotspot_card_badge {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        padding: 2px 7px;
+        border-radius: 50px;
+        background: var(--scita-hotspot-accent);
+        color: var(--scita-hotspot-on-accent);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.5;
+    }
+    .o_scita_hotspot_card_info {
+        min-width: 0;
+        flex-grow: 1;
+        padding-right: 22px; // the close button
     }
     .o_scita_hotspot_card_name {
-        display: block;
-        padding-right: 1.25rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 15px;
         font-weight: 600;
+        line-height: 1.35;
         color: inherit;
         text-decoration: none;
 
@@ -161,15 +237,64 @@ span.o_scita_hotspots {
         }
     }
     .o_scita_hotspot_card_price {
-        margin: 0.15rem 0 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 8px;
+        margin-top: 6px;
+    }
+    .o_scita_hotspot_card_amount {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--scita-hotspot-accent-text);
+    }
+    .o_scita_hotspot_card_old {
+        font-size: 13px;
+        color: #8a8a8a;
+    }
+    .o_scita_hotspot_card_request {
+        font-size: 14px;
+        color: #6c6c6c;
+    }
+    .o_scita_hotspot_card_stock {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 9px;
+        border-radius: 50px;
+        background: #fdecea;
+        color: #b42318;
+        font-size: 12px;
+        font-weight: 600;
     }
     .o_scita_hotspot_card_actions {
         display: flex;
+        // a long label ("View it in your room" on AR phones) takes its own row instead of
+        // spilling out of its button
         flex-wrap: wrap;
-        gap: 0.4rem;
+        gap: 8px;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #efefef;
 
         .btn {
+            flex: 1 1 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
             white-space: nowrap !important; // theme_scita's comman.scss forces wrapping
+        }
+        .fa-arrow-right {
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+        .btn:hover .fa-arrow-right {
+            transform: translateX(3px);
         }
     }
     // phones: a sheet at the bottom of the image instead of a floating card
@@ -180,8 +305,25 @@ span.o_scita_hotspots {
             top: auto !important;
             bottom: 0.5rem;
             width: auto;
-            transform: none;
+            // !important: the _up / _left placements above carry more classes, and the
+            // card was squeezed to a sliver (their transform plus the on-screen shift)
+            transform: none !important;
+            margin-left: 0 !important;
+
+            &::before {
+                display: none;
+            }
         }
+    }
+}
+
+@keyframes scita-hotspot-card-in {
+    from { opacity: 0; scale: 0.94; }
+    to { opacity: 1; scale: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .o_scita_hotspot_card {
+        animation: none;
     }
 }
 

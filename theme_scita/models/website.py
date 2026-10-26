@@ -35,7 +35,7 @@ class WebsiteMenu(models.Model):
                                           string="Megamenu View Type")
     is_service_menu = fields.Boolean(
         string='Is service menu...?', default=False)
-    parent_megamenu_view_type = fields.Selection(related='parent_id.megamenu_view_type')
+    parent_megamenu_view_type = fields.Selection(related='parent_id.megamenu_view_type', string="Parent Megamenu View Type")
     is_service_content_menu = fields.Boolean(
         string='Is service content menu...?', default=False)
     megamenu_size = fields.Selection([('medium', 'Medium'),

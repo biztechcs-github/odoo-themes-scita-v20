@@ -28,6 +28,10 @@ function loadProducts(ids) {
     return batch.promise;
 }
 
+// The area whose card is open: one card on the page at a time. Clicks on a dot or a card don't
+// reach the document (stopPropagation), so another area's outside-click close never runs.
+let openArea = null;
+
 let arLabelPromise = null;
 function arLabel() {
     arLabelPromise ||= detectArSupport().then(arButtonLabel, () => arButtonLabel(false));
@@ -76,6 +80,8 @@ export class ScitaHotspots extends Interaction {
         let index = 0;
         const numbers = {};
         for (const spot of this.spots) {
+            // left by a page saved while a card was open (fixed in the editor since)
+            spot.classList.remove("o_scita_hotspot_active");
             const product = this.products[spot.dataset.productTemplateId];
             if (!product) {
                 this.setClass(spot, "d-none", true);
@@ -88,6 +94,11 @@ export class ScitaHotspots extends Interaction {
             this.setAttr(spot, "aria-expanded", "false");
         }
         this.setClass(this.el, "o_scita_hotspots_ready", true);
+    }
+
+    destroy() {
+        // e.g. the editor opens: don't leave a card (or a stale openArea) behind
+        this.closeCard();
     }
 
     /** Change server-rendered nodes, undone when the interaction stops (e.g. editor opens). */
@@ -127,6 +138,10 @@ export class ScitaHotspots extends Interaction {
 
     openCard(spot, product) {
         this.closeCard();
+        if (openArea && openArea !== this) {
+            openArea.closeCard();
+        }
+        openArea = this;
         const [card] = this.renderAt("scita_smart_commerce.HotspotCard", { product, arLabel: this.arLabel }, this.el);
         const x = parseFloat(spot.style.left) || 50;
         const y = parseFloat(spot.style.top) || 50;
@@ -163,6 +178,9 @@ export class ScitaHotspots extends Interaction {
         }
         this.cardEl.remove();
         this.cardEl = null;
+        if (openArea === this) {
+            openArea = null;
+        }
         this.cardSpot.setAttribute("aria-expanded", "false");
         this.cardSpot.classList.remove("o_scita_hotspot_active");
         if (restoreFocus) {
