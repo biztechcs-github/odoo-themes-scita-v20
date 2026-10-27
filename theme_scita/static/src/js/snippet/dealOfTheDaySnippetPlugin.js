@@ -32,6 +32,22 @@ function rejectInvalidDate(dateInput, date) {
 // -------------------------------------------------
 // Shared Modal Logic
 // -------------------------------------------------
+// Modify: show the saved timer ("Nov 7,2026 18:30:0", the format the timers read) and message
+function prefillTimer(modalEl, storedDate, storedMsg) {
+    const date = storedDate && storedDate !== "nan" ? new Date(storedDate) : null;
+    if (date && !isNaN(date.getTime())) {
+        const pad = (n) => String(n).padStart(2, "0");
+        modalEl.querySelector("input#date").value =
+            `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        modalEl.querySelector("input#hours").value = date.getHours();
+        modalEl.querySelector("input#minutes").value = date.getMinutes();
+        modalEl.querySelector("input#second").value = date.getSeconds();
+    }
+    if (storedMsg) {
+        modalEl.querySelector("input#sale_over").value = storedMsg;
+    }
+}
+
 async function openDealOfTheDayModal(snippetEl) {
     // Render modal template
     const modalEl = renderToElement("theme_scita.deal_of_the_day_configration");
@@ -63,16 +79,7 @@ async function openDealOfTheDayModal(snippetEl) {
     const submitBtn = modalEl.querySelector("#snippnet_submit");
     const cancelBtn = modalEl.querySelector("#cancel");
 
-    // Prefill values if snippet already configured
-    if (snippetEl.dataset.dealSnippetId) {
-        selectEl.value = snippetEl.dataset.dealSnippetId;
-    }
-    if (snippetEl.dataset.date) {
-        dateInput.value = snippetEl.dataset.date;
-    }
-    if (snippetEl.dataset.msg) {
-        msgInput.value = snippetEl.dataset.msg;
-    }
+    prefillTimer(modalEl, snippetEl.dataset.date, snippetEl.dataset.msg);
 
     // Populate dropdown from RPC
     const res = await rpc("/theme_scita/deal_get_options", {});
@@ -83,10 +90,15 @@ async function openDealOfTheDayModal(snippetEl) {
         option.textContent = opt.name;
         selectEl.appendChild(option);
     });
+    // after the options exist: set before, it was lost and Modify switched to the first deal
+    if (snippetEl.dataset.dealSnippetId) {
+        selectEl.value = snippetEl.dataset.dealSnippetId;
+    }
 
     // Handle submit
     submitBtn.addEventListener("click", () => {
-        const date = new Date(dateInput.value);
+        // local midnight: a bare "YYYY-MM-DD" is read as UTC (the day before, west of UTC)
+        const date = new Date(`${dateInput.value}T00:00`);
         if (rejectInvalidDate(dateInput, date)) {
             return;
         }

@@ -1,2 +1,2 @@
-# odoo-themes-scita-v19
-odoo-themes-scita-v19
+# odoo-themes-scita-v20
+odoo-themes-scita-v20

@@ -32,6 +32,22 @@ function rejectInvalidDate(dateInput, date) {
 // -------------------------------------------------
 // Shared Modal Logic
 // -------------------------------------------------
+// Modify: show the saved timer ("Nov 7,2026 18:30:0", the format the timers read) and message
+function prefillTimer(modalEl, storedDate, storedMsg) {
+    const date = storedDate && storedDate !== "nan" ? new Date(storedDate) : null;
+    if (date && !isNaN(date.getTime())) {
+        const pad = (n) => String(n).padStart(2, "0");
+        modalEl.querySelector("input#date").value =
+            `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        modalEl.querySelector("input#hours").value = date.getHours();
+        modalEl.querySelector("input#minutes").value = date.getMinutes();
+        modalEl.querySelector("input#second").value = date.getSeconds();
+    }
+    if (storedMsg) {
+        modalEl.querySelector("input#sale_over").value = storedMsg;
+    }
+}
+
 async function openDealMultiProductModal(snippetEl) {
     const modalEl = renderToElement("theme_scita.multi_product_deal_custom_slider_configuration");
     document.body.appendChild(modalEl);
@@ -56,6 +72,8 @@ async function openDealMultiProductModal(snippetEl) {
     const $cancel = modalEl.querySelector("#cancel");
     const $submit = modalEl.querySelector("#snippnet_submit");
 
+    prefillTimer(modalEl, snippetEl.dataset.date, snippetEl.dataset.msg);
+
     // Load options dynamically
     rpc('/theme_scita/deal_get_options', {}).then((res) => {
         $sliderDeals.innerHTML = "";
@@ -65,12 +83,16 @@ async function openDealMultiProductModal(snippetEl) {
             opt.textContent = r.name;
             $sliderDeals.appendChild(opt);
         });
+        if (snippetEl.dataset.multiDealOfDayType) {
+            $sliderDeals.value = snippetEl.dataset.multiDealOfDayType;
+        }
     });
 
     // Submit handler
     $submit.addEventListener("click", () => {
         const dateVal = modalEl.querySelector("input#date").value;
-        const date = new Date(dateVal);
+        // local midnight: a bare "YYYY-MM-DD" is read as UTC (the day before, west of UTC)
+        const date = new Date(`${dateVal}T00:00`);
         if (rejectInvalidDate(modalEl.querySelector("input#date"), date)) {
             return;
         }

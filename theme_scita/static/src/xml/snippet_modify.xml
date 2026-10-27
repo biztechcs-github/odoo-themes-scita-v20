@@ -118,6 +118,51 @@
     </BuilderRow>
 </t>
 
+<t t-name="theme_scita_deal_of_day_banner_1_option">
+    <BuilderRow label.translate="Timer">
+        <BuilderButton
+            action="'dealOfDayBanner1ModifyBtn'"
+            actionParam="'open'"
+            preview="false"
+            type="'primary'"
+            className="'flex-grow-1'"
+            icon="'edit'"
+            title.translate="Change when the deal ends and the message shown after">
+            Modify
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="theme_scita_deal_of_day_banner_3_option">
+    <BuilderRow label.translate="Timer">
+        <BuilderButton
+            action="'dealOfDayBanner3ModifyBtn'"
+            actionParam="'open'"
+            preview="false"
+            type="'primary'"
+            className="'flex-grow-1'"
+            icon="'edit'"
+            title.translate="Change when the deal ends and the message shown after">
+            Modify
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="theme_scita_deal_of_day_banner_5_option">
+    <BuilderRow label.translate="Timer">
+        <BuilderButton
+            action="'dealOfDayBanner5ModifyBtn'"
+            actionParam="'open'"
+            preview="false"
+            type="'primary'"
+            className="'flex-grow-1'"
+            icon="'edit'"
+            title.translate="Change when the deal ends and the message shown after">
+            Modify
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
 <t t-name="brands_box_option">
     <BuilderRow label.translate="Content">
         <BuilderButton
@@ -295,6 +340,9 @@
         <scita_dynamic_video_banner_modify template="dynamic_video_banner" selector=".dynamic_video_banner"/>
         <scita_deal_seller_multi_product_custom_snippet_modify template="deal_seller_multi_product_custom_snippet" selector=".deal_multi_product_slider"/>
         <scita_deal_of_the_day_option_modify template="theme_scita_deal_of_the_day_option" selector=".oe_deal_of_the_day"/>
+        <scita_deal_of_day_banner_1_option_modify template="theme_scita_deal_of_day_banner_1_option" selector=".retial_deal_of_day_banner_snippet_1"/>
+        <scita_deal_of_day_banner_3_option_modify template="theme_scita_deal_of_day_banner_3_option" selector=".deal_of_day_banner_3"/>
+        <scita_deal_of_day_banner_5_option_modify template="theme_scita_deal_of_day_banner_5_option" selector=".deal_of_day_banner_5"/>
         <scita_brands_box_option_modify template="brands_box_option" selector=".box_brand_slider"/>
         <scita_it_brand_option_modify template="it_brand_option" selector=".it_brand_slider"/>
         <scita_sct_product_snippet_1_option_modify template="sct_product_snippet_1_option" selector=".sct_product_snippet_1"/>

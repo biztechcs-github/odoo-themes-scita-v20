@@ -89,7 +89,8 @@ async function openDealOfDayBanner5Modal(snippetEl) {
 
     // Handle submit
     submitBtn.addEventListener("click", () => {
-        const date = new Date(dateInput.value);
+        // local midnight: a bare "YYYY-MM-DD" is read as UTC (the day before, west of UTC)
+        const date = new Date(`${dateInput.value}T00:00`);
         if (rejectInvalidDate(dateInput, date)) {
             return;
         }
@@ -116,30 +117,39 @@ async function openDealOfDayBanner5Modal(snippetEl) {
                 timerElement.setAttribute("data-date", formatted);
                 timerElement.setAttribute("data-msg", msgInput.value);
                 
-                // Build timer HTML for preview in editor
+                // Preview in the editor (the timer widget doesn't run there): the time left, not
+                // the end time of day
+                const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, mins, secs);
+                const left = Math.max(0, end.getTime() - Date.now());
+                const [d, h, m, s] = [
+                    Math.floor(left / 864e5),
+                    Math.floor((left % 864e5) / 36e5),
+                    Math.floor((left % 36e5) / 6e4),
+                    Math.floor((left % 6e4) / 1000),
+                ].map((v) => String(v).padStart(2, "0"));
                 const timerHTML = `
                     <div class='counter_timer_div'>
                         <span class='col-lg-3 col-md-3 col-sm-3 col-3 text-center timer_col'>
                             <div class='box_degit'>
-                                <span id='days' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>00</span>
+                                <span id='days' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${d}</span>
                                 <span id='day_lbl' class='d-block'>DAYS</span>
                             </div>
                         </span>
                         <span class='col-lg-3 col-md-3 col-sm-3 col-3 text-center timer_col'>
                             <div class='box_degit'>
-                                <span id='hours' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${String(hours).padStart(2, '0')}</span>
+                                <span id='hours' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${h}</span>
                                 <span id='h_lbl' class='d-block'>HOURS</span>
                             </div>
                         </span>
                         <span class='col-lg-3 col-md-3 col-sm-3 col-3 text-center timer_col'>
                             <div class='box_degit'>
-                                <span id='minutes' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${String(mins).padStart(2, '0')}</span>
+                                <span id='minutes' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${m}</span>
                                 <span id='m_lbl' class='d-block'>MINS</span>
                             </div>
                         </span>
                         <span class='col-lg-3 col-md-3 col-sm-3 col-3 text-center timer_col'>
                             <div class='box_degit'>
-                                <span id='seconds' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${String(secs).padStart(2, '0')}</span>
+                                <span id='seconds' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>${s}</span>
                                 <span id='s_lbl' class='d-block'>SECS</span>
                             </div>
                         </span>
@@ -190,41 +200,32 @@ registry.category("website-plugins").add(
 );
 
 // -------------------------------------------------
-// Modify Button Action (Commented out - can be added later if needed)
+// Modify Button Action: change the end date / message after the drop
 // -------------------------------------------------
-// export class DealOfDayBanner5ModifyBtnAction extends BuilderAction {
-//     static id = "dealOfDayBanner5ModifyBtn";
+export class DealOfDayBanner5ModifyBtnAction extends BuilderAction {
+    static id = "dealOfDayBanner5ModifyBtn";
 
-//     apply({ editingElement, params: { mainParam } }) {
-//         if (mainParam === "open") {
-//             openDealOfDayBanner5Modal(editingElement);
-//         }
-//     }
+    apply({ editingElement, params: { mainParam } }) {
+        if (mainParam === "open") {
+            openDealOfDayBanner5Modal(editingElement);
+        }
+    }
 
-//     isApplied() {
-//         return false; // always allow reopen
-//     }
-// }
+    isApplied() {
+        return false; // always allow reopen
+    }
+}
 
-// Register modify plugin
-// class DealOfDayBanner5ModifyPlugin extends Plugin {
-//     static id = "dealOfDayBanner5ModifyPlugin";
-//     static dependencies = ["history", "media"];
-//     selector = ".deal_of_day_banner_5";
+class DealOfDayBanner5ModifyPlugin extends Plugin {
+    static id = "dealOfDayBanner5ModifyPlugin";
 
-//     resources = {
-//         builder_options: {
-//             template: "theme_scita_deal_of_day_banner_5_option",
-//             selector: ".deal_of_day_banner_5",
-//         },
-//         so_content_addition_selector: [".deal_of_day_banner_5"],
-//         builder_actions: {
-//             DealOfDayBanner5ModifyBtnAction,
-//         },
-//     };
-// }
-// registry.category("website-plugins").add(
-//     DealOfDayBanner5ModifyPlugin.id,
-//     DealOfDayBanner5ModifyPlugin
-// );
-
+    resources = {
+        builder_actions: {
+            DealOfDayBanner5ModifyBtnAction,
+        },
+    };
+}
+registry.category("website-plugins").add(
+    DealOfDayBanner5ModifyPlugin.id,
+    DealOfDayBanner5ModifyPlugin
+);
