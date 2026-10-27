@@ -7749,6 +7749,27 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
     $sct-row-card: '#{$sct-row-product} .oe_product_cart';
     $sct-row-btns: '#{$sct-btn}:is(.o_add_compare, .o_add_wishlist, .quick_view_sct_btn)';
 
+    // Smart Commerce "3D" button (bottom left of the image): in the bottom corner the buttons leave
+    // free. Style 2's column runs down the left (quick view went under the button on short
+    // images): bottom right. The row takes the bottom right (bottom left beside a diagonal ribbon
+    // on the right): the other bottom corner.
+    @if o-website-value('prod-hover-style') == 'prod_hover_style_2' {
+        :is(.oe_product, .o_carousel_product_card) .oe_product_image .o_scita_ar_card_btn {
+            right: 10px;
+            left: auto;
+        }
+    }
+    @media (min-width: 992px) {
+        #{$sct-row-card} .oe_product_image .o_scita_ar_card_btn {
+            right: auto;
+            left: 10px;
+        }
+        #{$sct-row-card}:has(#{$sct-band-right}) .oe_product_image .o_scita_ar_card_btn {
+            right: 10px;
+            left: auto;
+        }
+    }
+
     @media (min-width: 992px) {
         #{$sct-row-card} #{$sct-row-btns} {
             top: calc(-12px - var(--sct-btn-size, 30px)) !important; // above the text block, i.e. at the bottom of the image
@@ -8077,7 +8098,7 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
 // Smart Commerce "3D" button on shop cards (and Odoo's Products block): bottom left of the image (its default) with hover
 // styles 1 and 2. Styles 3 to 5 put colour swatches and buttons there: top right, below a tag
 // there; a diagonal ribbon fills that corner: top left then, below a tag there.
-@if index(('prod_hover_style_3', 'prod_hover_style_4', 'prod_hover_style_5'), o-website-value('prod-hover-style')) {
+@mixin sct-3d-card-top-corner {
     :is(.oe_product, .o_carousel_product_card) .oe_product_image .o_scita_ar_card_btn {
         top: 10px;
         right: 10px;
@@ -8092,6 +8113,13 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
     :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(:is(.img_lbl.right, .o_wsale_badge.o_right:not(:empty))) .o_scita_ar_card_btn {
         top: 44px;
     }
+    // smallest phones (cards ~110px wide): a tag on the left and the button do not fit side by
+    // side, the button goes under the tag
+    @media (max-width: 359.98px) {
+        :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(:is(.img_lbl.left, .o_wsale_badge.o_left:not(:empty))) .o_scita_ar_card_btn {
+            top: 36px;
+        }
+    }
     :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(.o_wsale_ribbon.o_right:not(:empty)) .o_scita_ar_card_btn {
         right: auto;
         left: 10px;
@@ -8102,6 +8130,15 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
     }
     :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(.o_wsale_ribbon.o_right:not(:empty)):has(:is(.img_lbl.left, .o_wsale_badge.o_left:not(:empty))) .o_scita_ar_card_btn {
         top: 44px;
+    }
+}
+@if index(('prod_hover_style_3', 'prod_hover_style_4', 'prod_hover_style_5'), o-website-value('prod-hover-style')) {
+    @include sct-3d-card-top-corner;
+} @else {
+    // styles 1 and 2 on phones: the cards (~110-170px wide) leave no bottom corner beside the
+    // image dots (centred) for the button, which covered one of them. The top corner, as above.
+    @media (max-width: 575.98px) {
+        @include sct-3d-card-top-corner;
     }
 }
 // The same button on Scita's own product cards (product snippets, deals page): placed on the card

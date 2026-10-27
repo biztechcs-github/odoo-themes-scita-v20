@@ -41,6 +41,14 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
         main:has(.o_wsale_comparison_bottom_bar) {
             padding-bottom: calc(var(--o-wsale-comparison-bottom-bar-height, 80px) + 74px);
         }
+        // Odoo's floating "Sort By / Filters" bar (shop page designs) also sticks to the bottom of
+        // the screen: above the app bar too (and above the comparison bar when there is one)
+        #o_wsale_floating_bar_rail #o_wsale_floating_bar {
+            bottom: 80px !important;
+        }
+        main:has(.o_wsale_comparison_bottom_bar) #o_wsale_floating_bar_rail #o_wsale_floating_bar {
+            bottom: calc(80px + var(--o-wsale-comparison-bottom-bar-height, 80px)) !important;
+        }
     }
 }
 

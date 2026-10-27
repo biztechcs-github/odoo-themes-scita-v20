@@ -373,6 +373,14 @@ body.editor_enable .o_scita_assistant {
 body:has(.offcanvas.show, .offcanvas.showing) .o_scita_assistant:not(.o_scita_assistant_is_open) {
     display: none;
 }
+// Checkout steps on phones and tablets (address, delivery, payment: Odoo's order summary sticks to
+// the bottom there): the button stood above that summary, over the last field of the form
+// (VAT / TIN), even scrolled to the end. The shopper is placing the order: it steps aside.
+@media (max-width: 991.98px) {
+    body:has(.o_mobile_summary) .o_scita_assistant:not(.o_scita_assistant_is_open) {
+        display: none;
+    }
+}
 
 // The open chat goes above Odoo's comparison bar (z-index 1055, the modals' level), which covered
 // it where the bar stops mid-screen at the end of a short page. Back under the modals as soon

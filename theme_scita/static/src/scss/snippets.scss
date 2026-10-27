@@ -657,6 +657,10 @@ body #wrapwrap{
                     position: relative;
                     z-index: 1;
 					max-width: 70%;
+					// the picture fills the right of the slide: the text stops before it
+					@media (min-width: 1200px) {
+						max-width: 60%;
+					}
 					@include flex;
 					@include flex-column;
 					height: 100%;					
@@ -860,8 +864,13 @@ body #wrapwrap{
                         display: block;
                     }
                 }
+                // the lines run on one line on phones: "Perfect Parts", not "PerfectParts"
+                .block + .block::before {
+                    content: " ";
+                }
+				// on the dark slide: the secondary colour when it reads there (a dark one did not)
 				.theme-color {
-					color: $secondary
+					color: if(contrast-ratio($secondary, #24262f) >= 3, $secondary, if(contrast-ratio($primary, #24262f) >= 3, $primary, tint-color($secondary, 60%)));
 				}
             }
             .sct_sub_title{
