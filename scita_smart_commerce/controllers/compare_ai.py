@@ -171,6 +171,7 @@ class ScitaCompareAi(Controller):
                                effort='low', json_schema=EXPLAIN_SCHEMA)
         except AIProviderError as e:
             return {'error': Ai.public_error(e)}
+        Ai.count_use(website, 'compare')
         if response.stop_reason == 'refusal':
             return {'error': _('We could not compare these products right now.')}
         try:

@@ -450,6 +450,10 @@ span[name="hidden_ptavs_count"] {
                     .oe_product_image .oe_product_image_img_wrapper{
                         height: calc(100% - 30px) !important;
                     }
+                    // Smart Commerce "3D" button: stays on the (shrunk) image
+                    .oe_product_image .o_scita_ar_card_btn{
+                        transform: translateY(-30px);
+                    }
                 }
             }
             &:hover{
@@ -1650,6 +1654,10 @@ span[name="hidden_ptavs_count"] {
                 @media (min-width: 992px){
                     .oe_product_image .oe_product_image_img_wrapper{
                         height: calc(100% - 30px) !important;
+                    }
+                    // Smart Commerce "3D" button: stays on the (shrunk) image
+                    .oe_product_image .o_scita_ar_card_btn{
+                        transform: translateY(-30px);
                     }
                 }
             }
@@ -6147,6 +6155,10 @@ span[name="hidden_ptavs_count"] {
                     .oe_product_image .oe_product_image_img_wrapper{
                         height: calc(100% - 30px) !important;
                     }
+                    // Smart Commerce "3D" button: stays on the (shrunk) image
+                    .oe_product_image .o_scita_ar_card_btn{
+                        transform: translateY(-30px);
+                    }
                 }
             }
             &:hover{
@@ -8060,5 +8072,101 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
         .btn:is(.a-submit, .sct-contact-us-btn) {
             border-color: $primary !important;
         }
+    }
+}
+// Smart Commerce "3D" button on shop cards (and Odoo's Products block): bottom left of the image (its default) with hover
+// styles 1 and 2. Styles 3 to 5 put colour swatches and buttons there: top right, below a tag
+// there; a diagonal ribbon fills that corner: top left then, below a tag there.
+@if index(('prod_hover_style_3', 'prod_hover_style_4', 'prod_hover_style_5'), o-website-value('prod-hover-style')) {
+    :is(.oe_product, .o_carousel_product_card) .oe_product_image .o_scita_ar_card_btn {
+        top: 10px;
+        right: 10px;
+        bottom: auto;
+        left: auto;
+
+        @media (max-width: 575.98px) {
+            top: 6px;
+            right: 6px;
+        }
+    }
+    :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(:is(.img_lbl.right, .o_wsale_badge.o_right:not(:empty))) .o_scita_ar_card_btn {
+        top: 44px;
+    }
+    :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(.o_wsale_ribbon.o_right:not(:empty)) .o_scita_ar_card_btn {
+        right: auto;
+        left: 10px;
+
+        @media (max-width: 575.98px) {
+            left: 6px;
+        }
+    }
+    :is(.oe_product, .o_carousel_product_card) .oe_product_image:has(.o_wsale_ribbon.o_right:not(:empty)):has(:is(.img_lbl.left, .o_wsale_badge.o_left:not(:empty))) .o_scita_ar_card_btn {
+        top: 44px;
+    }
+}
+// The same button on Scita's own product cards (product snippets, deals page): placed on the card
+// like the cards' tags and buttons, in a top corner of the image (at the top of these cards).
+// Top left with hover style 1, whose buttons take the right side (on phones, the top right
+// corner in Product Snippet 2); top right with the others, whose buttons or colour swatches take
+// the left side or the bottom (on phones and tablets with styles 4 and 5, below the swatches
+// there). Below a tag in that corner. Phones and tablets: a round icon, like the cards' own buttons.
+// the card is the button's reference, as for the cards' tags; some cards (Deal of the Day block
+// with hover style 3) leave it unpositioned and the button went to the block's corner
+.cs-product:has(> .pwp-img > .o_scita_ar_card_btn) {
+    position: relative;
+}
+$sct-3d-style: o-website-value('prod-hover-style');
+$sct-3d-left: not $sct-3d-style or $sct-3d-style == 'prod_hover_style_1';
+$sct-3d-swatch-styles: index(('prod_hover_style_4', 'prod_hover_style_5'), $sct-3d-style);
+$sct-3d-side: if($sct-3d-left, left, right);
+$sct-3d-other-side: if($sct-3d-left, right, left);
+.cs-product .pwp-img > .o_scita_ar_card_btn {
+    top: 10px;
+    bottom: auto;
+    #{$sct-3d-side}: 10px;
+    #{$sct-3d-other-side}: auto;
+
+    @if $sct-3d-swatch-styles {
+        @media (max-width: 991.98px) {
+            top: 32px;
+        }
+    }
+    @media (max-width: 575.98px) {
+        #{$sct-3d-side}: 6px;
+    }
+    // phones and tablets (cards down to ~150px wide beside a tag): the round icon
+    @media (max-width: 991.98px) {
+        justify-content: center;
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        padding: 0;
+
+        .o_scita_ar_card_btn_short {
+            display: none;
+        }
+        // focused / loading too: the label stays for screen readers only
+        .o_scita_ar_card_btn_long {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+        }
+    }
+}
+// below a tag in its corner; on phones and tablets below any tag (the cards are too narrow for
+// a tag and the button side by side)
+.cs-product .pwp-img:has(> .img_lbl.#{$sct-3d-side}) > .o_scita_ar_card_btn {
+    @media (min-width: 992px) {
+        top: 44px;
+    }
+}
+.cs-product .pwp-img:has(> .img_lbl) > .o_scita_ar_card_btn {
+    @media (max-width: 991.98px) {
+        top: if($sct-3d-swatch-styles and not $sct-3d-left, 64px, 54px); // tags end at ~45px
+    }
+    @media (max-width: 575.98px) {
+        top: if($sct-3d-swatch-styles and not $sct-3d-left, 62px, 56px); // ~49px on the deals page
     }
 }

@@ -15,7 +15,7 @@ const BOTTOM_BARS = [
     ".sticky-bottom",
 ].join(", ");
 const OPEN_KEY = "scita_assistant_open";
-const MAX_SENT_TURNS = 12;
+const MAX_SENT_TURNS = 8; // the server keeps the last 8 (controllers/assistant.py)
 
 /**
  * Minimal, safe formatting of an assistant reply: text is never parsed as HTML.

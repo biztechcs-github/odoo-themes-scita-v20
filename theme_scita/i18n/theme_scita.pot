@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 13:43+0000\n"
-"PO-Revision-Date: 2026-10-08 13:43+0000\n"
+"POT-Creation-Date: 2026-10-27 08:53+0000\n"
+"PO-Revision-Date: 2026-10-27 08:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -617,6 +617,13 @@ msgid "<span class=\"add_to_cart_text\">Add to cart</span>"
 msgstr ""
 
 #. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.fashion_multi_slider_products
+#: model_terms:theme.ir.ui.view,arch:theme_scita.scita_products_add_to_cart
+#: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_2_view
+msgid "<span class=\"add_to_cart_text\">Contact Us</span>"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.sct_banner_1
 msgid "<span class=\"banner-sub-title\">We Are The Best Fashion Shop</span>"
 msgstr ""
@@ -633,6 +640,22 @@ msgid ""
 "color\">Perfect</span></span><span class=\"block\"><span class=\"theme-"
 "color\">Parts</span> for Performance </span><span class=\"block\">and "
 "Reliability</span>"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.cart_sidebar_template
+msgid ""
+"<span class=\"btn btn-link disabled\" aria-disabled=\"true\" title=\"Free product: the quantity can't be changed\">\n"
+"                                                                <i class=\"fa fa-minus\"/>\n"
+"                                                            </span>"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.cart_sidebar_template
+msgid ""
+"<span class=\"btn btn-link disabled\" aria-disabled=\"true\" title=\"Free product: the quantity can't be changed\">\n"
+"                                                                <i class=\"fa fa-plus\"/>\n"
+"                                                            </span>"
 msgstr ""
 
 #. module: theme_scita
@@ -868,6 +891,17 @@ msgid ""
 msgstr ""
 
 #. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.biz_deal_page
+#: model_terms:theme.ir.ui.view,arch:theme_scita.retail_multi_slider_products
+#: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_1_view
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_deal_of_the_day_view
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_trending_products_view
+msgid ""
+"<span class=\"lni lni-envelope-1 cart_icon\"/><span "
+"class=\"add_to_cart_text\">Contact Us</span>"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.theme_product_details_category
 msgid "<span class=\"name-text\">Account</span>"
 msgstr ""
@@ -940,6 +974,13 @@ msgstr ""
 msgid ""
 "<span class=\"offer-tag title-26\">Get <span class=\"theme-color\">15% "
 "OFF</span> on first order</span>"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid ""
+"<span class=\"sct-brand-cta\">Shop now <i class=\"fa fa-angle-right\" "
+"role=\"presentation\"/></span>"
 msgstr ""
 
 #. module: theme_scita
@@ -1272,6 +1313,14 @@ msgid "<u class=\"h5\">Documents</u>"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-python
+#: code:addons/theme_scita/models/website.py:0
+msgid ""
+"A Scita Pages megamenu sits in the menu bar and only holds groups and their "
+"pages."
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.google_map_v2_static_preview
 #: model_terms:theme.ir.ui.view,arch:theme_scita.s_appjetty_google_map_content
 msgid "A Section Subtitle"
@@ -1282,6 +1331,12 @@ msgstr ""
 msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
+msgstr ""
+
+#. module: theme_scita
+#. odoo-python
+#: code:addons/theme_scita/models/website.py:0
+msgid "A mega menu cannot have a parent or child menu."
 msgstr ""
 
 #. module: theme_scita
@@ -1299,11 +1354,6 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_scita.fashion_multi_slider_products
 #: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_2_view
 msgid "ADD"
-msgstr ""
-
-#. module: theme_scita
-#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
-msgid "ALL"
 msgstr ""
 
 #. module: theme_scita
@@ -1458,6 +1508,7 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_scita.fashion_multi_slider_products
 #: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_2_view
 #: model_terms:theme.ir.ui.view,arch:theme_scita.shop_quick_view_modal
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_product_quantity
 msgid "Add one"
 msgstr ""
 
@@ -1523,6 +1574,11 @@ msgstr ""
 #. module: theme_scita
 #: model:ir.model.fields,field_description:theme_scita.field_product_public_category__align_category_content
 msgid "Align Category Content"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "All"
 msgstr ""
 
 #. module: theme_scita
@@ -2380,6 +2436,12 @@ msgid "Change what this block shows"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/snippet_modify.xml:0
+msgid "Change when the deal ends and the message shown after"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.how_it_work_v_3
 msgid "Chat Support"
 msgstr ""
@@ -2651,9 +2713,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:theme_scita.contact_us_3
 #: model_terms:ir.ui.view,arch_db:theme_scita.contact_us_4
 #: model_terms:ir.ui.view,arch_db:theme_scita.contact_us_5
+#: model_terms:theme.ir.ui.view,arch:theme_scita.biz_deal_page
+#: model_terms:theme.ir.ui.view,arch:theme_scita.fashion_multi_slider_products
+#: model_terms:theme.ir.ui.view,arch:theme_scita.retail_multi_slider_products
 #: model_terms:theme.ir.ui.view,arch:theme_scita.s_appjetty_google_map_content
 #: model_terms:theme.ir.ui.view,arch:theme_scita.scita_404_page_template
+#: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_1_view
+#: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_2_view
 #: model_terms:theme.ir.ui.view,arch:theme_scita.shop_quick_view_modal
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_deal_of_the_day_view
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_trending_products_view
 msgid "Contact Us"
 msgstr ""
 
@@ -3299,6 +3368,12 @@ msgid "Effect Style 5"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Effect played when the mouse moves over it"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:ir.ui.view,arch_db:theme_scita.contact_us_3
 msgid "Electronic Mail"
 msgstr ""
@@ -3577,6 +3652,11 @@ msgid "File storage"
 msgstr ""
 
 #. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "Filter brands by letter"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.service_varient_14
 msgid "Finance Analysis"
 msgstr ""
@@ -3606,6 +3686,18 @@ msgstr ""
 #. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.how_it_work_v_5
 msgid "Five simple steps to grow you business"
+msgstr ""
+
+#. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Flash"
+msgstr ""
+
+#. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Flash from the centre"
 msgstr ""
 
 #. module: theme_scita
@@ -3681,6 +3773,11 @@ msgstr ""
 #. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.option_header_4
 msgid "Free Shipping Worldwide"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.scita_19_cart_lines
+msgid "Free product: the quantity can't be changed"
 msgstr ""
 
 #. module: theme_scita
@@ -4153,6 +4250,12 @@ msgstr ""
 #. module: theme_scita
 #: model_terms:ir.ui.view,arch_db:theme_scita.view_banner_image_form
 msgid "Image Name"
+msgstr ""
+
+#. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Image Transition Effect"
 msgstr ""
 
 #. module: theme_scita
@@ -4994,6 +5097,14 @@ msgid "Megamenu type"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-python
+#: code:addons/theme_scita/models/website.py:0
+msgid ""
+"Menu \"%s\" holds groups with pages, which only a Pages megamenu can show. "
+"Move or remove those pages first."
+msgstr ""
+
+#. module: theme_scita
 #: model:ir.model.fields,field_description:theme_scita.field_website_menu__service_content
 msgid "Menu Content"
 msgstr ""
@@ -5232,6 +5343,16 @@ msgid "Next"
 msgstr ""
 
 #. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "No brand matches your search."
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "No brands to show yet."
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.third_client_slider_snippet_static_preview
 msgid ""
 "No clients added . For configuring, please goto admin\n"
@@ -5275,6 +5396,12 @@ msgstr ""
 #. module: theme_scita
 #: model:ir.model.fields,field_description:theme_scita.field_multi_slider_config__no_of_collection
 msgid "No. of collections to show"
+msgstr ""
+
+#. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "None"
 msgstr ""
 
 #. module: theme_scita
@@ -5510,6 +5637,11 @@ msgstr ""
 #. module: theme_scita
 #: model:ir.model.fields.selection,name:theme_scita.selection__website_menu__megamenu_view_type__pages_megamenu
 msgid "Pages Megamenu"
+msgstr ""
+
+#. module: theme_scita
+#: model:ir.model.fields,field_description:theme_scita.field_website_menu__parent_megamenu_view_type
+msgid "Parent Megamenu View Type"
 msgstr ""
 
 #. module: theme_scita
@@ -5902,6 +6034,8 @@ msgstr ""
 
 #. module: theme_scita
 #: model:ir.model.fields,field_description:theme_scita.field_quote_request__quantity
+#: model_terms:theme.ir.ui.view,arch:theme_scita.scita_19_cart_lines
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_product_quantity
 msgid "Quantity"
 msgstr ""
 
@@ -5998,6 +6132,7 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_scita.fashion_multi_slider_products
 #: model_terms:theme.ir.ui.view,arch:theme_scita.sct_product_snippet_2_view
 #: model_terms:theme.ir.ui.view,arch:theme_scita.shop_quick_view_modal
+#: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_product_quantity
 msgid "Remove one"
 msgstr ""
 
@@ -6084,6 +6219,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:theme_scita.selection__website_menu__category_slider_position__right
 #: model:ir.model.fields.selection,name:theme_scita.selection__website_menu__img_banner_position__right
 msgid "Right"
+msgstr ""
+
+#. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Round flash"
 msgstr ""
 
 #. module: theme_scita
@@ -6174,7 +6315,7 @@ msgstr ""
 
 #. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
-msgid "Search Brand"
+msgid "Search brand"
 msgstr ""
 
 #. module: theme_scita
@@ -6354,6 +6495,12 @@ msgid "Sharlene Rhodes"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Shine"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.policy_trust_snippet_v_3
 msgid "Shipping and Delivery"
 msgstr ""
@@ -6414,6 +6561,11 @@ msgid "Shop now<span class=\"arrow\"/>"
 msgstr ""
 
 #. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "Shop the brands you love"
+msgstr ""
+
+#. module: theme_scita
 #: model:ir.model.fields,field_description:theme_scita.field_res_partner__emp_description
 #: model:ir.model.fields,field_description:theme_scita.field_res_users__emp_description
 msgid "Short description about employee"
@@ -6470,11 +6622,6 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_scita.third_client_slider_snippet
 #: model_terms:theme.ir.ui.view,arch:theme_scita.third_client_slider_snippet_static_preview
 msgid "Slide 2"
-msgstr ""
-
-#. module: theme_scita
-#: model_terms:theme.ir.ui.view,arch:theme_scita.third_client_slider_snippet
-msgid "Slide 3"
 msgstr ""
 
 #. module: theme_scita
@@ -7165,6 +7312,12 @@ msgid "Timeline Snippets"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/snippet_modify.xml:0
+msgid "Timer"
+msgstr ""
+
+#. module: theme_scita
 #: model:ir.model.fields,field_description:theme_scita.field_biztech_deal_of_the_day_configuration__deal_title
 #: model:ir.model.fields,field_description:theme_scita.field_res_company__delivery_text
 #: model:ir.model.fields,field_description:theme_scita.field_scita_product_images__name
@@ -7763,6 +7916,12 @@ msgid "Zipcodes"
 msgstr ""
 
 #. module: theme_scita
+#. odoo-javascript
+#: code:addons/theme_scita/static/src/xml/img_effect_option.xml:0
+msgid "Zoom"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.pwa_service_worker
 msgid ""
 "];\n"
@@ -7824,6 +7983,8 @@ msgid ""
 "            fetch(req).catch(function () {\n"
 "                return caches.open(PWA_CACHE_NAME).then(function (cache) {\n"
 "                    return cache.match('/theme_scita/pwa/offline');\n"
+"                }).then(function (res) {\n"
+"                    return res || Response.error();\n"
 "                });\n"
 "            })\n"
 "        );\n"
@@ -7844,6 +8005,9 @@ msgid ""
 "        .catch(function() {\n"
 "            return caches.open(PWA_CACHE_NAME).then(function(cache) {\n"
 "                return cache.match(req);\n"
+"            }).then(function (res) {\n"
+"                // aborted or offline with nothing cached: a plain network error, never undefined\n"
+"                return res || Response.error();\n"
 "            });\n"
 "        })\n"
 "    );\n"
@@ -7896,6 +8060,11 @@ msgid "blog, posts, articles, news"
 msgstr ""
 
 #. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "brand"
+msgstr ""
+
+#. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_snippets
 msgid "brand, logo, partner, client"
 msgstr ""
@@ -7908,6 +8077,11 @@ msgstr ""
 #. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_snippets
 msgid "brand, logo, partner, client, it"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "brands"
 msgstr ""
 
 #. module: theme_scita
@@ -8097,6 +8271,11 @@ msgstr ""
 #. module: theme_scita
 #: model_terms:theme.ir.ui.view,arch:theme_scita.theme_scita_snippets
 msgid "pricing, price, cost, table"
+msgstr ""
+
+#. module: theme_scita
+#: model_terms:theme.ir.ui.view,arch:theme_scita.brand_template
+msgid "product"
 msgstr ""
 
 #. module: theme_scita

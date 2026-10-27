@@ -18,20 +18,37 @@ class Website(models.Model):
     scita_ai_api_key = fields.Char('AI API Key', groups='base.group_system')
     scita_ai_model = fields.Char(
         'AI Model', default=ANTHROPIC_DEFAULT,
-        help='Model identifier sent to the provider, e.g. claude-opus-5-5.')
-    scita_ai_daily_limit = fields.Integer(
-        'AI requests per visitor per day', default=40,
-        help='Protects your AI budget: each visitor (session) can make at most this many '
-             'AI requests per feature per day. 0 means unlimited.')
+        help='Model identifier sent to the provider, e.g. claude-haiku-5-5.')
+    # --- what each visitor may use per day (0 = unlimited) ---
+    scita_ai_guest_assistant_limit = fields.Integer(
+        'Assistant messages per guest per day', default=10,
+        help='Visitors who are not logged in. A conversation usually takes 3 to 8 messages.')
+    scita_ai_user_assistant_limit = fields.Integer(
+        'Assistant messages per customer per day', default=30,
+        help='Logged-in customers, counted per account across their devices.')
+    scita_ai_guest_action_limit = fields.Integer(
+        'Photo searches / comparisons per guest per day', default=5,
+        help='Each of the two features separately. A comparison already explained for the same '
+             'products is reused and does not count.')
+    scita_ai_user_action_limit = fields.Integer(
+        'Photo searches / comparisons per customer per day', default=20)
+    scita_ai_login_required = fields.Boolean(
+        'AI for logged-in customers only',
+        help='Hide the AI features from visitors who are not logged in.')
     scita_ai_ip_daily_limit = fields.Integer(
-        'AI requests per IP address per day', default=200,
-        help='Same limit per network address, so clearing cookies does not reset it. Keep it higher '
-             'than the per-visitor limit: shoppers of one office or mobile network share an address. '
-             '0 means unlimited.')
+        'Uses per IP address per day', default=100,
+        help='Guests, per feature and network address, so clearing cookies does not reset their '
+             'allowance. Keep it well above the per-guest limits: shoppers of one office or '
+             'mobile network share an address.')
+    # --- what the website may spend per day (0 = unlimited) ---
+    scita_ai_daily_token_budget = fields.Integer(
+        'AI tokens per website per day', default=2000000,
+        help='What your AI provider bills you for. Past 80% only logged-in customers keep the AI '
+             'features (you get an email), past 100% they are paused until tomorrow.')
+    scita_ai_budget_alert_date = fields.Date(copy=False, groups='base.group_system')
     scita_ai_site_daily_limit = fields.Integer(
         'AI requests per website per day', default=2000,
-        help='Hard cap on all AI requests of this website per day (all features and visitors). '
-             '0 means unlimited.')
+        help='Hard cap on the number of calls to the AI provider per day (all features and visitors).')
 
     # --- feature switches (all off until the shop owner turns them on) ---
     scita_assistant_enabled = fields.Boolean('AI Shopping Assistant')
@@ -105,9 +122,23 @@ class Website(models.Model):
     def _onchange_scita_ai_provider(self):
         self.scita_ai_model = DEFAULT_MODELS.get(self.scita_ai_provider)
 
+    def write(self, vals):
+        res = super().write(vals)
+        # guests get website pages from Odoo's page cache (an hour): a setting that changes
+        # what the pages show (AI features on/off, "logged-in only", the key...) would only
+        # reach them that much later
+        if any(key.startswith('scita_') and key != 'scita_ai_budget_alert_date' for key in vals):
+            self.env.transaction.invalidate_ormcache('templates')
+        return res
+
     def _scita_ai_ready(self):
-        """True when an AI feature can run: a key is set for this website."""
+        """True when the AI features can run for the current visitor: a key is set for this
+        website, and they are logged in if the website keeps AI for customers. (Checked here
+        rather than in the templates: website-specific copies of the templates made by the
+        editor keep their old conditions.)"""
         self.ensure_one()
+        if self.scita_ai_login_required and self.env.user._is_public():
+            return False
         return bool(self.sudo().scita_ai_api_key)
 
     def _scita_hide_price(self, product=None):

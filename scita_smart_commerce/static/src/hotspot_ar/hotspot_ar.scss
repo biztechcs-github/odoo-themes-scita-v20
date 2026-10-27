@@ -17,6 +17,98 @@
     margin-inline-end: 0.25rem;
 }
 
+// the card button filled with the theme colour, "View in 3D" spelled out
+@mixin scita-ar-card-btn-open {
+    padding-inline-end: 16px;
+    border-color: $primary;
+    background: $primary;
+    color: color-contrast($primary);
+
+    .o_scita_ar_card_btn_short {
+        display: none;
+    }
+    .o_scita_ar_card_btn_long {
+        position: static;
+        width: auto;
+        height: auto;
+        clip-path: none;
+    }
+}
+
+// "3D" button on product cards (shop grid, product snippets): bottom left of the image, clear of
+// the ribbons (top corners) and of the cards' hover buttons. "View in 3D" on hover / focus.
+.o_scita_ar_card_btn {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0 13px 0 11px;
+    border: 1px solid #e6ded6;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    color: #1f1f1f;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s, transform 0.3s ease-in;
+
+    svg {
+        flex: none;
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linejoin: round;
+    }
+    // the long label stays readable by screen readers while only "3D" shows
+    .o_scita_ar_card_btn_long {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+    }
+    &:focus-visible {
+        outline: 2px solid $primary;
+        outline-offset: 3px;
+    }
+    @media (hover: hover) {
+        &:hover {
+            @include scita-ar-card-btn-open;
+        }
+    }
+    &:focus-visible,
+    &.o_scita_ar_card_btn_loading {
+        @include scita-ar-card-btn-open;
+    }
+    &.o_scita_ar_card_btn_loading {
+        cursor: progress;
+    }
+    @include media-breakpoint-down(sm) {
+        left: 6px;
+        bottom: 6px;
+        height: 36px;
+        min-width: 36px;
+        padding: 0 11px 0 9px;
+        gap: 5px;
+        font-size: 13px;
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
 // 3D / AR viewer: the model fills the window, the product panel floats on it as a card
 // (at the bottom on phones, where the viewer is full screen)
 .o_scita_ar_modal {

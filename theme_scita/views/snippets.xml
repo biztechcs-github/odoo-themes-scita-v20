@@ -60,6 +60,8 @@
             <form> 
                 <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
                     <div class="pwp-img">
+                        <!-- "3D" button (Scita Smart Commerce, when installed) -->
+                        <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                         <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href"
                         class="btn btn-secondary btn-sm btn-danger btn_unpub" title="This product is unpublished.">
                             Unpublished
@@ -348,6 +350,8 @@
                             <form>
                                 <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
                                     <div class="pwp-img">
+                                        <!-- "3D" button (Scita Smart Commerce, when installed) -->
+                                        <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                                         <a role="button" t-if="not show_publish and not product.website_published"
                                         t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger btn_unpub"
                                         title="This product is unpublished.">Unpublished
@@ -655,6 +659,8 @@
                             <form>
                                 <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
                                     <div class="pwp-img">
+                                        <!-- "3D" button (Scita Smart Commerce, when installed) -->
+                                        <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                                         <a role="button" t-if="not show_publish and not product.website_published"
                                         t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger btn_unpub"
                                         title="This product is unpublished.">Unpublished

@@ -45,7 +45,8 @@ def _to_openai_messages(system, messages):
 class OpenAIProvider(BaseProvider):
     code = 'openai'
 
-    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None):
+    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None,
+             allow_tool_calls=True):
         try:
             import openai  # noqa: PLC0415 - optional dependency, only needed for this provider
         except ImportError as e:
@@ -61,6 +62,8 @@ class OpenAIProvider(BaseProvider):
             params['tools'] = [{'type': 'function', 'function': {
                 'name': t['name'], 'description': t['description'], 'parameters': t['input_schema'],
             }} for t in tools]
+            if not allow_tool_calls:
+                params['tool_choice'] = 'none'
         if json_schema:
             params['response_format'] = {'type': 'json_schema', 'json_schema': {'name': 'result', 'schema': json_schema}}
         try:

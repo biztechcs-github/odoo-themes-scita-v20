@@ -46,7 +46,9 @@ class BaseProvider:
         self.model = model
         self.timeout = timeout
 
-    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None):
+    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None,
+             allow_tool_calls=True):
         """Return an AIResponse. `json_schema` asks for a JSON object matching the schema
-        as the text answer (no tools in that case)."""
+        as the text answer (no tools in that case). `allow_tool_calls=False` keeps the tools
+        defined (the history may hold tool calls) but makes the model answer in text."""
         raise NotImplementedError

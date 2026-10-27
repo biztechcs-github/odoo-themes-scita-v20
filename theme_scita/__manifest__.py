@@ -374,6 +374,9 @@ publish unpublish product
           'theme_scita/static/src/xml/scita_header_option.xml',
           'theme_scita/static/src/xml/scita_footer_option.xml',
           'theme_scita/static/src/xml/snippet_modify.xml',
+          # "Image Transition Effect" of images and background-image blocks (Scita 17/18 option)
+          'theme_scita/static/src/js/img_effect_plugin.js',
+          'theme_scita/static/src/xml/img_effect_option.xml',
             'theme_scita/static/src/js/category_slider.js',
             'theme_scita/static/src/js/category_slider2.js',
             'theme_scita/static/src/js/category_slider3.js',

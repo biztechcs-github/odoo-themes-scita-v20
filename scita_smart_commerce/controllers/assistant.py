@@ -12,9 +12,11 @@ from odoo.addons.scita_smart_commerce.models.ai_providers import AIProviderError
 
 _logger = logging.getLogger(__name__)
 
-MAX_TURNS = 12              # conversation turns accepted from the client
-MAX_MESSAGE_CHARS = 2000    # per client message
-MAX_TOOL_ITERATIONS = 5     # model <-> tool round trips per request
+# Every AI call resends the conversation: these keep a message's cost bounded. Shopping
+# questions are short, and the last few turns carry what the shopper is looking for.
+MAX_TURNS = 8               # conversation turns accepted from the client
+MAX_MESSAGE_CHARS = 500     # per client message
+MAX_TOOL_ITERATIONS = 3     # model <-> tool round trips per request
 MAX_SEARCH_RESULTS = 8
 MAX_ADD_QTY = 50
 
@@ -94,6 +96,7 @@ class ScitaAssistantController(http.Controller):
             reply = self._run_conversation(website, conversation, state)
         except AIProviderError as e:
             return {'error': Ai.public_error(e)}
+        Ai.count_use(website, 'assistant')
         return {
             'reply': reply,
             'products': self._mentioned_products(list(state['products'].values()), reply)[:MAX_SEARCH_RESULTS],
@@ -167,8 +170,18 @@ class ScitaAssistantController(http.Controller):
         system = self._system_prompt(website)
         messages = [dict(m) for m in conversation]
         response = None
-        for _i in range(MAX_TOOL_ITERATIONS):
-            response = Ai.chat(website, 'assistant', system, messages, tools=TOOLS, max_tokens=2048, effort='low')
+        for i in range(MAX_TOOL_ITERATIONS):
+            last_round = i == MAX_TOOL_ITERATIONS - 1
+            call_messages = messages
+            if last_round and i:
+                # answer with what the searches found instead of searching again (with all rounds
+                # spent on searches the shopper only got a generic sentence). Tool calls are
+                # switched off too, but Gemini does not always respect that on its own.
+                last = dict(messages[-1], content=messages[-1]['content'] + [{
+                    'type': 'text', 'text': 'Answer the shopper now with these results; do not search again.'}])
+                call_messages = messages[:-1] + [last]
+            response = Ai.chat(website, 'assistant', system, call_messages, tools=TOOLS, max_tokens=2048,
+                               effort='low', allow_tool_calls=not last_round)
             if response.stop_reason == 'refusal':
                 return request.env._("Sorry, I can't help with that. Is there a product I can help you find?")
             if not response.tool_calls:
@@ -265,6 +278,14 @@ class ScitaAssistantController(http.Controller):
             data['compare_at_price'] = card['compare_price_text']
         if template is not None:
             data['description'] = (template.description_sale or '')[:300]
+            # the choices a shopper can make (colour, size, material...): without them "a green
+            # sofa?" was answered "no" while the shop sells one in Emerald
+            options = {
+                line.attribute_id.name: line.value_ids[:8].mapped('name')
+                for line in template.valid_product_template_attribute_line_ids[:4]
+            }
+            if options:
+                data['options'] = options
             if with_description:
                 data['details'] = html2plaintext(template.website_description or '')[:1500]
         return data

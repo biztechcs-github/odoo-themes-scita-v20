@@ -154,7 +154,8 @@ class GeminiProvider(BaseProvider):
                               % (self.model, _error_message(last_error)[:150] if last_error is not None else ''),
                               admin=True)
 
-    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None):
+    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None,
+             allow_tool_calls=True):
         def build_body(model):
             body = {
                 'contents': _to_gemini_contents(messages, model),
@@ -167,6 +168,8 @@ class GeminiProvider(BaseProvider):
                     'name': t['name'], 'description': t['description'],
                     'parameters': _clean_schema(t['input_schema']),
                 } for t in tools]}]
+                if not allow_tool_calls:
+                    body['toolConfig'] = {'functionCallingConfig': {'mode': 'NONE'}}
             if json_schema:
                 body['generationConfig'].update({'responseMimeType': 'application/json',
                                                  'responseSchema': _clean_schema(json_schema)})

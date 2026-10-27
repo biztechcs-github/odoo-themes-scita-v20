@@ -26,17 +26,51 @@
                                 <label for="scita_ai_api_key" class="col-lg-4 o_light_label"/>
                                 <field name="scita_ai_api_key" password="True"/>
                             </div>
+                        </div>
+                    </setting>
+                    <setting id="scita_ai_limits_setting" string="AI Usage Limits"
+                             help="Protect your AI budget. Each limit is per day; 0 means unlimited.">
+                        <div class="content-group mt-2">
                             <div class="row">
-                                <label for="scita_ai_daily_limit" class="col-lg-4 o_light_label"/>
-                                <field name="scita_ai_daily_limit"/>
+                                <label for="scita_ai_guest_assistant_limit" string="Assistant messages per guest" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5"><field name="scita_ai_guest_assistant_limit" class="oe_inline"/></div>
                             </div>
                             <div class="row">
-                                <label for="scita_ai_ip_daily_limit" class="col-lg-4 o_light_label"/>
-                                <field name="scita_ai_ip_daily_limit"/>
+                                <label for="scita_ai_user_assistant_limit" string="Assistant messages per customer" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5"><field name="scita_ai_user_assistant_limit" class="oe_inline"/></div>
                             </div>
                             <div class="row">
-                                <label for="scita_ai_site_daily_limit" class="col-lg-4 o_light_label"/>
-                                <field name="scita_ai_site_daily_limit"/>
+                                <label for="scita_ai_guest_action_limit" string="Photo searches / comparisons per guest" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5"><field name="scita_ai_guest_action_limit" class="oe_inline"/></div>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_user_action_limit" string="Photo searches / comparisons per customer" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5"><field name="scita_ai_user_action_limit" class="oe_inline"/></div>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_ip_daily_limit" string="Guest uses per IP address" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5"><field name="scita_ai_ip_daily_limit" class="oe_inline"/></div>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_daily_token_budget" string="AI tokens for the website" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5">
+                                    <field name="scita_ai_daily_token_budget" class="oe_inline"/>
+                                </div>
+                                <div class="col-12 text-muted small">Used today: <field name="scita_ai_tokens_today" class="d-inline"/> tokens.
+                                    Past 80% only logged-in customers keep the AI features and you get an email.</div>
+                            </div>
+                            <div class="row">
+                                <label for="scita_ai_site_daily_limit" string="AI requests for the website" class="col-lg-7 o_light_label"/>
+                                <div class="col-lg-5"><field name="scita_ai_site_daily_limit" class="oe_inline"/></div>
+                            </div>
+                            <div class="mt-2">
+                                <field name="scita_ai_login_required" class="oe_inline"/>
+                                <label for="scita_ai_login_required" class="o_light_label"/>
+                            </div>
+                            <div class="alert alert-warning mt-2" role="alert" invisible="not scita_ai_proxy_warning">
+                                Odoo runs behind a proxy without <code>--proxy-mode</code>: every visitor appears to come from the
+                                proxy's address, so all guests share one "per IP address" allowance. Start Odoo with
+                                <code>--proxy-mode</code> (or <code>proxy_mode = True</code> in its configuration file).
                             </div>
                         </div>
                     </setting>

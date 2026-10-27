@@ -1154,17 +1154,43 @@ body.editor_enable {
 /*editer sidebar overlay hide end*/
 
 /*img hover effect*/
+// the flash of effects 1, 2, 3 and 5 (a 10% light grey one did not show on photos)
+$sct-img-effect-flash: rgba(255, 255, 255, 0.45);
+// span put around an image by the editor's "Image Transition Effect": as big as the image
+span.sct_img_effect_wrap {
+	display: inline-block;
+	max-width: 100%;
+	vertical-align: top;
+	line-height: 0;
+
+	&.sct_img_effect_wrap_block {
+		display: block;
+		// a centred image smaller than its column: the box stays the image's size
+		width: fit-content;
+	}
+	> img {
+		max-width: 100%;
+	}
+	// the box has the image's % width (editor "Size" option): the image fills it
+	&[style*="width"] > img {
+		width: 100%;
+	}
+}
 .sct_img_effect1 {
 	position: relative;
-	display: block;
 	overflow: hidden;
+	// not on blocks: a carousel slide must keep its own display
+	&:where(a, span) {
+		display: block;
+	}
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: fade-out($light-grey-color, 0.9);
+		background-color: $sct-img-effect-flash;
 		width: 150px;
 		height: 100%;
 		z-index: 1;
+		pointer-events: none;
 		left: -100%;
 		top: 0;
 		-webkit-transform: skew(45deg);
@@ -1191,13 +1217,17 @@ body.editor_enable {
 }
 .sct_img_effect2 {
 	position: relative;
-	display: block;
 	overflow: hidden;
+	// not on blocks: a carousel slide must keep its own display
+	&:where(a, span) {
+		display: block;
+	}
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: fade-out($light-grey-color, 0.9);
+		background-color: $sct-img-effect-flash;
 		z-index: 1;
+		pointer-events: none;
 		left: 50%;
 	    right: 50%;
 	    top: 0;
@@ -1245,13 +1275,17 @@ body.editor_enable {
 }
 .sct_img_effect3 {
 	position: relative;
-	display: block;
 	overflow: hidden;
+	// not on blocks: a carousel slide must keep its own display
+	&:where(a, span) {
+		display: block;
+	}
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: fade-out($light-grey-color, 0.9);
+		background-color: $sct-img-effect-flash;
 		z-index: 1;
+		pointer-events: none;
 		left: 50%;
 	    right: 50%;
 	    top: 50%;
@@ -1303,26 +1337,31 @@ body.editor_enable {
 }
 .sct_img_effect4 {
 	position: relative;
-	display: block;
 	overflow: hidden;
+	// not on blocks: a carousel slide must keep its own display
+	&:where(a, span) {
+		display: block;
+	}
 	img {
 		@include transition(all, 0.5s, ease);
-		&:hover{
-			-webkit-transform:scale(1.06);
-			-ms-transform:scale(1.06);
-			transform:scale(1.06);
-		}
+	}
+	&:hover img {
+		transform: scale(1.06);
 	}
 }
 .sct_img_effect5 {
 	position: relative;
-	display: block;
 	overflow: hidden;
+	// not on blocks: a carousel slide must keep its own display
+	&:where(a, span) {
+		display: block;
+	}
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: fade-out($light-grey-color, 0.8);
+		background-color: $sct-img-effect-flash;
 		z-index: 1;
+		pointer-events: none;
 		left: 50%;
 	    right: 50%;
 	    top: 50%;

@@ -36,7 +36,7 @@
                         <form class="o_scita_assistant_form o_no_wait_lazy_js">
                             <label class="visually-hidden" for="o_scita_assistant_input">Your question</label>
                             <textarea id="o_scita_assistant_input" class="o_scita_assistant_input form-control" rows="1"
-                                      maxlength="2000" placeholder="Ask about our products..."/>
+                                      maxlength="500" placeholder="Ask about our products..."/>
                             <button type="submit" class="o_scita_assistant_send btn btn-primary" aria-label="Send">&#10148;</button>
                         </form>
                         <p class="o_scita_assistant_disclaimer">AI answers can contain mistakes. Check product pages before buying.</p>

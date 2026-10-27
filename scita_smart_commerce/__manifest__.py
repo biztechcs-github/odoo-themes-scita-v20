@@ -23,7 +23,7 @@ OpenAI or Google Gemini selectable) configured in Website settings.
     'author': 'AppJetty',
     'website': 'https://www.appjetty.com/',
     'category': 'Website/eCommerce',
-    'version': '20.0.1.4.0',
+    'version': '20.0.1.5.0',
     'license': 'OPL-1',
     'depends': [
         'theme_scita',

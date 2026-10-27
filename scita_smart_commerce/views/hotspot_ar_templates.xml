@@ -22,4 +22,25 @@
             </t>
         </xpath>
     </template>
+
+    <!-- "3D" button on a product card (shop grid, Scita product snippets): opens the 3D viewer
+         in place (card_ar_button.js). ar_product: product.template or product.product.
+         Theme Scita's snippet cards call it, guarded by the scita_has_ar field: their templates
+         are theme views, which this module can't inherit. -->
+    <template id="card_3d_button" name="Scita 3D Button on Product Cards">
+        <t t-set="ar_template" t-value="ar_product.product_tmpl_id if ar_product._name == 'product.product' else ar_product"/>
+        <button t-if="ar_template.scita_has_ar" type="button" class="o_scita_ar_card_btn"
+                t-att-data-product-id="ar_template.id" title="View in 3D">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 20 7.4v9.2l-8 4.6-8-4.6V7.4z"/><path d="M4 7.4l8 4.6 8-4.6M12 12v9.2"/></svg>
+            <span class="o_scita_ar_card_btn_short" aria-hidden="true">3D</span>
+            <span class="o_scita_ar_card_btn_long">View in 3D</span>
+        </button>
+    </template>
+
+    <!-- Shop grid (and its "Load more", wishlist): on the product image, outside its link -->
+    <template id="shop_card_3d_button" inherit_id="website_sale.product_image_and_ribbon" name="Scita 3D Button on Shop Cards">
+        <xpath expr="//div[hasclass('oe_product_image')]" position="inside">
+            <t t-if="product" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
+        </xpath>
+    </template>
 </odoo>

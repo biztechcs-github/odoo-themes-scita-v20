@@ -346,6 +346,7 @@ class ScitaVisualSearch(Controller):
                                effort='low', json_schema=VISION_SCHEMA)
         except AIProviderError as e:
             return {'error': Ai.public_error(e)}
+        Ai.count_use(website, 'visual_search')
         if response.stop_reason == 'refusal':
             return {'error': _('We could not analyse this photo. Please try another one.')}
         try:

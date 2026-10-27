@@ -204,6 +204,8 @@
                             <form>
                                 <div class="cs-product o_carousel_product_card" data-publish="on">
                                     <div class="pwp-img">
+                                        <!-- "3D" button (Scita Smart Commerce, when installed) -->
+                                        <t t-if="'scita_has_ar' in deal_product._fields and deal_product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="deal_product"/>
                                         <a t-att-href="deal_product.website_url">
                                             <img class="img img-fluid" t-att-alt="deal_product.name"
                                                     t-att-title="deal_product.name"

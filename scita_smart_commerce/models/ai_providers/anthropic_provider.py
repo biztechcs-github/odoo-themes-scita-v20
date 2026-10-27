@@ -10,14 +10,16 @@ from .base import AIProviderError, AIResponse, AIToolCall, BaseProvider
 
 _logger = logging.getLogger(__name__)
 
-# Models offered in the settings. claude-opus-5-5 is the default.
+# Models offered in the settings. claude-haiku-5-5 is the default: shopper questions, photo
+# descriptions and comparisons are short, well-defined tasks, and it costs a fraction of Opus.
 MODELS = [
+    ('claude-haiku-5-5', 'Claude Haiku 5.5'),
     ('claude-opus-5-5', 'Claude Opus 5.5'),
     ('claude-sonnet-5-5', 'Claude Sonnet 5.5'),
     ('claude-opus-5', 'Claude Opus 5'),
     ('claude-haiku-4-5', 'Claude Haiku 4.5'),
 ]
-DEFAULT_MODEL = 'claude-opus-5-5'
+DEFAULT_MODEL = 'claude-haiku-5-5'
 
 # Server-side refusal fallbacks ("default" routing) on the Claude API.
 FALLBACK_MODELS = {'claude-opus-5-5', 'claude-opus-5', 'claude-sonnet-5-5'}
@@ -38,7 +40,8 @@ class AnthropicProvider(BaseProvider):
                 "(pip install anthropic).", admin=True) from e
         return anthropic, anthropic.Anthropic(api_key=self.api_key, timeout=self.timeout, max_retries=2)
 
-    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None):
+    def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None,
+             allow_tool_calls=True):
         anthropic, client = self._client()
         params = {
             'model': self.model,
@@ -48,6 +51,8 @@ class AnthropicProvider(BaseProvider):
         }
         if tools:
             params['tools'] = tools
+            if not allow_tool_calls:
+                params['tool_choice'] = {'type': 'none'}
         output_config = {}
         if effort and self.model not in NO_EFFORT_MODELS:
             output_config['effort'] = effort

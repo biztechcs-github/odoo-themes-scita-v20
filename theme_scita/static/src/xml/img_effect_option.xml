@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="theme_scita.ImgEffectBgOption">
+    <BuilderRow label.translate="Image Transition Effect" tooltip.translate="Effect played when the mouse moves over it">
+        <BuilderSelect action="'scitaImgEffect'">
+            <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'sct_img_effect1'">Shine</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'sct_img_effect2'">Flash</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'sct_img_effect3'">Flash from the centre</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'sct_img_effect5'">Round flash</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="theme_scita.ImgEffectOption" t-inherit="theme_scita.ImgEffectBgOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderSelectItem[@actionParam=&quot;'sct_img_effect5'&quot;]" position="after">
+        <BuilderSelectItem actionParam="'sct_img_effect4'">Zoom</BuilderSelectItem>
+    </xpath>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <!-- images of the page content; not those of the header/footer, product pages, dynamic
+         blocks, galleries, Odoo's own hover animation or Scita hotspots (the effect box hides
+         what overflows it: the hotspot cards) -->
+    <xpath expr="//t[@id='image_options']" position="inside">
+        <scita_img_effect_option
+            selector="#wrap img"
+            exclude="[data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .s_image_gallery img, .o_scita_hotspots img, .o_scita_hotspot_card img, img[data-hover-effect]"/>
+    </xpath>
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <!-- blocks with a background image (promo banners, covers, carousel slides...) -->
+        <!-- (with a Scroll Effect, the image is on an inner span.s_parallax_bg) -->
+        <scita_img_effect_bg_option
+            selector="#wrap .oe_img_bg, #wrap .parallax:has(> .s_parallax_bg_wrap > .oe_img_bg)"
+            exclude="[data-oe-type] *, .o_scita_hotspots:not(:has(> .promo-block-main)), .s_parallax_bg"/>
+    </xpath>
+</t>
+
+</templates>

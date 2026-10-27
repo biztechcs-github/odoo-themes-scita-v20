@@ -40,11 +40,13 @@
     <xpath expr="//t[@id='image_options']" position="inside">
         <scita_hotspots_option
             selector="#wrap img"
-            exclude="a > img:not(:only-child), a :not(a) img, [data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .oe_img_hotspot img, .o_scita_hotspot_card img, .s_image_gallery img"/>
+            exclude="a > img:not(:only-child), a :not(a) img, [data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .oe_img_hotspot img, .o_scita_hotspot_card img, .s_image_gallery img, .sct_img_effect_wrap > img, .o_grid_item_image[class*='sct_img_effect'] img"/>
     </xpath>
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <!-- any block with a background image (banners, carousel slides...) -->
-        <scita_hotspots_bg_option selector="#wrap .oe_img_bg" exclude="[data-oe-type] .oe_img_bg"/>
+        <!-- not on a block with Scita's "Image Transition Effect" (the effect box hides what
+             overflows it: the hotspot cards) -->
+        <scita_hotspots_bg_option selector="#wrap .oe_img_bg" exclude="[data-oe-type] .oe_img_bg, [class*='sct_img_effect']"/>
         <scita_hotspot_option selector=".o_scita_hotspots > .o_scita_hotspot" title="Hotspot"/>
     </xpath>
 </t>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 13:35+0000\n"
-"PO-Revision-Date: 2026-10-08 13:35+0000\n"
+"POT-Creation-Date: 2026-10-27 08:53+0000\n"
+"PO-Revision-Date: 2026-10-27 08:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -101,6 +101,7 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-python
+#: code:addons/scita_smart_commerce/controllers/hotspot_ar.py:0
 #: code:addons/scita_smart_commerce/models/product_template.py:0
 msgid "%s cm"
 msgstr ""
@@ -131,6 +132,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
 msgid "1 similar product"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "3D"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -166,6 +173,12 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__multi_shape
 msgid "3D shape"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "3D view controls"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -266,15 +279,59 @@ msgid ""
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.card_3d_button
+msgid ""
+"<span class=\"o_scita_ar_card_btn_short\" aria-hidden=\"true\">3D</span>\n"
+"            <span class=\"o_scita_ar_card_btn_long\">View in 3D</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.compare_ai_explain
 msgid ""
-"<span class=\"o_scita_compare_ai_spinner spinner-border spinner-border-sm me-1 d-none\" role=\"status\" aria-hidden=\"true\"/>\n"
-"                        Explain the differences"
+"<span class=\"o_scita_compare_ai_spinner spinner-border spinner-border-sm d-none\" role=\"status\" aria-hidden=\"true\"/>\n"
+"                        <span>Explain the differences</span>"
 msgstr ""
 
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
 msgid "<span><strong>You've unlocked free delivery!</strong></span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "<span>Take a photo</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "<span>Upload a photo</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid ""
+"<span>Your photo is only used for this search and is not stored.</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid ""
+"<strong>Shop similar products</strong>\n"
+"                                            <span>The closest matches from our catalogue, ready to add to your cart.</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid ""
+"<strong>Snap or upload</strong>\n"
+"                                            <span>A photo of a product you like: in a shop, a magazine or a friend's home.</span>"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid ""
+"<strong>We read the photo</strong>\n"
+"                                            <span>Its kind of product, colour, material and style.</span>"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -326,6 +383,11 @@ msgid "AI Provider"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__request_count
+msgid "AI Requests"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_assistant_enabled
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_assistant_enabled
 msgid "AI Shopping Assistant"
@@ -336,6 +398,11 @@ msgstr ""
 #: model:ir.ui.menu,name:scita_smart_commerce.scita_ai_usage_menu
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_pivot
 msgid "AI Usage"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "AI Usage Limits"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -350,15 +417,14 @@ msgid "AI answers can contain mistakes. Check product pages before buying."
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_ip_daily_limit
-#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_ip_daily_limit
-msgid "AI requests per IP address per day"
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_login_required
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_login_required
+msgid "AI for logged-in customers only"
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_daily_limit
-#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_daily_limit
-msgid "AI requests per visitor per day"
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "AI requests for the website"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -373,6 +439,28 @@ msgid ""
 "AI shopping assistant, visual search, AI comparison, price alerts, product "
 "hotspots on any image with 3D/AR and a free-shipping progress bar for Theme "
 "Scita"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "AI tokens for the website"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_daily_token_budget
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_daily_token_budget
+msgid "AI tokens per website per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_tokens_today
+msgid "AI tokens used today"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid "AI usage at %(share)s%% of the daily budget on %(website)s"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -437,6 +525,7 @@ msgstr ""
 #. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
 #: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
 msgid "Add to cart"
 msgstr ""
@@ -448,6 +537,7 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/card_ar_button.js:0
 #: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.js:0
 msgid "Added ✓"
 msgstr ""
@@ -507,6 +597,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_assistant_welcome
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_assistant_welcome
 msgid "Assistant Welcome Message"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Assistant messages per customer"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_user_assistant_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_user_assistant_limit
+msgid "Assistant messages per customer per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Assistant messages per guest"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_guest_assistant_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_guest_assistant_limit
+msgid "Assistant messages per guest per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ai_usage__action_count
+msgid ""
+"Assistant messages, photo searches or comparisons: what the daily allowances"
+" count"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Auto-rotate"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -611,6 +736,11 @@ msgid "Box (a photo on each face)"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_scita_ai_usage__request_count
+msgid "Calls to the AI provider (an assistant message can take a few)"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ar_photo_wizard_view_form
 msgid "Cancel"
 msgstr ""
@@ -672,6 +802,7 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
 #: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.free_shipping_bar
 msgid "Choose options"
@@ -696,6 +827,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__company_id
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert_report__company_id
 msgid "Company"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+msgid "Comparing the products…"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -819,6 +956,12 @@ msgid "Delete closed alerts after"
 msgstr ""
 
 #. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/hotspot_ar.py:0
+msgid "Depth"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_price_alert_default_percent
 #: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_price_alert_default_percent
 msgid ""
@@ -872,13 +1015,21 @@ msgstr ""
 #. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
-msgid "Drag to rotate, pinch to zoom, or place it in your room."
+msgid "Drag to rotate · Pinch to zoom"
 msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
-msgid "Drag to rotate, pinch to zoom. AR is not available on this device."
+msgid "Drag to rotate · Scroll to zoom"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_guest_action_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_guest_action_limit
+msgid ""
+"Each of the two features separately. A comparison already explained for the "
+"same products is reused and does not count."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1010,15 +1161,26 @@ msgid "Front photo"
 msgstr ""
 
 #. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Full screen"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.compare_ai_explain
 msgid ""
-"Get a plain-language summary of the real differences, based only on our "
-"product information."
+"Get a short, plain-language summary of the real differences, based only on "
+"our product information."
 msgstr ""
 
 #. module: scita_smart_commerce
 #: model:ir.model.fields.selection,name:scita_smart_commerce.selection__website__scita_ai_provider__gemini
 msgid "Google Gemini"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Guest uses per IP address"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1033,11 +1195,20 @@ msgid "Guests confirm by email (recommended)"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_ip_daily_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_ip_daily_limit
+msgid ""
+"Guests, per feature and network address, so clearing cookies does not reset "
+"their allowance. Keep it well above the per-guest limits: shoppers of one "
+"office or mobile network share an address."
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_site_daily_limit
 #: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_site_daily_limit
 msgid ""
-"Hard cap on all AI requests of this website per day (all features and "
-"visitors). 0 means unlimited."
+"Hard cap on the number of calls to the AI provider per day (all features and"
+" visitors)."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1058,8 +1229,20 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-python
+#: code:addons/scita_smart_commerce/controllers/hotspot_ar.py:0
+msgid "Height"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
 #: code:addons/scita_smart_commerce/controllers/assistant.py:0
 msgid "Here is what I found in our catalogue."
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_login_required
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_login_required
+msgid "Hide the AI features from visitors who are not logged in."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1089,6 +1272,11 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.product_template_form_view_scita_ar
 msgid "How it is used"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "How it works"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1267,6 +1455,24 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Loading..."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/card_ar_button.js:0
+msgid "Loading…"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_user_assistant_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_user_assistant_limit
+msgid "Logged-in customers, counted per account across their devices."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/visual_search/visual_search.js:0
 msgid "Looking for similar products…"
 msgstr ""
@@ -1301,7 +1507,7 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_model
 #: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_model
-msgid "Model identifier sent to the provider, e.g. claude-opus-5-5."
+msgid "Model identifier sent to the provider, e.g. claude-haiku-5-5."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1364,7 +1570,7 @@ msgstr ""
 #. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
-msgid "Not specified in our product information: %s"
+msgid "Not in our product information (%s)"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1417,6 +1623,14 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
 msgid "Number of results"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"Odoo runs behind a proxy without <code>--proxy-mode</code>: every visitor appears to come from the\n"
+"                                proxy's address, so all guests share one \"per IP address\" allowance. Start Odoo with\n"
+"                                <code>--proxy-mode</code> (or <code>proxy_mode = True</code> in its configuration file)."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1492,6 +1706,7 @@ msgstr ""
 #. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/assistant/assistant.js:0
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
 #: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
 msgid "Out of stock"
 msgstr ""
@@ -1524,6 +1739,28 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ar_photo_wizard__photo
 msgid "Photo (front)"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Photo searches / comparisons per customer"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_user_action_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_user_action_limit
+msgid "Photo searches / comparisons per customer per day"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Photo searches / comparisons per guest"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_guest_action_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_guest_action_limit
+msgid "Photo searches / comparisons per guest per day"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1590,6 +1827,18 @@ msgstr ""
 #: code:addons/scita_smart_commerce/models/price_alert.py:0
 #: code:addons/scita_smart_commerce/static/src/price_alert/price_alert.js:0
 msgid "Please enter the price you would pay."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid "Please log in to use this feature."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid "Please reload the page and try again."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1826,11 +2075,14 @@ msgid "Progress towards free delivery"
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_daily_limit
-#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_daily_limit
-msgid ""
-"Protects your AI budget: each visitor (session) can make at most this many "
-"AI requests per feature per day. 0 means unlimited."
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Protect your AI budget. Each limit is per day; 0 means unlimited."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "QR code to open this product on your phone"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1873,11 +2125,6 @@ msgid "Real width (cm)"
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__request_count
-msgid "Request Count"
-msgstr ""
-
-#. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/hotspots/hotspots.xml:0
 msgid "Request a quote"
@@ -1898,6 +2145,12 @@ msgstr ""
 msgid ""
 "Requests and tokens used by the shopping assistant, visual search and AI comparison,\n"
 "               per day. Your AI provider bills you for these tokens."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Reset view"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1944,12 +2197,9 @@ msgid "Same kind first"
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_ip_daily_limit
-#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_ip_daily_limit
-msgid ""
-"Same limit per network address, so clearing cookies does not reset it. Keep "
-"it higher than the per-visitor limit: shoppers of one office or mobile "
-"network share an address. 0 means unlimited."
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Scan with your phone camera to place it in your space, at real size."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -1968,8 +2218,24 @@ msgid "Scita AI Usage"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_budget_alert_date
+msgid "Scita Ai Budget Alert Date"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_missing_package
 msgid "Scita Ai Missing Package"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_proxy_warning
+msgid "Scita Ai Proxy Warning"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_product__scita_ar_dimensions
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_product_template__scita_ar_dimensions
+msgid "Scita Ar Dimensions"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2001,6 +2267,12 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
 msgid "See all results"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "See it in your room"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2149,11 +2421,6 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.portal_my_price_alerts
 msgid "Stopped"
-msgstr ""
-
-#. module: scita_smart_commerce
-#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
-msgid "Take a photo"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2345,6 +2612,19 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid ""
+"This feature is very busy today. Log in to your account to keep using it."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid "This feature is very busy today. Please try again tomorrow."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
 #: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
 msgid "This file is not a photo Odoo can read. Use a JPEG, PNG or WEBP image."
 msgstr ""
@@ -2438,8 +2718,11 @@ msgid "USDZ Filename"
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
-msgid "Upload a photo"
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid ""
+"Until tomorrow the AI features stay available to logged-in customers only. "
+"You can raise the budget in Website > Settings > Scita Smart Commerce."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2457,6 +2740,23 @@ msgid ""
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid "Used today:"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__action_count
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.scita_ai_usage_view_list
+msgid "Uses"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_res_config_settings__scita_ai_ip_daily_limit
+#: model:ir.model.fields,field_description:scita_smart_commerce.field_website__scita_ai_ip_daily_limit
+msgid "Uses per IP address per day"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_price_alert__product_id
 msgid "Variant"
 msgstr ""
@@ -2469,13 +2769,21 @@ msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "View full product details"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.card_3d_button
 msgid "View in 3D"
 msgstr ""
 
 #. module: scita_smart_commerce
 #. odoo-javascript
 #: code:addons/scita_smart_commerce/static/src/hotspot_ar/ar_viewer.js:0
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
 msgid "View it in your room"
 msgstr ""
 
@@ -2488,6 +2796,14 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model:ir.model.fields,field_description:scita_smart_commerce.field_scita_ai_usage__visitor_key
 msgid "Visitor Key"
+msgstr ""
+
+#. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_guest_assistant_limit
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_guest_assistant_limit
+msgid ""
+"Visitors who are not logged in. A conversation usually takes 3 to 8 "
+"messages."
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2651,6 +2967,15 @@ msgid ""
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model:ir.model.fields,help:scita_smart_commerce.field_res_config_settings__scita_ai_daily_token_budget
+#: model:ir.model.fields,help:scita_smart_commerce.field_website__scita_ai_daily_token_budget
+msgid ""
+"What your AI provider bills you for. Past 80% only logged-in customers keep "
+"the AI features (you get an email), past 100% they are paused until "
+"tomorrow."
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model:ir.model.fields,help:scita_smart_commerce.field_product_product__scita_ar_placement
 #: model:ir.model.fields,help:scita_smart_commerce.field_product_template__scita_ar_placement
 msgid ""
@@ -2664,6 +2989,12 @@ msgstr ""
 msgid ""
 "Which product information the words found in the photo (type, colour, "
 "material, style) are compared with. Categories are always used."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/controllers/hotspot_ar.py:0
+msgid "Width"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2699,13 +3030,23 @@ msgid "You're watching this price: we'll email you when it %(condition)s."
 msgstr ""
 
 #. module: scita_smart_commerce
-#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
-msgid "Your photo"
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid ""
+"You've reached today's limit for this feature. Log in to your account to "
+"continue."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid ""
+"You've reached today's limit for this feature. Please try again tomorrow."
 msgstr ""
 
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
-msgid "Your photo is only used for this search and is not stored."
+msgid "Your photo"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2727,6 +3068,26 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.assistant_bubble
 msgid "Your question"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-python
+#: code:addons/scita_smart_commerce/models/ai_service.py:0
+msgid ""
+"Your website \"%(website)s\" has used %(used)s of its %(budget)s daily AI "
+"tokens today."
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Zoom in"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/hotspot_ar/hotspot_ar.xml:0
+msgid "Zoom out"
 msgstr ""
 
 #. module: scita_smart_commerce
@@ -2840,6 +3201,11 @@ msgid "more for <strong>free delivery</strong>"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.visual_search_modal
+msgid "or drop an image here"
+msgstr ""
+
+#. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
 msgid "pip install"
 msgstr ""
@@ -2868,6 +3234,13 @@ msgid "scita_ar_model_usdz"
 msgstr ""
 
 #. module: scita_smart_commerce
+#: model_terms:ir.ui.view,arch_db:scita_smart_commerce.res_config_settings_view_form
+msgid ""
+"tokens.\n"
+"                                    Past 80% only logged-in customers keep the AI features and you get an email."
+msgstr ""
+
+#. module: scita_smart_commerce
 #. odoo-python
 #: code:addons/scita_smart_commerce/models/ar_photo_wizard.py:0
 msgid "top"
@@ -2881,4 +3254,10 @@ msgstr ""
 #. module: scita_smart_commerce
 #: model_terms:ir.ui.view,arch_db:scita_smart_commerce.price_alert_product_block
 msgid "you@example.com"
+msgstr ""
+
+#. module: scita_smart_commerce
+#. odoo-javascript
+#: code:addons/scita_smart_commerce/static/src/compare_ai/compare_ai.js:0
+msgid "★ %(average)s (%(reviews)s)"
 msgstr ""

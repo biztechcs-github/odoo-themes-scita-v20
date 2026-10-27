@@ -8,6 +8,7 @@
                 <field name="date"/>
                 <field name="website_id" groups="website.group_multi_website"/>
                 <field name="feature"/>
+                <field name="action_count" sum="Uses"/>
                 <field name="request_count" sum="Requests"/>
                 <field name="input_tokens" sum="Input tokens"/>
                 <field name="output_tokens" sum="Output tokens"/>
@@ -22,6 +23,7 @@
             <pivot string="AI Usage">
                 <field name="date" type="row" interval="day"/>
                 <field name="feature" type="col"/>
+                <field name="action_count" type="measure"/>
                 <field name="request_count" type="measure"/>
                 <field name="input_tokens" type="measure"/>
                 <field name="output_tokens" type="measure"/>
@@ -49,6 +51,8 @@
         <field name="name">AI Usage</field>
         <field name="res_model">scita.ai.usage</field>
         <field name="view_mode">pivot,list</field>
+        <!-- the per-IP rows repeat the requests of the visitors' rows (they only enforce the IP limit) -->
+        <field name="domain">[('visitor_key', 'not =like', 'ip:%')]</field>
         <field name="context">{'search_default_this_month': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">No AI requests yet</p>

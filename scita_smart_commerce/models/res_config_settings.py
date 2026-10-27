@@ -1,6 +1,8 @@
 import importlib.util
 
 from odoo import api, fields, models
+from odoo.http import request
+from odoo.tools import config
 
 from .ai_providers import PYTHON_PACKAGES
 
@@ -14,9 +16,16 @@ class ResConfigSettings(models.TransientModel):
     scita_ai_api_key = fields.Char(related='website_id.scita_ai_api_key', readonly=False, groups='base.group_system')
     scita_ai_model = fields.Char(related='website_id.scita_ai_model', readonly=False)
     scita_ai_missing_package = fields.Char(compute='_compute_scita_ai_missing_package')
-    scita_ai_daily_limit = fields.Integer(related='website_id.scita_ai_daily_limit', readonly=False)
+    scita_ai_guest_assistant_limit = fields.Integer(related='website_id.scita_ai_guest_assistant_limit', readonly=False)
+    scita_ai_user_assistant_limit = fields.Integer(related='website_id.scita_ai_user_assistant_limit', readonly=False)
+    scita_ai_guest_action_limit = fields.Integer(related='website_id.scita_ai_guest_action_limit', readonly=False)
+    scita_ai_user_action_limit = fields.Integer(related='website_id.scita_ai_user_action_limit', readonly=False)
+    scita_ai_login_required = fields.Boolean(related='website_id.scita_ai_login_required', readonly=False)
     scita_ai_ip_daily_limit = fields.Integer(related='website_id.scita_ai_ip_daily_limit', readonly=False)
+    scita_ai_daily_token_budget = fields.Integer(related='website_id.scita_ai_daily_token_budget', readonly=False)
     scita_ai_site_daily_limit = fields.Integer(related='website_id.scita_ai_site_daily_limit', readonly=False)
+    scita_ai_tokens_today = fields.Integer('AI tokens used today', compute='_compute_scita_ai_tokens_today')
+    scita_ai_proxy_warning = fields.Boolean(compute='_compute_scita_ai_proxy_warning')
     scita_assistant_enabled = fields.Boolean(related='website_id.scita_assistant_enabled', readonly=False)
     scita_assistant_name = fields.Char(related='website_id.scita_assistant_name', readonly=False)
     scita_assistant_welcome = fields.Text(related='website_id.scita_assistant_welcome', readonly=False)
@@ -41,6 +50,18 @@ class ResConfigSettings(models.TransientModel):
         for settings in self:
             package = PYTHON_PACKAGES.get(settings.scita_ai_provider)
             settings.scita_ai_missing_package = package if package and not importlib.util.find_spec(package) else False
+
+    @api.depends('website_id')
+    def _compute_scita_ai_tokens_today(self):
+        for settings in self:
+            settings.scita_ai_tokens_today = (
+                self.env['scita.ai']._site_totals(settings.website_id)[1] if settings.website_id else 0)
+
+    def _compute_scita_ai_proxy_warning(self):
+        # behind a reverse proxy without --proxy-mode every visitor has the proxy's address, so
+        # the per-IP allowance would be shared by all guests
+        behind_proxy = bool(request and request.httprequest.headers.get('X-Forwarded-For'))
+        self.scita_ai_proxy_warning = behind_proxy and not config.get('proxy_mode')
 
     @api.onchange('scita_ai_provider')
     def _onchange_scita_ai_provider(self):
