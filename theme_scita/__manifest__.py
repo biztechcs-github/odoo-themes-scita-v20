@@ -222,6 +222,8 @@ publish unpublish product
             'theme_scita/static/src/js/search_dropdown_width.js',
             'theme_scita/static/src/js/extra_menu_megamenu.js',
             'theme_scita/static/src/js/lazy_load_button.js',
+            # forms: letters typed before the (deferred) JS started are kept
+            'theme_scita/static/src/js/website_form_keep_typed.js',
             'theme_scita/static/src/js/mobile_view.js',
             'theme_scita/static/src/js/snippet_preview.js',
             'theme_scita/static/src/js/brand_filter.js',

@@ -167,6 +167,11 @@ if (document.readyState !== 'loading') {
 // (waitLazy). Larger screens keep Odoo's behaviour (their top menu is laid out by that JS), as do
 // pages shown in a frame (the website editor).
 const DELAY_AFTER_FIRST_PAINT = 3000;
+// The fields the visitor typed in before that JS is loaded (a phone may be typing already, the
+// JS started at the touch on the field): Odoo's form empties its fields when it starts, the first
+// letters were lost. website_form_keep_typed.js puts them back.
+const typedFieldEls = new WeakSet();
+document.addEventListener('input', (ev) => typedFieldEls.add(ev.target), true);
 // Scita's dynamic blocks (placeholder until their data is loaded), Odoo's dynamic snippets
 const FILLED_BY_JS = '.category-slider-placeholder, .s_dynamic';
 const INTERACTION_EVENTS = ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll', 'focusin'];
@@ -243,4 +248,5 @@ export default {
     loadScripts: _loadScripts,
     allScriptsLoaded: _allScriptsLoaded,
     registerPageReadinessDelay: retriggeringWaitingProms.push.bind(retriggeringWaitingProms),
+    typedFieldEls,
 };

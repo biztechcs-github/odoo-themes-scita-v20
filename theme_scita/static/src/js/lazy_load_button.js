@@ -82,7 +82,11 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
         // Use current product count as offset (already tracks loaded products)
         this.offset = this.product_count;
 
-        let category = $(".selected_filters .selected_category").attr("data-index") || 0;
+        // the category is written in the shop sidebar; layouts without one (filters on top) only
+        // have it in the URL, the last one of the path (/shop/category/living-room-19/sofas-20)
+        const categoryPath = (window.location.pathname.split("/shop/category/")[1] || "").split("/page/")[0];
+        const urlCategoryIds = categoryPath.split("/").map((part) => (part.match(/(?:^|-)(\d+)$/) || [])[1]).filter(Boolean);
+        let category = $(".selected_filters .selected_category").attr("data-index") || urlCategoryIds.pop() || 0;
         let attributes = $(".selected_filters .attributes .attrib_list").attr("data-list") || null;
 
         const url = new URL(window.location.href);
@@ -92,6 +96,9 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
         const min_price = parseFloat(url.searchParams.get('min_price') || 0);
 
         rpc('/lazy/load', {
+            // the shop's own query params too: Odoo 20 attribute filters (`brand-1=oakline-28`)
+            // and tags are only there, without them the next products were not filtered
+            ...Object.fromEntries(url.searchParams),
             search,
             ppg: this.ppg,
             offset: this.offset,
