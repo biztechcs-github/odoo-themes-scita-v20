@@ -15,52 +15,138 @@
         <field name="subject">Price drop: {{ object._scita_product_name() }} is now {{ object._scita_format(object.last_price) }}</field>
         <field name="email_from">{{ (object.website_id.company_id.email_formatted or user.email_formatted) }}</field>
         <field name="email_to">{{ object.email }}</field>
+        <!-- Odoo 20 defaults it to True: the record's partner (the signed-in account) was emailed
+             instead of the address typed on the alert, the double opt-in included -->
+        <field name="use_default_to" eval="False"/>
         <field name="lang">{{ object.lang }}</field>
         <field name="auto_delete" eval="True"/>
         <field name="body_html" type="html">
-<div style="margin: 0; padding: 0; font-family: Arial, sans-serif; color: #212529;">
-    <t t-set="saving" t-value="object._scita_saving()"/>
-    <t t-set="stock_left" t-value="object._scita_stock_left()"/>
-    <p>Hello,</p>
-    <p>
-        Good news: the product you are watching just got cheaper.
-    </p>
-    <table cellpadding="0" cellspacing="0" style="width: 100%; max-width: 560px; border: 1px solid #dee2e6; border-radius: 8px; margin: 16px 0;">
-        <tr>
-            <td t-if="object.product_id.image_128" style="padding: 16px; width: 140px; vertical-align: top;">
-                <img t-attf-src="{{ object.website_id.get_base_url() }}/web/image/product.product/{{ object.product_id.id }}/image_256"
-                     alt="" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;"/>
+<t t-set="website" t-value="object.website_id.sudo()"/>
+<t t-set="company" t-value="website.company_id"/>
+<t t-set="base_url" t-value="website.get_base_url()"/>
+<t t-set="saving" t-value="object._scita_saving()"/>
+<t t-set="stock_left" t-value="object._scita_stock_left()"/>
+<t t-set="new_price" t-value="object._scita_format(object.last_price)"/>
+<t t-set="variant_values" t-value="object.product_id.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.display_type != 'multi' and not v.is_custom)"/>
+<div style="margin: 0; padding: 0; background-color: #EFEAE4;">
+<div style="display: none; max-height: 0; overflow: hidden; opacity: 0; color: #EFEAE4; font-size: 1px; line-height: 1px;">
+    <t t-out="object.product_tmpl_id.name or ''">Product</t> is now <t t-out="new_price or ''">$ 90.00</t><t t-if="stock_left">, only <t t-out="stock_left">3</t> left at this price</t>.
+</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #EFEAE4; border-collapse: collapse;">
+<tr><td align="center" style="padding: 32px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #FFFFFF; border-radius: 12px; border-collapse: separate; overflow: hidden; font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; color: #1F1F1F;">
+
+    <!-- header: the website's logo, else its name -->
+    <tr><td style="padding: 22px 32px; border-bottom: 1px solid #EAE3DB;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td style="vertical-align: middle;">
+                <a t-att-href="base_url" style="text-decoration: none; color: #1F1F1F;">
+                    <img t-if="website.header_logo" t-att-src="'%s/web/image/website/%s/header_logo' % (base_url, website.id)"
+                         t-att-alt="website.name" height="40" style="height: 40px; width: auto; border: 0; vertical-align: middle;"/>
+                    <img t-elif="website.logo" t-att-src="'%s/web/image/website/%s/logo' % (base_url, website.id)"
+                         t-att-alt="website.name" height="40" style="height: 40px; width: auto; border: 0; vertical-align: middle;"/>
+                    <span t-else="" style="font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: bold;" t-out="website.name">My Website</span>
+                </a>
             </td>
-            <td t-attf-style="padding: {{ '16px 16px 16px 0' if object.product_id.image_128 else '16px' }}; vertical-align: top;">
-                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;" t-out="object._scita_product_name()">Product</div>
-                <div>
-                    <span t-if="saving[0]" style="text-decoration: line-through; color: #6c757d; margin-right: 8px;"
-                          t-out="object._scita_format(object.price_at_creation) or ''">$ 100.00</span>
-                    <span style="font-size: 22px; font-weight: bold; color: #198754;"
-                          t-out="object._scita_format(object.last_price) or ''">$ 90.00</span>
-                </div>
-                <div t-if="saving[0]" style="margin-top: 4px; color: #198754;">
-                    You save <strong t-out="object._scita_format(saving[0]) or ''">$ 10.00</strong>
-                    (<t t-out="saving[1]">10</t>%)
-                </div>
-                <div t-if="stock_left" style="margin-top: 8px; color: #dc3545; font-weight: bold;">
-                    Only <t t-out="stock_left">3</t> left at this price
-                </div>
+            <td align="right" style="vertical-align: middle;">
+                <a t-attf-href="{{ base_url }}/shop" style="font-size: 14px; color: #5F5A55; text-decoration: none;">Shop</a>
             </td>
-        </tr>
-    </table>
-    <p style="margin: 24px 0;">
-        <a t-att-href="object._scita_product_url()"
-           style="background-color: #875A7B; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-            Buy now at <t t-out="object._scita_format(object.last_price) or ''">$ 90.00</t>
-        </a>
-    </p>
-    <p style="font-size: 12px; color: #6c757d;">
-        You asked us to email you when the price <t t-out="object._scita_condition_text() or ''">drops</t>.
-        Prices can change at any time. This alert is now done:
-        <a t-att-href="object._scita_rearm_url()" style="color: #875A7B;">keep watching for a lower price</a>
-        or <a t-att-href="object._scita_unsubscribe_url()" style="color: #6c757d;">stop this alert</a>.
-    </p>
+        </tr></table>
+    </td></tr>
+
+    <!-- hero -->
+    <tr><td align="center" style="background-color: #2E3A33; padding: 36px 32px 32px; text-align: center; color: #FFFFFF;">
+        <div style="font-size: 12px; font-weight: bold; letter-spacing: 2px; color: #E9D9C6;">&#8600;&#160; PRICE DROP ALERT</div>
+        <div style="margin-top: 12px; font-family: 'Playfair Display', Georgia, serif; font-size: 30px; line-height: 1.2; font-weight: bold; color: #FFFFFF;">Good news, the price just dropped</div>
+        <div style="margin-top: 10px; font-size: 16px; line-height: 1.5; color: #D8DED9;">The product you were watching is cheaper today.</div>
+    </td></tr>
+
+    <!-- product card -->
+    <tr><td style="padding: 28px 32px 0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #EAE3DB; border-radius: 12px; border-collapse: separate;">
+        <tr><td style="padding: 20px; font-size: 0; text-align: center;">
+            <!-- image and details sit side by side, and stack on narrow screens -->
+            <div t-if="object.product_id.image_128" style="display: inline-block; vertical-align: middle; width: 100%; max-width: 200px; font-size: 14px;">
+                <a t-att-href="object._scita_product_url()">
+                    <img t-att-src="'%s/web/image/product.product/%s/image_512' % (base_url, object.product_id.id)"
+                         t-att-alt="object.product_tmpl_id.name" width="200"
+                         style="display: block; width: 100%; max-width: 200px; height: auto; border: 0; border-radius: 8px; background-color: #F4F1EC; margin: 0 auto;"/>
+                </a>
+            </div>
+            <div t-attf-style="display: inline-block; vertical-align: middle; width: 100%; max-width: {{ '280px' if object.product_id.image_128 else '100%' }}; font-size: 14px; text-align: left;">
+                <div t-attf-style="padding: {{ '16px 0 0 20px' if object.product_id.image_128 else '0' }};">
+                    <span t-if="saving[1]" style="display: inline-block; background-color: #9B7353; color: #FFFFFF; font-size: 13px; font-weight: bold; padding: 4px 10px; border-radius: 999px;"><t t-out="saving[1]">10</t>% off</span>
+                    <div style="margin-top: 10px; font-family: 'Playfair Display', Georgia, serif; font-size: 22px; line-height: 1.25; font-weight: bold;">
+                        <a t-att-href="object._scita_product_url()" style="color: #1F1F1F; text-decoration: none;" t-out="object.product_tmpl_id.name or ''">Product</a>
+                    </div>
+                    <div t-if="variant_values" style="margin-top: 6px; font-size: 14px; color: #5F5A55;">
+                        <t t-foreach="variant_values" t-as="value"><t t-out="value.attribute_id.name"/>: <t t-out="value.name"/><t t-if="not value_last"> · </t></t>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <span style="font-size: 30px; font-weight: bold; color: #2E3A33;" t-out="new_price or ''">$ 90.00</span>
+                        <span t-if="saving[0]" style="margin-left: 10px; font-size: 16px; color: #6B655F; text-decoration: line-through;" t-out="object._scita_format(object.price_at_creation) or ''">$ 100.00</span>
+                    </div>
+                    <div t-if="saving[0]" style="margin-top: 6px; font-size: 15px; font-weight: bold; color: #2E6B4A;">
+                        You save <t t-out="object._scita_format(saving[0]) or ''">$ 10.00</t>
+                    </div>
+                </div>
+            </div>
+        </td></tr>
+        </table>
+    </td></tr>
+
+    <!-- low stock, buy button -->
+    <tr><td style="padding: 20px 32px 0;">
+        <div t-if="stock_left" style="background-color: #FBF3E9; border-radius: 8px; padding: 12px 16px; font-size: 15px; color: #8A3B12; margin-bottom: 16px;">
+            <strong>Only <t t-out="stock_left">3</t> left</strong> at this price
+        </div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td align="center" style="background-color: #9B7353; border-radius: 8px;">
+                <a t-att-href="object._scita_product_url()"
+                   style="display: block; padding: 16px 24px; font-size: 17px; font-weight: bold; color: #FFFFFF; text-decoration: none;">
+                    Buy now at <t t-out="new_price or ''">$ 90.00</t>
+                </a>
+            </td>
+        </tr></table>
+        <div style="margin-top: 14px; text-align: center;">
+            <a t-att-href="object._scita_product_url()" style="font-size: 15px; color: #7A5A3F;">View product details</a>
+        </div>
+    </td></tr>
+
+    <!-- the alert -->
+    <tr><td style="padding: 28px 32px 0;">
+        <div style="background-color: #F7F3EE; border-radius: 8px; padding: 18px 20px;">
+            <div style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #5F5A55;">YOUR ALERT</div>
+            <div style="margin-top: 8px; font-size: 15px; line-height: 1.5;">
+                You asked us to email you when the price <t t-out="object._scita_condition_text() or ''">drops</t>. This alert is now complete.
+            </div>
+            <div style="margin-top: 10px; font-size: 15px; line-height: 1.8;">
+                <a t-att-href="object._scita_rearm_url()" style="color: #7A5A3F; font-weight: bold;">Keep watching for a lower price</a>
+                <span style="color: #B8AFA6;">&#160;|&#160;</span>
+                <a t-att-href="object._scita_unsubscribe_url()" style="color: #5F5A55;">Stop this alert</a>
+            </div>
+        </div>
+    </td></tr>
+
+    <!-- footer -->
+    <tr><td align="center" style="padding: 28px 32px 32px; text-align: center; font-size: 13px; line-height: 1.6; color: #5F5A55;">
+        <div style="border-top: 1px solid #EAE3DB; padding-top: 20px;">
+            Prices can change at any time. The price shown was correct when we sent this email.
+        </div>
+        <div style="margin-top: 8px;">
+            <t t-out="company.name or ''">My Company</t>
+            <t t-set="address" t-value="', '.join(filter(None, [company.street, company.city, ' '.join(filter(None, [company.state_id.code, company.zip])), company.country_id.name]))"/>
+            <t t-if="address"> · <t t-out="address"/></t>
+            <t t-if="company.phone"> · <t t-out="company.phone"/></t>
+        </div>
+        <div style="margin-top: 8px;">
+            <a t-att-href="object._scita_unsubscribe_url()" style="color: #5F5A55;">Unsubscribe from this alert</a>
+        </div>
+    </td></tr>
+
+</table>
+</td></tr>
+</table>
 </div>
         </field>
     </record>
@@ -71,6 +157,9 @@
         <field name="subject">Please confirm your price alert for {{ object.product_tmpl_id.name }}</field>
         <field name="email_from">{{ (object.website_id.company_id.email_formatted or user.email_formatted) }}</field>
         <field name="email_to">{{ object.email }}</field>
+        <!-- Odoo 20 defaults it to True: the record's partner (the signed-in account) was emailed
+             instead of the address typed on the alert, the double opt-in included -->
+        <field name="use_default_to" eval="False"/>
         <field name="lang">{{ object.lang }}</field>
         <field name="auto_delete" eval="True"/>
         <field name="body_html" type="html">

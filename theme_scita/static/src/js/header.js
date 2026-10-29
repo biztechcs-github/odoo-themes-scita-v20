@@ -206,9 +206,10 @@ $(document).ready(function() {
         }
     };
     //hide or show the "back to top" link
-    $('#wrapwrap').on('scroll',function() {
-        ($(this).scrollTop() > offset) ? $back_to_top.addClass('cd-is-visible'): $back_to_top.removeClass('cd-is-visible cd-fade-out');
-        if ($(this).scrollTop() > offset_opacity) {
+    $(window).on('scroll',function() {
+        var scrollTop = document.scrollingElement.scrollTop;
+        (scrollTop > offset) ? $back_to_top.addClass('cd-is-visible'): $back_to_top.removeClass('cd-is-visible cd-fade-out');
+        if (scrollTop > offset_opacity) {
             $back_to_top.addClass('cd-fade-out');
         }
         placeAboveCompareBar();
@@ -238,7 +239,6 @@ $(document).ready(function() {
     }
     $back_to_top.on('click', function(event) {
         event.preventDefault();
-        // the page scrolls inside #wrapwrap (comman.scss), not body/html
-        $('#wrapwrap').animate({scrollTop: 0}, scroll_top_duration);
+        $(document.scrollingElement).animate({scrollTop: 0}, scroll_top_duration);
     });
 });

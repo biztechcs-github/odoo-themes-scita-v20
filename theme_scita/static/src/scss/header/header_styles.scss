@@ -5033,13 +5033,9 @@ header {
 
 // All category + 2 level mega menu common design
 @if o-website-value('header-template')=='scita_header_1' or o-website-value('header-template')=='scita_header_2' or o-website-value('header-template')=='scita_header_3' or o-website-value('header-template')=='scita_header_4' or o-website-value('header-template')=='scita_header_5' {
+    // no `position: initial` on `.o_header_affixed` for phones: the header's scroll effect
+    // (Standard, Fixed, Disappears, Fade Out) applies there too, as on larger screens
     header {
-        &.o_header_affixed {
-            @media (max-width: 767px) {
-                position: initial;
-            }
-        }
-
         .navbar {
             #o_main_nav {
                 li {

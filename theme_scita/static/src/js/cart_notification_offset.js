@@ -6,11 +6,11 @@ import { CartNotificationContainer } from "@website_sale/js/cart_notification/ca
 
 // The "added to cart" popup is placed just below the header: Odoo adds up the visible part of
 // every `.o_top_fixed_element` (height + top). It expects that header to stay on screen, but
-// Scita's header scrolls away with the page (inside #wrapwrap). So
+// a header without a scroll effect scrolls away with the page. So
 // - after scrolling down, `top` was very negative and the popup opened above the screen;
-// - Odoo only recomputes on window / header changes, not on #wrapwrap scrolling, so after
-//   scrolling back up the popup kept its old place, half behind the header icons.
-// Count only what is visible of each element, and follow #wrapwrap scrolling.
+// - Odoo only recomputes on window / header changes, not on scrolling, so after scrolling
+//   back up the popup kept its old place, half behind the header icons.
+// Count only what is visible of each element, and follow the page scrolling.
 patch(CartNotificationContainer.prototype, {
     setup() {
         super.setup(...arguments);
@@ -23,13 +23,9 @@ patch(CartNotificationContainer.prototype, {
                 });
             }
         };
-        let scrollingEl = null;
-        onMounted(() => {
-            scrollingEl = document.querySelector("#wrapwrap");
-            scrollingEl?.addEventListener("scroll", onScroll, { passive: true });
-        });
+        onMounted(() => window.addEventListener("scroll", onScroll, { passive: true }));
         onWillUnmount(() => {
-            scrollingEl?.removeEventListener("scroll", onScroll);
+            window.removeEventListener("scroll", onScroll);
             if (frame !== null) {
                 cancelAnimationFrame(frame);
             }

@@ -15,6 +15,10 @@ leading ones is the general lever available server-side: the first handful of
 images in document order are the above-the-fold ones on every layout this
 theme ships.
 """
+import io
+import os
+import re
+
 from odoo import api, models
 from odoo.http import request
 from odoo.tools.misc import file_path
@@ -33,6 +37,14 @@ EAGER_IMAGE_COUNT = 1
 # as the hero/content image, so without this they can consume the one eager
 # slot before the real content image is even reached.
 _ICON_MAX_SIZE = 200
+
+# Widths of the smaller versions of website pictures (phones at 1x/2x, tablets, desktops), and
+# the one phones get for background pictures. Also the only widths /theme_scita/resized/ makes.
+RESPONSIVE_WIDTHS = (480, 828, 1280, 1920)
+MOBILE_BG_WIDTH = 828
+_RESIZABLE_EXTENSIONS = ('.jpg', '.jpeg', '.png')
+_RESIZABLE_MIMETYPES = ('image/jpeg', 'image/png')
+_BG_URL_RE = re.compile(r'''url\(\s*(?:&#34;|&quot;|["'])?(/(?:web/image/|theme_scita/static/)[^"'()\s&]+(?:&amp;[^"'()\s&]+)*)''')
 
 
 def _is_icon_sized(atts):
@@ -70,7 +82,7 @@ class IrQweb(models.AbstractModel):
         if tagName == 'div' and request and 'category-slider-placeholder' in (atts.get('class') or '').split():
             request._scita_in_placeholder = True  # its image is next (_scita_placeholder_image)
             return atts
-        if tagName != 'img' or not request or atts.get('data-no-post-process'):
+        if not request or atts.get('data-no-post-process') or (tagName != 'img' and not atts.get('style')):
             return atts
 
         # Mirror the guards core uses before it touches attributes at all, so
@@ -80,8 +92,11 @@ class IrQweb(models.AbstractModel):
                 or context.get('edit_translations') or context.get('debug')
                 or request.session.debug):
             return atts
+        if tagName != 'img':
+            return self._scita_add_mobile_background(atts)
 
         atts = self._scita_add_theme_image_size(atts)
+        atts = self._scita_add_responsive_srcset(atts)
         atts = self._scita_add_shop_image_sizes(atts)
         if getattr(request, '_scita_in_placeholder', False):
             request._scita_in_placeholder = False
@@ -229,17 +244,117 @@ class IrQweb(models.AbstractModel):
             atts['style'] = ('%s; ' % style.rstrip(';') if style else '') + '--sct-w: %dpx' % width
         return atts
 
+    # ------------------------------------------------------------------------------------------
+    # Responsive images. A picture was sent at its full size to every screen: a phone downloaded
+    # a 1920px banner (147KB) to show it 376px wide, the mobile LCP image. Any website JPEG/PNG
+    # (a file of the theme, a theme image record, an uploaded attachment) gets smaller versions
+    # made on demand, whatever picture the site uses, by controllers/responsive_image.py
+    # (/theme_scita/resized/ for the theme's files, /theme_scita/resized_image/ for attachments).
+    # - <img>: a srcset of those versions (no `sizes`: the browser takes 100vw, never more than
+    #   the picture's own width);
+    # - background pictures (banners, slides): an 828px version for phones, in --sct-bg-m, which
+    #   comman.scss uses below 768px.
+    # WebP is left as it is: Odoo never processes WebP on the server (odoo/tools/image.py), and
+    # the editor's WebP are already compressed.
+    # ------------------------------------------------------------------------------------------
+    def _scita_add_responsive_srcset(self, atts):
+        src = atts.get('src')
+        if atts.get('srcset') or not isinstance(src, str):
+            return atts
+        versions = self._scita_resized_versions(src)
+        if not versions:
+            return atts
+        atts = dict(atts)
+        atts['srcset'] = ', '.join('%s %dw' % (url, width) for width, url in versions)
+        return atts
+
+    def _scita_add_mobile_background(self, atts):
+        style = atts.get('style')
+        if not style or '--sct-bg-m' in style or 'background-image' not in style or 'gradient' in style:
+            return atts
+        urls = _BG_URL_RE.findall(style)
+        if len(urls) != 1:
+            return atts
+        url = urls[0].replace('&amp;', '&')
+        small = dict(self._scita_resized_versions(url)).get(MOBILE_BG_WIDTH)
+        if not small:
+            return atts
+        atts = dict(atts)
+        atts['style'] = "%s; --sct-bg-m: url('%s')" % (style.rstrip().rstrip(';'), small)
+        return atts
+
+    @api.model
+    def _scita_srcset(self, src):
+        """The srcset _scita_add_responsive_srcset gives an <img> showing `src`, or False."""
+        versions = self._scita_resized_versions(src)
+        return versions and ', '.join('%s %dw' % (url, width) for width, url in versions) or False
+
     @api.model
     @api.ormcache('src')
-    def _scita_theme_image_size(self, src):
-        """(width, height) of a theme-shipped image given by URL, or None."""
+    def _scita_resized_versions(self, src):
+        """((width, url), ...) of the smaller versions of a website picture given by URL, then
+        the picture itself at its own width; () when it can't be made smaller."""
+        try:
+            info = self._scita_resizable_image(src)
+        except Exception:  # noqa: BLE001  a performance hint must never break a page
+            return ()
+        if not info:
+            return ()
+        natural_width, url_for = info
+        widths = [width for width in RESPONSIVE_WIDTHS if width < natural_width * 0.9]
+        if not widths:
+            return ()
+        return tuple((width, url_for(width)) for width in widths) + ((natural_width, src),)
+
+    @api.model
+    def _scita_resizable_image(self, src):
+        """(own width, function giving the URL of the picture at a given width) for a website
+        JPEG/PNG given by URL, or None."""
+        path, _sep, query = src.partition('?')
+        if 'width=' in query or 'height=' in query:
+            return None  # already a sized version
+        if path.startswith('/theme_scita/static/') or path.startswith('/web/image/theme_scita.'):
+            static_path = self._scita_theme_image_path(path)
+            if not static_path or not static_path.lower().endswith(_RESIZABLE_EXTENSIONS):
+                return None
+            size = self._scita_theme_image_size(static_path)
+            if not size:
+                return None
+            unique = int(os.path.getmtime(file_path(static_path.lstrip('/'))))
+            resized = '/theme_scita/resized/%%d%s?unique=%s' % (static_path[len('/theme_scita/static'):], unique)
+            return size[0], lambda width: resized % width
+        match = re.fullmatch(r'/web/image/(\d+)(?:-[0-9a-f]+)?(?:/[^/]*)?', path)
+        if not match:
+            return None  # record fields (/web/image/product.product/...) have Odoo's own srcset
+        attachment = self.env['ir.attachment'].sudo().browse(int(match.group(1))).exists()
+        if not attachment or attachment.type != 'binary' or attachment.mimetype not in _RESIZABLE_MIMETYPES:
+            return None
+        from PIL import Image
+        with Image.open(io.BytesIO(attachment.raw)) as image:
+            width = image.size[0]
+        unique = (attachment.checksum or '')[:8]
+        name = path.rsplit('/', 1)[1] if path.count('/') > 3 else ''
+        return width, lambda w: '/theme_scita/resized_image/%d/%d%s?unique=%s' % (
+            attachment.id, w, '/' + name if name else '', unique)
+
+    @api.model
+    def _scita_theme_image_path(self, src):
+        """Static path of a theme-shipped image given by URL (/web/image/theme_scita.<xmlid> or
+        /theme_scita/static/...), or None."""
         path = src.split('?', 1)[0]
         if path.startswith('/web/image/theme_scita.'):
             attachment = self.env.ref(path[len('/web/image/'):], raise_if_not_found=False)
             if not attachment or attachment._name != 'ir.attachment' or not (attachment.sudo().url or '').startswith('/theme_scita/static/'):
                 return None
             path = attachment.sudo().url.split('?', 1)[0]
-        if not path.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')):
+        return path if path.startswith('/theme_scita/static/') else None
+
+    @api.model
+    @api.ormcache('src')
+    def _scita_theme_image_size(self, src):
+        """(width, height) of a theme-shipped image given by URL, or None."""
+        path = self._scita_theme_image_path(src)
+        if not path or not path.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')):
             return None  # svg & co: no reliable pixel size
         try:
             full_path = file_path(path.lstrip('/'))

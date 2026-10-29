@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from .ir_qweb import MOBILE_BG_WIDTH
 
 PPG = 18
 
@@ -236,15 +237,25 @@ class website(models.Model):
     def get_megamenu_pages_count(self, submenu):
         return len(submenu.sudo().child_id)
 
+    def _scita_megamenu_categories(self):
+        """The categories shown in megamenus (include_in_megamenu), by name, searched once per
+        request: for a visitor every category search carries Odoo's "has published products"
+        subquery, and the category megamenu ran one per top category (35ms of a 190ms product
+        page, which put the page in Chrome's paint-holding window on Lighthouse)."""
+        key = '_scita_megamenu_categ_%s' % self.id
+        categories = request and getattr(request, key, None)
+        if categories is None:
+            categories = self.env['product.public.category'].search(
+                [("website_id", "in", (False, self.id)), ('include_in_megamenu', '!=', False)],
+                order="name")
+            if request:
+                setattr(request, key, categories)
+        return categories
+
     # For category megamenu
     def get_public_product_category(self, submenu):
-        categories = self.env['product.public.category'].search(
-            [('parent_id', '=', False), ("website_id", "in", (False, request.env.website.id)),
-             ('include_in_megamenu',
-              '!=', False),
-             ('menu_id', '=', submenu.id)],
-            order="name")
-        return categories
+        return self._scita_megamenu_categories().filtered(
+            lambda categ: not categ.parent_id and categ.menu_id == submenu)
 
     def get_all_public_product_category(self, submenu):
         categories = self.env['product.public.category'].search([("website_id", "in", (False, request.env.website.id)),
@@ -256,11 +267,8 @@ class website(models.Model):
 
     # For child category megamenu
     def get_public_product_child_category(self, children):
-        # one search for all the children (was one per child); same result and order
-        allowed = self.env['product.public.category'].search([
-            ('id', 'in', children.ids),
-            ("website_id", "in", (False, request.env.website.id)),
-            ('include_in_megamenu', '!=', False)])
+        # same result and order as a search on the children, without a query per category
+        allowed = self._scita_megamenu_categories()
         return [child for child in children if child in allowed]
 
     def get_parent_category_breadcum(self, category):
@@ -452,6 +460,11 @@ class website(models.Model):
                 declared = self._SCITA_IMG_WIDTH_RE.search(markup)
                 if declared and int(declared.group(1)) < 200:
                     continue
+                # theme icons saved without a width (the trust icons block above a hero: its
+                # 39x25 truck took the preload and the hero's bandwidth)
+                natural = self.env['ir.qweb']._scita_theme_image_size(src.group(1))
+                if natural and min(natural) < 200:
+                    continue
                 candidates.append((tag.start(), src.group(1)))
                 break
 
@@ -465,9 +478,28 @@ class website(models.Model):
             # <img> instead, stealing bandwidth from the actual LCP resource
             # on the throttled connection.
             request._scita_lcp_href = href
+            request._scita_lcp_is_background = bool(href and background and href == background.group(1))
             return href
         except Exception:  # noqa: BLE001
             return False
+
+    def _scita_lcp_preload_links(self, href):
+        """Attributes of the <link rel="preload"> tags for the page's LCP picture `href`, asking
+        for what the page itself will use (ir_qweb.py): the srcset of an <img>, the phone version
+        of a background picture below 768px. Anything else would download the picture twice."""
+        if not href:
+            return []
+        try:
+            QWeb = self.env['ir.qweb']
+            if getattr(request, '_scita_lcp_is_background', False):
+                small = dict(QWeb._scita_resized_versions(href)).get(MOBILE_BG_WIDTH)
+                if small:
+                    return [{'href': small, 'media': '(max-width: 767.98px)'},
+                            {'href': href, 'media': '(min-width: 768px)'}]
+                return [{'href': href}]
+            return [{'href': href, 'imagesrcset': QWeb._scita_srcset(href) or None}]
+        except Exception:  # noqa: BLE001  a performance hint must never break a page
+            return [{'href': href}]
 
     def _scita_path_startswith(self, *prefixes):
         """The current URL path, without its language prefix (/ar/shop -> /shop), starts with

@@ -162,7 +162,11 @@ if (document.readyState !== 'loading') {
 // evaluation blocks the page (Lighthouse mobile: total blocking time ~400-600ms, the main image
 // counted after it). On phones and tablets (the mobile header, below 992px) it starts at the
 // visitor's first interaction (touch, scroll, key...) or 3s after the first paint, whichever comes
-// first - right after the first paint when the first screen shows a block filled by that JS.
+// first - right after the first paint when the page opens with a block filled by that JS (a
+// dynamic banner as the hero: else the whole first screen would wait). Not for such a block lower
+// on the first screen (a category slider under the hero): its room is kept (snippets.scss) and it
+// fills at the first touch or scroll; starting at once put that 0.5s of evaluation in the page's
+// blocking time (Lighthouse mobile home page: 76 with it, 87-89 without).
 // Buttons tapped before that are held and replayed once it is loaded, as Odoo already does
 // (waitLazy). Larger screens keep Odoo's behaviour (their top menu is laid out by that JS), as do
 // pages shown in a frame (the website editor).
@@ -198,11 +202,11 @@ function onPageLoaded() {
     for (const type of INTERACTION_EVENTS) {
         window.addEventListener(type, startLazy, INTERACTION_OPTIONS);
     }
-    // blocks filled by that JS (products, categories, blogs, videos...) on the first screen: no
-    // waiting, it starts as soon as the page is painted
+    // a block filled by that JS (products, categories, blogs, videos...) opening the page, at the
+    // top of the first screen: no waiting, it starts as soon as the page is painted
     const delay = [...document.querySelectorAll(FILLED_BY_JS)].some((el) => {
         const rect = el.getBoundingClientRect();
-        return rect.width && rect.bottom > 0 && rect.top < window.innerHeight;
+        return rect.width && rect.bottom > 0 && rect.top < window.innerHeight * 0.2;
     }) ? 0 : DELAY_AFTER_FIRST_PAINT;
     if (!paintSupported) {
         setTimeout(startLazy, delay);

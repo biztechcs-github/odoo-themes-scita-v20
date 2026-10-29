@@ -1256,6 +1256,22 @@ body:not(.editor_enable) #wrapwrap {
             max-height: 52.4vw;
         }
     }
+    // Category Slider 3: 278px -> 388px on phones when it loaded, the home page's layout shift
+    section[data-snippet="theme_scita_category_slider_3"]:has(.category-slider-placeholder) {
+        min-height: 388px;
+        @media (min-width: 768px) {
+            min-height: 378px;
+        }
+        @media (min-width: 992px) {
+            min-height: 398px;
+        }
+        @media (min-width: 1200px) {
+            min-height: 428px;
+        }
+        @media (min-width: 1600px) {
+            min-height: 432px;
+        }
+    }
     section[data-snippet="theme_scita_trending_products_snippet"]:has(.category-slider-placeholder) {
         min-height: 579px;
         @media (min-width: 992px) {

@@ -76,6 +76,13 @@ img {
 	max-width: 100%;
 	height: auto;
 }
+// --sct-bg-m: an 828px version of a background picture (banners, slides), set when the page is
+// rendered (ir_qweb.py): phones download it instead of the full-size picture.
+@include media-breakpoint-down(md) {
+	[style*="--sct-bg-m"] {
+		background-image: var(--sct-bg-m) !important;
+	}
+}
 input.form-control {
 	height: unset;
 	transition: none;
@@ -2220,16 +2227,16 @@ header{
 	}
 }
 
-body #wrapwrap{
-	overflow: auto;
-	height: 100%;
-}
+// No `#wrapwrap { overflow: auto; height: 100% }` (Odoo 16 and older scrolled the page inside
+// #wrapwrap): Odoo 20 scrolls the document, and its header effects (Disappears, Fade out,
+// Fixed...) and on-scroll animations listen to the document - with #wrapwrap scrolling they
+// never ran.
 
 *::-webkit-scrollbar, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar{
 	width: 3px;
 	height: 3px;
 }
-body #wrapwrap::-webkit-scrollbar{
+html::-webkit-scrollbar{
 	width: 6px;
 }
 *::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-thumb {
