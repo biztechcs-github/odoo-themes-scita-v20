@@ -44,6 +44,10 @@ async function openDynamicProductModal2(snippetEl) {
         option.textContent = opt.name;
         sliderTypeSelect.appendChild(option);
     });
+    // Modify re-opens on the slider the block shows
+    if (snippetEl.dataset.multiCatSliderType) {
+        sliderTypeSelect.value = snippetEl.dataset.multiCatSliderType;
+    }
 
     // Handle submit
     submitBtn.addEventListener("click", () => {

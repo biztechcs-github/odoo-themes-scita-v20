@@ -73,6 +73,8 @@ async function openGoogleMapModal(snippetEl) {
 
     const setBtn = modalEl.querySelector("#set_map_data");
     const textarea = modalEl.querySelector("#address_html_code");
+    // Modify re-opens on the map in place
+    textarea.value = snippetEl.querySelector("iframe")?.getAttribute("src") || "";
 
     setBtn.addEventListener("click", () => {
         const iframe = validMapIframe(textarea);
@@ -97,6 +99,7 @@ async function openGoogleMapContentModal(snippetEl) {
 
     const setBtn = modalEl.querySelector("#set_map_data_content");
     const textarea = modalEl.querySelector("#address_content_html_code");
+    textarea.value = snippetEl.querySelector(".map_data_container iframe")?.getAttribute("src") || "";
 
     setBtn.addEventListener("click", () => {
         const iframe = validMapIframe(textarea);

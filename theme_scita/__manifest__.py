@@ -365,6 +365,8 @@ publish unpublish product
           'theme_scita/static/src/js/carousel_indicators_compat.js',
           # product page "Tags" option: no crash when the page has no product id
           'theme_scita/static/src/xml/product_tags_option_guard.xml',
+          # product page "Specification": Scita's "Inside Tab" choice
+          'theme_scita/static/src/xml/product_page_option_scita.xml',
           # shop Products Design: hide the button settings Scita's hover styles replace
           'theme_scita/static/src/xml/products_design_panel_scita.xml',
           # Odoo 20 saves image width/height attributes as inline px styles: restore them

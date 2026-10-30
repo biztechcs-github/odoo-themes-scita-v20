@@ -151,7 +151,8 @@ class ProductTemplate(models.Model):
                 data.update({"price": "", "list_price": ""})
             elif product.website_hide_price or not website_show_price:
                 # Markup: a plain str was escaped and showed the <span> tags as text
-                message = product.website_hide_price_message
+                message = (product.website_hide_price_message
+                           or self.env.website.website_hide_price_default_message)
                 data.update({
                     "price": Markup("<span>%s</span>") % message if message else "",
                     "list_price": "",

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Product page "Specification": Scita's "Inside Tab" (a Specification tab next to
+         Description / Reviews, as in Scita 18) was no longer offered by Odoo 20's editor. One
+         choice of the select, so it replaces "Bottom of Page" / "In accordion" instead of
+         showing the table twice. -->
+    <t t-inherit="website_sale.ProductPageOption" t-inherit-mode="extension">
+        <xpath expr="//BuilderSelectItem[@actionParam=&quot;{views:['website_sale.accordion_specs_item']}&quot;]" position="after">
+            <BuilderSelectItem actionParam="{views:['theme_scita.scita_product_description_table']}">Inside Tab</BuilderSelectItem>
+        </xpath>
+    </t>
+</templates>

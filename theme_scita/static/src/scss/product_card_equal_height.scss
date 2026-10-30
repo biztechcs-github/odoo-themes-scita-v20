@@ -486,6 +486,13 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
 // sticky shop overlay (the compare page's mini bar, $zindex-fixed - 1).
 [name="o_cart_notification_container"] {
     z-index: $zindex-fixed - 1;
+
+    // Bootstrap's toast is 350px wide, its max-width (100%) taken from Odoo's wrapper - which is
+    // as wide as the toast: on phones under ~375px the right-aligned popup went past the left
+    // edge of the screen (by 45px at 320px). Keep the wrapper within the container.
+    .container > div {
+        max-width: 100%;
+    }
 }
 
 // Bootstrap 4's "sr-only" no longer exists in Bootstrap 5 ("visually-hidden"). The theme's

@@ -609,6 +609,15 @@
 
         <!-- 🧩 Insert "Login to See Price" / "Request Quote" buttons -->
         <xpath expr="//div[hasclass('sct-other-desciption')]" position="inside">
+            <!-- the "Hidden price message" of the product, else the website's default one
+                 (Website settings): how to find the price out, while it is hidden -->
+            <t t-set="sct_hidden_price_message" t-value="website and not (website.login_see_price and request.env.user._is_public())
+                and (not website.website_show_price or product.website_hide_price)
+                and (product.website_hide_price_message or website.website_hide_price_default_message)"/>
+            <div t-if="sct_hidden_price_message" class="alert alert-light border sct_hidden_price_message mt-3 mb-0">
+                <i class="fa fa-info-circle me-1" role="presentation"/>
+                <span t-out="sct_hidden_price_message"/>
+            </div>
             <!-- Odoo 20: with Buy Now enabled, hide_PDP_buy_now_btn_template already
                  renders this button next to the quantity, so skip it here. -->
             <t t-set="sct_buy_now_shows_btn" t-value="is_view_active('website_sale.product_buy_now') and (
