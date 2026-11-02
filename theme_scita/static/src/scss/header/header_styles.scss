@@ -172,9 +172,8 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 display: block;
             }
 
-            &.navbar-light {
-                background-color: transparent;
-            }
+            // no `background-color: transparent` here: it hid Header > Background (Odoo colours
+            // .navbar-light with the website's menu colour, like in the other Scita headers)
 
             .scita_top_menu {
                 li {
@@ -223,8 +222,6 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
             background: $white;
 
             .navbar {
-                background: transparent !important;
-
                 .top-header {
                     padding-bottom: 20px;
                 }
@@ -1605,7 +1602,10 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                     background: transparent !important;
                     border: 1px solid rgba($dark-grey-color, 0.2);
                     border-left: 0;
-                    border-radius: 0 50px 50px 0;
+                    // !important like .search-query: while the results are open Odoo squares the
+                    // bottom corners (!important, for a dropdown glued to the box) but Scita's
+                    // results float below it: the pill kept a cut bottom right corner ("x results")
+                    border-radius: 0 50px 50px 0 !important;
                     box-shadow: none;
                     padding: 0 10px;
                     height: auto;
@@ -3713,7 +3713,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
             &.navbar {
                 @include min992 {
                     padding: 0;
-                    background-color: transparent;
+                    // (no transparent background: Header > Background colours the header)
 
                     #o_main_nav {
                         padding: 15px;
@@ -5909,10 +5909,8 @@ header {
                     .nav-item {
                         &.dropdown {
                             border-top: 1px solid #dededf;
-
-                            .nav-link.dropdown-toggle {
-                                padding: 1rem !important;
-                            }
+                            // no padding of their own: the megamenu entries are spaced like the
+                            // other menu items (they were taller and indented further)
                         }
                     }
                 }
@@ -6046,60 +6044,101 @@ header #o_main_nav .scita_top_menu > .nav-item.o_extra_menu_items{
 header #o_main_nav .menu_right ul li + li.o_no_autohide_item {
     flex-wrap: wrap;
 }
+// Request Quote pop-up (request_quote_custom_templates.xml)
 #cfp_pop_up {
-    padding: 0 20px;
-    .modal-dialog.modal-content {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    padding: 25px;
-    @include min992 {
-        margin-top: 80px;
-        margin-bottom: 80px;
+    .modal-content {
+        border: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba($black, 0.18);
     }
-    form {
-        hr {
-                margin: 30px 0;
+    .modal-header {
+        align-items: flex-start;
+        gap: 16px;
+        padding: 24px 28px 16px;
+        border-bottom: 1px solid rgba($black, 0.08);
+        .modal-title {
+            margin: 0 0 4px;
         }
-    }
-    table {
-        width: 100% !important;
-        tbody {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            @include min992 {
-                grid-template-columns: 1fr 1fr;
-            }
-            tr {
-                height: auto;
-                td {
-                    width: 100% !important;
-                    display: block;
-                }
-            }
+        .sct_quote_intro {
+            font-size: 0.9rem;
+            opacity: 0.75;
         }
-       
-    }
-    //  button#send_btn {
-    //         &:hover {
-    //             color: $primary
-    //         }
-    //     }
-    }
-    #request_modal_close {
-            margin-left: 15px;
-            border-color: $primary;
-            color: $primary;
+        // round close button in the top right corner of the header (same look as the
+        // "Search by photo" pop-up); the focus ring only for keyboard focus, not on opening
+        .btn-close {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            margin: -6px -10px 0 auto;
+            border-radius: 50%;
+            background-color: rgba($black, 0.05);
+            background-size: 12px;
+            opacity: 0.85;
+            transition: background-color 0.2s, opacity 0.2s;
             &:hover {
-                background-color: $primary;
-                color: $white;
+                background-color: rgba($black, 0.1);
+                opacity: 1;
             }
+            &:focus {
+                box-shadow: none;
+            }
+            &:focus-visible {
+                box-shadow: 0 0 0 3px rgba($primary, 0.35);
+            }
+        }
     }
-    // button#send_btn {
-    //     &:hover {
-    //         color: $white;
-    //     }
-    // }
+    .modal-body {
+        padding: 20px 28px 8px;
+    }
+    .sct_quote_product {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        background-color: rgba($primary, 0.08);
+        font-weight: 500;
+        .fa {
+            color: $primary;
+        }
+        &.d-none {
+            display: none !important;
+        }
+    }
+    .form-label {
+        margin-bottom: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .form-control {
+        min-height: 44px;
+        border-radius: 8px;
+    }
+    textarea.form-control {
+        resize: vertical;
+    }
+    .modal-footer {
+        gap: 12px;
+        padding: 16px 28px 24px;
+        border-top: 0;
+        > .btn {
+            min-width: 130px;
+            margin: 0;
+        }
+    }
+    @media (max-width: 575.98px) {
+        .modal-header, .modal-body, .modal-footer {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+        .modal-footer > .btn {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+    }
 }
 
 // Pricelist dropdown (all Scita headers): the menu is as wide as its button (width: 100% above),
@@ -6117,4 +6156,46 @@ header .o_pricelist_dropdown .dropdown-menu {
         position: absolute;
         inset: 0;
     }
+}
+
+// Header > Show/Hide Elements > Logo off: Odoo leaves an empty <span id="o_fake_navbar_brand">
+// where the logo was. In the Scita headers whose logo sits in a Bootstrap .row (Headers 3, 4)
+// it got the whole row width (.row > *), which pushed the search bar and the icons onto a
+// second line, on the site and in the editor.
+#wrapwrap > header .row > #o_fake_navbar_brand {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 0;
+}
+
+// Sub Menus > On Hover: a dropdown opens below the menu bar (top: 100% of the bar), but the
+// menu items were only as tall as their links, centred in the bar. When something else in the
+// bar is taller (e.g. Header 3's offer text on two lines), the pointer crossed a strip of bar
+// outside the item on its way down, the item lost the hover and the dropdown closed before it
+// could be reached. The top-level items now fill the bar height, links stay centred.
+@include min992 {
+    #wrapwrap > header nav.navbar .scita_top_menu {
+        align-self: stretch;
+        align-items: stretch;
+
+        > .nav-item {
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+// Menu items moved into the "+" overflow menu kept Bootstrap's small triangle while the menu bar
+// shows Scita's chevron: same chevron there, in the item's colour (it follows the hover colour).
+#wrapwrap > header .o_extra_menu_items .dropdown-menu .dropdown-toggle::after {
+    width: 7px;
+    height: 7px;
+    border: 0;
+    border-top: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+    transform: rotate(-135deg);
+    transform-origin: center;
+    margin: 0 0 3px 8px;
+    vertical-align: middle;
+    transition: all 0.2s ease-in-out;
 }

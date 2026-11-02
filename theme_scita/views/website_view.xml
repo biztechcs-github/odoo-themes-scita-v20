@@ -66,37 +66,37 @@
                               </group>
                             </page>
                             <page string="Grid Image Configuration"
-                                 invisible="megamenu_view_type != 'cat_megamenu' or img_grid == False">
+                                 invisible="not is_megamenu or megamenu_view_type != 'cat_megamenu' or img_grid == False">
                                 <group name="banner_image" string="Image Grid">
                                     <field name="banner_images_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
                                 </group>
                             </page>
                             <page string="Product Configuration"
-                                invisible="megamenu_view_type not in ('prod_megamenu')">
+                                invisible="not is_megamenu or megamenu_view_type not in ('prod_megamenu')">
                               <group>
                                 <field name="megamenu_product_ids" />
                               </group>
                             </page>
                             <page string="Service Configuration"
-                                invisible="parent_megamenu_view_type != 'service_page_megamenu' and (megamenu_view_type != 'service_page_megamenu' or not is_service_menu)">
+                                invisible="not is_service_menu or parent_megamenu_view_type != 'service_page_megamenu'">
                                 <group>
                                     <field name="img_menu"/>
                                     <field name="menu_desc"/>
                                 </group>
                             </page>
-                            <page string="Service menu content" invisible="parent_megamenu_view_type != 'service_content_megamenu' and (megamenu_view_type != 'service_content_megamenu' or not is_service_menu)">
+                            <page string="Service menu content" invisible="not is_service_menu or parent_megamenu_view_type != 'service_content_megamenu'">
                                 <group>
                                     <field name='service_content' widget="html"/>
                                 </group>
                             </page>   
-                            <page string="Banner Image" invisible="megamenu_view_type not in ('prod_megamenu','service_banner_megamenu')">
+                            <page string="Banner Image" invisible="not is_megamenu or megamenu_view_type not in ('prod_megamenu','service_banner_megamenu')">
                                 <group>
                                     <field name="is_img_banner"/>
                                     <field name="img_banner" invisible="is_img_banner == False"/>
                                     <field name="img_banner_position" invisible="is_img_banner == False"/>
                                 </group>
                             </page>
-                            <page string="Service banner menu content" invisible="megamenu_view_type not in ('service_banner_megamenu')">
+                            <page string="Service banner menu content" invisible="not is_megamenu or megamenu_view_type not in ('service_banner_megamenu')">
                                 <group>
                                     <field name='menu_desc'/>
                                     <field name='banner_content' widget="html"/>

@@ -5058,7 +5058,15 @@
 /*about snippet 2 end*/
 /*about snippet 3*/
 .about_us_v_4 {
-	background-color: #f7f7f7;
+	// default grey only while no colour preset (o_cc) is chosen in the editor: the preset must win
+	&:not(.o_cc) {
+		background-color: #f7f7f7;
+	}
+	// with a colour preset the tab labels take the preset's text colour ($dark-color below
+	// was unreadable on the dark presets); the active tab keeps its light pill
+	&.o_cc .sct_btm_row .sct_cmp_info .navigation-tab .nav-tabs .nav-item .nav-link:not(.active) {
+		color: inherit;
+	}
 	padding: 50px 0;
 	@include min992{
 		padding: 60px 0;

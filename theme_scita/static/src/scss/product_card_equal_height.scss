@@ -188,9 +188,11 @@ a.btn.request_for_quote_button#request_for_quote_button {
     line-height: 1.5;
     white-space: nowrap !important;
 
+    // outlined on hover: the background too with !important, else the snippets' more specific
+    // rules (deal of the day...) kept it $primary under the $primary !important text: empty pill
     &:hover, &:focus {
-        background-color: transparent;
-        border-color: $primary;
+        background-color: transparent !important;
+        border-color: $primary !important;
         color: $primary !important;
     }
 }

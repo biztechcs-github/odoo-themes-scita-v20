@@ -9,7 +9,7 @@
                 t-thumbnail="/theme_scita/static/src/img/snippet_icon/about_us2.png"/>
             <t snippet-group="scita_banner" t-snippet="website.s_snippet_group" string="Banner Snippets"
                 t-thumbnail="/theme_scita/static/src/img/snippet_icon/grocery-banner.png"/>
-            <t snippet-group="scita_blog" t-snippet="website.s_snippet_group" string="Blog Snippets"
+            <t snippet-group="scita_blog" t-snippet="website.s_snippet_group" string="Scita Blog Snippets"
                 t-thumbnail="/theme_scita/static/src/img/snippet_icon/Blogs-1.svg"/>
             <t snippet-group="scita_testimonial" t-snippet="website.s_snippet_group" string="Testimonial Snippets"
                 t-thumbnail="/theme_scita/static/src/img/snippet_icon/testimonial-4.svg"/>

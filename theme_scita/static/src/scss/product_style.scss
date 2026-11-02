@@ -2853,7 +2853,11 @@
 								.js_attribute_value{
 									padding: 0;
 									line-height: 1;
-									background: transparent;
+									// Odoo 20 puts "border border-primary bg-primary-subtle" (all !important) on the pill <li>:
+									// the Scita pill is the label inside, so the li keeps no border/background of its own
+									background: transparent !important;
+									border: 0 !important;
+									box-shadow: none !important;
 									margin: 0 5px 5px !important;
 									display: inline-block;
 
@@ -3827,4 +3831,11 @@
     height: auto;
     aspect-ratio: 220 / 270;
     object-fit: contain;
+}
+
+// Product page and quick view: lists in the product's description. Scita's base `ul { padding: 0 }`
+// left their bullets hanging outside the text column, to the left of the title and paragraph.
+#product_details .oe_structure :is(ul, ol):not([class]) {
+	padding-left: 1.25rem;
+	margin-bottom: 1rem;
 }

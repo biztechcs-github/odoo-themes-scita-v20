@@ -79,7 +79,7 @@
         <xpath expr="//t[@t-call='website.placeholder_header_language_selector']" position="before">
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-            <t t-call="website_sale.pricelist_selector" _div_classes.f="o_pricelist_dropdown dropdown me-3 mb-3" navClass.f="l">
+            <t t-call="website_sale.pricelist_selector" t-if="is_view_active('website_sale.header_pricelist_selector')" _div_classes.f="o_pricelist_dropdown dropdown me-3 mb-3" navClass.f="l">
             </t>
 
             <!-- Mobile header content -->
@@ -104,7 +104,7 @@
                         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                         <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                         <t t-out='sct_price_list'/>
-                        <t t-call="website_sale.pricelist_selector" t-if="_sct_price_list" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
+                        <t t-call="website_sale.pricelist_selector" t-if="_sct_price_list and is_view_active('website_sale.header_pricelist_selector')" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
                         </t>
                         <t t-call="website.placeholder_header_language_selector" t-if="_sct_lang_list" _btn_class.f="btn-outline-secondary d-flex align-items-center w-100 px-2" _txt_class.f="me-auto small" _flag_class.f="me-2" _div_classes.f="dropup mb-3" _dropdown_menu_class.f="w-100">
                         </t>
@@ -177,7 +177,7 @@
                         <div class="row align-items-center justify-content-between top-header">
                             <div class="col-lg-6 col-md-12">
                                 <div class="h-left">
-                                    <ul class="head-cinfo">
+                                    <ul class="head-cinfo" t-if="is_view_active('website.header_text_element')">
                                         <li t-if="res_company.phone" t-ignore="true">
                                             <a t-attf-href="tel:#{res_company.phone}">
                                                 <i class="fa fa-phone"/>
@@ -247,7 +247,7 @@
                         <div class="row align-items-center justify-content-between">
                             <div class="col-lg-6 col-md-6 sct_left_side">
                                 <div class="h-left">
-                                    <ul class="head-cinfo">
+                                    <ul class="head-cinfo" t-if="is_view_active('website.header_text_element')">
                                         <li t-if="res_company.phone" t-ignore="true">
                                             <a t-attf-href="tel:#{res_company.phone}">
                                                 <i class="fa fa-phone"/>
@@ -275,7 +275,7 @@
                 <div id="o_main_nav" class="container d-flex justify-content-between align-items-center flex-nowrap">
                     <t t-call="website.placeholder_header_brand" _link_class.f="me-4">
                     </t>
-                    <t t-call="website.navbar_nav" _nav_class.f="me-auto scita_top_menu flex-row flex-grow-1 justify-content-center">
+                    <t t-call="website.navbar_nav" _nav_class.f="me-auto scita_top_menu flex-row flex-grow-1">
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu" item_class.f="nav-item" link_class.f="nav-link">
                             </t>
@@ -308,12 +308,12 @@
                     <div class="container">
                         <div class="row align-items-center justify-content-between belt_inner">
                             <div class="col-md-5">
-                                <p>Buy one get one free on first order</p>
+                                <p t-if="is_view_active('website.header_text_element')">Buy one get one free on first order</p>
                             </div>
                             <div class="col-md-7">
                                 <ul class="d-flex align-items-center justify-content-md-end">
                                     <t t-call="website.placeholder_header_social_links"/>
-                                    <li>
+                                    <li t-if="is_view_active('website_sale.header_pricelist_selector')">
                                         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                                         <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                                         <t t-call="website_sale.pricelist_selector" navClass.f="l" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
@@ -443,11 +443,11 @@
                                 </t>
                             </div>
                             <div class="col-md-4 text-center">
-                                <p>Free Shipping Worldwide</p>
+                                <p t-if="is_view_active('website.header_text_element')">Free Shipping Worldwide</p>
                             </div>
                             <div class="col-md-4">
                                 <ul class="d-flex align-items-center justify-content-md-end">
-                                    <li>
+                                    <li t-if="is_view_active('website_sale.header_pricelist_selector')">
                                         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                                         <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                                         <t t-call="website_sale.pricelist_selector" navClass.f="l" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
@@ -549,7 +549,7 @@
                             </t>
                             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
                                 <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-                                <t t-call="website_sale.pricelist_selector" _div_classes.f="o_pricelist_dropdown dropdown me-3">
+                                <t t-call="website_sale.pricelist_selector" t-if="is_view_active('website_sale.header_pricelist_selector')" _div_classes.f="o_pricelist_dropdown dropdown me-3">
                                 </t>
                         </ul>
                         <ul class="list-inline d-flex justify-content-end align-items-center sct-cart-list">
@@ -906,6 +906,61 @@
     <template id="custom_template_header_boxed" inherit_id="website.template_header_boxed">
         <xpath expr="//header" position="attributes">
             <attribute name="t-attf-class" add="cst_default_header_8" separator=" "/>
+        </xpath>
+    </template>
+
+    <!-- Header > Navigation > Desktop Menu alignment. Odoo's option enables "<header view>_align_center"
+         / "_align_right": without them the buttons did nothing on Scita headers. The menu row has a
+         fixed width in some headers, so the items are aligned inside it (and the row itself when it
+         is narrower). Header 2 shows its menu centred unless another alignment is chosen. -->
+    <template id="option_header_1_align_center" inherit_id="theme_scita.option_header_1" name="Scita Header 1: menu centred" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">mx-auto justify-content-center scita_top_menu flex-row</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_1_align_right" inherit_id="theme_scita.option_header_1" name="Scita Header 1: menu on the right" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">ms-auto justify-content-end scita_top_menu flex-row</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_2_align_center" inherit_id="theme_scita.option_header_2" name="Scita Header 2: menu centred" active="True">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">mx-auto justify-content-center scita_top_menu flex-row flex-grow-1</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_2_align_right" inherit_id="theme_scita.option_header_2" name="Scita Header 2: menu on the right" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">ms-auto justify-content-end scita_top_menu flex-row flex-grow-1</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_3_align_center" inherit_id="theme_scita.option_header_3" name="Scita Header 3: menu centred" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">mx-auto justify-content-center scita_top_menu flex-row</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_3_align_right" inherit_id="theme_scita.option_header_3" name="Scita Header 3: menu on the right" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">ms-auto justify-content-end scita_top_menu flex-row</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_4_align_center" inherit_id="theme_scita.option_header_4" name="Scita Header 4: menu centred" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">mx-auto justify-content-center scita_top_menu flex-row</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_4_align_right" inherit_id="theme_scita.option_header_4" name="Scita Header 4: menu on the right" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">ms-auto justify-content-end scita_top_menu flex-row</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_5_align_center" inherit_id="theme_scita.option_header_5" name="Scita Header 5: menu centred" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">mx-auto justify-content-center scita_top_menu flex-row flex-grow-1</attribute>
+        </xpath>
+    </template>
+    <template id="option_header_5_align_right" inherit_id="theme_scita.option_header_5" name="Scita Header 5: menu on the right" active="False">
+        <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+            <attribute name="_nav_class.f">ms-auto justify-content-end scita_top_menu flex-row flex-grow-1</attribute>
         </xpath>
     </template>
     <template id="flag_lazy_load_off" inherit_id="website.lang_flag" name="Flag Lazyload Off">

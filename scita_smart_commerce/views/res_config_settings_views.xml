@@ -90,13 +90,14 @@
                     <setting id="scita_visual_search_setting" help="Shoppers upload a photo and see visually similar products.">
                         <field name="scita_visual_search_enabled"/>
                         <div class="content-group" invisible="not scita_visual_search_enabled">
+                            <!-- radio buttons: the choices are long, a dropdown this narrow cut them -->
                             <div class="row mt-2">
                                 <label for="scita_visual_search_match" string="Match photos on" class="col-lg-5 o_light_label"/>
-                                <field name="scita_visual_search_match" class="col-lg-7"/>
+                                <field name="scita_visual_search_match" class="col-lg-7" widget="radio"/>
                             </div>
-                            <div class="row">
+                            <div class="row mt-2">
                                 <label for="scita_visual_search_scope" string="Results" class="col-lg-5 o_light_label"/>
-                                <field name="scita_visual_search_scope" class="col-lg-7"/>
+                                <field name="scita_visual_search_scope" class="col-lg-7" widget="radio"/>
                             </div>
                             <div class="row">
                                 <label for="scita_visual_search_limit" string="Number of results" class="col-lg-5 o_light_label"/>

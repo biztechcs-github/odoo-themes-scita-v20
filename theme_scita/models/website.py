@@ -98,7 +98,9 @@ class WebsiteMenu(models.Model):
     def _on_change_parent(self):
         """ Password parent
         """
-        if self.parent_id.megamenu_view_type == 'service_page_megamenu' or self.parent_id.megamenu_view_type == 'service_content_megamenu':
+        # a page of a Scita Service megamenu (a parent that is not, or no longer, a Scita megamenu
+        # keeps its old type: its Service tabs stayed on the form)
+        if self.parent_id.is_megamenu and self.parent_id.megamenu_view_type in ('service_page_megamenu', 'service_content_megamenu'):
             self.is_service_menu = True
         else:
             self.is_service_menu = False

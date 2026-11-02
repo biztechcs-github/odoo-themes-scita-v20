@@ -198,7 +198,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -284,7 +284,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -370,7 +370,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -456,7 +456,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -501,7 +501,7 @@
                     </div>
                     <div class="row" t-if="submenu.display_menu_footer">
                         <div class="footer">
-                            <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                            <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                         </div>
                     </div>
                 </ul>
@@ -548,7 +548,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -589,7 +589,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -630,7 +630,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -671,7 +671,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -708,7 +708,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -740,7 +740,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -772,7 +772,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -804,7 +804,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -833,7 +833,7 @@
                                             </a>
                                         </div>
                                         <div class='page_info'>
-                                            <div t-out="page.service_content" class="sub_menu_content" t-options="{'widget': 'html'}"/>
+                                            <div t-if="page.service_content" t-out="page.service_content" class="sub_menu_content" t-options="{'widget': 'html'}"/>
                                         </div>
                                     </div>
                                 </t>
@@ -841,7 +841,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -860,17 +860,17 @@
                             </div>
                         </div>
                         <div t-att-class="'col-md-3 col-xs-12 banner_simple_desc' if submenu.is_img_banner else 'col-md-6 banner_simple_desc'">
-                            <h2 class='sct_head'><t t-out='submenu.menu_desc'/></h2>
+                            <h2 class='sct_head' t-if="submenu.menu_desc"><t t-out='submenu.menu_desc'/></h2>
                             <t t-out="submenu.banner_content" t-options="{'widget': 'html'}" t-if="submenu.banner_content"/>
                         </div>
                         <div t-att-class="'col-md-5 col-xs-12 letter-spacing' if submenu.is_img_banner else 'col-md-6 banner_info_tag letter-spacing'">
-                            <t t-out="submenu.service_content" t-options="{'widget': 'html'}"/>
+                            <t t-out="submenu.service_content" t-options="{'widget': 'html'}" t-if="submenu.service_content"/>
                         </div>
                         
                     </div>
                     <div class="row" t-if="submenu.display_menu_footer">
                         <div class="footer">
-                            <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                            <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                         </div>
                     </div>
                 </ul>
@@ -911,7 +911,7 @@
                     </div>
                     <div class="row" t-if="submenu.display_menu_footer">
                         <div class="footer">
-                            <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                            <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                         </div>
                     </div>
                 </ul>
@@ -957,7 +957,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -998,7 +998,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>
@@ -1039,7 +1039,7 @@
                         </div>
                         <div class="row" t-if="submenu.display_menu_footer">
                             <div class="footer">
-                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}"/>
+                                <t t-out="submenu.menu_footer" t-options="{'widget': 'html'}" t-if="submenu.menu_footer"/>
                             </div>
                         </div>
                     </ul>

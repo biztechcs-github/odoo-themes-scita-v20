@@ -3,6 +3,7 @@
 import { rpc } from '@web/core/network/rpc';
 import wSaleUtils from "@theme_scita/js/compat/website_sale_utils";
 import publicWidget from '@theme_scita/js/compat/public_widget';
+import { setQuoteProduct } from "@theme_scita/js/request_quote";
 import wishlistUtils from '@website_sale/js/wishlist_utils';
 import { formatFloat } from '@web/core/utils/numbers';
 
@@ -292,11 +293,8 @@ odoo.define('theme_scita.quick_view', [], function (require) {
             
         _onRequestQuoteClick(ev) {
             ev.preventDefault();
-            const $btn = $(ev.currentTarget);
-            const productId = $btn.data('product_id') ?? $btn.data('product-id');
-            // Set this ID in the modal before it opens
-            const $modal = $('#cfp_pop_up');
-            $modal.find('#product_id').val(productId);
+            // Set the product in the modal before it opens
+            setQuoteProduct(ev.currentTarget);
         },
     });
 });

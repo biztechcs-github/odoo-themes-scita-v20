@@ -32,6 +32,7 @@
                    data-bs-target="#cfp_pop_up"
                    href="#"
                    t-att-data-product_id="wish.product_id.id"
+                   t-att-data-product-name="wish.product_id.name"
                    class="o_wsale_product_btn_primary btn btn-primary"
                    title="Request Quote" aria-label="Request Quote">
                     <span class="d-inline-flex align-items-baseline">
@@ -99,6 +100,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#cfp_pop_up"
                         t-att-data-product_id="product.id"
+                        t-att-data-product-name="product.name"
                         href="#"
                         class="btn btn-primary mt-2"
                         title="Request Quote" aria-label="Request Quote">
@@ -173,6 +175,7 @@
                     data-bs-target="#cfp_pop_up"
                     href="#"
                     t-att-data-product_id="product.id"
+                    t-att-data-product-name="product.name"
                     class="btn btn-primary mt-2">
                         Request Quote
                     </a>
@@ -266,6 +269,7 @@
                     data-bs-target="#cfp_pop_up"
                     href="#"
                     t-att-data-product_id="product.id"
+                    t-att-data-product-name="product.name"
                     class="btn btn-primary mt-2">
                         Request Quote
                     </a>
@@ -311,6 +315,7 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
                             t-att-data-product_id="product.id"
+                            t-att-data-product-name="product.name"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -356,6 +361,7 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
                             t-att-data-product_id="product.id"
+                            t-att-data-product-name="product.name"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -413,6 +419,7 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
                             t-att-data-product_id="deal_product.id"
+                            t-att-data-product-name="deal_product.name"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -458,6 +465,7 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
                             t-att-data-product_id="product.id"
+                            t-att-data-product-name="product.name"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -503,6 +511,7 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#cfp_pop_up"
                             t-att-data-product_id="product.id"
+                            t-att-data-product-name="product.name"
                             id="request_for_quote_button"
                             class="btn request_for_quote_button">
                                 Request Quote
@@ -579,6 +588,7 @@
                     data-bs-target="#cfp_pop_up"
                     href="#"
                     t-att-data-product_id="product.id"
+                    t-att-data-product-name="product.name"
                     class="btn btn_cta mt-2">
                         Request Quote
                     </a>
@@ -647,6 +657,7 @@
                     data-bs-target="#cfp_pop_up"
                     href="#"
                     t-att-data-product_id="product.id"
+                    t-att-data-product-name="product.name"
                     class="btn btn-primary btn_cta mt-2">
                         Request Quote
                     </a>

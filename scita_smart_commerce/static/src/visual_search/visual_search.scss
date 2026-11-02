@@ -60,12 +60,13 @@
     }
 }
 .o_scita_vs_close {
+    // in the top right corner, in its own strip above the cards (body padding-top)
     position: absolute;
-    top: 16px;
-    inset-inline-end: 16px;
+    top: 12px;
+    inset-inline-end: 12px;
     z-index: 3;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border: 0;
     border-radius: 999px;
     background: #fff;
@@ -82,7 +83,7 @@
 .o_scita_vs_body {
     max-height: calc(100vh - 3.5rem);
     overflow-y: auto;
-    padding: 24px;
+    padding: 60px 24px 24px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -311,8 +312,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 14px;
-    // room for the close button above the first row
-    padding-top: 48px;
     &:empty {
         display: none;
     }
@@ -333,22 +332,22 @@
     }
 }
 .o_scita_vs_card_img {
-    // square whatever the photo: overflow hidden lets the ratio win over a tall image
-    display: flex;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    padding: 12px;
+    // same square for every result, filled like the searched photo (.o_scita_vs_preview_img):
+    // wide and tall product photos no longer end up at different sizes
+    display: block;
+    padding: 12px 12px 0;
     background: #fff;
     img {
         display: block;
-        max-width: 100%;
-        max-height: 100%;
-        margin: auto;
-        object-fit: contain;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 12px;
+        background: var(--scita-vs-ground);
     }
 }
 .o_scita_vs_card_body {
-    padding: 0 14px 14px;
+    padding: 12px 14px 14px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -450,7 +449,6 @@
     .o_scita_vs_results {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
-        padding-top: 0;
     }
     .o_scita_vs_card_loading {
         min-height: 200px;
