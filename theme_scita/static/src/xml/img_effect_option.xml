@@ -21,12 +21,13 @@
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <!-- images of the page content; not those of the header/footer, product pages, dynamic
-         blocks, galleries, Odoo's own hover animation or Scita hotspots (the effect box hides
-         what overflows it: the hotspot cards) -->
+         blocks, galleries or Odoo's own hover animation. With Scita hotspots too: the effect box
+         goes inside their area, around the image only (it hides what overflows it: the hotspot
+         cards), not in a grid cell where the cell is the area -->
     <xpath expr="//t[@id='image_options']" position="inside">
         <scita_img_effect_option
             selector="#wrap img"
-            exclude="[data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .s_image_gallery img, .o_scita_hotspots img, .o_scita_hotspot_card img, img[data-hover-effect]"/>
+            exclude="[data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .s_image_gallery img, .o_grid_item_image.o_scita_hotspots img, .o_scita_hotspot_card img, img[data-hover-effect]"/>
     </xpath>
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <!-- blocks with a background image (promo banners, covers, carousel slides...) -->

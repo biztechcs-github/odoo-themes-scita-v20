@@ -32,6 +32,10 @@ span.o_scita_hotspots {
     &.o_scita_hotspots_block {
         display: block;
     }
+    // centred (Alignment option): still as wide as its image, not as the column
+    &.d-block:not(.o_scita_hotspots_block) {
+        width: fit-content;
+    }
     > img, > a > img {
         max-width: 100%;
     }

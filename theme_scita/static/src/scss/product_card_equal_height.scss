@@ -259,6 +259,16 @@ a.btn.request_for_quote_button#request_for_quote_button {
         line-height: 1;
     }
 }
+// ...that small size is for the row it shares with the quantity (Buy Now on); on its own below
+// the hidden-price message it keeps the pill (it showed as a 31px button on phones)
+#product_detail #product_details #o_wsale_cta_wrapper .sct-other-desciption a.btn#request_for_quote_button {
+    @media (max-width: 767px) {
+        height: 50px;
+        padding: 0 20px !important;
+        font-size: 16px !important;
+        line-height: 21px;
+    }
+}
 
 // Scita's pagers ("Load more" / default) keep id="o_wsale_pager" so Odoo views
 // can target it; keep them free of the side borders Odoo draws on its own pager.

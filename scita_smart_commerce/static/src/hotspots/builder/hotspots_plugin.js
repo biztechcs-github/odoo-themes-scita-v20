@@ -2,9 +2,18 @@ import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
+import { ImageAlignClassAction } from "@html_builder/plugins/image/image_tool_option_plugin";
+import {
+    MediaSizeSliderAction,
+    MediaSizeTextAction,
+    SetMediaSizeAutoAction,
+} from "@html_builder/plugins/image/media_size_option_plugin";
 
 const SPOT = ".o_scita_hotspot";
 const AREA = ".o_scita_hotspots";
+// Theme Scita's "Image Transition Effect" box around an image
+const EFFECT_WRAP = "sct_img_effect_wrap";
 // classes describing where an image sits: they move to the wrapper so the image stays in place
 const PLACEMENT_CLASSES = ["mx-auto", "d-block", "float-start", "float-end", "me-auto", "ms-auto", "w-100"];
 
@@ -82,10 +91,15 @@ export class ScitaHotspotsPlugin extends Plugin {
             }
             return null;
         }
+        // image with Scita's "Image Transition Effect": the area goes around the effect box (it
+        // hides what overflows it: the hotspot cards)
+        const effectEl = el.parentElement.matches(`span.${EFFECT_WRAP}`) ? el.parentElement : null;
+        const imageEl = effectEl || el;
         // linked image: the area goes around the link, so that the hotspots are not inside it
         // (a click on a hotspot must open its card, not follow the link)
-        const linkEl = el.parentElement.matches("a") && this.isOnlyContent(el.parentElement, el) ? el.parentElement : null;
-        const box = linkEl || el;
+        const linkEl = imageEl.parentElement.matches("a") && this.isOnlyContent(imageEl.parentElement, imageEl)
+            ? imageEl.parentElement : null;
+        const box = linkEl || imageEl;
         const parent = box.parentElement;
         if (parent.matches(`span${AREA}`)) {
             return parent;
@@ -113,13 +127,16 @@ export class ScitaHotspotsPlugin extends Plugin {
         for (const className of PLACEMENT_CLASSES) {
             if (el.classList.contains(className)) {
                 el.classList.remove(className);
+                effectEl?.classList.remove(className);
                 wrapper.classList.add(className);
             }
         }
-        if (el.style.width.endsWith("%")) {
-            // a % width is relative to the parent: keep it on the wrapper
-            wrapper.style.width = el.style.width;
-            el.style.width = "100%";
+        for (const sizedEl of [el, effectEl]) {
+            if (sizedEl?.style.width.endsWith("%")) {
+                // a % width is relative to the parent: keep it on the wrapper
+                wrapper.style.width = sizedEl.style.width;
+                sizedEl.style.width = "100%";
+            }
         }
         box.before(wrapper);
         wrapper.append(box);
@@ -339,5 +356,93 @@ export class ScitaHotspotPositionAction extends BuilderAction {
         return String(Number.isFinite(number) ? number : 50);
     }
 }
+
+/**
+ * The image "Alignment" and "Size" options of an image with hotspots: they apply to its hotspot
+ * area (the image fills it). On the image, the area kept its first place and size: the image
+ * moved or shrank inside it, away from its hotspots.
+ */
+const spanArea = (img) => (img.tagName === "IMG" && img.closest(`span${AREA}`)) || null;
+const areaInnerEls = (img, area) => {
+    const els = [];
+    for (let el = img; el && el !== area; el = el.parentElement) {
+        els.push(el);
+    }
+    return els;
+};
+patch(ImageAlignClassAction.prototype, {
+    apply({ editingElement, params: { mainParam: classNames } }) {
+        super.apply(...arguments);
+        const area = spanArea(editingElement);
+        if (!area) {
+            return;
+        }
+        for (const el of [area, ...areaInnerEls(editingElement, area)]) {
+            el.classList.remove(...PLACEMENT_CLASSES);
+        }
+        if (classNames) {
+            area.classList.add(...classNames.split(" "));
+        }
+        // the editor's mark of a floated child (o-float-end-parent...), left when no longer floated
+        for (const floatClass of ["float-start", "float-end"]) {
+            if (!area.classList.contains(floatClass)) {
+                area.parentElement.classList.remove(`o-${floatClass}-parent`);
+            }
+        }
+    },
+    isApplied({ editingElement, params: { mainParam: classNames } }) {
+        const area = spanArea(editingElement);
+        if (!area) {
+            return super.isApplied(...arguments);
+        }
+        const names = classNames ? classNames.split(" ") : [];
+        return names.length
+            ? names.every((className) => area.classList.contains(className))
+            : !["mx-auto", "float-start", "float-end"].some((className) => area.classList.contains(className));
+    },
+});
+/** Width of the area, the image (and its effect box / link) filling it. */
+function setAreaWidth(img, area, width) {
+    area.style.width = width;
+    for (const el of areaInnerEls(img, area)) {
+        el.style.removeProperty("width");
+    }
+    if (width) {
+        // the effect box when there is one (it would take the image's width anyway), else the image
+        const innerEl = img.parentElement.matches(`span.${EFFECT_WRAP}`) ? img.parentElement : img;
+        innerEl.style.width = "100%";
+    }
+}
+for (const Action of [MediaSizeSliderAction, MediaSizeTextAction]) {
+    patch(Action.prototype, {
+        getValue({ editingElement }) {
+            const area = spanArea(editingElement);
+            // the option reads the area's width as it reads an image's (only its style.width)
+            return super.getValue(area ? { editingElement: { style: { width: area.style.width } } } : arguments[0]);
+        },
+        apply({ editingElement, value }) {
+            const area = spanArea(editingElement);
+            if (!area) {
+                return super.apply(...arguments);
+            }
+            const width = value ? `${value}`.trim() : "";
+            setAreaWidth(editingElement, area, /^[\d.]+$/.test(width) ? `${width}%` : width);
+        },
+    });
+}
+patch(SetMediaSizeAutoAction.prototype, {
+    isApplied({ editingElement }) {
+        const area = spanArea(editingElement);
+        return area ? !area.style.width || area.style.width === "auto" : super.isApplied(...arguments);
+    },
+    apply({ editingElement }) {
+        const area = spanArea(editingElement);
+        return area ? setAreaWidth(editingElement, area, "") : super.apply(...arguments);
+    },
+    clean({ editingElement }) {
+        const area = spanArea(editingElement);
+        return area ? setAreaWidth(editingElement, area, "100%") : super.clean(...arguments);
+    },
+});
 
 registry.category("website-plugins").add(ScitaHotspotsPlugin.id, ScitaHotspotsPlugin);

@@ -1162,6 +1162,7 @@ body.editor_enable {
 
 /*img hover effect*/
 // the flash of effects 1, 2, 3 and 5 (a 10% light grey one did not show on photos)
+// (an image with product hotspots: also played over its dots, which sit next to the effect box)
 $sct-img-effect-flash: rgba(255, 255, 255, 0.45);
 // span put around an image by the editor's "Image Transition Effect": as big as the image
 span.sct_img_effect_wrap {
@@ -1205,7 +1206,7 @@ span.sct_img_effect_wrap {
 		transform: skew(45deg);
 		@include transition(all, 0.5s, ease);
 	}
-	&:hover{
+	&:hover, .o_scita_hotspots:hover > &, .o_scita_hotspots:hover > a > &{
 		&:before{
 			-webkit-animation: flash_line 1s;
 			animation: flash_line 1s;
@@ -1241,7 +1242,7 @@ span.sct_img_effect_wrap {
 	    bottom: 0;
 		@include transition(all, 0.5s, ease);
 	}
-	&:hover{
+	&:hover, .o_scita_hotspots:hover > &, .o_scita_hotspots:hover > a > &{
 		&:before{
 			-webkit-animation: flash_lr 0.5s;
 			animation: flash_lr 0.5s;
@@ -1299,7 +1300,7 @@ span.sct_img_effect_wrap {
 	    bottom: 50%;
 		@include transition(all, 0.5s, ease);
 	}
-	&:hover{
+	&:hover, .o_scita_hotspots:hover > &, .o_scita_hotspots:hover > a > &{
 		&:before{
 			-webkit-animation: flash_square 0.5s;
 			animation: flash_square 0.5s;
@@ -1352,7 +1353,7 @@ span.sct_img_effect_wrap {
 	img {
 		@include transition(all, 0.5s, ease);
 	}
-	&:hover img {
+	&:hover img, .o_scita_hotspots:hover > & img, .o_scita_hotspots:hover > a > & img {
 		transform: scale(1.06);
 	}
 }
@@ -1376,7 +1377,7 @@ span.sct_img_effect_wrap {
 		@include transition(all, 0.5s, ease);
 		border-radius: 100%;
 	}
-	&:hover{
+	&:hover, .o_scita_hotspots:hover > &, .o_scita_hotspots:hover > a > &{
 		&:before{
 			-webkit-animation: flash_circle 0.5s;
 			animation: flash_circle 0.5s;

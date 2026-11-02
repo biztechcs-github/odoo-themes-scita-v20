@@ -18,8 +18,9 @@ import logging
 import struct
 import tempfile
 import os
+from collections import deque
 
-from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageOps
+from PIL import Image, ImageFilter, ImageOps
 
 _logger = logging.getLogger(__name__)
 
@@ -28,6 +29,8 @@ MAX_TEXTURE_PX = 1024
 MAX_SOURCE_PIXELS = 40_000_000
 # simple remover sanity check: share of the photo removed as "background"
 MIN_REMOVED, MAX_REMOVED = 0.03, 0.97
+# the simple remover works on a copy of this size (pure Python: about 1s a photo)
+WORK_PX = 640
 
 
 class PhotoError(ValueError):
@@ -113,35 +116,155 @@ def remove_background(image_bytes, method='auto', tolerance=20):
     return _to_png(rgba), 'simple'
 
 
+def _median(values):
+    values = sorted(values)
+    return values[len(values) // 2]
+
+
+def _smooth_line(line, window):
+    """Running median of a border line of pixels: a product touching the border is ignored."""
+    half = max(1, window // 2)
+    return [tuple(_median([p[c] for p in line[max(0, i - half):i + half + 1]]) for c in range(3))
+            for i in range(len(line))]
+
+
+def _background_field(px, w, h):
+    """Colour of the backdrop expected at each pixel (flat list): a Coons patch of the four
+    median-smoothed borders, i.e. the light gradient / vignette of a real photo's backdrop."""
+    win = max(9, int(min(w, h) * 0.25))
+    top = _smooth_line(px[0:w], win)
+    bottom = _smooth_line(px[(h - 1) * w:h * w], win)
+    left = _smooth_line([px[y * w] for y in range(h)], win)
+    right = _smooth_line([px[y * w + w - 1] for y in range(h)], win)
+    c00, c10, c01, c11 = top[0], top[-1], bottom[0], bottom[-1]
+    field = []
+    for y in range(h):
+        v = y / (h - 1)
+        lft, rgt = left[y], right[y]
+        for x in range(w):
+            u = x / (w - 1)
+            t, b = top[x], bottom[x]
+            field.append(tuple(
+                (1 - v) * t[c] + v * b[c] + (1 - u) * lft[c] + u * rgt[c]
+                - ((1 - u) * (1 - v) * c00[c] + u * (1 - v) * c10[c] + (1 - u) * v * c01[c] + u * v * c11[c])
+                for c in range(3)))
+    return field
+
+
+def _neighbours(i, w, h):
+    x, y = i % w, i // w
+    if x:
+        yield i - 1
+    if x < w - 1:
+        yield i + 1
+    if y:
+        yield i - w
+    if y < h - 1:
+        yield i + w
+
+
 def _simple_cutout(rgb, tolerance):
-    w, h = rgb.size
-    # Background colour = median of the 4 corner patches.
-    patch = max(2, min(w, h) // 50)
-    samples = []
-    for box in ((0, 0, patch, patch), (w - patch, 0, w, patch),
-                (0, h - patch, patch, h), (w - patch, h - patch, w, h)):
-        samples.extend(list(rgb.crop(box).getdata()))
-    samples.sort()
-    bg = samples[len(samples) // 2]
+    """Built-in remover for product photos on a backdrop (no extra package).
 
-    # Per-pixel distance to the background colour -> "foreground candidate" mask.
-    flat = Image.new('RGB', rgb.size, bg)
-    # largest difference over the 3 channels: a cream product on an off-white background
-    # differs in one channel only (an average would call it background)
-    r, g, b = ImageChops.difference(rgb, flat).split()
-    diff = ImageChops.lighter(r, ImageChops.lighter(g, b))
-    # Everything that differs less than `tolerance` is a background candidate (0),
-    # the rest foreground (255).
-    fg = diff.point(lambda v: 255 if v > tolerance else 0)
+    A single backdrop colour (the corners) left the light gradients, vignettes and soft shadows
+    of real photos in the cut-out - and in the 3D model and its real size. The backdrop is
+    modelled from the four borders (a smooth colour field); background is what is connected to
+    the border through smooth steps (a product's outline is a sharper step) and is close to
+    that field, or a soft shadow of it. Backdrop seen through the product (between legs) is
+    removed too, and specks of it left apart from the product dropped. Worked out on a copy of
+    at most WORK_PX pixels, then scaled up to the photo."""
+    W, H = rgb.size
+    scale = min(1.0, WORK_PX / float(max(W, H)))
+    small = rgb.resize((max(2, int(W * scale)), max(2, int(H * scale))), Image.BILINEAR) if scale < 1 else rgb
+    small = small.filter(ImageFilter.MedianFilter(3))  # sensor noise, JPEG blocks
+    w, h = small.size
+    n = w * h
+    px = list(small.getdata())
+    field = _background_field(px, w, h)
 
-    # Only background candidates *connected to the border* are real background.
-    work = fg.copy()
-    seeds = [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1),
-             (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)]
-    for seed in seeds:
-        if work.getpixel(seed) == 0:
-            ImageDraw.floodfill(work, seed, 128)
-    alpha = work.point(lambda v: 0 if v == 128 else 255)
+    def far(i):
+        p, f = px[i], field[i]
+        return max(abs(p[0] - f[0]), abs(p[1] - f[1]), abs(p[2] - f[2]))
+
+    border = sorted(set(list(range(w)) + list(range((h - 1) * w, n))
+                        + [y * w for y in range(h)] + [y * w + w - 1 for y in range(h)]))
+    noise = _median([far(i) for i in border])
+    tol = max(tolerance, 2.5 * noise + 8)  # close to the backdrop
+    step_tol = max(10, noise + 7)  # smooth step between neighbours: no outline crossed
+    shadow_step = max(4, noise + 2)  # a shadow fades in (soft edge)
+
+    # 2: close to the backdrop, 1: a shadow on it (darker, same colour), 0: product
+    cand = bytearray(n)
+    for i in range(n):
+        if far(i) <= tol:
+            cand[i] = 2
+            continue
+        p, f = px[i], field[i]
+        sp, sf = p[0] + p[1] + p[2], f[0] + f[1] + f[2]
+        if sp and sf > 30 and 0.55 <= sp / sf < 1.0 \
+                and max(abs(p[c] / sp - f[c] / sf) for c in range(3)) <= 0.02:
+            cand[i] = 1
+
+    def smooth(a, b):
+        pa, pb = px[a], px[b]
+        limit = shadow_step if cand[b] == 1 else step_tol
+        return max(abs(pa[0] - pb[0]), abs(pa[1] - pb[1]), abs(pa[2] - pb[2])) <= limit
+
+    bg = bytearray(n)
+    queue = deque()
+    for i in border:
+        if cand[i] == 2:
+            bg[i] = 1
+            queue.append(i)
+    while queue:
+        i = queue.popleft()
+        for j in _neighbours(i, w, h):
+            if not bg[j] and cand[j] and smooth(i, j):
+                bg[j] = 1
+                queue.append(j)
+
+    # backdrop seen through the product (between chair legs): enclosed smooth areas of the
+    # backdrop's colour, large enough not to be a light patch on the product
+    seen = bytearray(n)
+    min_hole = max(30, n // 400)
+    for s in range(n):
+        if bg[s] or seen[s] or cand[s] != 2:
+            continue
+        region, queue = [s], deque([s])
+        seen[s] = 1
+        while queue:
+            i = queue.popleft()
+            for j in _neighbours(i, w, h):
+                if not seen[j] and not bg[j] and cand[j] == 2 and smooth(i, j):
+                    seen[j] = 1
+                    queue.append(j)
+                    region.append(j)
+        if len(region) >= min_hole and sum(1 for i in region if far(i) <= tol * 0.6) >= 0.9 * len(region):
+            for i in region:
+                bg[i] = 1
+
+    # the product: its biggest part and the parts of a similar size; specks of backdrop left
+    # apart would widen the cut-out, and the real size worked out from it
+    label = [0] * n
+    sizes = []
+    for s in range(n):
+        if bg[s] or label[s]:
+            continue
+        sizes.append(0)
+        label[s] = len(sizes)
+        queue = deque([s])
+        while queue:
+            i = queue.popleft()
+            sizes[-1] += 1
+            for j in _neighbours(i, w, h):
+                if not bg[j] and not label[j]:
+                    label[j] = len(sizes)
+                    queue.append(j)
+    keep = {k + 1 for k, size in enumerate(sizes) if size >= max(sizes) * 0.05} if sizes else set()
+    alpha = Image.new('L', (w, h))
+    alpha.putdata([255 if label[i] in keep else 0 for i in range(n)])
+    if scale < 1:
+        alpha = alpha.resize((W, H), Image.BILINEAR).point(lambda v: 255 if v >= 128 else 0)
     # Soften the edge by one pixel so the cut-out does not look jagged.
     alpha = alpha.filter(ImageFilter.GaussianBlur(0.8))
 

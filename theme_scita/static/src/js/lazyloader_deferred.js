@@ -119,7 +119,8 @@ function waitLazy() {
     }
 
     // Theme Scita: Bootstrap controls that are not buttons (the arrows of Scita's banner sliders
-    // are <div>s) are held and replayed the same way: a tap before the JS was loaded was lost.
+    // are <div>s) and the product hotspots' dots (<span>s) are held and replayed the same way: a
+    // tap before the JS was loaded was lost.
     registerLoadingEffectHandler(document, 'click', ev => {
         const controlEl = ev.target.closest && ev.target.closest(SCITA_BS_CONTROLS);
         if (!controlEl || loadingEffectButtonEls.includes(controlEl)) {
@@ -130,7 +131,7 @@ function waitLazy() {
         waitForLazyAndRetrigger(ev);
     });
 }
-const SCITA_BS_CONTROLS = '[data-bs-slide], [data-bs-slide-to], .carousel-control-prev, .carousel-control-next, [data-bs-toggle]';
+const SCITA_BS_CONTROLS = '[data-bs-slide], [data-bs-slide-to], .carousel-control-prev, .carousel-control-next, [data-bs-toggle], .o_scita_hotspot';
 /**
  * Undo what @see waitLazy did.
  */

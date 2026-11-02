@@ -25,7 +25,7 @@
         <BuilderMany2One
             action="'scitaHotspotProduct'"
             model="'product.template'"
-            domain="[['is_published', '=', true], ['sale_ok', '=', true]]"
+            domain="this.productDomain"
             defaultMessage.translate="Choose a product"/>
     </BuilderRow>
     <BuilderRow label.translate="Position" tooltip.translate="From the left and from the top, in % of the image. Or drag the hotspot.">
@@ -36,11 +36,13 @@
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <!-- any image of the page content (not the header/footer, product pages or dynamic blocks); a
-         linked image only when it is the whole link (the hotspots then go around the link) -->
+         linked image only when it is the whole link (the hotspots then go around the link). With
+         Scita's "Image Transition Effect" too (around its box), except in a grid cell: the cell
+         would be the box of both, hiding the hotspot cards -->
     <xpath expr="//t[@id='image_options']" position="inside">
         <scita_hotspots_option
             selector="#wrap img"
-            exclude="a > img:not(:only-child), a :not(a) img, [data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .oe_img_hotspot img, .o_scita_hotspot_card img, .s_image_gallery img, .sct_img_effect_wrap > img, .o_grid_item_image[class*='sct_img_effect'] img"/>
+            exclude="a > img:not(:only-child), a > .sct_img_effect_wrap:not(:only-child) img, a :not(a):not(.sct_img_effect_wrap) img, [data-oe-type] img, .o_wsale_product_images img, [data-snippet^='s_dynamic_snippet'] img, .oe_img_hotspot img, .o_scita_hotspot_card img, .s_image_gallery img, .o_grid_item_image[class*='sct_img_effect'] img"/>
     </xpath>
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <!-- any block with a background image (banners, carousel slides...) -->

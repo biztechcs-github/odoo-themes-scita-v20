@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 /** "Hotspots" of an image or of a block with a background image. */
 export class ScitaHotspotsOption extends BaseOptionComponent {
@@ -26,6 +27,21 @@ export class ScitaHotspotsBgOption extends ScitaHotspotsOption {
 export class ScitaHotspotOption extends BaseOptionComponent {
     static id = "scita_hotspot_option";
     static template = "scita_smart_commerce.HotspotOption";
+
+    setup() {
+        super.setup();
+        this.website = useService("website");
+    }
+
+    /** Products sold on the website being edited (another website's ones have no dot on it). */
+    get productDomain() {
+        const websiteId = this.website.currentWebsite?.id;
+        return [
+            ["is_published", "=", true],
+            ["sale_ok", "=", true],
+            ...(websiteId ? [["website_id", "in", [false, websiteId]]] : []),
+        ];
+    }
 }
 
 registry.category("website-options")
