@@ -37,6 +37,9 @@ class WebsiteMenu(models.Model):
     is_service_menu = fields.Boolean(
         string='Is service menu...?', default=False)
     parent_megamenu_view_type = fields.Selection(related='parent_id.megamenu_view_type', string="Parent Megamenu View Type")
+    # the form's Service tabs follow the parent as it is now: is_service_menu is only set when this
+    # menu's parent changes, not when the parent itself stops being a Scita megamenu
+    parent_is_megamenu = fields.Boolean(related='parent_id.is_megamenu', string="Parent is a Scita Megamenu")
     is_service_content_menu = fields.Boolean(
         string='Is service content menu...?', default=False)
     megamenu_size = fields.Selection([('medium', 'Medium'),

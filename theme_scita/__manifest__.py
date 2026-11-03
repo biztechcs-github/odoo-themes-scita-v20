@@ -382,6 +382,8 @@ publish unpublish product
           'theme_scita/static/src/xml/scita_header_option.xml',
           # Scita Headers 1-5 in Header > Template, like Odoo's headers (Desktop Menu alignment)
           'theme_scita/static/src/js/header_templates_plugin.js',
+          # block "Create and copy a link" on http://<server-ip> (no Clipboard API there)
+          'theme_scita/static/src/js/anchor_copy_fallback.js',
           'theme_scita/static/src/xml/scita_footer_option.xml',
           'theme_scita/static/src/xml/snippet_modify.xml',
           # "Image Transition Effect" of images and background-image blocks (Scita 17/18 option)

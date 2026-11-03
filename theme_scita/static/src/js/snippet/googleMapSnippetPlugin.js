@@ -61,6 +61,21 @@ function validMapIframe(textarea) {
     return null;
 }
 
+// Esc closes it like the editor's own dialogs (and the other Scita block dialogs): the focus
+// stays in the editor, so Bootstrap's keyboard handling (on the modal itself) never sees the key.
+// Consumed, or the editor would also take it.
+function closeOnEscape(modalEl, modal) {
+    const onKey = (ev) => {
+        if (ev.key === "Escape" && modalEl.classList.contains("show")) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            modal.hide();
+        }
+    };
+    document.addEventListener("keydown", onKey, true);
+    modalEl.addEventListener("hidden.bs.modal", () => document.removeEventListener("keydown", onKey, true));
+}
+
 // ------------------------------------------------------
 // Shared Modal Openers
 // ------------------------------------------------------
@@ -69,6 +84,7 @@ async function openGoogleMapModal(snippetEl) {
     document.body.appendChild(modalEl);
 
     const modal = new Modal(modalEl);
+    closeOnEscape(modalEl, modal);
     modal.show();
 
     const setBtn = modalEl.querySelector("#set_map_data");
@@ -95,6 +111,7 @@ async function openGoogleMapContentModal(snippetEl) {
     document.body.appendChild(modalEl);
 
     const modal = new Modal(modalEl);
+    closeOnEscape(modalEl, modal);
     modal.show();
 
     const setBtn = modalEl.querySelector("#set_map_data_content");

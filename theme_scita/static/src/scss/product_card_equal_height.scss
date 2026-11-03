@@ -323,10 +323,16 @@ a.btn.request_for_quote_button#request_for_quote_button {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 8px 12px !important;
+    padding: 8px 16px !important; // 16px: content starts in line with the menu items
     border: 0;
     box-shadow: none;
     background: rgba($primary, 0.03);
+
+    // Pages Megamenu: its page links carry 15px of their own on top of the column padding
+    .letter-spacing .dropdown-header > a {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
     .row {
         margin-left: 0 !important; // a Scita rule keeps the -15px gutter margin

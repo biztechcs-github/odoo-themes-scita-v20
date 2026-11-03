@@ -1,6 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import { HeaderTemplateChoice } from "@website/builder/plugins/options/header/header_template_option";
+import { HeaderTemplateConfigAction } from "@website/builder/plugins/options/header/header_option_plugin";
 
 /**
  * Scita Headers 1-5 in Header > Template, registered like Odoo's own headers (they used to be
@@ -48,3 +50,14 @@ export class ScitaHeaderTemplatesPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(ScitaHeaderTemplatesPlugin.id, ScitaHeaderTemplatesPlugin);
+
+// Changing the header template rebuilds the website's whole style bundle (header-template is a SCSS
+// value). With ?debug=assets that takes more than the builder's 10 s operation timeout: it rolled
+// the editor back and showed "A technical issue occurred in the builder" although the header was
+// switched. No timeout for it, as Odoo does for the theme switch (SwitchThemeAction).
+patch(HeaderTemplateConfigAction.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.canTimeout = false;
+    },
+});

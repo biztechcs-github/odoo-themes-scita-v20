@@ -27,7 +27,9 @@ class BlogSlider(models.Model):
     collections_blog_post = fields.Many2many('blog.post', 'blogpost_slider_rel', 'slider_id',
                                              'post_id',
                                              string="Collections of blog posts", required=True,
-                                             domain="[('is_published', '=', True), ('website_id', '=', website_id)]")
+                                             # a blog with no website is on every website: its posts have no
+                                             # website_id either (the website pages accept them the same way)
+                                             domain="[('is_published', '=', True), ('website_id', 'in', [website_id, False])]")
 
     website_id = fields.Many2one(
         'website',

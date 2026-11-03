@@ -119,19 +119,30 @@ function waitLazy() {
     }
 
     // Theme Scita: Bootstrap controls that are not buttons (the arrows of Scita's banner sliders
-    // are <div>s) and the product hotspots' dots (<span>s) are held and replayed the same way: a
-    // tap before the JS was loaded was lost.
-    registerLoadingEffectHandler(document, 'click', ev => {
-        const controlEl = ev.target.closest && ev.target.closest(SCITA_BS_CONTROLS);
-        if (!controlEl || loadingEffectButtonEls.includes(controlEl)) {
-            return;
-        }
-        ev.preventDefault();
-        ev.stopImmediatePropagation();
-        waitForLazyAndRetrigger(ev);
-    });
+    // are <div>s), the product hotspots' dots (<span>s) and the product page's colour / image
+    // options (<label>s) are held and replayed the same way: a tap before the JS was loaded was
+    // lost. Held until every interaction has started, not only until the JS is loaded: neither
+    // Odoo's buffering of clicks (buttons and links only) nor this one covered the time between
+    // the two, so a dot tapped after scrolling to it (the scroll starts that JS on phones) did
+    // nothing, and a colour picked early stayed unmarked, its name not shown.
+    loadingEffectButtonEls.forEach(el => scitaButtonEls.add(el));
+    document.addEventListener('click', holdScitaControl, { capture: true });
+    _allScriptsLoaded
+        .then(() => Promise.all(retriggeringWaitingProms))
+        .finally(() => document.removeEventListener('click', holdScitaControl, { capture: true }));
 }
-const SCITA_BS_CONTROLS = '[data-bs-slide], [data-bs-slide-to], .carousel-control-prev, .carousel-control-next, [data-bs-toggle], .o_scita_hotspot';
+const SCITA_BS_CONTROLS = '[data-bs-slide], [data-bs-slide-to], .carousel-control-prev, .carousel-control-next, [data-bs-toggle], .o_scita_hotspot, label[name^="o_wsale_attribute_"]';
+const scitaButtonEls = new Set(); // held by Odoo's handlers above
+function holdScitaControl(ev) {
+    // !isTrusted: the replayed click itself
+    const controlEl = ev.isTrusted && ev.target.closest && ev.target.closest(SCITA_BS_CONTROLS);
+    if (!controlEl || (waitingLazy && scitaButtonEls.has(controlEl))) {
+        return;
+    }
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    waitForLazyAndRetrigger(ev);
+}
 /**
  * Undo what @see waitLazy did.
  */

@@ -32,6 +32,7 @@
                             <field name="parent_id"/>
                             <field name="is_service_menu" invisible='1'/>
                             <field name="parent_megamenu_view_type" invisible='1'/>
+                            <field name="parent_is_megamenu" invisible='1'/>
                         </group>
                         <group invisible="parent_id == False or is_megamenu == True">
                             <label for='is_mega_menu' string='Odoo Megamenu?'/>
@@ -45,7 +46,7 @@
                             <field name="megamenu_view_type"/>
                         </group>
                         <notebook>
-                            <page string="General Settings" invisible="is_megamenu == False or is_service_menu == True">
+                            <page string="General Settings" invisible="is_megamenu == False or (is_service_menu == True and parent_is_megamenu == True)">
                               <group>
                                 <field name="megamenu_type" widget="radio"
                                     invisible="megamenu_view_type in ('service_banner_megamenu','cat_img_megamenu','prod_megamenu','service_content_megamenu','service_page_megamenu')"/>
@@ -78,13 +79,13 @@
                               </group>
                             </page>
                             <page string="Service Configuration"
-                                invisible="not is_service_menu or parent_megamenu_view_type != 'service_page_megamenu'">
+                                invisible="not is_service_menu or not parent_is_megamenu or parent_megamenu_view_type != 'service_page_megamenu'">
                                 <group>
                                     <field name="img_menu"/>
                                     <field name="menu_desc"/>
                                 </group>
                             </page>
-                            <page string="Service menu content" invisible="not is_service_menu or parent_megamenu_view_type != 'service_content_megamenu'">
+                            <page string="Service menu content" invisible="not is_service_menu or not parent_is_megamenu or parent_megamenu_view_type != 'service_content_megamenu'">
                                 <group>
                                     <field name='service_content' widget="html"/>
                                 </group>

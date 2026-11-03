@@ -1381,7 +1381,7 @@
     <!-- IT industry End -->
 
     <template id="health_location_snippet" name="Contact Us Snippet 4">
-        <section class="health_location_snippet" data-disp='contact_us' style="background-color:#f5f2f8;">
+        <section class="health_location_snippet" data-disp='contact_us'>
             <div class="container">
                 <div class='row s_nb_column_fixed sct_top_row'>
                     <div class="col-md-12">

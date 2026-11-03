@@ -2687,6 +2687,10 @@
 /*health case study snippet end*/
 /*health location we serve snippet*/
 .health_location_snippet {
+	// default background (was inline in the block): only while no colour preset is chosen
+	&:not(.o_cc) {
+		background-color: #f5f2f8;
+	}
 	padding: 50px 0 20px; 
 	@include min992{
 		padding: 60px 0 30px;
@@ -7921,3 +7925,103 @@
 	}
 }
 
+
+// Colour presets (Background > Theme in the editor: classes o_cc o_ccN on the block). Without a
+// preset nothing here applies, so every block keeps its own look. #wrapwrap: to win over the
+// blocks' own text colours, set with long selectors.
+// - Accordion 1 and Blog Slider 1 paint a gradient over the preset's colour: the preset's own
+//   gradient (if the palette has one) or none.
+@for $index from 1 through 5 {
+	:is(.accordion_v_1, .blog_2_custom).o_cc#{$index} {
+		background-color: var(--o-cc-bg);
+		background-image: none;
+		@include o-add-gradient('o-cc#{$index}-bg-gradient');
+	}
+}
+#wrapwrap {
+	// - Text with a fixed colour made for the block's own background (dark text on a light block,
+	//   white text on a dark one): it takes the preset's text colour, muted text stays muted.
+	.about_us_v_4.o_cc .nav-tabs .nav-link:not(.active),
+	.blog_2_custom.o_cc .block-title .fancy,
+	.contact_us_v_1.o_cc .sct-right-side :is(.sct_simple_text, .sct_simple_text a),
+	.retial_deal_of_day_banner_snippet_1.o_cc .sct_img_name :is(.img_title, .sub_title),
+	.retial_trust_snippet_1.o_cc .sct-right-side :is(h4, p),
+	.pricing_table_v5.o_cc .package :is(.sct_price_descrtiption, .sct_text),
+	.pricing_table_v4.o_cc .sct_per_month .sct_mont,
+	.policy_trust_snippet_v_3.o_cc .sct_test_box :is(.sct_title, .sct_simple_text),
+	.expertise_statistics_4.o_cc .progress-value,
+	.service_varient_11.o_cc :is(.sct_title, .sct_simple_text, li) {
+		color: var(--color);
+	}
+	.about_us_v_5.o_cc .sct_cmp_title .sct_simple_text,
+	.portfolio_snippet_1.o_cc .nav-link:not(.active) .nav_title,
+	.how_it_work_v_4.o_cc .sct_steps_div .sct_simple_text,
+	.it_portfolio_tabs.o_cc .nav-tabs .nav-link:not(.active),
+	.expertise_statistics_4.o_cc .progress-value-text,
+	.health_cash_study_snippet.o_cc .sct_right_side .sct_simple_text {
+		color: color-mix(in srgb, var(--color) 85%, transparent);
+	}
+	// Accordion 1: white text made for its dark gradient (gone with a preset, see above)
+	.accordion_v_1.o_cc {
+		.sct_top_row :is(.section-title, p), .accordion-body {
+			color: var(--color);
+		}
+		.accordion-header {
+			color: var(--color) !important; // the block's own colour is !important
+		}
+	}
+	// Service 11's "Read more" link: its text, line and arrow
+	.service_varient_11.o_cc .sct_cst_btn .btn {
+		color: var(--color);
+		border-bottom-color: currentColor;
+		&::after {
+			border-color: currentColor;
+		}
+	}
+	// Service 11's highlighted box: a light veil of the preset's text colour (white on a dark
+	// preset, as without one), else white text on a light box on the theme-colour preset
+	.service_varient_11.o_cc .sct_service_long_block .sct_sers_box {
+		background: color-mix(in srgb, var(--color) 15%, transparent);
+	}
+	// Expertise 11: white titles on its own dark boxes, which keep their colour
+	.expertise_statistics_11.o_cc .sct_info_box .sct_stat_title {
+		color: #fff;
+	}
+	// - Text in the theme colour (a title's highlighted word, the active tab): mixed with the
+	//   preset's text colour, so still in the theme colour but lighter on a dark preset, darker
+	//   on a light one, white-ish on the theme-colour preset.
+	.how_it_work_v_3.o_cc .red_text,
+	.how_it_work_v_5.o_cc .sct_three_dots,
+	.it_portfolio_tabs.o_cc .nav-tabs .nav-link.active,
+	.portfolio_snippet_1.o_cc .nav-link.active .nav_title,
+	.content_snippets_v_11.o_cc .accordion-button span {
+		color: color-mix(in srgb, #{$primary} 20%, var(--color));
+	}
+	// - White / light cards inside the block keep their dark text: they inherited the preset's
+	//   light text (white on white).
+	.content_snippets_v_10.o_cc .sct_content_box,
+	.health_location_snippet.o_cc .sct_contact_info,
+	.how_it_work_v_1.o_cc .sct_work_box,
+	.how_it_work_v_3.o_cc .sct_work_box,
+	.it_grids_service.o_cc .sct_img_content_block,
+	.it_main_banner.o_cc :is(.carousel-item, .vertical-banner-content, .sct_top_deal),
+	.retial_deal_of_day_banner_snippet_1.o_cc .sct_timer_inner,
+	.pricing_table_v2.o_cc .package,
+	.testinomial_varient_2.o_cc .client_right_side,
+	.testinomial_varient_3.o_cc .thumb_box .sct_base_class,
+	.third-client-slider.o_cc .sct_test_content,
+	.timeline_snippet_1.o_cc .sct_timeline_info,
+	.timeline_snippet_3.o_cc .tab-content,
+	.service_varient_7.o_cc .sct_sers_box {
+		color: #212529;
+		// the headings the preset coloured (others keep the block's colours)
+		:is(.sct_title, h4.sct_work_title, .sct_work_sub_title, .sct_pers_name, .section-title,
+			.section-title-big, .title-20, .title-36, .sct_img_content_block > h4, .simple_text) {
+			color: inherit;
+		}
+	}
+	// (its title keeps the theme colour)
+	.service_varient_7.o_cc .sct_sers_box .sct_title:is(h1, h2, h3, h4, h5, h6) {
+		color: $primary;
+	}
+}

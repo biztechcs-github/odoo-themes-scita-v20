@@ -45,6 +45,7 @@ class ScitaPriceAlertPortal(CustomerPortal):
         if alert and action == 'stop' and alert.state in ('pending', 'active'):
             alert.action_cancel()
             message = 'stopped'
-        elif alert and action == 'watch' and alert.state in ('notified', 'expired', 'cancelled'):
+        elif (alert and action == 'watch' and alert.state in ('notified', 'expired', 'cancelled')
+              and not alert._scita_price_is_hidden()):  # its price is hidden now: nothing to watch
             message = 'watching' if alert._scita_rearm() else ''
         return request.redirect('/my/price-alerts' + ('?message=%s' % message if message else ''))

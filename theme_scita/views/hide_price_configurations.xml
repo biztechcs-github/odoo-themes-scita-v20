@@ -43,6 +43,14 @@
             </t>
         </xpath>
 
+        <!-- the "Hidden price message" in the hidden price's place -->
+        <xpath expr="//div[hasclass('container', 'oe_website_sale')]//div[hasclass('align-middle', 'o_wish_price')]" position="after">
+            <t t-set="sct_hidden_price_message" t-value="wish.product_id.product_tmpl_id._sct_hidden_price_message()"/>
+            <div t-if="sct_hidden_price_message" class="sct_hidden_price_message small text-muted">
+                <span t-out="sct_hidden_price_message"/>
+            </div>
+        </xpath>
+
         <!-- 🧱 Hide price when conditions are met -->
         <xpath expr="//div[hasclass('container', 'oe_website_sale')]//div[hasclass('align-middle', 'o_wish_price')]" position="attributes">
             <attribute name="t-if">
@@ -113,6 +121,15 @@
                 </t>
             </t>
         </xpath>
+
+        <!-- the "Hidden price message" in the price's place, above the button above (an
+             "after" on the same node goes first). Request Quote products too. -->
+        <xpath expr="//div[hasclass('product_price')]" position="after">
+            <t t-set="sct_hidden_price_message" t-value="product._sct_hidden_price_message()"/>
+            <div t-if="sct_hidden_price_message" class="sct_hidden_price_message small text-muted">
+                <span t-out="sct_hidden_price_message"/>
+            </div>
+        </xpath>
     </template>
 
     <template id="shop_button_hide_product_price" inherit_id="website_sale.shop_product_buttons">
@@ -150,6 +167,13 @@
     <!-- Product compare detail start -->
     <template id="product_compare_detail" inherit_id="website_sale.product_compare">
         
+        <!-- "Hidden price message" where the price would be (outside Odoo's hide_price t-if around the price) -->
+        <xpath expr="//div[@id='o_comparelist_product_name']/span[@t-if=&quot;not combination_info['hide_price']&quot;]" position="before">
+            <t t-set="sct_hidden_price_message" t-value="product.product_tmpl_id._sct_hidden_price_message()"/>
+            <div t-if="sct_hidden_price_message" class="sct_hidden_price_message small text-muted">
+                <span t-out="sct_hidden_price_message"/>
+            </div>
+        </xpath>
         <!-- 🧩 Add Request Quote / Login button before price -->
         <xpath expr="//span[@t-out=&quot;combination_info['price']&quot;]" position="before">
             <t t-if="website and (
@@ -242,6 +266,15 @@
                 and not product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
             </attribute>
+        </xpath>
+
+        <!-- the "Hidden price message" in the price's place (before the button below) -->
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
+            <t t-set="sct_hidden_price_message" t-value="product._sct_hidden_price_message()"/>
+            <div t-if="sct_hidden_price_message" class="alert alert-light border sct_hidden_price_message mt-2 mb-0">
+                <i class="fa fa-info-circle me-1" role="presentation"/>
+                <span t-out="sct_hidden_price_message"/>
+            </div>
         </xpath>
 
         <!-- 🧩 Show 'Login to see price' or 'Request Quote' -->
@@ -621,9 +654,7 @@
         <xpath expr="//div[hasclass('sct-other-desciption')]" position="inside">
             <!-- the "Hidden price message" of the product, else the website's default one
                  (Website settings): how to find the price out, while it is hidden -->
-            <t t-set="sct_hidden_price_message" t-value="website and not (website.login_see_price and request.env.user._is_public())
-                and (not website.website_show_price or product.website_hide_price)
-                and (product.website_hide_price_message or website.website_hide_price_default_message)"/>
+            <t t-set="sct_hidden_price_message" t-value="product._sct_hidden_price_message()"/>
             <div t-if="sct_hidden_price_message" class="alert alert-light border sct_hidden_price_message mt-0 mb-3">
                 <i class="fa fa-info-circle me-1" role="presentation"/>
                 <span t-out="sct_hidden_price_message"/>

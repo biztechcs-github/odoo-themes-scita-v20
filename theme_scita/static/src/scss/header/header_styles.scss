@@ -416,7 +416,9 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 }
 
                 a {
-                    color: $dark-color;
+                    // the header's text colour: $dark-color was unreadable on a dark Header >
+                    // Background (same dark grey on light ones)
+                    color: inherit;
                     font-size: $head-label;
                     @include transition(all, 0.5s, ease);
                     font-size: 12px;
@@ -1598,9 +1600,28 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                     }
                 }
 
+                // follow the header's text colour (Header > Background): on a dark preset the
+                // text, icons and border stayed dark on the dark row. Same look on light presets.
+                .search-query {
+                    color: inherit !important;
+                    border-color: color-mix(in srgb, currentColor 20%, transparent) !important;
+
+                    &:placeholder-shown {
+                        color: inherit !important;
+                    }
+                    &::placeholder {
+                        color: color-mix(in srgb, currentColor 65%, transparent) !important;
+                    }
+                }
+                .oe_search_button,
+                .o_scita_visual_search_btn {
+                    color: inherit !important;
+                }
+
                 .oe_search_button {
                     background: transparent !important;
                     border: 1px solid rgba($dark-grey-color, 0.2);
+                    border-color: color-mix(in srgb, currentColor 20%, transparent);
                     border-left: 0;
                     // !important like .search-query: while the results are open Odoo squares the
                     // bottom corners (!important, for a dropdown glued to the box) but Scita's
@@ -1742,7 +1763,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                         .user_name,
                         .contact_address {
-                            color: $dark-color;
+                            color: inherit; // the header's text colour (dark Background presets)
                             white-space: nowrap;
                             max-width: 120px;
                             overflow: hidden;
@@ -2929,7 +2950,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                         .user_name,
                         .contact_address {
-                            color: $dark-color;
+                            color: inherit; // the header's text colour (dark Background presets)
                             white-space: nowrap;
                             max-width: 120px;
                             overflow: hidden;
@@ -6198,4 +6219,133 @@ header .o_pricelist_dropdown .dropdown-menu {
     margin: 0 0 3px 8px;
     vertical-align: middle;
     transition: all 0.2s ease-in-out;
+}
+
+// Headers 2 and 4, Link Style Block / Fill / Pills: Odoo draws the active menu item on the header
+// preset's button colour, but Scita forced its text (black in Header 4: lost on a dark button
+// colour; red in Header 2: lost on all of them). Black or white, whichever reads on that colour.
+$-sct-menu-cc: map-get($o-color-palette, 'menu');
+@if index((scita_header_2, scita_header_4), o-website-value('header-template'))
+        and index((block, fill, pills), o-website-value('header-links-style'))
+        and type-of($-sct-menu-cc) == 'number' {
+    // as Odoo computes it for `.o_ccN .nav-pills .nav-link.active` (html_editor.common.scss)
+    $-sct-btn-primary: map-get($colors, 'o-cc#{$-sct-menu-cc}-btn-primary');
+    $-sct-pill-bg: if($-sct-btn-primary, o-color($-sct-btn-primary), map-get($theme-colors, 'primary'));
+    @if type-of($-sct-pill-bg) == 'color' {
+        #wrapwrap > header .navbar:not(.o_header_mobile) #top_menu > .nav-item > .nav-link.active {
+            color: if(contrast-ratio($-sct-pill-bg, $black) >= contrast-ratio($-sct-pill-bg, $white), $black, $white);
+        }
+    }
+}
+
+// Header > Background set to a dark colour (same test as Odoo's .navbar-light -> .navbar-dark):
+// what Scita draws in dark straight on the header background turns light.
+$-sct-menu-color: o-color('menu-custom') or o-color('menu');
+@if str-index(o-website-value('header-template'), 'scita_header_') == 1 and $-sct-menu-color and color-contrast($-sct-menu-color) != $color-contrast-dark {
+    $-sct-header: o-website-value('header-template');
+    #wrapwrap > header {
+        // phone header: the cart / wishlist icons are dark images with no light circle behind them
+        .o_header_mobile .o_header_mobile_buttons_wrap li img[src*="sct_"] {
+            filter: brightness(0) invert(1);
+        }
+
+        // social icons in their brand colours: X (black), Facebook... were lost on a dark header
+        .o_header_social_links .s_social_media:not(.no_icon_color) a {
+            &, &:hover, &:focus {
+                color: inherit !important;
+            }
+        }
+
+        // Headers 2, 4 and 5 put their icons straight on the header background (Headers 1 and 3
+        // have them on a white bar / in light circles, which stay as they are)
+        @if index((scita_header_2, scita_header_4, scita_header_5), $-sct-header) {
+            .navbar:not(.o_header_mobile) {
+                .menu_right img[src*="sct_"],
+                .header_search_modal .o_search_btn img[src*="sct_"] {
+                    filter: brightness(0) invert(1);
+                }
+                .menu_right {
+                    .o_wsale_my_compare .fa,
+                    .o_pricelist_dropdown .dropdown-toggle {
+                        color: inherit !important;
+                    }
+                }
+            }
+        }
+
+        // Headers 2 and 4: the menu bar is the header background too, its links were black
+        @if index((scita_header_2, scita_header_4), $-sct-header) {
+            .navbar:not(.o_header_mobile) #top_menu > .nav-item > .nav-link:not(.active) {
+                color: inherit;
+
+                // the chevron of a dropdown item is drawn with black borders
+                &.dropdown-toggle::after {
+                    border-top-color: currentColor;
+                    border-left-color: currentColor;
+                }
+            }
+        }
+
+        @if $-sct-header == scita_header_4 {
+            .navbar:not(.o_header_mobile) {
+                // "Call us on" + phone number ($primary: the same navy as a navy header)
+                .head_deal .deal_right {
+                    &, .nav-link, a {
+                        color: inherit;
+                    }
+                }
+                .search_bar .search-query {
+                    color: inherit !important;
+
+                    &:placeholder-shown {
+                        color: inherit !important;
+                    }
+                    &::placeholder {
+                        color: color-mix(in srgb, currentColor 65%, transparent) !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Header 1, icons on the right of the menu bar: the compare icon sat 5px above the others (its
+// 35px link has the icon at the top, plus a 5px top margin) and the gaps between the icons were
+// 18 / 15 / 32 / 32px (the search button has Bootstrap's 16px side padding). One row, centred,
+// with the same gap between every icon.
+@if o-website-value('header-template') == 'scita_header_1' {
+    #wrapwrap > header .navbar:not(.o_header_mobile) #o_main_nav .menu_right > ul {
+        align-items: center;
+        gap: 22px;
+        > li {
+            margin: 0 !important;
+            display: flex;
+            align-items: center;
+        }
+        > li.o_wsale_my_compare > a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: auto;
+            padding: 0;
+        }
+        .o_search_btn {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+// Mobile header bar: the menu button's own 8px padding put its icon 23px from the right edge
+// (15px on the logo side) and 12px from the wishlist icon (16px between the other icons).
+// No right padding, 12px left: 15px on both edges, 16px between all icons.
+header .o_header_mobile button[data-bs-toggle="offcanvas"] {
+    padding-right: 0 !important;
+    padding-left: 12px !important;
+}
+// Mobile menu: the phone link's own 8px padding pushed it in from the menu items' left edge
+.offcanvas .offcanvas-body .o_nav-link_secondary {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }

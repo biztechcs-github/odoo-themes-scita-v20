@@ -44,6 +44,26 @@ ul{
 	margin: 0;
 	padding: 0;
 }
+// A colour preset chosen in the editor (Background > Theme: classes o_cc o_ccN on the block) wins
+// over the block's own default background, as on About Us 4: these blocks kept their grey / tinted
+// background whatever preset was picked. A custom colour (inline or bg-* !important) still wins.
+:is(.accordion_v_2, .blog_4_custom, .box_brand_slider, .deal_of_day_banner_5, .expertise_statistics_4,
+	.fashion_multi_category_slider, .health_location_snippet, .how_it_work_v_3, .how_it_work_v_4,
+	.it_grids_service, .it_letstalk, .it_our_team, .retial_trust_snippet_1, .service_varient_11,
+	.pricing_table_v2, .testinomial_varient_3, .scita_blog_slider, .cat_slider_4, .third-client-slider,
+	.timeline_snippet_3).o_cc {
+	background-color: var(--o-cc-bg);
+}
+// Bulleted lists typed in the editor (Odoo's text blocks, blog posts, product Description tab):
+// the rule above left their bullets outside the text column (at the screen edge on phones) and
+// set them apart from numbered lists, indented as in Odoo. Scita's own blocks keep theirs, and so
+// do the header and footer (Scita's footers are text blocks with unbulleted link lists).
+#wrap :is([data-snippet^="s_"]:not([data-snippet^="s_theme_scita"], [data-snippet^="s_appjetty"]), .o_wblog_post_content_field, #product_full_description) ul:not([class]) {
+	padding-left: 2rem;
+	&:not(li > ul) {
+		margin-bottom: 1rem;
+	}
+}
 .btn-link:focus {
     text-decoration: none;
 }
@@ -75,6 +95,13 @@ img {
 	width: var(--sct-w, auto);
 	max-width: 100%;
 	height: auto;
+}
+// My Account side card: the rule above overrode the avatar's 50x50 size, so it showed at 180px
+// and pushed the name past the screen at 992-1024px. (The card's own rule is in
+// checkout_style.scss, which only checkout pages load.)
+#wrapwrap.o_portal .account-detail img.object-fit-cover {
+	width: 50px;
+	height: 50px;
 }
 // --sct-bg-m: an 828px version of a background picture (banners, slides), set when the page is
 // rendered (ir_qweb.py): phones download it instead of the full-size picture.

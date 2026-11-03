@@ -265,8 +265,12 @@
                                 </a>
                             </td>
                             <td class="small" t-out="alert._scita_condition_text()"/>
+                            <!-- a price Theme Scita hides (Request a Quote, hidden prices) is not
+                                 shown here either: the alert stays quiet for it -->
+                            <t t-set="price_hidden" t-value="alert._scita_price_is_hidden()"/>
                             <td class="text-end text-nowrap">
-                                <t t-if="alert.last_price" t-out="alert._scita_format(alert.last_price)"/>
+                                <span t-if="price_hidden" class="text-muted small">On request</span>
+                                <t t-elif="alert.last_price" t-out="alert._scita_format(alert.last_price)"/>
                             </td>
                             <td>
                                 <span t-attf-class="badge #{'text-bg-info' if alert.state == 'active' else 'text-bg-warning' if alert.state == 'pending' else 'text-bg-success' if alert.state == 'notified' else 'text-bg-light'}">
@@ -284,7 +288,7 @@
                                 <form method="post" class="d-inline" t-attf-action="/my/price-alerts/#{alert.id}/#{'stop' if alert.state in ('pending', 'active') else 'watch'}">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                     <button t-if="alert.state in ('pending', 'active')" type="submit" class="btn btn-sm btn-outline-secondary">Stop</button>
-                                    <button t-else="" type="submit" class="btn btn-sm btn-outline-primary">Watch again</button>
+                                    <button t-elif="not price_hidden" type="submit" class="btn btn-sm btn-outline-primary">Watch again</button>
                                 </form>
                             </td>
                         </tr>

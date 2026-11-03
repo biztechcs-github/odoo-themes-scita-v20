@@ -556,6 +556,14 @@
 				margin: 0;
 			}
 		}
+		// phones: Odoo pulls the category filmstrip 30px past the right of the column, but
+		// only the column padding is left there: it went 15px off screen and the shop page
+		// scrolled sideways. It now ends at the screen edge.
+		@media (max-width: 767.98px) {
+			.o_wsale_filmstrip_container.o_wsale_filmstrip_grid {
+				margin-right: $grid-gutter-width * -0.5;
+			}
+		}
 		&.list-view-box {
 			.sct_list_box{
 				margin-left: 0;
@@ -1345,6 +1353,12 @@
 			}
 		}
 	}
+}
+// a product without a website description showed a "Description" tab over an empty box: Odoo
+// leaves the field out of the page for visitors, and renders it empty for editors. Hidden in
+// both cases outside the editor (the editor still shows it, to fill it)
+body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description:not(:empty))) {
+	display: none;
 }
 .sct-description-tab {
 	padding: 15px 0;

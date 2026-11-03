@@ -135,6 +135,19 @@ class ProductTemplate(models.Model):
             kept = self.exists().sudo().filtered_domain(domain)
         return kept.with_env(self.env)  # keeps the prefetch of the whole menu tree
 
+    def _sct_hidden_price_message(self):
+        """The text shown where this product's price would be, while Scita hides it (prices
+        hidden on the website or for this product, or a Request Quote product): the product's
+        "Hidden price message", else the website's "Default Hidden price message". Empty when
+        the price shows, or when the visitor only has to log in (a Login button says so)."""
+        self.ensure_one()
+        website = self.env.website
+        if not website or (website.login_see_price and self.env.user._is_public()):
+            return ''
+        if website.website_show_price and not self.website_hide_price and not self.quote_request:
+            return ''
+        return self.website_hide_price_message or website.website_hide_price_default_message or ''
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         """Hide price on the search bar results"""
         results_data = super()._search_render_results(
@@ -149,10 +162,9 @@ class ProductTemplate(models.Model):
         for product, data in zip(self, results_data, strict=True):
             if login_to_see_price:
                 data.update({"price": "", "list_price": ""})
-            elif product.website_hide_price or not website_show_price:
+            elif product.website_hide_price or product.quote_request or not website_show_price:
                 # Markup: a plain str was escaped and showed the <span> tags as text
-                message = (product.website_hide_price_message
-                           or self.env.website.website_hide_price_default_message)
+                message = product._sct_hidden_price_message()
                 data.update({
                     "price": Markup("<span>%s</span>") % message if message else "",
                     "list_price": "",
