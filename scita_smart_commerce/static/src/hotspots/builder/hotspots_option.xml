@@ -28,9 +28,28 @@
             domain="this.productDomain"
             defaultMessage.translate="Choose a product"/>
     </BuilderRow>
-    <BuilderRow label.translate="Position" tooltip.translate="From the left and from the top, in % of the image. Or drag the hotspot.">
+    <BuilderRow label.translate="Show on" tooltip.translate="Devices on which this hotspot is shown (mobile: screens narrower than 992px, as the editor's mobile preview)">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">All devices</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_scita_hotspot_hide_mobile'">Desktop only</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_scita_hotspot_hide_desktop'">Mobile only</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <!-- desktop preview: the position of every device without a mobile position of its own;
+         mobile preview: the mobile position (the first change copies the desktop one) -->
+    <BuilderRow t-if="!this.domState.isMobile" label.translate="Position" tooltip.translate="From the left and from the top, in % of the image. Or drag the hotspot. Switch to the mobile preview to place it differently on phones.">
         <BuilderNumberInput title.translate="From the left (%)" action="'scitaHotspotPosition'" actionParam="'left'" min="2" max="98" step="0.5"/>
         <BuilderNumberInput title.translate="From the top (%)" action="'scitaHotspotPosition'" actionParam="'top'" min="2" max="98" step="0.5"/>
+    </BuilderRow>
+    <BuilderRow t-else="" label.translate="Mobile position" tooltip.translate="Position on phones and tablets only, in % of the image. Or drag the hotspot in this mobile preview. The desktop position does not change.">
+        <BuilderNumberInput title.translate="From the left (%) on mobile" action="'scitaHotspotPosition'" actionParam="'left'" min="2" max="98" step="0.5"/>
+        <BuilderNumberInput title.translate="From the top (%) on mobile" action="'scitaHotspotPosition'" actionParam="'top'" min="2" max="98" step="0.5"/>
+    </BuilderRow>
+    <BuilderRow t-if="this.domState.hasMobilePosition" label.translate="Mobile position" level="1"
+                tooltip.translate="This hotspot has its own position on mobile">
+        <BuilderButton action="'scitaHotspotMobileReset'" preview="false" title.translate="Remove the mobile position: the hotspot goes back to its desktop position on mobile">
+            Same as desktop
+        </BuilderButton>
     </BuilderRow>
 </t>
 

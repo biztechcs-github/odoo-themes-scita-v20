@@ -19,6 +19,40 @@ const PLACEMENT_CLASSES = ["mx-auto", "d-block", "float-start", "float-end", "me
 
 const clamp = (value) => Math.min(98, Math.max(2, Math.round(value * 10) / 10));
 
+// A hotspot's own position on mobile (screens under 992px, as the editor's mobile preview): two
+// CSS variables used by `.o_scita_hotspot_m_pos` there (hotspots.scss), its inline left / top
+// staying the desktop position.
+const MOBILE_POS = "o_scita_hotspot_m_pos";
+const mobileVar = (property) => `--scita-hotspot-m-${property}`;
+/** Left or top (number, in %) of a hotspot: on mobile, its mobile one when it has one. */
+function getSpotPosition(spot, property, isMobile) {
+    const value = isMobile && spot.classList.contains(MOBILE_POS)
+        ? spot.style.getPropertyValue(mobileVar(property))
+        : spot.style[property];
+    const number = parseFloat(value);
+    return Number.isFinite(number) ? number : 50;
+}
+/** Move a hotspot on desktop, or on mobile only (its first mobile move copies the desktop position). */
+function setSpotPosition(spot, property, percent, isMobile) {
+    if (!isMobile) {
+        spot.style[property] = `${percent}%`;
+        return;
+    }
+    if (!spot.classList.contains(MOBILE_POS)) {
+        for (const prop of ["left", "top"]) {
+            spot.style.setProperty(mobileVar(prop), `${getSpotPosition(spot, prop, false)}%`);
+        }
+        spot.classList.add(MOBILE_POS);
+    }
+    spot.style.setProperty(mobileVar(property), `${percent}%`);
+}
+/** Back to the desktop position on mobile. */
+function resetMobilePosition(spot) {
+    spot.classList.remove(MOBILE_POS);
+    spot.style.removeProperty(mobileVar("left"));
+    spot.style.removeProperty(mobileVar("top"));
+}
+
 /**
  * Product hotspots on any image of any block, in the website editor.
  *
@@ -40,6 +74,14 @@ export class ScitaHotspotsPlugin extends Plugin {
             ScitaHotspotsStyleAction,
             ScitaHotspotProductAction,
             ScitaHotspotPositionAction,
+            ScitaHotspotMobileResetAction,
+        },
+        // the hotspot options show the desktop or the mobile position: refresh them
+        on_mobile_view_switched_handlers: () => {
+            const target = this.dependencies.builderOptions.getTarget();
+            if (target?.isConnected && target.matches(SPOT)) {
+                this.dependencies.builderOptions.updateContainers(target, { forceUpdate: true });
+            }
         },
         // hotspots are not text: no caret, no typing in them
         content_not_editable_selectors: SPOT,
@@ -249,6 +291,12 @@ export class ScitaHotspotsPlugin extends Plugin {
         if (!drag || ev.pointerId !== drag.pointerId) {
             return;
         }
+        if (ev.pointerType === "mouse" && !(ev.buttons & 1)) {
+            // the button was released without a pointerup reaching the page (outside the frame,
+            // over the options panel...): the drag is over, the hotspot must not follow the mouse
+            this.onPointerUp(ev);
+            return;
+        }
         if (!drag.moved && Math.hypot(ev.clientX - drag.startX, ev.clientY - drag.startY) < 4) {
             return; // a click, not a drag: let the editor select the hotspot
         }
@@ -257,10 +305,12 @@ export class ScitaHotspotsPlugin extends Plugin {
             drag.spot.setPointerCapture?.(ev.pointerId);
         }
         ev.preventDefault();
-        // positions are relative to the image (wrapper / cell / block)
+        // positions are relative to the image (wrapper / cell / block); in the mobile preview,
+        // the mobile position only
         const rect = drag.area.getBoundingClientRect();
-        drag.spot.style.left = `${clamp(((ev.clientX - rect.left) / rect.width) * 100)}%`;
-        drag.spot.style.top = `${clamp(((ev.clientY - rect.top) / rect.height) * 100)}%`;
+        const isMobile = this.config.isMobileView(drag.spot);
+        setSpotPosition(drag.spot, "left", clamp(((ev.clientX - rect.left) / rect.width) * 100), isMobile);
+        setSpotPosition(drag.spot, "top", clamp(((ev.clientY - rect.top) / rect.height) * 100), isMobile);
     }
 
     onPointerUp(ev) {
@@ -344,16 +394,28 @@ export class ScitaHotspotProductAction extends BuilderAction {
 /**
  * Hotspot position (`left` / `top`, in % of the image). The generic styleAction reads the
  * computed value in px and converts it against the wrong box, so read the inline %.
+ * In the mobile preview: the mobile position (the desktop one does not change).
  */
 export class ScitaHotspotPositionAction extends BuilderAction {
     static id = "scitaHotspotPosition";
     apply({ editingElement, params: { mainParam: property }, value }) {
         const number = parseFloat(value);
-        editingElement.style[property] = `${clamp(Number.isFinite(number) ? number : 50)}%`;
+        const isMobile = this.config.isMobileView(editingElement);
+        setSpotPosition(editingElement, property, clamp(Number.isFinite(number) ? number : 50), isMobile);
     }
     getValue({ editingElement, params: { mainParam: property } }) {
-        const number = parseFloat(editingElement.style[property]);
-        return String(Number.isFinite(number) ? number : 50);
+        return String(getSpotPosition(editingElement, property, this.config.isMobileView(editingElement)));
+    }
+}
+
+/** "Same as desktop": the hotspot loses its mobile position. */
+export class ScitaHotspotMobileResetAction extends BuilderAction {
+    static id = "scitaHotspotMobileReset";
+    apply({ editingElement }) {
+        resetMobilePosition(editingElement);
+    }
+    isApplied() {
+        return false;
     }
 }
 

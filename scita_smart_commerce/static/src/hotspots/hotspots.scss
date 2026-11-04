@@ -321,6 +321,23 @@ span.o_scita_hotspots {
     }
 }
 
+// the card is white whatever the block's colour preset: on a dark preset (e.g. the home page's
+// image grid) the product name took the preset's pale link colour (unreadable on white) and the
+// close button its inverted icon. #wrapwrap: the presets' link rules are more specific.
+#wrapwrap .o_scita_hotspot_card {
+    .o_scita_hotspot_card_name {
+        color: #1f1f1f;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--scita-hotspot-accent-text);
+        }
+    }
+    .o_scita_hotspot_card_close {
+        filter: none;
+    }
+}
+
 @keyframes scita-hotspot-card-in {
     from { opacity: 0; scale: 0.94; }
     to { opacity: 1; scale: 1; }
@@ -328,6 +345,41 @@ span.o_scita_hotspots {
 @media (prefers-reduced-motion: reduce) {
     .o_scita_hotspot_card {
         animation: none;
+    }
+}
+
+// ---------------------------------------------------------------- per device
+// (mobile: under 992px, as the editor's mobile preview and Odoo's block visibility)
+// own position on mobile (hotspot option "Mobile position"); the inline left / top stay the
+// desktop position
+@include media-breakpoint-down(lg) {
+    .o_scita_hotspot.o_scita_hotspot_m_pos {
+        left: var(--scita-hotspot-m-left) !important;
+        top: var(--scita-hotspot-m-top) !important;
+    }
+    .o_scita_hotspot.o_scita_hotspot_hide_mobile {
+        display: none !important;
+    }
+}
+@include media-breakpoint-up(lg) {
+    .o_scita_hotspot.o_scita_hotspot_hide_desktop {
+        display: none !important;
+    }
+}
+// in the editor a hotspot hidden on the previewed device stays there, faded, so it can still
+// be selected (and shown again)
+body.editor_enable {
+    @include media-breakpoint-down(lg) {
+        .o_scita_hotspot.o_scita_hotspot_hide_mobile {
+            display: flex !important;
+            opacity: 0.4;
+        }
+    }
+    @include media-breakpoint-up(lg) {
+        .o_scita_hotspot.o_scita_hotspot_hide_desktop {
+            display: flex !important;
+            opacity: 0.4;
+        }
     }
 }
 

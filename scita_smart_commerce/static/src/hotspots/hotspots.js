@@ -44,6 +44,25 @@ function arLabel() {
  * position in %) inside the `.o_scita_hotspots` area; here a dot opens its product card with
  * the live price and stock for this visitor. Dots of products the visitor can't see are hidden.
  */
+// phones and tablets: a hotspot's mobile position and "Show on" (as hotspots.scss)
+const MOBILE_QUERY = "(max-width: 991.98px)";
+const isMobile = () => window.matchMedia(MOBILE_QUERY).matches;
+// phones: the card is a sheet at the bottom of the image (hotspots.scss, below "sm")
+const PHONE_QUERY = "(max-width: 575.98px)";
+const SHEET_WIDTH = 320; // the card's width elsewhere
+const SHEET_MARGIN = 8; // px, from the image / screen edges (0.5rem)
+const CARD_GAP = 28; // px between the dot and its card (the card's translate, hotspots.scss)
+/** Whether a hotspot is hidden on this device ("Show on" option). */
+const isHiddenHere = (spot) =>
+    spot.classList.contains(isMobile() ? "o_scita_hotspot_hide_mobile" : "o_scita_hotspot_hide_desktop");
+/** Left / top of a hotspot (in %) on this device. */
+function spotPosition(spot, property) {
+    const value = isMobile() && spot.classList.contains("o_scita_hotspot_m_pos")
+        ? spot.style.getPropertyValue(`--scita-hotspot-m-${property}`)
+        : spot.style[property];
+    return parseFloat(value) || 50;
+}
+
 export class ScitaHotspots extends Interaction {
     static selector = ".o_scita_hotspots";
     dynamicContent = {
@@ -77,8 +96,6 @@ export class ScitaHotspots extends Interaction {
     }
 
     start() {
-        let index = 0;
-        const numbers = {};
         for (const spot of this.spots) {
             // left by a page saved while a card was open (fixed in the editor since)
             spot.classList.remove("o_scita_hotspot_active");
@@ -87,13 +104,36 @@ export class ScitaHotspots extends Interaction {
                 this.setClass(spot, "d-none", true);
                 continue;
             }
-            numbers[product.id] ||= ++index;
-            this.setAttr(spot, "data-hotspot-index", String(numbers[product.id]));
             this.setAttr(spot, "aria-label", product.name);
             this.setAttr(spot, "aria-haspopup", "dialog");
             this.setAttr(spot, "aria-expanded", "false");
         }
+        this.numberSpots();
+        this.registerCleanup(() => this.spots.forEach((spot) => spot.removeAttribute("data-hotspot-index")));
+        // desktop <-> mobile (rotating a tablet, resizing): other hotspots shown, at other places
+        const mediaQuery = window.matchMedia(MOBILE_QUERY);
+        const onDeviceChange = () => {
+            this.closeCard();
+            this.numberSpots();
+        };
+        mediaQuery.addEventListener("change", onDeviceChange);
+        this.registerCleanup(() => mediaQuery.removeEventListener("change", onDeviceChange));
         this.setClass(this.el, "o_scita_hotspots_ready", true);
+    }
+
+    /** "Number" style: 1, 2, 3... over the hotspots shown on this device (one number per product). */
+    numberSpots() {
+        let index = 0;
+        const numbers = {};
+        for (const spot of this.spots) {
+            const product = this.products[spot.dataset.productTemplateId];
+            if (!product || isHiddenHere(spot)) {
+                spot.removeAttribute("data-hotspot-index");
+                continue;
+            }
+            numbers[product.id] ||= ++index;
+            spot.setAttribute("data-hotspot-index", String(numbers[product.id]));
+        }
     }
 
     destroy() {
@@ -143,33 +183,67 @@ export class ScitaHotspots extends Interaction {
         }
         openArea = this;
         const [card] = this.renderAt("scita_smart_commerce.HotspotCard", { product, arLabel: this.arLabel }, this.el);
-        const x = parseFloat(spot.style.left) || 50;
-        const y = parseFloat(spot.style.top) || 50;
+        // where the dot is on this device (its mobile position on phones and tablets)
+        const x = spotPosition(spot, "left");
+        const y = spotPosition(spot, "top");
         // open towards the free side of the image
         card.classList.add(x > 50 ? "o_scita_hotspot_card_left" : "o_scita_hotspot_card_right",
             y > 55 ? "o_scita_hotspot_card_up" : "o_scita_hotspot_card_down");
         card.style.left = `${x}%`;
         card.style.top = `${y}%`;
         // keep it on screen: on a phone the image is narrower than the card on either side of
-        // the dot (a dot at 70% of a 354px banner slide opened the card off the left edge)
-        const rect = card.getBoundingClientRect();
+        // the dot (a dot at 70% of a 354px banner slide opened the card off the left edge).
+        // Where it lands is worked out from the dot, not measured: it is measured while its
+        // opening animation shrinks it (scale 0.94), and the shift came out ~40px short on a
+        // tablet (the card still went off the left edge).
+        const area = this.el.getBoundingClientRect();
+        const width = card.offsetWidth;
+        const dotX = area.left + (area.width * x) / 100;
+        const cardLeft = x > 50 ? dotX - CARD_GAP - width : dotX + CARD_GAP;
         const margin = 8;
         const viewWidth = document.documentElement.clientWidth;
         let shift = 0;
-        if (rect.left < margin) {
-            shift = margin - rect.left;
-        } else if (rect.right > viewWidth - margin) {
-            shift = viewWidth - margin - rect.right;
+        if (cardLeft < margin) {
+            shift = margin - cardLeft;
+        } else if (cardLeft + width > viewWidth - margin) {
+            shift = viewWidth - margin - (cardLeft + width);
         }
         if (shift) {
             card.style.marginLeft = `${shift}px`;
         }
+        this.fitSheetOnPhone(card);
         this.cardEl = card;
         this.cardSpot = spot;
         spot.setAttribute("aria-expanded", "true");
         spot.classList.add("o_scita_hotspot_active");
         // preventScroll: the area may be overflow hidden (banner slides), never scroll its content
         card.querySelector(".o_scita_hotspot_card_name")?.focus({ preventScroll: true });
+    }
+
+    /**
+     * Phones: the card is a sheet across the bottom of the image (hotspots.scss). On a small
+     * image (a cell of an image grid, two images side by side...) that sheet was as narrow as the
+     * image (~160px): the product name was cut to a few letters. There it takes the card's
+     * width (or the screen's), centred on the image and kept on the screen.
+     */
+    fitSheetOnPhone(card) {
+        if (!window.matchMedia(PHONE_QUERY).matches) {
+            return;
+        }
+        const area = this.el.getBoundingClientRect();
+        const viewWidth = document.documentElement.clientWidth;
+        const width = Math.min(SHEET_WIDTH, viewWidth - 2 * SHEET_MARGIN);
+        if (area.width - 2 * SHEET_MARGIN >= width) {
+            return; // a wide image: the sheet across it is wide enough
+        }
+        const left = Math.min(
+            Math.max(area.left + area.width / 2 - width / 2, SHEET_MARGIN),
+            viewWidth - SHEET_MARGIN - width
+        );
+        // !important: the phone sheet's left / right / width are (hotspots.scss)
+        card.style.setProperty("width", `${width}px`, "important");
+        card.style.setProperty("left", `${left - area.left}px`, "important");
+        card.style.setProperty("right", "auto", "important");
     }
 
     closeCard(restoreFocus = false) {

@@ -23,7 +23,7 @@ export class ScitaHotspotsBgOption extends ScitaHotspotsOption {
     static id = "scita_hotspots_bg_option";
 }
 
-/** One hotspot: its product and position. */
+/** One hotspot: its product, the devices showing it and its position (desktop / mobile). */
 export class ScitaHotspotOption extends BaseOptionComponent {
     static id = "scita_hotspot_option";
     static template = "scita_smart_commerce.HotspotOption";
@@ -31,6 +31,11 @@ export class ScitaHotspotOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.website = useService("website");
+        // which position the Position row edits: the desktop one, or (mobile preview) the mobile one
+        this.domState = useDomState((editingElement) => ({
+            isMobile: this.env.editor.config.isMobileView(editingElement),
+            hasMobilePosition: editingElement.classList.contains("o_scita_hotspot_m_pos"),
+        }));
     }
 
     /** Products sold on the website being edited (another website's ones have no dot on it). */
