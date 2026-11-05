@@ -3148,7 +3148,8 @@
 			.sct_cst_btn{
 				margin-top: 10px;
 				.btn{
-					padding: 0px 25px 7px 10px;
+					// no left padding: the link starts in line with the box's text above it
+					padding: 0px 25px 7px 0;
 					box-shadow: none;
 					background: transparent;
 					border: 0;
@@ -3169,7 +3170,9 @@
 						@include transition(all, 0.3s, ease);
 						position: absolute;
 						right: 11px;
-						top: 4px;
+						// in the middle of the text's line (whatever its font size / line height)
+						top: 8px;
+						top: calc(0.5lh - 4px);
 					}
 
 					&:hover{

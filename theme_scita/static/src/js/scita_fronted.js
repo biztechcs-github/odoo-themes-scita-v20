@@ -438,32 +438,11 @@ $(document).ready(function(){
             var hasPlaceholder = self.$target.find('.category-slider-placeholder').length > 0;
             
             // Only restore if we have rendered content and no placeholder
-            if (hasRenderedContent && !hasPlaceholder) {
+            if (hasRenderedContent && !hasPlaceholder && self.el._sctSample) {
                 var brand_type = self.$target.attr('data-brand-config-type');
                 var brand_id = self.$target.attr('data-brand-config-id');
-                var titleText = _t("Brands");
-                
-                // Get title from rendered content if exists
-                var $existingTitle = self.$target.find('.title-block h2, .section-title, h3.section-title');
-                if ($existingTitle.length) {
-                    titleText = $existingTitle.text().trim() || titleText;
-                }
-                
-                // Restore placeholder structure
-                self.$target.html(`
-                    <div class="container">
-                        <div class="row our-brands">
-                            <div class="col-md-12">
-                                <h3 class="section-title style1" id="snippet-title">
-                                    <span>${titleText}</span>
-                                </h3>
-                                <div class="category-slider-placeholder">
-                                    <img src="/theme_scita/static/src/img/Brand2.webp" alt="Category Slider" class="img-fluid"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `);
+                // Restore the block's sample (kept before the live content replaced it)
+                self.$target.html(self.el._sctSample);
                 
                 // Restore attributes
                 if (brand_type) {
@@ -505,6 +484,8 @@ $(document).ready(function(){
                 }
             }
             if (!this.editableMode) {
+                // the editor shows this sample again (_restorePlaceholder)
+                self.el._sctSample = self.el._sctSample || self.$target.html();
                 var slider_type = self.$target.attr('data-brand-config-type');
                 rpc("/shop/get_box_brand_slider", {
                     'slider-type': slider_type || '',
@@ -844,7 +825,7 @@ $(document).ready(function(){
                         rpc('/theme_scita/blog_image_effect_config', {
                             'slider_type': slider_type
                         }).then(function(res) {
-                            $('#blog_2_owl_carosel').owlCarousel({
+                            self.$target.find('#blog_2_owl_carosel').owlCarousel({
                                 margin: 30,
                                 items: 4,
                                 loop: false,
@@ -1068,7 +1049,7 @@ $(document).ready(function(){
                         rpc('/theme_scita/blog_image_effect_config', {
                             'slider_type': slider_type
                         }).then(function(res) {
-                            $('#blog_5_owl_carosel').owlCarousel({
+                            self.$target.find('#blog_5_owl_carosel').owlCarousel({
                                 margin: 45,
                                 items: 3,
                                 loop: false,
@@ -1206,7 +1187,7 @@ $(document).ready(function(){
             var hasPlaceholder = self.$target.find('.category-slider-placeholder').length > 0;
             
             // Only restore if we have rendered content and no placeholder
-            if (hasRenderedContent && !hasPlaceholder) {
+            if (hasRenderedContent && !hasPlaceholder && self.el._sctSample) {
                 var titleText = _t("Our Awesome Team");
                 
                 // Get title from rendered content if exists
@@ -1219,11 +1200,7 @@ $(document).ready(function(){
                 }
                 
                 // Restore placeholder structure
-                self.$target.html(`
-                    <div class="category-slider-placeholder">
-                        <img src="/theme_scita/static/src/img/scita-placeholder.png" alt="Our Team Slider" class="img-fluid"/>
-                    </div>
-                `);
+                self.$target.html(self.el._sctSample);
             }
         },
         
@@ -1257,6 +1234,8 @@ $(document).ready(function(){
                 }
             }
             if (!this.editableMode) {
+                // the editor shows this sample again (_restorePlaceholder)
+                self.el._sctSample = self.el._sctSample || self.$target.html();
                 rpc("/biztech_emp_data_one/employee_data", {}).then(function(data) {
                     self.$target.empty();
                     self.$target.append(data);
@@ -1264,7 +1243,7 @@ $(document).ready(function(){
                     if ($('#wrapwrap').hasClass('o_rtl')) {
                         sct_rtl = true;
                     }
-                    $('#myourteam').owlCarousel({
+                    self.$target.find('#myourteam').owlCarousel({
                         loop:false,
                         margin:30,
                         nav:false,
@@ -1318,7 +1297,7 @@ $(document).ready(function(){
             var hasPlaceholder = self.$target.find('.category-slider-placeholder').length > 0;
             
             // Only restore if we have rendered content and no placeholder
-            if (hasRenderedContent && !hasPlaceholder) {
+            if (hasRenderedContent && !hasPlaceholder && self.el._sctSample) {
                 var titleText = _t("Our Team");
                 
                 // Get title from rendered content if exists
@@ -1331,11 +1310,7 @@ $(document).ready(function(){
                 }
                 
                 // Restore placeholder structure
-                self.$target.html(`
-                    <div class="category-slider-placeholder">
-                        <img src="/theme_scita/static/src/img/scita-placeholder.png" alt="Our Team Slider" class="img-fluid"/>
-                    </div>
-                `);
+                self.$target.html(self.el._sctSample);
             }
         },
         
@@ -1369,6 +1344,8 @@ $(document).ready(function(){
                 }
             }
             if (!this.editableMode) {
+                // the editor shows this sample again (_restorePlaceholder)
+                self.el._sctSample = self.el._sctSample || self.$target.html();
                 rpc("/biztech_emp_data_three/employee_data", {}).then(function(data) {
                     self.$target.empty();
                     self.$target.append(data);
@@ -1376,7 +1353,7 @@ $(document).ready(function(){
                     if ($('#wrapwrap').hasClass('o_rtl')) {
                         sct_rtl = true;
                     }
-                    $('#v_3_myourteam').owlCarousel({
+                    self.$target.find('#v_3_myourteam').owlCarousel({
                         loop:false,
                         margin:30,
                         nav:false,
@@ -1430,7 +1407,7 @@ $(document).ready(function(){
             var hasPlaceholder = self.$target.find('.category-slider-placeholder').length > 0;
             
             // Only restore if we have rendered content and no placeholder
-            if (hasRenderedContent && !hasPlaceholder) {
+            if (hasRenderedContent && !hasPlaceholder && self.el._sctSample) {
                 var titleText = _t("Meet Our Team");
                 
                 // Get title from rendered content if exists
@@ -1443,11 +1420,7 @@ $(document).ready(function(){
                 }
                 
                 // Restore placeholder structure
-                self.$target.html(`
-                    <div class="category-slider-placeholder">
-                        <img src="/theme_scita/static/src/img/scita-placeholder.png" alt="Our Team Slider" class="img-fluid"/>
-                    </div>
-                `);
+                self.$target.html(self.el._sctSample);
             }
         },
         
@@ -1481,6 +1454,8 @@ $(document).ready(function(){
                 }
             }
             if (!this.editableMode) {
+                // the editor shows this sample again (_restorePlaceholder)
+                self.el._sctSample = self.el._sctSample || self.$target.html();
                 rpc("/biztech_emp_data_five/employee_data", {}).then(function(data) {
                     self.$target.empty();
                     self.$target.append(data);
@@ -1488,7 +1463,7 @@ $(document).ready(function(){
                     if ($('#wrapwrap').hasClass('o_rtl')) {
                         sct_rtl = true;
                     }
-                    $('#v_5_myourteam').owlCarousel({
+                    self.$target.find('#v_5_myourteam').owlCarousel({
                         loop:false,
                         margin:30,
                         nav:false,

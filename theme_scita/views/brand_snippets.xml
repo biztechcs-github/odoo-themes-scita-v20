@@ -88,14 +88,28 @@
     <!-- for brands_box_slider_4 snippets -->
     <template id="brands_box_slider_4" name="Brand Slider 1">
         <section class="box_brand_slider" contentEditable="false" data-product-count="0" data-name="Brand Slider 1" data-disp='brand'>
-            <div class="container">                
-                <div class="row our-brands">
-                    <div class="col-md-12">
-                        <h3 class="section-title style1" id="snippet-title">
-                            <span>Brands</span>
-                        </h3>
-                         <div class="category-slider-placeholder">
-                            <img src="/theme_scita/static/src/img/Brand2.webp" alt="Category Slider" class="img-fluid" width="430" height="114"/>
+            <!-- the editor's sample of the slider (the brands are loaded on the live page): the same
+                 markup as box_brand_snippet_4, sample logos in a row instead of the carousel -->
+            <div class="box_brand_snippet_4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 title-block">
+                            <h2 class="section-title" id="snippet-title">
+                                <span>Brands</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row our-brands">
+                        <div class="col-sm-12">
+                            <div class="category-slider-placeholder sct-dyn-sample sct-brand-sample">
+                                <t t-foreach="[(1, 81, 19), (2, 61, 61), (3, 50, 61), (4, 61, 63), (5, 60, 61), (6, 61, 47), (7, 88, 88), (8, 81, 15)]" t-as="sct_b">
+                                    <div class="sct_brand_box text-center">
+                                        <div class="brand-logo-box">
+                                            <img t-attf-src="/theme_scita/static/src/img/playground_img/brand_#{sct_b[0]}.png" alt="Brand" class="img img-fluid" t-att-width="sct_b[1]" t-att-height="sct_b[2]" loading="lazy"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>

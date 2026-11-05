@@ -1174,6 +1174,52 @@ body #wrapwrap{
 	}
 }
 
+/* Editor samples of the dynamic Brand Slider 1 and Our Team blocks: the loaded block's own cards
+   (brand logos, team members) in a row, as many as its carousel shows at that width, with the
+   carousel's gap between them. They take the block's real styles, so the editor and the block
+   picker show what the page will. (Visitors never see them: hidden until the content loads.) */
+.category-slider-placeholder.sct-dyn-sample {
+	// (--sct-sample-n cards, --sct-sample-gap apart: set per block below)
+	display: flex;
+	gap: var(--sct-sample-gap, 30px);
+	min-height: 0;
+	overflow: hidden;
+
+	> * {
+		flex: 0 0 calc((100% - (var(--sct-sample-n, 1) - 1) * var(--sct-sample-gap, 30px)) / var(--sct-sample-n, 1));
+		min-width: 0;
+	}
+	// as the carousel does for its images (`.owl-carousel .owl-item img`; the blocks' own image
+	// rules, the brand logos', still win)
+	img {
+		width: 100%;
+	}
+}
+// (the breakpoints and gaps of the blocks' carousels, scita_fronted.js)
+.sct-brand-sample {
+	--sct-sample-gap: 10px;
+	--sct-sample-n: 2;
+	@media (min-width: 480px) { --sct-sample-n: 3; }
+	@media (min-width: 768px) { --sct-sample-n: 4; }
+	@media (min-width: 1024px) { --sct-sample-n: 6; }
+	@media (min-width: 1500px) { --sct-sample-n: 7; }
+}
+.sct-team-sample-1 {
+	@media (min-width: 600px) { --sct-sample-n: 2; }
+	@media (min-width: 992px) { --sct-sample-n: 3; }
+	@media (min-width: 1200px) { --sct-sample-n: 4; }
+}
+.sct-team-sample-3 {
+	@media (min-width: 576px) { --sct-sample-n: 2; }
+	@media (min-width: 992px) { --sct-sample-n: 3; }
+	@media (min-width: 1400px) { --sct-sample-n: 4; }
+}
+.sct-team-sample-5 {
+	@media (min-width: 600px) { --sct-sample-n: 2; }
+	@media (min-width: 768px) { --sct-sample-n: 3; }
+	@media (min-width: 992px) { --sct-sample-n: 4; }
+}
+
 /* Same problem, wider blast radius: the theme's own placeholder art appears
    all over saved snippet markup (56 uses of scita-placeholder.png alone), and
    those saved copies carry no dimensions. Keying off the filename is

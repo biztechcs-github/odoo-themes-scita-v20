@@ -200,10 +200,16 @@ async function openBrandSliderModal(snippetEl, { template, defaultLabel }) {
         snippetEl.setAttribute("data-brand-config-type", sliderTypeSelect.value);
         snippetEl.setAttribute("data-brand-config-id", sliderTypeSelect.value);
 
-        // Determine which placeholder image to use based on snippet class
-        const placeholderImg = snippetEl.classList.contains("box_brand_slider") 
-            ? "/theme_scita/static/src/img/Brand2.webp" 
-            : "/theme_scita/static/src/img/brand1.png";
+        // Brand Slider 1 keeps its sample (brand_snippets.xml): only the title changes. The content
+        // is replaced, not edited in place: a change inside this non-editable block is not saved
+        if (snippetEl.classList.contains("box_brand_slider")) {
+            const copy = snippetEl.cloneNode(true);
+            copy.querySelector("#snippet-title span").textContent = _t(selectedOption);
+            snippetEl.innerHTML = copy.innerHTML;
+            myModal.hide();
+            return;
+        }
+        const placeholderImg = "/theme_scita/static/src/img/brand1.png";
 
         // Use the original placeholder template structure to maintain consistency
         snippetEl.innerHTML = `

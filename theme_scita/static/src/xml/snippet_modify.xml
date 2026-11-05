@@ -355,5 +355,11 @@
         <scita_blog_2_custom_snippet_option_modify template="blog_2_custom_snippet_option" selector=".blog_2_custom"/>
         <scita_blog_5_custom_snippet_option_modify template="blog_5_custom_snippet_option" selector=".blog_5_custom"/>
     </xpath>
+    <!-- Location Snippet: no Layout (grid) option. Dragging a card turns the first row of the
+         container into a grid, here the title row, not the cards' one: the card was dropped
+         there with no size (g-col-lg-NaN) and the editor broke -->
+    <xpath expr="//layout_option" position="attributes">
+        <attribute name="exclude" add=".health_location_snippet" separator=", "/>
+    </xpath>
 </t>
 </templates>

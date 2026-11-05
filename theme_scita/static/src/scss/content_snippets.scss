@@ -139,7 +139,8 @@
 		.title-block{		
 			text-align: center;			
 		}
-		.sct-brand-slider-2{
+		// (the editor's sample of the slider, .sct-brand-sample, is drawn in the same box)
+		.sct-brand-slider-2, .sct-brand-sample{
 			background-color: lighten($light-grey-color, 2.5%); @include sct-light-box(lighten($light-grey-color, 2.5%), false);
 			border-radius: 5px;
 			box-shadow:0 0 4px 2px rgba($dark-grey-color, 0.2);

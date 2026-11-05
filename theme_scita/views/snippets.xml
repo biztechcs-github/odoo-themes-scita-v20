@@ -1383,14 +1383,14 @@
     <template id="health_location_snippet" name="Contact Us Snippet 4">
         <section class="health_location_snippet" data-disp='contact_us'>
             <div class="container">
-                <div class='row s_nb_column_fixed sct_top_row'>
+                <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                     <div class="col-md-12">
                         <h2 class="section-title">Location we serve</h2>
                     </div>
                 </div>
                 <div class="row s_nb_column_fixed sct_btm_row">
                     <div class="col-lg-3 col-md-6 col-sm-6 sct_loc_info">
-                        <section class="sct_contact_info d-flex flex-column">
+                        <div class="sct_contact_info d-flex flex-column">
                             <div class="sct_contact_heading d-flex align-items-center">
                                 <img src="/theme_scita/static/src/img/india.png" alt="India" title="India" width="105" height="63"/>
                                 <h3 class='sct_title'>
@@ -1408,10 +1408,10 @@
                                     <a href="mailto:info@mediclinic.com">info@mediclinic.com</a>
                                 </span>
                             </div>
-                        </section>
+                        </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 sct_loc_info">
-                        <section class="sct_contact_info d-flex flex-column">
+                        <div class="sct_contact_info d-flex flex-column">
                             <div class="sct_contact_heading d-flex align-items-center">
                                 <img src="/theme_scita/static/src/img/uk.png" alt="uk" title="uk" width="105" height="63"/>
                                 <h3 class='sct_title'>UK - London</h3>
@@ -1431,10 +1431,10 @@
                                     <a href="mailto:info@mediclinic.com">info@mediclinic.com</a>
                                 </span>
                             </div>
-                        </section>
+                        </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 sct_loc_info">
-                        <section class="sct_contact_info d-flex flex-column">
+                        <div class="sct_contact_info d-flex flex-column">
                             <div class="sct_contact_heading d-flex align-items-center">
                                 <img src="/theme_scita/static/src/img/france.png" alt="france" title="france" width="105" height="63"/>
                                 <h3 class='sct_title'>France - Paris</h3>
@@ -1454,10 +1454,10 @@
                                     <a href="mailto:info@mediclinic.com">info@mediclinic.com</a>
                                 </span>
                             </div>
-                        </section>
+                        </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 sct_loc_info">
-                        <section class="sct_contact_info d-flex flex-column">
+                        <div class="sct_contact_info d-flex flex-column">
                             <div class="sct_contact_heading d-flex align-items-center">
                                 <img src="/theme_scita/static/src/img/canada.png" alt="canada" title="canada" width="105" height="63"/>
                                 <h3 class='sct_title'>Canada - Toronto</h3>
@@ -1477,7 +1477,7 @@
                                     <a href="mailto:info@mediclinic.com">info@mediclinic.com</a>
                                 </span>
                             </div>
-                        </section>
+                        </div>
                     </div>
                 </div>
             </div>

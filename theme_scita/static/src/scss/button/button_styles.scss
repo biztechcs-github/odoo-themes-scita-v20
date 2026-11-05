@@ -52,7 +52,11 @@
             margin-left: 5px;
             @include transition(all, 0.3s, ease);
         }
-        &:hover{
+        // pressed and keyboard focus look like the hover (Bootstrap's own pressed / focus colours,
+        // a darker fill, hid the arrow: it is drawn in the primary colour then). `.btn:active`: as
+        // specific as Bootstrap's pressed rules (and after them); a selected toggle (.active,
+        // .btn-check:checked) keeps its fill
+        &:hover, &:focus-visible, &.btn:active{
             @include transition(all, 0.3s, ease);
             background-color:transparent;
             color: sct-pc($primary);
@@ -65,7 +69,7 @@
         }
     }
     // on a photo (banner slides, image backgrounds) the transparent hover left the text on the picture
-    :is(.oe_img_bg, .carousel-item, [style*="background-image"]) .btn-primary:hover{
+    :is(.oe_img_bg, .carousel-item, [style*="background-image"]) .btn-primary:is(:hover, :focus-visible, .btn:active){
         background-color: $light-color; @include sct-light-box($light-color, false);
     }
 }

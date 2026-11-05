@@ -12,8 +12,33 @@
                 </div>
             </div>
             <div class='container our_team_1' id="it_our_team">
-                <div class="category-slider-placeholder">
-                    <img src="/theme_scita/static/src/img/scita-placeholder.png" alt="Our Team Slider" class="img-fluid" width="500" height="500"/>
+                <!-- the editor's sample of the slider (the team is loaded on the live page): the same
+                     markup as it_our_team_view, sample members in a row instead of the carousel -->
+                <div class="row sct_btm_row">
+                    <div class="col-md-12">
+                        <div class="sct_team_slider">
+                            <div class="category-slider-placeholder sct-dyn-sample sct-team-sample-1">
+                                <t t-foreach="[(1, 'Jeffrey Kelly', 'Consultant'), (2, 'Anita Oliver', 'Experienced Developer'), (3, 'Ethan Brooks', 'Marketing Manager'), (4, 'Toni Jimenez', 'Sales Executive')]" t-as="sct_m">
+                                    <div class="item">
+                                        <div class="image-container">
+                                            <div class="only-image">
+                                                <img class="img-responsive" t-attf-src="/theme_scita/static/src/img/sct_team_sample_#{sct_m[0]}.webp" alt="Team member" width="300" height="300" loading="lazy"/>
+                                            </div>
+                                            <div class="name">
+                                                <h3 class="sct_title" t-out="sct_m[1]"/>
+                                                <p class="sct_simple_text"><span t-out="sct_m[2]"/></p>
+                                            </div>
+                                            <div class="follow">
+                                                <a href="#"><i class="fa fa-twitter"/></a>
+                                        <a href="#"><i class="fa fa-facebook"/></a>
+                                        <a href="#"><i class="fa fa-linkedin"/></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -66,8 +91,21 @@
                 <div class='row sct_btm_row'>
                     <div class='col-md-12'>
                         <div class="sct_team_slider our_team_3" id="our_team_varient_3">
-                            <div class="category-slider-placeholder">
-                                <img src="/theme_scita/static/src/img/scita-placeholder.png" alt="Our Team Slider" class="img-fluid" width="500" height="500"/>
+                            <!-- the editor's sample (the team is loaded on the live page), as our_team_varient_3_view -->
+                            <div class="category-slider-placeholder sct-dyn-sample sct-team-sample-3">
+                                <t t-foreach="[(1, 'Jeffrey Kelly', 'Consultant'), (2, 'Anita Oliver', 'Experienced Developer'), (3, 'Ethan Brooks', 'Marketing Manager'), (4, 'Toni Jimenez', 'Sales Executive')]" t-as="sct_m">
+                                    <div class="item">
+                                        <div class="v-3-image-container">
+                                            <div class="only-image">
+                                                <img class="img-responsive" t-attf-src="/theme_scita/static/src/img/sct_team_sample_#{sct_m[0]}.webp" alt="Team member" width="300" height="300" loading="lazy"/>
+                                            </div>
+                                            <div class="name">
+                                                <h3 class="sct_title" t-out="sct_m[1]"/>
+                                                <h4 class="sct_job_desig"><span t-out="sct_m[2]"/></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
                             </div>
                         </div>
                     </div>
@@ -106,8 +144,31 @@
                 <div class='row sct_btm_row'>
                     <div class='col-md-12'>
                         <div class="sct_team_slider our_team_5" id="our_team_varient_5">
-                            <div class="category-slider-placeholder">
-                                <img src="/theme_scita/static/src/img/scita-placeholder.png" alt="Our Team Slider" class="img-fluid" width="500" height="500"/>
+                            <!-- the editor's sample (the team is loaded on the live page), as our_team_varient_5_view -->
+                            <div class="category-slider-placeholder sct-dyn-sample sct-team-sample-5">
+                                <t t-foreach="[(1, 'Jeffrey Kelly', 'Consultant'), (2, 'Anita Oliver', 'Experienced Developer'), (3, 'Ethan Brooks', 'Marketing Manager'), (4, 'Toni Jimenez', 'Sales Executive')]" t-as="sct_m">
+                                    <div class="item">
+                                        <div class="v-5-image-container">
+                                            <div class="only-image">
+                                                <img class="img-responsive" t-attf-src="/theme_scita/static/src/img/sct_team_sample_#{sct_m[0]}.webp" alt="Team member" width="300" height="300" loading="lazy"/>
+                                                <div class="user_content_hover_wrap">
+                                                    <div class="sct_emp_desc">
+                                                        <p class="sct_simple_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                                    </div>
+                                                    <div class="sct_hover_follow">
+                                                        <a href="#"><i class="fa fa-twitter"/></a>
+                                        <a href="#"><i class="fa fa-facebook"/></a>
+                                        <a href="#"><i class="fa fa-linkedin"/></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="name">
+                                                <h3 class="sct_title" t-out="sct_m[1]"/>
+                                                <h4 class="sct_job_desig sct_blue_line"><span t-out="sct_m[2]"/></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
                             </div>
                         </div>
                     </div>
