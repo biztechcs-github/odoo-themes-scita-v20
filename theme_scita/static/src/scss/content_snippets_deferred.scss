@@ -3628,6 +3628,8 @@
 							color: sct-oc($light-color, $primary);
 							font-size: $title;
 							margin-right: 10px;
+							// the title's uppercase (span rule above) breaks the icon name ligature of a replaced (.oi) icon
+							text-transform: none;
 						}
 					}
 				}

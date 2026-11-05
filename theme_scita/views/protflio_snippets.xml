@@ -3,7 +3,7 @@
     <template id="it_portfolio_tabs_snippets" name="Portfolio Snippet 3">
         <section class="it_portfolio_tabs s_tabs" data-disp="portfolio">
             <div class="container">
-                <div class='row s_nb_column_fixed sct_top_row'>
+                <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                     <div class="col-md-12 text-center">
                         <h2 class="section-title">Our Latest Projects</h2>
                     </div>
@@ -137,7 +137,7 @@
 	<template id="portfolio_snippet_1" name="Portfolio Snippet 1">
         <section class="portfolio_snippet_1 s_tabs" data-disp="portfolio">
             <div class="container">
-                <div class="row s_nb_column_fixed sct_top_row">
+                <div class="row s_nb_column_fixed s_col_no_resize sct_top_row">
                     <div class='col-md-12'>
                         <div class="sct_section_title">
                             <h2 class="section-title mb-3">Recent Projects</h2>
@@ -318,7 +318,7 @@
     <template id="portfolio_snippet_2" name="Portfolio Snippet 2">
         <section class="portfolio_snippet_2" data-disp="portfolio">
             <div class="container">
-                <div class="row s_nb_column_fixed sct_top_row">
+                <div class="row s_nb_column_fixed s_col_no_resize sct_top_row">
                     <div class='col-md-12'>
                         <div class="sct_section_title">
                             <h2 class="section-title mb-3">Our Portfolio</h2>

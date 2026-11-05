@@ -445,7 +445,7 @@
             <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
                 <section class="s_text_block footer-content sct-footer-option-27">
                     <div class="container">
-                        <div class="row sct-top-row">
+                        <div class="row sct-top-row s_col_no_resize">
                             <div class="col-md-6 col-lg-3 top-block">
                                 <div class="sct-left-side best-price">
                                     <img src="/web/image/theme_scita.sct_best_prices_offers" class="img img-fluid" alt="Best prices &amp; offers" title="Best prices &amp; offers" loading="lazy"  />

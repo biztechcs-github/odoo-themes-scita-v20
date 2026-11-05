@@ -5,7 +5,7 @@
     <template id="health_cash_study_snippet" name="Case Study Snippet 1">
         <section class='health_cash_study_snippet' data-disp='case_study'>
             <div class="container">
-                <div class='row s_nb_column_fixed sct_top_row'>
+                <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                     <div class="col-md-12">
                         <h2 class="section-title"><span>Case Studies</span></h2>
                     </div>

@@ -59,7 +59,7 @@
             <div class='container'>
                 <div class="row sct_btm_row">
                     <div class='col-lg-4'>
-						<section class='sct_bg oe_img_bg' style="background-image: url('/theme_scita/static/src/img/scita-placeholder.png');">
+						<section class='sct_bg oe_img_bg oe_unmovable' style="background-image: url('/theme_scita/static/src/img/scita-placeholder.png');">
 							<div class='sct_prog_content'>
 								<p class='sct_simple_text'>Investment Numbers</p>
 								<h2 class='sct_title'>Making an impact in our community</h2> 
@@ -121,7 +121,7 @@
 						
                     </div>
                     <div class="col-lg-8">
-						<section class="sct_info_box">
+						<section class="sct_info_box oe_unmovable">
 							<div class="sct_stat_content">
 								<h3 class="sct_stat_title">Maximize Your Growth with Our Expert Digital Marketing</h3>
 								<p class="sct_stat_para">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>

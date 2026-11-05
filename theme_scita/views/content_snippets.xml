@@ -22,12 +22,12 @@
     <template id="content_snippets_v_6" name="About Us Snippet 6">
         <section class="content_snippets_v_6" data-disp="about_us">
             <div class='container'>
-            	<div class='row s_nb_column_fixed sct_top_row'>
+            	<div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
             		<div class="col-md-12">
                         <h2 class="section-title">Why do we use it?</h2>
                     </div>
             	</div>
-                <section class="row s_nb_column_fixed sct_btm_row oe_custom_bg oe_img_bg" style="background-image: url('/web/image/theme_scita.sct_blog_slider_1');">
+                <section class="row s_nb_column_fixed sct_btm_row oe_custom_bg oe_img_bg oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_blog_slider_1');">
                     <div class='col-md-12 sct_content_info' >
                     	<div class='sct_content_box'>
 	                    	<div class='sct_desc_div'>
@@ -51,7 +51,7 @@
             <div class='container'>
                 <div class="row sct_btm_row">                   
                     <div class='col-lg-4  sct_content_info'>
-                    	<section class='sct_content_box py-4 p-md-4 p-xxl-5 h-100 d-flex justify-content-center flex-column'>	
+                    	<section class='sct_content_box py-4 p-md-4 p-xxl-5 h-100 d-flex justify-content-center flex-column oe_unmovable'>	
                         	<div class='sct_contect_into'>
                                 <div class="sct_icon mb-3"><i class="fa fa-gears p-3"></i></div>
 	                            <h2 class='sct_title'>Uncompromised sound with newly designed drivers</h2>

@@ -9,7 +9,7 @@
                         <div class="sct_health_title section-title-wrapper">
                             <h2 class="section-title text-center"><span class="o_default_snippet_text">What Our Customer Speaks</span></h2>
                         </div>
-                        <section class="sct_test_slider testimonial_slider s_carousel_wrapper">
+                        <section class="sct_test_slider testimonial_slider s_carousel_wrapper oe_unmovable">
                               <div id="carouselExampleCaptions" class="s_carousel s_carousel_default carousel slide" data-bs-ride="carousel" data-bs-interval="10000">
                                 <div class="carousel-indicators" role="tablist">
                                     <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
@@ -250,7 +250,7 @@
                             <span class="simple_text">Sub title</span>
                             <h2 class="section-title">Happy Clients</h2>
                         </div>
-                        <section class="sct_test_slider s_carousel_wrapper">
+                        <section class="sct_test_slider s_carousel_wrapper oe_unmovable">
                             <div id="myQuoteCarousel_2" class="s_carousel carousel quotecarousel slide" data-bs-interval="10000">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active" data-name="Slide">
@@ -419,7 +419,7 @@
     <template id="testinomial_varient_5" name="Testimonial Snippet 1">
         <section class="testinomial_varient_5" data-disp="testimonial">
             <div class="container">
-                <div class="row s_nb_column_fixed sct_top_row">
+                <div class="row s_nb_column_fixed s_col_no_resize sct_top_row">
                     <div class='col-md-12'>
                         <h2 class="section-title"> Testimonials </h2>
                     </div>

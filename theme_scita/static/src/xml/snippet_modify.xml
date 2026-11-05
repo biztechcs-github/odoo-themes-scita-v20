@@ -359,7 +359,7 @@
          container into a grid, here the title row, not the cards' one: the card was dropped
          there with no size (g-col-lg-NaN) and the editor broke -->
     <xpath expr="//layout_option" position="attributes">
-        <attribute name="exclude" add=".health_location_snippet" separator=", "/>
+        <attribute name="exclude" add=".health_location_snippet, .health_cash_study_snippet, .case_study_varient_2, .about_us_v_4, .about_us_v_5, .it_main_banner, .fashion_static_brand_snippet, .content_snippets_v_6, .how_it_work_v_3, .how_it_work_v_4, .how_it_work_v_5, .pricing_table_v2, .pricing_table_v5, .retial_advertisement_banner_1, .it_portfolio_tabs, .portfolio_snippet_1, .portfolio_snippet_2, .service_varient_11, .testinomial_varient_5, .timeline_snippet_1, .timeline_snippet_3" separator=", "/>
     </xpath>
 </t>
 </templates>

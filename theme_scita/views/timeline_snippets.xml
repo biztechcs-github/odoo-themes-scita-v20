@@ -3,7 +3,7 @@
 	<template id="timeline_snippet_1" name="Timeline Snippet 1">
         <section class="timeline_snippet_1" data-disp="timeline">
             <div class='container'>
-                <div class="row s_nb_column_fixed sct_top_row">
+                <div class="row s_nb_column_fixed s_col_no_resize sct_top_row">
                     <div class='col-md-12'>
                         <div class='section_title_div text-center'>
                             <h2 class='section-title'>Timeline</h2>
@@ -78,7 +78,7 @@
     <template id="timeline_snippet_3" name="Timeline Snippet 3">
         <section class="timeline_snippet_3 s_tabs" data-disp="timeline">
             <div class="container">
-                <div class="row s_nb_column_fixed sct_top_row">
+                <div class="row s_nb_column_fixed s_col_no_resize sct_top_row">
                     <div class='col-md-12'>
                         <div class="sct_section_title">
                             <h2 class="section-title">Timeline</h2>

@@ -64,7 +64,7 @@
         <section data-disp='banner' class="sct_banner_2 s_text_cover">
             <div class="container">
                 <div class="row sct_banner_row">
-                    <section class="col-md-7 banner_slider s_carousel_wrapper">
+                    <section class="col-md-7 banner_slider s_carousel_wrapper oe_unmovable">
                         <div id="carouselExampleIndicators" class="s_carousel s_carousel_default carousel slide" data-bs-interval="10000">
                             <div class="carousel-indicators" role="tablist">
                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
@@ -101,7 +101,7 @@
                     </section>
                     <div class="col-md-5 sct_deal_main">
                         <div class="sct_deal_inner d-flex flex-column">
-                            <section class="sct_top_deal oe_custom_bg oe_img_bg" style="background-image: url('/web/image/theme_scita.sct_top_deal_cold_drinks'); background-position: 100% 0;">
+                            <section class="sct_top_deal oe_custom_bg oe_img_bg oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_top_deal_cold_drinks'); background-position: 100% 0;">
                                 <div class="top-deal-content">
                                     <p class="title-20 text-uppercase">Top Deal</p>
                                     <h3 class="title-30">Juicy <span class="green-font">Cold Drinks</span> </h3>
@@ -109,7 +109,7 @@
                                     <a href="/shop" alt-="Shop now" title="Shop now" class="btn solid-btn"><img src="/theme_scita/static/src/img/arrow.svg" fetchpriority="high" width="22" height="22" loading="eager" alt="Shop Now" /></a>
                                 </div>
                             </section>
-                            <section class="sct_top_deal oe_custom_bg oe_img_bg o_colored_level o_cc o_cc1" style="background-image: url('/web/image/theme_scita.sct_top_deal_bakery'); background-position: 100% 0;">
+                            <section class="sct_top_deal oe_custom_bg oe_img_bg o_colored_level o_cc o_cc1 oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_top_deal_bakery'); background-position: 100% 0;">
                                 <div class="top-deal-content">
                                     <p class="title-20 text-uppercase">Top Deal</p>
                                     <h3 class="title-30"><span class="green-font"> Bakery </span> Items</h3>
@@ -198,7 +198,7 @@
         <section class="it_main_banner" data-disp='banner'>
            <div class="container">
                 <div class="row sct_banner_row">
-                    <section class="col-md-6 col-lg-9 banner_slider s_carousel_wrapper">
+                    <section class="col-md-6 col-lg-9 banner_slider s_carousel_wrapper oe_unmovable">
                         <div id="carouselExampleIndicatorsItMain" class="s_carousel s_carousel_default carousel slide" data-bs-interval="10000">
                             <div class="carousel-indicators" role="tablist">
                                 <button type="button" data-bs-target="#carouselExampleIndicatorsItMain" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
@@ -244,7 +244,7 @@
                         </div>
                     </section>
                     <div class="col-md-6 col-lg-3 sct_deal_vertical">
-                        <section class="sct_top_deal">
+                        <section class="sct_top_deal oe_unmovable">
                             <div class="vertical-banner-content">
                                 <div class="sct_banner_img pb-4">
                                     <img src="/theme_scita/static/src/img/shues.png" class="img img-fluid" alt='Banner image' loading="lazy" width="499" height="284"/>
@@ -262,7 +262,7 @@
                 </div>
                 <div class="row sct_banner_row">
                     <div class="col-md-6 sct_deal_main">
-                        <section class="sct_top_deal">
+                        <section class="sct_top_deal oe_unmovable">
                             <div class="top-deal-content">
                                 <div class="sct_banner_content col-md-7">
                                     <p class="title-18 text-uppercase">Top Deal</p>
@@ -277,7 +277,7 @@
                         </section>
                     </div>
                     <div class="col-md-6 sct_deal_main">
-                        <section class="sct_top_deal">
+                        <section class="sct_top_deal oe_unmovable">
                             <div class="top-deal-content">
                                 <div class="sct_banner_content col-md-7">
                                     <p class="title-18 text-uppercase">Top Deal</p>

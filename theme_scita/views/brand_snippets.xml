@@ -51,7 +51,7 @@
     <template id="fashion_static_brand_snippet" name="Brand Snippet 2">
         <section class="fashion_static_brand_snippet" data-disp='brand'>
             <div class="container-fluid">
-                <div class="row s_nb_column_fixed">
+                <div class="row s_nb_column_fixed s_col_no_resize">
                     <div class="sct_section_title">
                         <h2 class="section-title">Shop Brands</h2>
                     </div>

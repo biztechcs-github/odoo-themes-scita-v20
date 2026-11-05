@@ -9,7 +9,7 @@
                         <div class="col-md-12">
                             <h2 class="section-title">Services Offered</h2>
                         </div>
-                        <section class='sct_bg oe_img_bg' style="background-image: url('/theme_scita/static/src/img/scita-placeholder.png');">
+                        <section class='sct_bg oe_img_bg oe_unmovable' style="background-image: url('/theme_scita/static/src/img/scita-placeholder.png');">
 							<div class='sct_cst_btn'>
 								<a href="/shop" class="btn btn-primary scita_cstm_btn ">Read More</a>
 							</div>

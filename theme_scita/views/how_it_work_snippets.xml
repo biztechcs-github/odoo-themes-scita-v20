@@ -18,7 +18,7 @@
                </div>
                <div class='col-lg-6 sct_content_div'>
                   <div class='sct_base_class'>
-                     <section class='sct_work_box'>
+                     <section class='sct_work_box oe_unmovable'>
                         <div class="sct_work_heading">
                            <h4 class='sct_work_title'><span class="sct_work_count">1.</span>Request Quote</h4>
                         </div>
@@ -31,7 +31,7 @@
                            </p>
                         </div>
                      </section>
-                     <section class='sct_work_box'>
+                     <section class='sct_work_box oe_unmovable'>
                         <div class="sct_work_heading">
                            <h4 class='sct_work_title'><span class="sct_work_count">2.</span>Compare Price</h4>
                         </div>
@@ -57,7 +57,7 @@
                            </ul>
                         </div>
                      </section>
-                     <section class='sct_work_box'>
+                     <section class='sct_work_box oe_unmovable'>
                         <div class="sct_work_heading">
                            <h4 class='sct_work_title'><span class="sct_work_count">3.</span>Choose Provider</h4>
                         </div>
@@ -73,7 +73,7 @@
                            </ul>
                         </div>
                      </section>
-                     <section class='sct_work_box'>
+                     <section class='sct_work_box oe_unmovable'>
                         <div class="sct_work_heading">
                            <h4 class='sct_work_title'><span class="sct_work_count">4.</span>Request Quote</h4>
                         </div>
@@ -92,7 +92,7 @@
                            </p>
                         </div>
                      </section>
-                     <section class='sct_work_box'>
+                     <section class='sct_work_box oe_unmovable'>
                         <div class="sct_work_heading">
                            <h4 class='sct_work_title'><span class="sct_work_count">5.</span>Compare Price</h4>
                         </div>
@@ -118,7 +118,7 @@
                            </ul>
                         </div>
                      </section>
-                     <section class='sct_work_box'>
+                     <section class='sct_work_box oe_unmovable'>
                         <div class="sct_work_heading">
                            <h4 class='sct_work_title'><span class="sct_work_count">6.</span>Choose Provider</h4>
                         </div>
@@ -140,7 +140,7 @@
    <template id="how_it_work_v_3" name="How it Works Snippet 3">
       <section class="how_it_work_v_3" data-disp='how_it_works'>
          <div class='container'>
-            <div class='row s_nb_column_fixed sct_top_row'>
+            <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                <div class="col-md-12">
                   <h2 class="section-title"><span class='text'>How Does</span> <span class='red_text'>It Works</span></h2>
                </div>
@@ -237,7 +237,7 @@
    <template id="how_it_work_v_4" name="How it Works Snippet 4">
       <section class="how_it_work_v_4 s_text_image" data-disp='how_it_works'>
          <div class='container'>
-            <section class='d-flex s_nb_column_fixed sct_top_row'>
+            <section class='d-flex s_nb_column_fixed sct_top_row oe_unmovable'>
                <div class="col-md-12">
                   <p class='sct_simple_text'>Our Services</p>
                   <h2 class="section-title">Fast &amp; Easy Way Application Process</h2>
@@ -291,7 +291,7 @@
    <template id="how_it_work_v_5" name="How it Works Snippet 2">
       <section class="how_it_work_v_5" data-disp='how_it_works'>
          <div class='container'>
-            <div class='row s_nb_column_fixed sct_top_row'>
+            <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                <div class="col-md-12">
                   <p class='sct_three_dots'>How does it work</p>
                   <h2 class="section-title">Five simple steps to grow you business</h2>
@@ -300,7 +300,7 @@
             </div>
             <div class="row s_nb_column_fixed sct_btm_row">
                <div class='col-md-6 col-lg-4 col-xl-2 sct_content_div'>
-                  <section class='sct_work_box' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
+                  <section class='sct_work_box oe_unmovable' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
                      <div class='sct_work_steps_heading'>
                         <img src="/theme_scita/static/src/img/ebook.png" class="img img-fluid" alt="Choosen Block" width="512" height="512"/>
                         <h4 class='sct_work_blue_text'>01</h4>
@@ -317,7 +317,7 @@
                   </section>
                </div>
                <div class='col-md-6 col-lg-4 col-xl-2 sct_content_div'>
-                  <section class='sct_work_box' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
+                  <section class='sct_work_box oe_unmovable' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
                      <div class='sct_work_steps_heading'>
                         <img src="/theme_scita/static/src/img/ebook.png" class="img img-fluid" alt="Choosen Block" width="512" height="512"/>
                         <h4 class='sct_work_blue_text'>02</h4>
@@ -334,7 +334,7 @@
                   </section>
                </div>
                <div class='col-md-6 col-lg-4 col-xl-2 sct_content_div'>
-                  <section class='sct_work_box' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
+                  <section class='sct_work_box oe_unmovable' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
                      <div class='sct_work_steps_heading'>
                         <img src="/theme_scita/static/src/img/ebook.png" class="img img-fluid" alt="Choosen Block" width="512" height="512"/>
                         <h4 class='sct_work_blue_text'>03</h4>
@@ -351,7 +351,7 @@
                   </section>
                </div>
                <div class='col-md-6 col-lg-4 col-xl-2 sct_content_div'>
-                  <section class='sct_work_box' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
+                  <section class='sct_work_box oe_unmovable' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
                      <div class='sct_work_steps_heading'>
                         <img src="/theme_scita/static/src/img/ebook.png" class="img img-fluid" alt="Choosen Block" width="512" height="512"/>
                         <h4 class='sct_work_blue_text'>04</h4>
@@ -368,7 +368,7 @@
                   </section>
                </div>
                <div class='col-md-6 col-lg-4 col-xl-2 sct_content_div'>
-                  <section class='sct_work_box' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
+                  <section class='sct_work_box oe_unmovable' style="background-image: url(/theme_scita/static/src/img/scita-placeholder.png)">
                      <div class='sct_work_steps_heading'>
                         <img src="/theme_scita/static/src/img/ebook.png" class="img img-fluid" alt="Choosen Block" width="512" height="512"/>
                         <h4 class='sct_work_blue_text'>05</h4>

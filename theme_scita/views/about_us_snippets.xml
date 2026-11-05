@@ -46,7 +46,7 @@
     <template id="about_us_v_4" name="About Us Snippet 3">
         <section class="about_us_v_4 s_tabs" data-disp='about_us'>
             <div class='container'>
-                <div class='row s_nb_column_fixed sct_top_row'>
+                <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                     <div class="col-md-12 text-center">
                         <h2 class="section-title">About Us</h2>
                         <p class='sct_simple_text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
@@ -138,7 +138,7 @@
     <template id="about_us_v_5" name="About Us Snippet 4">
         <section class="about_us_v_5" data-disp='about_us'>
             <div class='container'>
-                <div class='row s_nb_column_fixed sct_top_row'>
+                <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                     <div class="col-md-12">
                         <h2 class="section-title">About Us</h2>
                         <p class='sct_simple_text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>

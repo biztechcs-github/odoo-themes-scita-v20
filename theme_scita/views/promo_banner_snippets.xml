@@ -28,7 +28,7 @@
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class='col-md-4'>
-                        <section class="promo_block_wrapper oe_img_bg" style="background-image: url('/web/image/theme_scita.sct_fresh_fruit_juices');background-position: 100% 0;">
+                        <section class="promo_block_wrapper oe_img_bg oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_fresh_fruit_juices');background-position: 100% 0;">
                             <a href="#" class="promo-block-main sct_img_effect2">
                                 <div class="promo-block fruits">
                                     <div class="promo-block-disc">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-md-4 promo_block_wrapper">
                         <div class="promo-block-inner d-flex flex-column">
-                            <section class="promo-block oe_img_bg" style="background-image: url('/web/image/theme_scita.sct_fresh_bakery_products');">
+                            <section class="promo-block oe_img_bg oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_fresh_bakery_products');">
                                 <a href="#"  class="promo-block-main sct_img_effect2">
                                     <div class="promo-block-disc" >
                                         <h2 class="title-30">Fresh <span class="green-font">Bakery </span> Everyday</h2>
@@ -49,7 +49,7 @@
                                     </div>
                                 </a>
                             </section>
-                            <section class="promo-block oe_img_bg" style="background-image: url('/web/image/theme_scita.sct_healthy_breakfast');">
+                            <section class="promo-block oe_img_bg oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_healthy_breakfast');">
                                 <a href="#" class="promo-block-main sct_img_effect2">
                                     <div class="promo-block-disc" >
                                         <h2 class="title-30">Healthy <span class="green-font">Breakfast</span> Foods</h2>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class='col-md-4'>
-                        <section class="promo_block_wrapper oe_img_bg" style="background-image: url('/web/image/theme_scita.sct_fresh_vegetables');">
+                        <section class="promo_block_wrapper oe_img_bg oe_unmovable" style="background-image: url('/web/image/theme_scita.sct_fresh_vegetables');">
                             <a href="#" class="promo-block-main sct_img_effect2">
                                 <div  class="promo-block vegetables">
                                     <div class="promo-block-disc">
@@ -79,7 +79,7 @@
     <template id="retial_advertisement_banner_1" name="Advertisement Snippet 1">
         <section class="retial_advertisement_banner_1" data-disp='advbanner'>
             <div class='container'>
-                <div class='row s_nb_column_fixed sct_top_row'>
+                <div class='row s_nb_column_fixed s_col_no_resize sct_top_row'>
                     <div class="col-md-6">
                         <h2 class="section-title">Advertisement Banner</h2>
                     </div>
@@ -118,7 +118,7 @@
         <section class="retial_promo_banner_snippet_1" data-disp='advbanner'>
             <div class='container'>
                 <div class="row">
-                    <section class='col-md-4'>
+                    <section class='col-md-4 oe_unmovable'>
                         <div class='sct_gray_side retail-offer-thumb'>
                             <div class="sct_left_text_btn">
                                 <h2 class="title_text">Laptop Windows 10</h2>
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                     </section>
-                    <section class='col-md-4'>
+                    <section class='col-md-4 oe_unmovable'>
                         <div class='sct_pink_side retail-offer-thumb'>
                             <div class="sct_left_text_btn">
                                 <h2 class="title_text">Crazy Deal Camera</h2>
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                     </section>
-                    <section class='col-md-4'>
+                    <section class='col-md-4 oe_unmovable'>
                         <div class='sct_orange_side retail-offer-thumb'>
                             <div class="sct_left_text_btn">
                                 <h2 class="title_text">Wi-Fi Camera Drone</h2>

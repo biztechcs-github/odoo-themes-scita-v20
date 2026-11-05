@@ -13,7 +13,7 @@
                             </div>
                             <div class='row testimonial_wrap'>
                                 <div class='col-md-12'>
-                                    <section class="sct_test_slider s_carousel_wrapper">
+                                    <section class="sct_test_slider s_carousel_wrapper oe_unmovable">
                                         <div id="mymixCarousel" class="s_carousel carousel quotecarousel slide" data-bs-interval="10000">
                                             
                                             <div class="carousel-inner">
