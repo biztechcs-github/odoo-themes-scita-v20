@@ -174,14 +174,14 @@ a.btn.request_for_quote_button#request_for_quote_button {
     padding: 3px 10px;
     border: 1px solid transparent;
     border-radius: 6px;
-    background-color: $primary;
-    color: $light-color;
+    background-color: $primary; @include sct-light-box($primary, true);
+    color: sct-oc($light-color, $primary);
     // Default hover style / style 1: the product snippets' rules (deal of the day, product
     // snippet 1, trending products...) set the text to $primary below 992px, on this primary
     // background: the label was invisible on phones. Styles 2-5 draw an outline button there
     // (white background, primary text), so they keep their own colour.
     @if not o-website-value('prod-hover-style') or o-website-value('prod-hover-style') == 'prod_hover_style_1' {
-        color: $light-color !important;
+        color: sct-oc($light-color, $primary) !important;
     }
     font-size: 14px;
     font-weight: 400;
@@ -193,7 +193,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     &:hover, &:focus {
         background-color: transparent !important;
         border-color: $primary !important;
-        color: $primary !important;
+        color: sct-pc($primary) !important;
     }
 }
 
@@ -215,7 +215,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
         padding: 3px 8px;
         border: 1px solid transparent;
         border-radius: 40px;
-        background-color: $light-grey-color;
+        background-color: $light-grey-color; @include sct-light-box($light-grey-color, true);
         color: $gray-900 !important; // over the white of the general rule above
         font-size: 16px !important; // global #request_for_quote_button sets 14px !important
         font-weight: 700;
@@ -243,7 +243,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     padding: 0 20px !important;
     border: 1px solid transparent;
     border-radius: 50px;
-    background-color: $secondary;
+    background-color: $secondary; @include sct-light-box($secondary, true);
     color: color-contrast($secondary);
     font-size: 18px !important;
     line-height: 21px;
@@ -326,7 +326,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     padding: 8px 16px !important; // 16px: content starts in line with the menu items
     border: 0;
     box-shadow: none;
-    background: rgba($primary, 0.03);
+    background: rgba($primary, 0.03); @include sct-light-box(rgba($primary, 0.03), false);
 
     // Pages Megamenu: its page links carry 15px of their own on top of the column padding
     .letter-spacing .dropdown-header > a {
@@ -365,12 +365,12 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
         white-space: nowrap !important;
 
         &.show, &.show:focus, &.show:active {
-            background-color: rgba($primary, 0.08) !important; // open
-            color: $primary !important;
+            background-color: rgba($primary, 0.08) !important; @include sct-light-box(rgba($primary, 0.08), true); // open
+            color: sct-pc($primary, rgba($primary, 0.08)) !important;
         }
         &:hover, &.show:hover {
-            background-color: #202020 !important; // as the other "+" entries
-            color: #fbfbfb !important;
+            background-color: #202020 !important; @include sct-light-box(#202020, true); // as the other "+" entries
+            color: sct-dk(#fbfbfb) !important;
         }
     }
     > .dropdown-menu.mega-dropdown-menu {
@@ -384,7 +384,7 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
         padding: 8px 12px !important;
         border: 0;
         box-shadow: none;
-        background: rgba($primary, 0.03);
+        background: rgba($primary, 0.03); @include sct-light-box(rgba($primary, 0.03), false);
 
         &.show {
             display: block !important;

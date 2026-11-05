@@ -65,6 +65,13 @@ class WebsitePage(models.Model):
             return None  # 404, as if Scita was not installed
         return info
 
+    @api.model
+    def _allow_cache_insertion(self, layout):
+        # website_sale writes the visitor's cart count into the header's cart badge of a cached
+        # page, and fails (error 500) on a page that has no badge: Scita's Coming Soon and
+        # Maintenance pages have no header. Such pages are not cached.
+        return 'my_cart_quantity' in layout and super()._allow_cache_insertion(layout)
+
 
 class WebsiteMenu(models.Model):
     _inherit = 'website.menu'

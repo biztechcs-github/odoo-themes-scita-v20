@@ -23,7 +23,7 @@ span[name="hidden_ptavs_count"] {
                     .o_wsale_product_information_text{
                         .ratings{
                             position: absolute;
-                            background: $light-color;
+                            background: $light-color; @include sct-light-box($light-color, false);
                             padding: 3px 5px;
                             top: -29px;
                             left: 12px;
@@ -46,7 +46,7 @@ span[name="hidden_ptavs_count"] {
                             }
 
                             a{
-                                color: $black !important;
+                                color: sct-dk($black) !important;
                             }
                         }
                     }
@@ -68,13 +68,13 @@ span[name="hidden_ptavs_count"] {
                             padding: 3px 10px;
                             min-width: 90px;
                             border: 1px solid transparent;
-                            background: $primary;
-                            color: $light-color;
+                            background: $primary; @include sct-light-box($primary, true);
+                            color: sct-oc($light-color, $primary);
 
                             &:hover{
                                 background-color: transparent;
                                 border-color: $primary;
-                                color: $primary;
+                                color: sct-pc($primary);
                             }
                             @media (min-width: 992px) {
                                 position: absolute;
@@ -166,7 +166,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             span.h6{
-                                color: $primary;
+                                color: sct-pc($primary);
                                 font-size: $font-size-base-scita;
 
                                 @media (min-width: 1200px) {
@@ -202,7 +202,7 @@ span[name="hidden_ptavs_count"] {
                                 width: auto;
                                 height: auto;
                                 border: 0;
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 
                                 @media (min-width: 992px) {
                                     position: absolute;
@@ -234,18 +234,18 @@ span[name="hidden_ptavs_count"] {
 
                                     @media (min-width: 768px) {
                                         font-family: "Rubik", "Odoo Unicode Support Noto", sans-serif;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         padding: 4px 10px;
                                         font-size: 14px;
                                         min-width: 90px;
                                         border: 1px solid transparent;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         box-shadow: none;
 
                                         &:hover{
                                             background-color: transparent;
                                             border-color: $primary;
-                                            color: $primary;
+                                            color: sct-pc($primary);
                                         }
                                     }
 
@@ -300,8 +300,8 @@ span[name="hidden_ptavs_count"] {
                                         line-height: 1;
                                     }
                                     &:hover{
-                                        color: $light-color;
-                                        background: $primary;
+                                        color: sct-oc($light-color, $primary);
+                                        background: $primary; @include sct-light-box($primary, true);
                                     }
                                 }
                                 &.o_add_compare{
@@ -459,7 +459,7 @@ span[name="hidden_ptavs_count"] {
             &:hover{
                 .o_wsale_product_grid_wrapper{
                     .o_wsale_product_information{
-                        background: $light-color;
+                        background: $light-color; @include sct-light-box($light-color, false);
     
                         @media (min-width: 992px){
                             transform: translateY(-30px);
@@ -663,19 +663,19 @@ span[name="hidden_ptavs_count"] {
                                             margin-top: 15px;
                                             margin-bottom: 15px;
                                             border: 1px solid $primary;
-                                            color: $primary;
+                                            color: sct-pc($primary);
                                             @include min992 {
                                                 position: absolute;
                                                 opacity: 0;
                                                 left: 0;
                                                 right: 0;
                                                 bottom: -50px;
-                                                color: $white;
-                                                background-color: $primary;
+                                                color: sct-oc($white, $primary);
+                                                background-color: $primary; @include sct-light-box($primary, true);
                                             }
                                             &:hover {
-                                                color: $primary;
-                                                background-color: $white;
+                                                color: sct-pc($primary, $white);
+                                                background-color: $white; @include sct-light-box($white, true);
                                             }
                                         }
                                     }
@@ -708,7 +708,7 @@ span[name="hidden_ptavs_count"] {
                                         }
                                     }
                                     .btn{
-                                        background: $light-color;
+                                        background: $light-color; @include sct-light-box($light-color, false);
                                         box-shadow: rgba($black, 0.2) 0px 0px 4px;
                                         padding: 6px;
                                         line-height: 1;
@@ -736,8 +736,8 @@ span[name="hidden_ptavs_count"] {
                                         }
             
                                         &:hover{
-                                            background: $primary;
-                                            color: $light-color;
+                                            background: $primary; @include sct-light-box($primary, true);
+                                            color: sct-oc($light-color, $primary);
                                         }
             
                                         &.o_add_compare{
@@ -889,7 +889,7 @@ span[name="hidden_ptavs_count"] {
                         
                         .pwp-info{
                             padding-bottom: 10px;
-                            background: $light-color;
+                            background: $light-color; @include sct-light-box($light-color, false);
                             @include transition(all, 0.3s, ease-in);
                         }
 
@@ -906,24 +906,24 @@ span[name="hidden_ptavs_count"] {
                                 width: fit-content;
                                 transform: unset !important;
                                 margin-top: 15px;
-                                color: $primary;
+                                color: sct-pc($primary);
                                 border: 1px solid $primary;
                                 @include min992{
                                     margin: 0 auto;
                                     box-shadow: none;
-                                    background: $primary;
+                                    background: $primary; @include sct-light-box($primary, true);
                                     padding: 5px 10px;
                                     font-size: 14px;
                                     min-width: 90px;
-                                    color: $white;
+                                    color: sct-oc($white, $primary);
                                     bottom: 0;
                                     top: auto;
                                     right: 50%;
                                     transform: translate(50%, 10px);
 
                                     &:hover{
-                                        background: $white;
-                                        color: $primary;
+                                        background: $white; @include sct-light-box($white, true);
+                                        color: sct-pc($primary, $white);
                                     }
                                 }
                                 @include min992 {
@@ -935,8 +935,8 @@ span[name="hidden_ptavs_count"] {
                                     bottom: -50px;
                                 }
                                 &:hover {
-                                    color: $primary;
-                                    background-color: $white;
+                                    color: sct-pc($primary, $white);
+                                    background-color: $white; @include sct-light-box($white, true);
                                 }
                             }
                          }
@@ -966,7 +966,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .btn{
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 box-shadow: rgba($black, 0.2) 0px 0px 4px;
                                 padding: 6px;
                                 line-height: 1;
@@ -991,19 +991,19 @@ span[name="hidden_ptavs_count"] {
                                 }
                                 
                                 &:hover{
-                                    background: $primary;
-                                    color: $light-color;
+                                    background: $primary; @include sct-light-box($primary, true);
+                                    color: sct-oc($light-color, $primary);
                                 }
 
                                 &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     @include min992{
                                         margin: 0 auto;
                                         box-shadow: none;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         padding: 5px 10px;
                                         font-size: 14px;
                                         min-width: 90px;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         border: 1px solid $primary;
                                         bottom: 0;
                                         top: auto;
@@ -1011,8 +1011,8 @@ span[name="hidden_ptavs_count"] {
                                         transform: translate(50%, 10px);
 
                                         &:hover{
-                                            background: $light-color;
-                                            color: $primary;
+                                            background: $light-color; @include sct-light-box($light-color, true);
+                                            color: sct-pc($primary, $light-color);
                                         }
                                     }
 
@@ -1134,7 +1134,7 @@ span[name="hidden_ptavs_count"] {
                                         height: 26px;
                                         margin: 0 2px 5px;
                                         border-radius: 6px;
-                                        background-color: #ffffff;
+                                        background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
@@ -1160,19 +1160,19 @@ span[name="hidden_ptavs_count"] {
                                         margin-top: 15px;
                                         margin-bottom: 15px;
                                         border: 1px solid $primary;
-                                        color: $primary;
+                                        color: sct-pc($primary);
                                         @include min992 {
                                             position: absolute;
                                             opacity: 0;
                                             left: 0;
                                             right: 0;
                                             bottom: -50px;
-                                            color: $white;
-                                            background-color: $primary;
+                                            color: sct-oc($white, $primary);
+                                            background-color: $primary; @include sct-light-box($primary, true);
                                         }
                                         &:hover {
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                         }
                                     }
                                 }
@@ -1225,7 +1225,7 @@ span[name="hidden_ptavs_count"] {
                     .o_wsale_product_information_text{
                         .ratings{
                             position: absolute;
-                            background: $light-color;
+                            background: $light-color; @include sct-light-box($light-color, false);
                             padding: 3px 5px;
                             top: -29px;
                             left: 12px;
@@ -1248,7 +1248,7 @@ span[name="hidden_ptavs_count"] {
                             }
 
                             a{
-                                color: $black !important;
+                                color: sct-dk($black) !important;
                             }
                         }
                     }
@@ -1270,13 +1270,13 @@ span[name="hidden_ptavs_count"] {
                             padding: 3px 10px;
                             min-width: 90px;
                             border: 1px solid transparent;
-                            background: $primary;
-                            color: $light-color;
+                            background: $primary; @include sct-light-box($primary, true);
+                            color: sct-oc($light-color, $primary);
 
                             &:hover{
                                 background-color: transparent;
                                 border-color: $primary;
-                                color: $primary;
+                                color: sct-pc($primary);
                             }
                             @media (min-width: 992px) {
                                 position: absolute;
@@ -1368,7 +1368,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             span.h6{
-                                color: $primary;
+                                color: sct-pc($primary);
                                 font-size: $font-size-base-scita;
 
                                 @media (min-width: 1200px) {
@@ -1404,7 +1404,7 @@ span[name="hidden_ptavs_count"] {
                                 width: auto;
                                 height: auto;
                                 border: 0;
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 
                                 @media (min-width: 992px) {
                                     position: absolute;
@@ -1436,18 +1436,18 @@ span[name="hidden_ptavs_count"] {
 
                                     @media (min-width: 768px) {
                                         font-family: "Rubik", "Odoo Unicode Support Noto", sans-serif;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         padding: 4px 10px;
                                         font-size: 14px;
                                         min-width: 90px;
                                         border: 1px solid transparent;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         box-shadow: none;
 
                                         &:hover{
                                             background-color: transparent;
                                             border-color: $primary;
-                                            color: $primary;
+                                            color: sct-pc($primary);
                                         }
                                     }
 
@@ -1504,8 +1504,8 @@ span[name="hidden_ptavs_count"] {
                                     }
 
                                     &:hover{
-                                        color: $light-color;
-                                        background: $primary;
+                                        color: sct-oc($light-color, $primary);
+                                        background: $primary; @include sct-light-box($primary, true);
                                     }
                                 }
                                 &.o_add_compare{
@@ -1664,7 +1664,7 @@ span[name="hidden_ptavs_count"] {
             &:hover{
                 .o_wsale_product_grid_wrapper{
                     .o_wsale_product_information{
-                        background: $light-color;
+                        background: $light-color; @include sct-light-box($light-color, false);
     
                         @media (min-width: 992px){
                             transform: translateY(-30px);
@@ -1869,8 +1869,8 @@ span[name="hidden_ptavs_count"] {
                                             transition: all 0.3s ease-in;
                                             top: unset;
                                             border: 1px solid $primary;
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                             margin: auto;
                                             width: fit-content;
                                             margin-top: 15px;
@@ -1881,11 +1881,11 @@ span[name="hidden_ptavs_count"] {
                                                 left: 0;
                                                 right: 0;
                                                 bottom: -50px;
-                                                color: $white;
-                                                background-color: $primary;
+                                                color: sct-oc($white, $primary);
+                                                background-color: $primary; @include sct-light-box($primary, true);
                                             }
                                             &:hover {
-                                                color: $primary;
+                                                color: sct-pc($primary, $white);
                                                 background-color: $white
                                             }
                                         }
@@ -1919,7 +1919,7 @@ span[name="hidden_ptavs_count"] {
                                         }
                                     }
                                     .btn{
-                                        background: $light-color;
+                                        background: $light-color; @include sct-light-box($light-color, false);
                                         box-shadow: rgba($black, 0.2) 0px 0px 4px;
                                         padding: 6px;
                                         line-height: 1;
@@ -1947,8 +1947,8 @@ span[name="hidden_ptavs_count"] {
                                         }
             
                                         &:hover{
-                                            background: $primary;
-                                            color: $light-color;
+                                            background: $primary; @include sct-light-box($primary, true);
+                                            color: sct-oc($light-color, $primary);
                                         }
             
                                         &.o_add_compare{
@@ -2109,8 +2109,8 @@ span[name="hidden_ptavs_count"] {
                                 transition: all 0.3s ease-in;
                                 top: unset;
                                 border: 1px solid $primary;
-                                color: $primary;
-                                background-color: $white;
+                                color: sct-pc($primary, $white);
+                                background-color: $white; @include sct-light-box($white, true);
                                 margin: auto;
                                 width: fit-content;
                                 transform: unset !important;
@@ -2120,19 +2120,19 @@ span[name="hidden_ptavs_count"] {
                                     opacity: 0;
                                     left: 0;
                                     right: 0;
-                                    color: $white;
-                                    background-color: $primary;
+                                    color: sct-oc($white, $primary);
+                                    background-color: $primary; @include sct-light-box($primary, true);
                                     bottom: -50px;
                                 }
                                 &:hover {
-                                    color: $primary;
-                                    background-color: $white;
+                                    color: sct-pc($primary, $white);
+                                    background-color: $white; @include sct-light-box($white, true);
                                 }
                             }
                         }
                         .pwp-info{
                             padding-bottom: 15px;
-                            background: $light-color;
+                            background: $light-color; @include sct-light-box($light-color, false);
                             @include transition(all, 0.3s, ease-in);
                         }
 
@@ -2161,7 +2161,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .btn{
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 box-shadow: rgba($black, 0.2) 0px 0px 4px;
                                 padding: 6px;
                                 line-height: 1;
@@ -2186,19 +2186,19 @@ span[name="hidden_ptavs_count"] {
                                 }
 
                                 &:hover{
-                                    background: $primary;
-                                    color: $light-color;
+                                    background: $primary; @include sct-light-box($primary, true);
+                                    color: sct-oc($light-color, $primary);
                                 }
 
                                 &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     @include min992{
                                         margin: 0 auto;
                                         box-shadow: none;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         padding: 5px 10px;
                                         font-size: 14px;
                                         min-width: 90px;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         border: 1px solid $primary;
                                         bottom: 0;
                                         top: auto;
@@ -2206,8 +2206,8 @@ span[name="hidden_ptavs_count"] {
                                         transform: translate(-50%, 10px);
 
                                         &:hover{
-                                            background: $light-color;
-                                            color: $primary;
+                                            background: $light-color; @include sct-light-box($light-color, true);
+                                            color: sct-pc($primary, $light-color);
                                         }
                                     }
 
@@ -2316,19 +2316,19 @@ span[name="hidden_ptavs_count"] {
                                         margin-top: 15px;
                                         margin-bottom: 15px;
                                         border: 1px solid $primary;
-                                        color: $primary;
+                                        color: sct-pc($primary);
                                         @include min992 {
                                             position: absolute;
                                             opacity: 0;
                                             left: 0;
                                             right: 0;
                                             bottom: -50px;
-                                            color: $white;
-                                            background-color: $primary;
+                                            color: sct-oc($white, $primary);
+                                            background-color: $primary; @include sct-light-box($primary, true);
                                         }
                                         &:hover {
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                         }
                                     }
                                 }
@@ -2401,7 +2401,7 @@ span[name="hidden_ptavs_count"] {
                         align-content: center;
                         margin: auto;
                         margin-left: -100%;
-                        background: rgba(18, 52, 191, 0.12);
+                        background: rgba(18, 52, 191, 0.12); @include sct-light-box(rgba(18, 52, 191, 0.12), false);
                         transition: all 0.5s ease;
                         gap: 0 !important;
                         @include min992 {
@@ -2430,13 +2430,13 @@ span[name="hidden_ptavs_count"] {
                             padding: 3px 10px;
                             min-width: 90px;
                             border: 1px solid transparent;
-                            background: $primary;
-                            color: $light-color;
+                            background: $primary; @include sct-light-box($primary, true);
+                            color: sct-oc($light-color, $primary);
 
                             &:hover{
                                 background-color: transparent;
                                 border-color: $primary;
-                                color: $primary;
+                                color: sct-pc($primary);
                             }
                         }
                     }
@@ -2460,7 +2460,7 @@ span[name="hidden_ptavs_count"] {
                             }
                             
                             a{
-                                color: #000 !important;
+                                color: sct-dk(#000) !important;
                                 font-weight: normal;
                                 font-size: 13px;
                                 line-height: normal;
@@ -2487,7 +2487,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             span.h6{
-                                color: $primary;
+                                color: sct-pc($primary);
                                 font-size: $font-size-base-scita;
     
                                 @media (min-width: 1200px) {
@@ -2509,7 +2509,7 @@ span[name="hidden_ptavs_count"] {
                             margin: auto;
                             opacity: 0;
                             margin-left: -100%;
-                            background: rgba($primary, 0.12);
+                            background: rgba($primary, 0.12); @include sct-light-box(rgba($primary, 0.12), false);
                             @include transition(all, 0.5s, ease);
                             gap: 0 !important;
     
@@ -2545,7 +2545,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .btn {
-                                background-color: darken($primary, 20%);
+                                background-color: darken($primary, 20%); @include sct-light-box(darken($primary, 20%), false);
                                 width: 37px;
                                 height: 37px;
                                 border-radius: 50px;
@@ -2568,7 +2568,7 @@ span[name="hidden_ptavs_count"] {
                                 @media (max-width: 1199px){
                                     width:25%;
                                     height: 30px;
-                                    background: rgba($primary, 0.2);
+                                    background: rgba($primary, 0.2); @include sct-light-box(rgba($primary, 0.2), false);
                                     margin: 0;
                                     border-radius: 0;
                                     border: 0;
@@ -2590,7 +2590,7 @@ span[name="hidden_ptavs_count"] {
                                         font-size: 23px;
                                         
                                         @media (min-width: 1200px) {
-                                            color: $white;
+                                            color: sct-oc($white, darken($primary, 20%));
                                         }
                                     }
                                     &:hover{
@@ -2605,10 +2605,10 @@ span[name="hidden_ptavs_count"] {
                                 }
                                 span {
                                     font-size: 20px;
-                                    color: $light-color;
+                                    color: sct-oc($light-color, darken($primary, 20%));
                                     @include transition(all, 0.3s, ease);
                                     @media (max-width: 1199px){
-                                        color: $dark-color;
+                                        color: sct-dk($dark-color);
                                     }
                                 }
                                 &.o_add_compare{
@@ -2623,7 +2623,7 @@ span[name="hidden_ptavs_count"] {
                                         @include transition(all, 0.3s, ease);
 
                                         &::before{
-                                            color: $white;
+                                            color: sct-oc($white, darken($primary, 20%));
                                         }
                                     }
                                 }
@@ -2641,7 +2641,7 @@ span[name="hidden_ptavs_count"] {
                                     height: auto;
                                     margin: 0;
                                     border-radius: 0;
-                                    color: #000;
+                                    color: sct-dk(#000);
                                     text-align: center;
                                 }
                                 @media (max-width: 767px){
@@ -2705,7 +2705,7 @@ span[name="hidden_ptavs_count"] {
                             @include flex-wrap-common;
                             @include align-content;
                             position: absolute;
-                            background: #fff;
+                            background: #fff; @include sct-light-box(#fff, false);
                             padding: 4px;
                             border-radius: 6px;
                             box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -2759,7 +2759,7 @@ span[name="hidden_ptavs_count"] {
                             @include flex-wrap-common;
                             @include align-content;
                             position: absolute;
-                            background: #fff;
+                            background: #fff; @include sct-light-box(#fff, false);
                             padding: 4px;
                             border-radius: 6px;
                             box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -2826,13 +2826,13 @@ span[name="hidden_ptavs_count"] {
                                     
                                     a{
                                         font-size: 11px;
-                                        color: $dark-color;
+                                        color: sct-dk($dark-color);
                                         text-decoration: line-through;
                                         font-weight: 500;
                                         padding: 0 2px;
                                         
                                         &:hover{
-                                            color: $primary;
+                                            color: sct-pc($primary, #fff);
                                         }
                                     }
                                 }
@@ -3032,8 +3032,8 @@ span[name="hidden_ptavs_count"] {
                         transition: all 0.3s ease-in;
                         top: unset;
                         border:1px solid $primary;
-                        color: $primary;
-                        background-color: $white;
+                        color: sct-pc($primary, $white);
+                        background-color: $white; @include sct-light-box($white, true);
                         width: fit-content;
                         transform: unset !important;
                         margin-top: 15px;
@@ -3044,12 +3044,12 @@ span[name="hidden_ptavs_count"] {
                             right: 10px;
                             bottom: 100%;
                             border-radius: 5px;
-                            color: $white;
-                            background-color: $primary;
+                            color: sct-oc($white, $primary);
+                            background-color: $primary; @include sct-light-box($primary, true);
                         }
                         &:hover {
-                            color: $primary;
-                            background-color: $white;
+                            color: sct-pc($primary, $white);
+                            background-color: $white; @include sct-light-box($white, true);
                         }
                     }
                 }
@@ -3057,7 +3057,7 @@ span[name="hidden_ptavs_count"] {
                     position: relative;
 
                     .sct-hover-info{
-                        background-color: rgba($primary, 0.12);
+                        background-color: rgba($primary, 0.12); @include sct-light-box(rgba($primary, 0.12), false);
                         @include transition(all, 0.5s, ease);
                         @include flex;
                         @include justify-align-content;
@@ -3100,12 +3100,12 @@ span[name="hidden_ptavs_count"] {
                             
                             @include min992{
                                 border: 0;
-                                background-color: darken($primary, 20%);
+                                background-color: darken($primary, 20%); @include sct-light-box(darken($primary, 20%), true);
                                 width: 37px;
                                 height: 37px;
                                 border-radius: 50%;
                                 margin: 0 7.5px 5px;
-                                color: $light-color;
+                                color: sct-oc($light-color, darken($primary, 20%));
                                 flex: 0 0 auto;
                                 max-width: fit-content;
                             }
@@ -3124,7 +3124,7 @@ span[name="hidden_ptavs_count"] {
 
                                 &:hover{
                                     color: darken($primary, 20%);
-                                    background: $light-color;
+                                    background: $light-color; @include sct-light-box($light-color, true);
                                 }
                             }
                             &.o_add_compare{
@@ -3219,7 +3219,7 @@ span[name="hidden_ptavs_count"] {
                     @include flex-wrap-common;
                     @include align-content;
                     position: absolute;
-                    background: $light-color;
+                    background: $light-color; @include sct-light-box($light-color, false);
                     padding: 4px;
                     border-radius: 6px;
                     box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -3309,8 +3309,8 @@ span[name="hidden_ptavs_count"] {
                                 transition: all 0.3s ease-in;
                                 top: unset;
                                 border: 1px solid $primary;
-                                color: $primary;
-                                background-color: $white;
+                                color: sct-pc($primary, $white);
+                                background-color: $white; @include sct-light-box($white, true);
                                 width: fit-content;
                                 margin-top: 15px;
                                 transform: unset !important;
@@ -3328,12 +3328,12 @@ span[name="hidden_ptavs_count"] {
                                     right: 10px;
                                     bottom: 100%;
                                     border-radius: 5px;
-                                    color: $white;
-                                    background-color: $primary;
+                                    color: sct-oc($white, $primary);
+                                    background-color: $primary; @include sct-light-box($primary, true);
                                 }
                                 &:hover {
-                                    color: $primary;
-                                    background-color: $white;
+                                    color: sct-pc($primary, $white);
+                                    background-color: $white; @include sct-light-box($white, true);
                                 }
                             }
                         }
@@ -3342,7 +3342,7 @@ span[name="hidden_ptavs_count"] {
                             flex-grow: 1;
                         }
                         .sct-hover-info{
-                            background-color: rgba($primary, 0.12);
+                            background-color: rgba($primary, 0.12); @include sct-light-box(rgba($primary, 0.12), false);
                             @include transition(all, 0.5s, ease);
                             @include flex;
                             @include justify-align-content;
@@ -3414,12 +3414,12 @@ span[name="hidden_ptavs_count"] {
                                 
                                 @include min992{
                                     border: 0;
-                                    background-color: darken($primary, 20%);
+                                    background-color: darken($primary, 20%); @include sct-light-box(darken($primary, 20%), true);
                                     width: 37px;
                                     height: 37px;
                                     border-radius: 50%;
                                     margin: 0 7.5px 5px;
-                                    color: $light-color;
+                                    color: sct-oc($light-color, darken($primary, 20%));
                                     flex: 0 0 auto;
                                     max-width: fit-content;
                                 }
@@ -3507,24 +3507,24 @@ span[name="hidden_ptavs_count"] {
                                         margin-top: 15px !important;
                                         margin-bottom: 0px !important;
                                         border: 1px solid $primary;
-                                        color: $primary;
+                                        color: sct-pc($primary);
                                         @include min992 {
                                             position: absolute;
                                             opacity: 0;
                                             left: 0;
                                             right: 0;
                                             bottom: -50px;
-                                            color: $white;
-                                            background-color: $primary;
+                                            color: sct-oc($white, $primary);
+                                            background-color: $primary; @include sct-light-box($primary, true);
                                         }
                                         &:hover {
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                         }
                                     }
                                 }
                                      .sct-hover-info {
-                                        background-color: rgba(113, 75, 103, 0.12);
+                                        background-color: rgba(113, 75, 103, 0.12); @include sct-light-box(rgba(113, 75, 103, 0.12), false);
                                         transition: all 0.5s ease;
                                         display: flex;
                                         justify-content: center;
@@ -3571,10 +3571,10 @@ span[name="hidden_ptavs_count"] {
                                                 border: 0;
                                                 border-radius: 50% !important;
                                                 margin: 0 7.5px 5px !important;
-                                                background-color: #34222f !important;
+                                                background-color: #34222f !important; @include sct-light-box(#34222f, true);
                                                 width: 37px !important;
                                                 height: 37px !important;
-                                                color: #ffffff;
+                                                color: sct-dk(#ffffff);
                                                 flex: unset !important;
                                                 
                                             }
@@ -3677,13 +3677,13 @@ span[name="hidden_ptavs_count"] {
                             padding: 3px 10px;
                             min-width: 90px;
                             border: 1px solid $primary;
-                            color: $primary;
-                            background: $light-color;
+                            color: sct-pc($primary, $light-color);
+                            background: $light-color; @include sct-light-box($light-color, true);
 
                             &:hover{
-                                background-color: $primary;
+                                background-color: $primary; @include sct-light-box($primary, true);
                                 border-color: $primary;
-                                color: $light-color;
+                                color: sct-oc($light-color, $primary);
                             }
                         }
                     }
@@ -3702,7 +3702,7 @@ span[name="hidden_ptavs_count"] {
                             }
 
                             a{
-                                color: $black !important;
+                                color: sct-dk($black) !important;
                             }
                         }
                         .o_wsale_product_rating_wrapper{
@@ -3780,7 +3780,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             span.h6{
-                                color: $primary;
+                                color: sct-pc($primary);
                                 font-size: $font-size-base-scita;
 
                                 @media (min-width: 1200px) {
@@ -3814,13 +3814,13 @@ span[name="hidden_ptavs_count"] {
                                 height: 29px;
                                 font-size: 16px;
                                 border-color: rgba($primary, 0.3);
-                                background: lighten($primary, 45%);
+                                background: lighten($primary, 45%); @include sct-light-box(lighten($primary, 45%), false);
                                 position: static;
                                 transform: none;
                                 transition: 0.3s ease-in;
                                 
                                 @media (min-width: 576px) {
-                                    background: #fff;
+                                    background: #fff; @include sct-light-box(#fff, false);
                                     margin: 0 2px 5px;
                                     border-radius: 6px;
                                 }
@@ -3845,13 +3845,13 @@ span[name="hidden_ptavs_count"] {
                                     }
                                 }
                                 &:hover{
-                                    background-color: $primary;
-                                    color: $light-color;
+                                    background-color: $primary; @include sct-light-box($primary, true);
+                                    color: sct-oc($light-color, $primary);
                                     border-color: rgba($primary, 0.7);
 
                                     span{
                                         &::before{
-                                            color: $white;
+                                            color: sct-oc($white, $primary);
                                         }
                                     }
                                 }
@@ -4011,8 +4011,8 @@ span[name="hidden_ptavs_count"] {
                         transition: all 0.3s ease-in;
                         top: unset;
                         border:1px solid $primary;
-                        color: $primary;
-                        background-color: $white;
+                        color: sct-pc($primary, $white);
+                        background-color: $white; @include sct-light-box($white, true);
                         margin: auto;
                         width: fit-content;
                         transform: unset !important;
@@ -4024,12 +4024,12 @@ span[name="hidden_ptavs_count"] {
                             right: 0;
                             bottom: unset;
                             top: 70px;
-                             color: $white;
-                            background-color: $primary;
+                             color: sct-oc($white, $primary);
+                            background-color: $primary; @include sct-light-box($primary, true);
 
                         }
                         &:hover {
-                            color: $primary;
+                            color: sct-pc($primary, $white);
                             background-color: $white
                         }
                     }
@@ -4078,7 +4078,7 @@ span[name="hidden_ptavs_count"] {
                         }
                         .btn{
                             margin-bottom: 5px;
-                            background: lighten($primary, 45%);
+                            background: lighten($primary, 45%); @include sct-light-box(lighten($primary, 45%), false);
                             @include flex;
                             @include justify-align-content;
                             border: 1px solid rgba($primary, 0.3);
@@ -4088,7 +4088,7 @@ span[name="hidden_ptavs_count"] {
                             height: 29px;
                             
                             @media (min-width: 576px) {
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 margin: 0 2px 5px;
                                 border-radius: 6px;
                             }
@@ -4113,8 +4113,8 @@ span[name="hidden_ptavs_count"] {
                             }
 
                             &:hover{
-                                background-color: $primary;
-                                color: $light-color;
+                                background-color: $primary; @include sct-light-box($primary, true);
+                                color: sct-oc($light-color, $primary);
                                 border-color: rgba($primary, 0.7);
                             }
                         }
@@ -4187,7 +4187,7 @@ span[name="hidden_ptavs_count"] {
                     position: absolute;
                     top: -165px;
                     right: 6px;
-                    background: $light-color;
+                    background: $light-color; @include sct-light-box($light-color, false);
                     padding: 2px;
                     border-radius: 6px;
                     box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -4299,7 +4299,7 @@ span[name="hidden_ptavs_count"] {
 
                             .btn{
                                 margin-bottom: 5px;
-                                background: lighten($primary, 45%);
+                                background: lighten($primary, 45%); @include sct-light-box(lighten($primary, 45%), false);
                                 @include flex;
                                 @include justify-align-content;
                                 border: 1px solid rgba($primary, 0.3);
@@ -4309,7 +4309,7 @@ span[name="hidden_ptavs_count"] {
                                 height: 29px;
                                 
                                 @media (min-width: 576px) {
-                                    background: $light-color;
+                                    background: $light-color; @include sct-light-box($light-color, false);
                                     margin: 0 2px 5px;
                                     border-radius: 6px;
                                 }
@@ -4333,8 +4333,8 @@ span[name="hidden_ptavs_count"] {
                                 }
 
                                 &:hover{
-                                    background-color: $primary;
-                                    color: $light-color;
+                                    background-color: $primary; @include sct-light-box($primary, true);
+                                    color: sct-oc($light-color, $primary);
                                     border-color: rgba($primary, 0.7);
                                 }
                             }
@@ -4349,8 +4349,8 @@ span[name="hidden_ptavs_count"] {
                             transition: all 0.3s ease-in;
                             top: unset;
                             border:1px solid $primary;
-                            color: $primary;
-                            background-color: $white;
+                            color: sct-pc($primary, $white);
+                            background-color: $white; @include sct-light-box($white, true);
                             margin: auto;
                             width: fit-content;
                                 transform: unset !important;
@@ -4362,12 +4362,12 @@ span[name="hidden_ptavs_count"] {
                                 right: 0;
                                 top: -90px;
                                 bottom: unset;
-                                color: $white;
-                                background-color: $primary;
+                                color: sct-oc($white, $primary);
+                                background-color: $primary; @include sct-light-box($primary, true);
                             }
                             &:hover {
-                                color: $primary;
-                                background-color: $white;
+                                color: sct-pc($primary, $white);
+                                background-color: $white; @include sct-light-box($white, true);
                             }
                         }
                     }
@@ -4412,19 +4412,19 @@ span[name="hidden_ptavs_count"] {
                                         margin-top: 15px;
                                         margin-bottom: 15px;
                                         border: 1px solid $primary;
-                                        color: $primary;
+                                        color: sct-pc($primary);
                                         @include min992 {
                                             position: absolute;
                                             opacity: 0;
                                             left: 0;
                                             right: 0;
                                             bottom: 0px;
-                                            color: $white;
-                                            background-color: $primary;
+                                            color: sct-oc($white, $primary);
+                                            background-color: $primary; @include sct-light-box($primary, true);
                                         }
                                         &:hover {
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                         }
                                     }
                                 }
@@ -4452,7 +4452,7 @@ span[name="hidden_ptavs_count"] {
                                                 height: 26px !important;
                                                 margin: 0 2px 5px;
                                                 border-radius: 6px;
-                                                background-color: #ffffff;
+                                                background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                                 display: flex;
                                                 justify-content: center;
                                                 align-items: center;
@@ -4497,7 +4497,7 @@ span[name="hidden_ptavs_count"] {
                 .o_wsale_product_information{
                     transition: all 0.3s ease-in;
                     padding: 10px 7px !important;
-                    background-color: $light-color;
+                    background-color: $light-color; @include sct-light-box($light-color, false);
 
                     @media (min-width: 992px) {
                         padding: 10px 15px !important;
@@ -4521,13 +4521,13 @@ span[name="hidden_ptavs_count"] {
                             padding: 3px 10px;
                             min-width: 90px;
                             border: 1px solid transparent;
-                            background: $primary;
-                            color: $light-color;
+                            background: $primary; @include sct-light-box($primary, true);
+                            color: sct-oc($light-color, $primary);
 
                             &:hover{
                                 background-color: transparent;
                                 border-color: $primary;
-                                color: $primary;
+                                color: sct-pc($primary);
                             }
                             @media (min-width: 992px) {
                                 position: absolute;
@@ -4542,7 +4542,7 @@ span[name="hidden_ptavs_count"] {
                         @include flex-wrap-common;
                         @include align-content;
                         position: absolute;
-                        background: #fff;
+                        background: #fff; @include sct-light-box(#fff, false);
                         padding: 4px;
                         border-radius: 6px;
                         box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -4623,7 +4623,7 @@ span[name="hidden_ptavs_count"] {
                                 
                                 a{
                                     font-size: 11px;
-                                    color: $dark-color;
+                                    color: sct-dk($dark-color);
                                     text-decoration: line-through;
                                     font-weight: 500;
                                     padding: 0 2px;
@@ -4636,7 +4636,7 @@ span[name="hidden_ptavs_count"] {
                                     }
                                     
                                     &:hover{
-                                        color: $primary;
+                                        color: sct-pc($primary, #fff);
                                     }
                                 }
                             }
@@ -4658,7 +4658,7 @@ span[name="hidden_ptavs_count"] {
                             }
 
                             a{
-                                color: $black !important;
+                                color: sct-dk($black) !important;
                             }
                         }
                         .o_wsale_product_rating_wrapper{
@@ -4675,7 +4675,7 @@ span[name="hidden_ptavs_count"] {
                             @include flex-wrap-common;
                             @include align-content;
                             position: absolute;
-                            background: #fff;
+                            background: #fff; @include sct-light-box(#fff, false);
                             padding: 4px;
                             border-radius: 6px;
                             box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -4754,7 +4754,7 @@ span[name="hidden_ptavs_count"] {
                                     
                                     a{
                                         font-size: 11px;
-                                        color: $dark-color;
+                                        color: sct-dk($dark-color);
                                         text-decoration: line-through;
                                         font-weight: 500;
                                         padding: 0 2px;
@@ -4767,7 +4767,7 @@ span[name="hidden_ptavs_count"] {
                                         }
                                         
                                         &:hover{
-                                            color: $primary;
+                                            color: sct-pc($primary, #fff);
                                         }
                                     }
                                 }
@@ -4789,7 +4789,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             span.h6{
-                                color: $primary;
+                                color: sct-pc($primary, $light-color);
                                 font-size: $font-size-base-scita;
 
                                 @media (min-width: 1200px) {
@@ -4841,7 +4841,7 @@ span[name="hidden_ptavs_count"] {
                                 border: 0;
                                 margin: 0 2px 5px;
                                 border-radius: 6px;
-                                background-color: $light-color;
+                                background-color: $light-color; @include sct-light-box($light-color, false);
                                 box-shadow: rgba($dark-color, 0.2) 0px 0px 6px 0px;
                                 position: static;
                                 transform: none;
@@ -4856,11 +4856,11 @@ span[name="hidden_ptavs_count"] {
 
                                     @include min1200{
                                         font-size: $font-size-base-scita;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         padding: 4px 10px;
                                         min-width: 90px;
                                         border: 1px solid transparent;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         box-shadow: none;
                                         margin-left: 0;
                                         margin-right: auto;
@@ -4876,13 +4876,13 @@ span[name="hidden_ptavs_count"] {
                                     }
                                 }
                                 &:hover{
-                                    background-color: $primary;
-                                    color: $light-color;
+                                    background-color: $primary; @include sct-light-box($primary, true);
+                                    color: sct-oc($light-color, $primary);
                                     border-color: rgba($primary, 0.7);
 
                                     span{
                                         &::before{
-                                            color: $white;
+                                            color: sct-oc($white, $primary);
                                         }
                                     }
                                 }
@@ -5043,14 +5043,14 @@ span[name="hidden_ptavs_count"] {
                                             
                                             a{
                                                 font-size: 11px;
-                                                color: $dark-color;
+                                                color: sct-dk($dark-color);
                                                 text-decoration: line-through;
                                                 font-weight: 500;
                                                 padding: 0 2px;
                                                 margin-left: 2px;
                                                 
                                                 &:hover{
-                                                    color: $primary;
+                                                    color: sct-pc($primary);
                                                 }
                                             }
                                         }
@@ -5124,7 +5124,7 @@ span[name="hidden_ptavs_count"] {
                 }
                 .pwp-info{
                     position: relative;
-                    background-color: $light-color;
+                    background-color: $light-color; @include sct-light-box($light-color, false);
                     @include transition(all, 0.3s, ease-in);
 
                     .sct-hover-info{
@@ -5164,7 +5164,7 @@ span[name="hidden_ptavs_count"] {
                             height: 26px;
                             margin: 0 2px 5px;
                             border-radius: 6px;
-                            background-color: $light-color;
+                            background-color: $light-color; @include sct-light-box($light-color, false);
                             @include flex;
                             @include justify-align-content;
                             box-shadow: rgba($dark-color, 0.2) 0px 0px 6px 0px;
@@ -5186,8 +5186,8 @@ span[name="hidden_ptavs_count"] {
                         transition: all 0.3s ease-in;
                         top: unset;
                         border: 1px solid $primary;
-                        color: $primary;
-                        background-color: $white;
+                        color: sct-pc($primary, $white);
+                        background-color: $white; @include sct-light-box($white, true);
                         margin: auto;
                         width: fit-content;
                             transform: unset !important;
@@ -5197,13 +5197,13 @@ span[name="hidden_ptavs_count"] {
                             opacity: 0;
                             left: 0;
                             right: 0;
-                             color: $white;
-                            background-color: $primary;
+                             color: sct-oc($white, $primary);
+                            background-color: $primary; @include sct-light-box($primary, true);
                             bottom: -50px;
                         }
                         &:hover {
-                            color: $primary;
-                            background-color: $white;
+                            color: sct-pc($primary, $white);
+                            background-color: $white; @include sct-light-box($white, true);
                         }
                     }
                 }
@@ -5245,7 +5245,7 @@ span[name="hidden_ptavs_count"] {
                     position: absolute;
                     top: -165px;
                     right: 6px;
-                    background: $light-color;
+                    background: $light-color; @include sct-light-box($light-color, false);
                     padding: 2px;
                     border-radius: 6px;
                     box-shadow: 0px 0px 7px rgba($black, 0.2);
@@ -5337,7 +5337,7 @@ span[name="hidden_ptavs_count"] {
                         position: relative;
                         flex-grow: 1;
                         overflow: visible;
-                        background-color: $light-color;
+                        background-color: $light-color; @include sct-light-box($light-color, false);
                         @include transition(all, 0.3s, ease-in);
 
                         .pwp-info{
@@ -5385,7 +5385,7 @@ span[name="hidden_ptavs_count"] {
                                 min-width: 27px;
                                 margin: 0 2px 5px;
                                 border-radius: 6px;
-                                background-color: $light-color;
+                                background-color: $light-color; @include sct-light-box($light-color, false);
                                 @include flex;
                                 @include justify-align-content;
                                 box-shadow: rgba($dark-color, 0.2) 0px 0px 6px 0px;
@@ -5402,11 +5402,11 @@ span[name="hidden_ptavs_count"] {
                                     white-space: nowrap;
                                     @include min1200{
                                         font-size: 15px;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         padding: 4px 10px;
                                         min-width: 90px;
                                         border: 1px solid transparent;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         width: auto;
                                         height: auto;
                                         box-shadow: none;
@@ -5436,8 +5436,8 @@ span[name="hidden_ptavs_count"] {
                             transition: all 0.3s ease-in;
                             top: unset;
                             border: 1px solid $primary;
-                            color: $primary;
-                            background-color: $white;
+                            color: sct-pc($primary, $white);
+                            background-color: $white; @include sct-light-box($white, true);
                             margin: auto;
                             width: fit-content;
                             transform: unset !important;
@@ -5452,11 +5452,11 @@ span[name="hidden_ptavs_count"] {
                                 right: 0;
                                 top: -50px;
                                 bottom: unset;
-                                color: $white;
-                                background-color: $primary;
+                                color: sct-oc($white, $primary);
+                                background-color: $primary; @include sct-light-box($primary, true);
                             }
                             &:hover {
-                                color: $primary;
+                                color: sct-pc($primary, $white);
                                 background-color: $white
                             }
                         }
@@ -5541,7 +5541,7 @@ span[name="hidden_ptavs_count"] {
                                         padding: 0 !important;
                                         margin: 0 2px 5px;
                                         border-radius: 6px;
-                                        background-color: #ffffff;
+                                        background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
@@ -5565,19 +5565,19 @@ span[name="hidden_ptavs_count"] {
                                         margin-top: 15px;
                                         margin-bottom: 15px;
                                         border: 1px solid $primary;
-                                        color: $primary;
+                                        color: sct-pc($primary);
                                         @include min992 {
                                             position: absolute;
                                             opacity: 0;
                                             left: 0;
                                             right: 0;
                                             bottom: -50px;
-                                            color: $white;
-                                            background-color: $primary;
+                                            color: sct-oc($white, $primary);
+                                            background-color: $primary; @include sct-light-box($primary, true);
                                         }
                                         &:hover {
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                         }
                                     }
                                 }
@@ -5728,7 +5728,7 @@ span[name="hidden_ptavs_count"] {
                     .o_wsale_product_information_text{
                         .ratings{
                             position: absolute;
-                            background: $light-color;
+                            background: $light-color; @include sct-light-box($light-color, false);
                             padding: 3px 5px;
                             top: -29px;
                             left: 12px;
@@ -5751,7 +5751,7 @@ span[name="hidden_ptavs_count"] {
                             }
 
                             a{
-                                color: $black !important;
+                                color: sct-dk($black) !important;
                             }
                         }
                     }
@@ -5773,13 +5773,13 @@ span[name="hidden_ptavs_count"] {
                             padding: 3px 10px;
                             min-width: 90px;
                             border: 1px solid transparent;
-                            background: $primary;
-                            color: $light-color;
+                            background: $primary; @include sct-light-box($primary, true);
+                            color: sct-oc($light-color, $primary);
 
                             &:hover{
                                 background-color: transparent;
                                 border-color: $primary;
-                                color: $primary;
+                                color: sct-pc($primary);
                             }
                             @media (min-width: 992px) {
                                 position: absolute;
@@ -5871,7 +5871,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             span.h6{
-                                color: $primary;
+                                color: sct-pc($primary);
                                 font-size: $font-size-base-scita;
 
                                 @media (min-width: 1200px) {
@@ -5907,7 +5907,7 @@ span[name="hidden_ptavs_count"] {
                                 width: auto;
                                 height: auto;
                                 border: 0;
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 
                                 @media (min-width: 992px) {
                                     position: absolute;
@@ -5939,18 +5939,18 @@ span[name="hidden_ptavs_count"] {
 
                                     @media (min-width: 768px) {
                                         font-family: "Rubik", "Odoo Unicode Support Noto", sans-serif;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         padding: 4px 10px;
                                         font-size: 14px;
                                         min-width: 90px;
                                         border: 1px solid transparent;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         box-shadow: none;
 
                                         &:hover{
                                             background-color: transparent;
                                             border-color: $primary;
-                                            color: $primary;
+                                            color: sct-pc($primary);
                                         }
                                     }
 
@@ -6005,8 +6005,8 @@ span[name="hidden_ptavs_count"] {
                                         line-height: 1;
                                     }
                                     &:hover{
-                                        color: $light-color;
-                                        background: $primary;
+                                        color: sct-oc($light-color, $primary);
+                                        background: $primary; @include sct-light-box($primary, true);
                                     }
                                 }
                                 &.o_add_compare{
@@ -6164,7 +6164,7 @@ span[name="hidden_ptavs_count"] {
             &:hover{
                 .o_wsale_product_grid_wrapper{
                     .o_wsale_product_information{
-                        background: $light-color;
+                        background: $light-color; @include sct-light-box($light-color, false);
     
                         @media (min-width: 992px){
                             transform: translateY(-30px);
@@ -6382,7 +6382,7 @@ span[name="hidden_ptavs_count"] {
                                         }
                                     }
                                     .btn{
-                                        background: $light-color;
+                                        background: $light-color; @include sct-light-box($light-color, false);
                                         box-shadow: rgba($black, 0.2) 0px 0px 4px;
                                         padding: 6px;
                                         line-height: 1;
@@ -6410,8 +6410,8 @@ span[name="hidden_ptavs_count"] {
                                         }
             
                                         &:hover{
-                                            background: $primary;
-                                            color: $light-color;
+                                            background: $primary; @include sct-light-box($primary, true);
+                                            color: sct-oc($light-color, $primary);
                                         }
             
                                         &.o_add_compare{
@@ -6558,7 +6558,7 @@ span[name="hidden_ptavs_count"] {
                         position: static;
                         
                         .pwp-info{
-                            background: $light-color;
+                            background: $light-color; @include sct-light-box($light-color, false);
                             @include transition(all, 0.3s, ease-in);
                         }
 
@@ -6587,7 +6587,7 @@ span[name="hidden_ptavs_count"] {
                                 }
                             }
                             .btn{
-                                background: $light-color;
+                                background: $light-color; @include sct-light-box($light-color, false);
                                 box-shadow: rgba($black, 0.2) 0px 0px 4px;
                                 padding: 6px;
                                 line-height: 1;
@@ -6615,19 +6615,19 @@ span[name="hidden_ptavs_count"] {
                                 }
 
                                 &:hover{
-                                    background: $primary;
-                                    color: $light-color;
+                                    background: $primary; @include sct-light-box($primary, true);
+                                    color: sct-oc($light-color, $primary);
                                 }
 
                                 &:is(.cart_view_sct_btn, .sct-contact-us-btn), &.login-price-btn{
                                     @include min992{
                                         margin: 0 auto;
                                         box-shadow: none;
-                                        background: $primary;
+                                        background: $primary; @include sct-light-box($primary, true);
                                         padding: 5px 10px;
                                         font-size: 14px;
                                         min-width: 90px;
-                                        color: $light-color;
+                                        color: sct-oc($light-color, $primary);
                                         border: 1px solid $primary;
                                         bottom: 0;
                                         top: auto;
@@ -6635,8 +6635,8 @@ span[name="hidden_ptavs_count"] {
                                         transform: translate(50%, 10px);
 
                                         &:hover{
-                                            background: $light-color;
-                                            color: $primary;
+                                            background: $light-color; @include sct-light-box($light-color, true);
+                                            color: sct-pc($primary, $light-color);
                                         }
                                     }
 
@@ -6742,24 +6742,24 @@ span[name="hidden_ptavs_count"] {
                                width: fit-content;
                                transform: unset !important;
                                margin-top: 15px;
-                               color: $primary;
+                               color: sct-pc($primary);
                                border: 1px solid $primary;
                                @include min992{
                                    margin: 0 auto;
                                    box-shadow: none;
-                                   background: $primary;
+                                   background: $primary; @include sct-light-box($primary, true);
                                    padding: 5px 10px;
                                    font-size: 14px;
                                    min-width: 90px;
-                                   color: $white;
+                                   color: sct-oc($white, $primary);
                                    bottom: 0;
                                    top: auto;
                                    right: 50%;
                                    transform: translate(50%, 10px);
 
                                    &:hover{
-                                       background: $white;
-                                       color: $primary;
+                                       background: $white; @include sct-light-box($white, true);
+                                       color: sct-pc($primary, $white);
                                    }
                                }
                                @include min992 {
@@ -6771,8 +6771,8 @@ span[name="hidden_ptavs_count"] {
                                    bottom: -50px;
                                }
                                &:hover {
-                                   color: $primary;
-                                   background-color: $white;
+                                   color: sct-pc($primary, $white);
+                                   background-color: $white; @include sct-light-box($white, true);
                                }
                            }
                         }
@@ -6825,7 +6825,7 @@ span[name="hidden_ptavs_count"] {
                                         height: 26px;
                                         margin: 0 2px 5px;
                                         border-radius: 6px;
-                                        background-color: #ffffff;
+                                        background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
@@ -6851,19 +6851,19 @@ span[name="hidden_ptavs_count"] {
                                         margin-top: 15px;
                                         margin-bottom: 15px;
                                         border: 1px solid $primary;
-                                        color: $primary;
+                                        color: sct-pc($primary);
                                         @include min992 {
                                             position: absolute;
                                             opacity: 0;
                                             left: 0;
                                             right: 0;
                                             bottom: -50px;
-                                            color: $white;
-                                            background-color: $primary;
+                                            color: sct-oc($white, $primary);
+                                            background-color: $primary; @include sct-light-box($primary, true);
                                         }
                                         &:hover {
-                                            color: $primary;
-                                            background-color: $white;
+                                            color: sct-pc($primary, $white);
+                                            background-color: $white; @include sct-light-box($white, true);
                                         }
                                     }
                                 }
@@ -7085,7 +7085,7 @@ span[name="hidden_ptavs_count"] {
                                         height: 26px;
                                         margin: 0 2px 5px;
                                         border-radius: 6px;
-                                        background-color: #ffffff;
+                                        background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
@@ -7281,7 +7281,7 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
             // the list rules give the buttons a transparent background: hover styles that draw
             // light icons on a dark bar (style 3) left them white on white
             .btn:not(.a-submit):not(.o_in_wishlist) {
-                color: $body-color !important;
+                color: sct-dk($body-color) !important;
 
                 // the glyph too: some hover styles colour the icon's ::before white on hover
                 :is(i, .oi, .fa, [class*="lni"]),
@@ -7291,13 +7291,13 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
             }
             // keep the cart button filled, its label is light
             .btn.a-submit {
-                background-color: $primary !important;
+                background-color: $primary !important; @include sct-light-box($primary, true);
                 border-color: $primary !important;
-                color: $light-color !important;
+                color: sct-oc($light-color, $primary) !important;
 
                 &:hover {
                     background-color: transparent !important;
-                    color: $primary !important;
+                    color: sct-pc($primary) !important;
                 }
             }
         }
@@ -7541,8 +7541,8 @@ $sct-btn: '.o_wsale_product_btn .btn';
         padding: 0 !important;
         border: 0 !important;
         border-radius: 50% !important;
-        background: $white !important;
-        color: $body-color;
+        background: $white !important; @include sct-light-box($white, true);
+        color: sct-dk($body-color);
         font-size: 16px;
         line-height: 1;
         box-shadow: 0 2px 10px rgba($black, .12);
@@ -7555,7 +7555,7 @@ $sct-btn: '.o_wsale_product_btn .btn';
             font-size: 17px;
         }
         &:hover, &:focus-visible {
-            background: $primary !important;
+            background: $primary !important; @include sct-light-box($primary, true);
             color: color-contrast($primary) !important;
             box-shadow: 0 4px 12px rgba($black, .18);
         }
@@ -7606,8 +7606,8 @@ $sct-btn: '.o_wsale_product_btn .btn';
             padding: 0 !important;
             border: 0 !important;
             border-radius: 50% !important;
-            background: $white !important;
-            color: $body-color !important;
+            background: $white !important; @include sct-light-box($white, true);
+            color: sct-dk($body-color) !important;
             font-size: 16px;
             box-shadow: 0 2px 10px rgba($black, .12);
 
@@ -7847,8 +7847,8 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
         padding: 0 !important;
         border: 0 !important;
         border-radius: 50% !important;
-        background: $white !important;
-        color: $body-color !important;
+        background: $white !important; @include sct-light-box($white, true);
+        color: sct-dk($body-color) !important;
         box-shadow: 0 2px 10px rgba($black, .12) !important;
 
         > .add_to_cart_text {
@@ -7878,12 +7878,12 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
             height: 37px !important;
             flex: 0 0 auto !important;
             max-width: none !important;
-            background: #34222f !important;
+            background: #34222f !important; @include sct-light-box(#34222f, true);
             color: $white !important;
             box-shadow: none !important;
 
             &:hover, &:focus-visible {
-                background: $primary !important;
+                background: $primary !important; @include sct-light-box($primary, true);
                 color: color-contrast($primary) !important;
             }
             // one icon size in all the blocks (some drew the eye / heart at 16px next to a 20px
@@ -7912,14 +7912,14 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
     padding: 0 !important;
     border: 0 !important;
     border-radius: 50% !important;
-    background: $white !important;
-    color: $body-color !important;
+    background: $white !important; @include sct-light-box($white, true);
+    color: sct-dk($body-color) !important;
     font-size: 15px;
     line-height: 1;
     box-shadow: 0 2px 10px rgba($black, .12) !important;
 
     &:hover, &:focus-visible {
-        background: $primary !important;
+        background: $primary !important; @include sct-light-box($primary, true);
         color: color-contrast($primary) !important;
         box-shadow: 0 4px 12px rgba($black, .18) !important;
     }

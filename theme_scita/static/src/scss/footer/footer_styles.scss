@@ -1114,3 +1114,188 @@ footer{
         }
     }
 }
+// ---------------------------------------------------------------------------------------------
+// Colour palettes: some footer texts use fixed light / dark colours or the palette's primary /
+// secondary colour. With some palettes they could not be read. Each rule below only applies when
+// Scita's own colour does not reach 3:1 on its background; with the colours Scita was designed
+// for nothing changes.
+// ---------------------------------------------------------------------------------------------
+@function sct-f-on($bg) {
+    @return if(contrast-ratio($bg, $white) >= 3.05, $white, $dark-color);
+}
+@function sct-f-readable($fg, $bg) {
+    @return if(contrast-ratio($bg, $fg) >= 3.05, $fg, sct-f-on($bg));
+}
+@function sct-f-readable-alpha($fg, $alpha, $bg) {
+    @return if(contrast-ratio($bg, mix($fg, $bg, $alpha * 100%)) >= 3.05, rgba($fg, $alpha), sct-f-on($bg));
+}
+
+// darker shade of the same colour that reaches 3:1 (keeps the palette's hue)
+@function sct-f-darken-to($fg, $bg) {
+    $i: 0;
+    @while contrast-ratio($bg, $fg) < 3.05 and $i < 20 {
+        $fg: if(lightness($bg) > 50%, darken($fg, 5%), lighten($fg, 5%));
+        $i: $i + 1;
+    }
+    // no shade reaches 3:1 (e.g. red on a mid yellow): dark or white text
+    @return if(contrast-ratio($bg, $fg) >= 3.05, $fg, sct-f-on($bg));
+}
+
+$-sct-ftr: o-website-value('footer-template');
+$-sct-ftr-bg: o-color('footer');
+@if type-of($-sct-ftr-bg) != 'color' {
+    $-sct-ftr-bg: $white;
+}
+// Odoo darkens the copyright bar with rgba(0, 0, 0, .15), unless the palette gives it its own colour
+$-sct-copy-bg: mix($black, $-sct-ftr-bg, 15%);
+$-sct-copy-own: o-color('copyright-custom') or o-color('copyright');
+@if type-of($-sct-copy-own) == 'color' {
+    $-sct-copy-bg: $-sct-copy-own;
+}
+
+@if $-sct-ftr == 'Footer-1' {
+    // white footer: with a dark footer preset the copyright bar kept its light text
+    @if color-contrast($-sct-ftr-bg) != $color-contrast-dark {
+        // (not the label of Odoo's pricelist / language buttons: the button keeps its own colours)
+        footer.o_footer .o_footer_copyright {
+            &, .o_footer_copyright_name, .o_brand_promotion, :not(.btn) > span, p, a:not(.btn) {
+                color: $dark-color;
+            }
+        }
+    } @else if contrast-ratio($primary, $light-color) < 3.05 {
+        // "Powered by Odoo" links: the palette's link colour, just under 3:1 on white
+        footer.o_footer .o_footer_copyright .o_brand_promotion a:not(.btn) {
+            color: sct-f-darken-to($primary, $light-color);
+        }
+    }
+}
+
+// Footers 2 and 3 are #141414: "Powered by Odoo" links take the palette's link colour, which is
+// a darker shade of the primary colour, too dark on this background
+@if index(('Footer-2', 'Footer-3'), $-sct-ftr) {
+    footer.o_footer .o_footer_copyright .o_brand_promotion a:not(.btn) {
+        color: sct-f-darken-to($primary, #141414);
+    }
+}
+
+@if $-sct-ftr == 'Footer-3' {
+    // dark footer (#141414): a light footer preset gave "Powered by" its dark text
+    @if color-contrast($-sct-ftr-bg) == $color-contrast-dark {
+        footer .o_footer_copyright .o_brand_promotion {
+            &, span, a:not(.btn) {
+                color: rgba($light-color, 0.6);
+            }
+        }
+    }
+    // link hover: the palette's (darkened) link colour, too dark on #141414 with a dark primary.
+    // Odoo makes it from the primary colour 15% darker, darkened again until it reads on the
+    // footer preset's own (light) background, so a light primary colour gets a dark one too.
+    $-sct-f3-hover: darken($primary, 25%);
+    @if function-exists('increase-contrast') {
+        $-sct-f3-hover: increase-contrast(darken($primary, 15%), $-sct-ftr-bg);
+    }
+    @if contrast-ratio(darken($primary, 25%), #141414) < 3.05 or contrast-ratio($-sct-f3-hover, #141414) < 3.05 {
+        footer.o_footer .footer-content ul li a:not(.btn):hover {
+            color: sct-f-darken-to($primary, #141414);
+        }
+    }
+    footer .footer-content .sct-fot-address {
+        @if sct-f-on($primary) != $white {
+            ul li, ul li .fa, ul li a {
+                color: sct-f-on($primary);
+            }
+        }
+        @if sct-f-readable($primary, $light-color) != $primary {
+            .sct-scocial-icon-footer a {
+                color: sct-f-readable($primary, $light-color);
+            }
+        }
+    }
+}
+
+@if $-sct-ftr == 'Footer-6' {
+    // the footer colour preset (not darken($primary, 30%)) is the background
+    @if sct-f-readable(#212529, $-sct-copy-bg) != #212529 {
+        footer .o_footer_copyright .o_footer_copyright_name {
+            color: sct-f-readable(#212529, $-sct-copy-bg) !important;
+        }
+    }
+    @if contrast-ratio($primary, $-sct-ftr-bg) < 3.05 and contrast-ratio(darken($primary, 20%), $-sct-ftr-bg) < 3.05 {
+        // links take the palette's link colour, kept just under 3:1 by Odoo with a light primary
+        footer .footer-content .sct-middle-row ul li a:not(:hover),
+        footer .o_footer_copyright .o_brand_promotion a:not(.btn) {
+            color: sct-f-darken-to($primary, $-sct-ftr-bg);
+        }
+    }
+}
+
+@if $-sct-ftr == 'Footer-27' {
+    $-sct-f27: darken($primary, 30%);
+    // Footer-27 paints its copyright bar with its own colour too (no darker overlay)
+    $-sct-f27-copy: $-sct-f27;
+    // light text at 60% on the darkened primary colour (2.1:1 with a light primary colour)
+    @if sct-f-readable-alpha($light-color, .6, $-sct-f27) != rgba($light-color, .6) or sct-f-on($-sct-f27) != $white {
+        footer.o_footer {
+            color: sct-f-readable-alpha($light-color, .6, $-sct-f27);
+            .sct-middle-row-wrapper .sct-middle-row .sct-links a:not(:hover) {
+                color: sct-f-readable-alpha($light-color, .6, $-sct-f27);
+            }
+            .sct-middle-row-wrapper .sct-middle-row .sct-links {
+                .title-20, .links_title, .sct-fot-address li i .fa, .social-media li a .fa {
+                    color: sct-f-on($-sct-f27);
+                }
+            }
+            .sct-top-row .top-block .sct-right-side {
+                color: sct-f-on($-sct-f27);
+            }
+            .footer_copyright .sct-copyright-text {
+                color: sct-f-on($-sct-f27);
+            }
+        }
+        footer.o_footer .o_footer_copyright .o_footer_copyright_name {
+            color: sct-f-readable-alpha($light-color, .6, $-sct-f27-copy) !important;
+        }
+    }
+    @if sct-f-readable(lighten($primary, 15%), $-sct-f27) != lighten($primary, 15%) {
+        footer.o_footer .sct-top-row .title-20 {
+            color: sct-f-readable(lighten($primary, 15%), $-sct-f27);
+        }
+    }
+    // "Powered by Odoo" links take the palette's link colour (a shade of the primary colour)
+    // (Odoo darkens that colour on a dark footer, which keeps it below 3:1 here)
+    footer.o_footer .o_footer_copyright .o_brand_promotion a:not(.btn) {
+        color: sct-f-darken-to($primary, $-sct-f27);
+    }
+    @if sct-f-readable($secondary, $-sct-f27) != $secondary {
+        footer.o_footer .footer_copyright .sct-copyright-text a:not(:hover) {
+            color: sct-f-readable($secondary, $-sct-f27);
+        }
+    }
+    // newsletter "Thanks" button (after subscribing), on a 30% white tint of the footer: it took
+    // the footer's link colour or Odoo's success-button text, either could not be read there;
+    // white, or dark text on a light footer
+    $-sct-f27-thanks: mix($light-color, $-sct-f27, 30%);
+    footer.o_footer .s_newsletter_subscribe_form .btn-success {
+        --bs-btn-color: #{sct-f-on($-sct-f27-thanks)};
+        --bs-btn-hover-color: #{sct-f-on($-sct-f27-thanks)};
+        --bs-btn-active-color: #{sct-f-on($-sct-f27-thanks)};
+        color: sct-f-on($-sct-f27-thanks) !important;
+    }
+}
+
+// Hover colours: same idea for the footer links Scita colours with the primary / secondary colour.
+@if $-sct-ftr == 'Footer-6' and contrast-ratio($primary, $-sct-ftr-bg) < 3.05 {
+    footer .footer-content .sct-middle-row ul li a:hover {
+        color: sct-f-darken-to($primary, $-sct-ftr-bg);
+    }
+}
+@if $-sct-ftr == 'Footer-27' {
+    $-sct-f27h: darken($primary, 30%);
+    @if contrast-ratio($secondary, $-sct-f27h) < 3.05 {
+        footer.o_footer a:hover,
+        footer.o_footer .sct-middle-row-wrapper .sct-middle-row .sct-links a:hover,
+        footer.o_footer .sct-middle-row-wrapper .sct-middle-row .sct-links .social-media li a:hover .fa {
+            color: sct-f-darken-to($secondary, $-sct-f27h);
+        }
+    }
+}

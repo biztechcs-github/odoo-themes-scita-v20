@@ -21,7 +21,7 @@ a#theme_customize {
 	position: fixed;
 	right: 0;
 	top: 100px;
-	background: $dark-color;
+	background: $dark-color; @include sct-light-box($dark-color, true);
 	width: 50px;
 	height: 50px;
 	color: transparent;
@@ -63,7 +63,7 @@ a#theme_customize {
 		margin-bottom: 15px;
 		.sct_label {
 			padding: 10px;
-			background-color: $dark-color;
+			background-color: $dark-color; @include sct-light-box($dark-color, true);
 			border-radius: 8px;
 			margin-bottom: 0;
 			color: $light-color;
@@ -92,7 +92,7 @@ a#theme_customize {
 			a {
 				display: inline-block;
 				vertical-align: middle;
-				color: $primary;
+				color: sct-pc($primary);
 				padding: 0 10px;
 				font-weight: bold;
 				font-size: 16px;
@@ -101,7 +101,7 @@ a#theme_customize {
 					border-left: 1px solid fade-out($dark-color, 0.7);
 				}
 				&:hover{
-					color:$dark-color;
+					color:sct-dk($dark-color);
 				}
 			}
 		}
@@ -123,7 +123,7 @@ a#theme_customize {
 			padding: 5px;
 			border: none;
 			font-weight: bold;
-			background: #84f4ff;
+			background: #84f4ff; @include sct-light-box(#84f4ff, false);
 		}
 	}
 	.o_panel_body {

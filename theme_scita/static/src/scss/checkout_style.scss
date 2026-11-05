@@ -8,7 +8,7 @@
 		.progress-wizard-step {
 			&.active {
 				.progress-wizard-dot {
-					background: $primary;
+					background: $primary; @include sct-light-box($primary, false);
     				box-shadow: 0 0 0 0.1875rem white, 0 0 0 0.25rem fade-out($primary, 0.5);
 				}
 			}
@@ -18,9 +18,9 @@
 .oe_cart {
 	td {
 		a {
-			color: $primary;
+			color: sct-pc($primary);
 			&:hover{
-				color:$dark-color;
+				color:sct-dk($dark-color);
 			}
 		}
 	}
@@ -41,7 +41,7 @@
     padding-left: 0.3rem;
 }
 .table-striped tbody tr:nth-of-type(odd) {
-	background-color: fade-out($primary, 0.9);
+	background-color: fade-out($primary, 0.9); @include sct-light-box(fade-out($primary, 0.9), false);
 }
 .js_cart_summary {
 	border-radius: 0;
@@ -93,7 +93,7 @@
 	}
 	.card-body {
 		a {
-			color: $primary;
+			color: sct-pc($primary);
 		}
 	}
 }
@@ -102,10 +102,10 @@
 		border-radius: 0;
 	}
 	.bg-info {
-		background: $primary !important;
+		background: $primary !important; @include sct-light-box($primary, false);
 	}
 	.bg-info-light {
-		background: fade-out($primary, 0.9);
+		background: fade-out($primary, 0.9); @include sct-light-box(fade-out($primary, 0.9), false);
 	}
 	.card-header{
 		p{
@@ -126,7 +126,7 @@ header {
 	.h-cart {
 		#cart_total {
 			a {
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				border-radius: 0;
 				line-height: 25px;
 				&.proceed {
@@ -155,7 +155,7 @@ header {
     border: 1px dashed $primary;
 }
 .wizard .progress-wizard .progress-wizard-step.active .progress-wizard-dot:before {
-    background: $primary;
+    background: $primary; @include sct-light-box($primary, false);
     content: "";
     position: absolute;
     top: 0;
@@ -217,13 +217,13 @@ body #wrapwrap.o_portal {
 			width: 50px;
 		}
 		.btn.btn-link{
-			color: $light-color;
-			background-color: $primary;
+			color: sct-oc($light-color, $primary);
+			background-color: $primary; @include sct-light-box($primary, true);
 			@include transition(all, 0.2s, ease-in);
 			
 			&:hover{
-				color: $primary;
-				background-color: $light-color;
+				color: sct-pc($primary, $light-color);
+				background-color: $light-color; @include sct-light-box($light-color, true);
 			}
 		}
 	}
@@ -231,7 +231,7 @@ body #wrapwrap.o_portal {
 		.o_portal_docs{
 			.o_portal_index_card{
 				a{
-					background-color: rgba($primary, 0.25);
+					background-color: rgba($primary, 0.25); @include sct-light-box(rgba($primary, 0.25), false);
 					border-color: rgba($primary, 0.25);
 					align-items: center;
 				}
@@ -243,8 +243,8 @@ body #wrapwrap.o_portal {
 	}
 	.o_portal_navbar {
 		.btn-secondary {
-			background-color: $primary;
-			color: $light-color;
+			background-color: $primary; @include sct-light-box($primary, true);
+			color: sct-oc($light-color, $primary);
 			line-height: 35px !important;
 			border:none;
 			padding: 0 10px;
@@ -252,14 +252,14 @@ body #wrapwrap.o_portal {
 		.dropdown-menu{
 			.dropdown-item{
 				&.active{
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, false);
 				}
 			}
 		}
 	}
 	.breadcrumb-item {
 		a {
-			color: $primary;
+			color: sct-pc($primary);
 		}
 	}
 	.o_portal_wrap {
@@ -267,7 +267,7 @@ body #wrapwrap.o_portal {
 			.card {
 				.bs-sidenav, .sale_tbody {
 					a {
-						color: $primary;
+						color: sct-pc($primary);
 					}
 				}
 
@@ -276,7 +276,7 @@ body #wrapwrap.o_portal {
 		.o_portal_my_doc_table {
 			td {
 				a {
-					color: $primary;
+					color: sct-pc($primary);
 
 					&:hover{
 						text-decoration: underline;
@@ -286,8 +286,8 @@ body #wrapwrap.o_portal {
 						min-width: auto;
 						padding: 3px 10px 4px;
 						line-height: normal;
-						background-color: $light-color;
-						color: $primary;
+						background-color: $light-color; @include sct-light-box($light-color, true);
+						color: sct-pc($primary, $light-color);
 						font-size: 14px;
 						font-weight: 500;
 						border-radius: 0.3rem;
@@ -335,9 +335,9 @@ body #wrapwrap.o_portal {
 // view cart page design
 .o_website_sale_checkout {
 	> a{
-		color: $body-color;
+		color: sct-dk($body-color);
 		&:hover{
-			color: $primary;
+			color: sct-pc($primary);
 		}
 	}
 	.btn-primary{
@@ -413,7 +413,7 @@ body #wrapwrap.o_portal {
 					.input-group{
 						margin-bottom: 0 !important;
 						margin-right: 15px;
-						background-color: #f6f6f6;
+						background-color: #f6f6f6; @include sct-light-box(#f6f6f6, false);
 						border-radius: 40px;
 						position: relative;
 						top: 0;
@@ -426,14 +426,14 @@ body #wrapwrap.o_portal {
 						align-items: center;
 						.btn-link{
 							border: 0;
-							background-color: $light-color;
+							background-color: $light-color; @include sct-light-box($light-color, true);
 							border-radius: 50% !important;
 							width: 32px;
 							height: 32px;
 							display: flex !important;
 							align-items: center;
 							justify-content: center;
-							color: $secondary;
+							color: sct-pc($secondary, $light-color);
 							padding: 0;
 							i{
 								font-size: 13px;
@@ -490,15 +490,15 @@ body #wrapwrap.o_portal {
 						display: flex !important;
 						margin-top: 0 !important;
 						.css_quantity {
-							background-color: whitesmoke;
+							background-color: whitesmoke; @include sct-light-box(whitesmoke, false);
 							padding: 4px;
 							border-radius: 50px;
 							border: 0 !important;
 							.btn-link {
 								padding: 5px 10px;
-								background-color: #ffffff;
+								background-color: #ffffff; @include sct-light-box(#ffffff, true);
 								// the theme colour (a fixed light peach was barely visible on white, whatever the palette)
-								color: $primary;
+								color: sct-pc($primary, #ffffff);
 								border-radius: 50px;
 							}
 							input {
@@ -536,10 +536,10 @@ body #wrapwrap.o_portal {
 		}
 		.coupon_form{
 			a.btn-secondary{
-				color: $light-color;
+				color: sct-oc($light-color, $primary);
 				font-weight: bold;
 				box-shadow: none;
-				background-color: $primary;
+				background-color: $primary; @include sct-light-box($primary, true);
 				border-color: $primary;
 				padding: 10px 15px !important;
 			}
@@ -551,15 +551,15 @@ body #wrapwrap.o_portal {
 					margin: 24px 0 12px;
 					border: 2px dotted $primary;
 					position: relative;
-					background-color: rgba($secondary , 0.2);
-					color: $primary;
+					background-color: rgba($secondary , 0.2); @include sct-light-box(rgba($secondary , 0.2), true);
+					color: sct-pc($primary, rgba($secondary , 0.2));
 					transition: 0.3s ease-in;
 					font-size: $font-size-base-scita;
 					@include min1340{
 						font-size: $font-size-base-scita + 2;
 					}
 					&:hover{
-						background-color: rgba($secondary , 0.3);
+						background-color: rgba($secondary , 0.3); @include sct-light-box(rgba($secondary , 0.3), false);
 					}
 					&::before{
 						content: "\f0c4";
@@ -568,7 +568,7 @@ body #wrapwrap.o_portal {
 						position: absolute;
 						top: -21px;
 						left: 10px;
-						color: $primary;
+						color: sct-pc($primary, rgba($secondary , 0.2));
 					}
 					strong{
 						font-weight: 500;
@@ -582,7 +582,7 @@ body #wrapwrap.o_portal {
 						padding: 0;
 						background: transparent;
 						border: 0;
-						color: $primary !important;
+						color: sct-pc($primary, rgba($secondary , 0.2)) !important;
 						position: absolute;
 						left: 0;
 						right: 0;
@@ -771,7 +771,7 @@ body #wrapwrap.o_portal {
 	margin-bottom: 0;
 }
 .btn-fill-primary:disabled, .btn-primary:disabled, .btn-primary.o_wysiwyg_loader, .btn-fill-primary.o_wysiwyg_loader, .btn-fill-primary.disabled, .disabled.btn-primary{
-	background-color: $light-color;
+	background-color: $light-color; @include sct-light-box($light-color, false);
 	border-color: $light-color;
 }
 .o_payment_form .o_outline:hover {
@@ -785,7 +785,7 @@ body #wrapwrap.o_portal {
 	border-color: $primary;
 }
 .form-check-input:checked{
-	background-color: $primary;
+	background-color: $primary; @include sct-light-box($primary, false);
     border-color: $primary;
 }
 
@@ -810,18 +810,18 @@ body #wrapwrap.o_portal {
 	max-width: 80px;
 	max-height: 80px;
 	border-radius: 50%;
-	background: #dbb544;
+	background: #dbb544; @include sct-light-box(#dbb544, false);
 	animation: popup-product 0.9s ease-in-out infinite;
   }
   
   .popup-product:hover {
 	width: 80px;
 	height: 80px;
-	background: #25c462;
+	background: #25c462; @include sct-light-box(#25c462, false);
   }
 #brand_filter button.active,
 #brand_filter button:hover {
-	background-color: #212529;
+	background-color: #212529; @include sct-light-box(#212529, true);
 	color: white;
 }
 
@@ -854,7 +854,7 @@ body #wrapwrap.o_portal {
     min-width: 0;
 
     input.quantity {
-        color: $body-color;
+        color: sct-dk($body-color);
         font-weight: 500;
         background-color: transparent !important;
         min-height: 0 !important;

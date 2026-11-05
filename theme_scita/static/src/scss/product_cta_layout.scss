@@ -230,7 +230,7 @@
     padding: 6px 20px;
     border: 0 !important;
     border-radius: 4px !important;
-    background: rgba($secondary, 0.1) !important;
+    background: rgba($secondary, 0.1) !important; @include sct-light-box(rgba($secondary, 0.1), true);
     color: if(contrast-ratio($secondary, $white) < 4.5, shade-color($secondary, 60%), $secondary);
     font-size: 14px;
 }

@@ -15,7 +15,7 @@
 // Auto-split from snippets.scss during the CSS bundle-scoping pass.
 
 .retial_trust_snippet_1{
-	background: $light-grey-color;
+	background: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 50px 0 20px;
 	@include min992{
 		padding: 60px 0 30px;
@@ -30,7 +30,7 @@
 		height: 100%;
 	}
 	.sct-left-side {
-		background: $light-color;
+		background: $light-color; @include sct-light-box($light-color, false);
 		border: 1px solid $dark-grey-color;
 		width: 80px;
 		min-width: 80px; 
@@ -50,7 +50,7 @@
 		padding-left: 20px;
 	}
 	h4 {
-		color: $dark-color;
+		color: sct-dk($dark-color);
 		font-size: $head-label;
 		font-weight: 900;
 		@media (max-width: 991px){
@@ -60,7 +60,7 @@
 	p{
 		font-size: 13px;
 		font-weight: 600;
-		color: #7b7b7b;
+		color: sct-dk(#7b7b7b);
 		margin-bottom: 0;
 	}
 }
@@ -94,7 +94,7 @@
 			padding: 5px;
 
 			.sct_timer_inner{
-				background-color: #f0f0f0;
+				background-color: #f0f0f0; @include sct-light-box(#f0f0f0, false);
 				padding: 25px;
 				border-radius: 15px;
 				@include flex;
@@ -141,7 +141,7 @@
 									.t_days_hr_min_sec_digit{
 										margin-top: 0;
 										font-size: $subtitle - 10;
-										background: rgba($light-color, 0.6);
+										background: rgba($light-color, 0.6); @include sct-light-box(rgba($light-color, 0.6), false);
 										padding: 5px;
 										width: 100%;
 										display: block;
@@ -187,7 +187,7 @@
 					font-size: $subtitle - 10;
 					font-weight: 300;
 					margin: 0;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					
 					@include min1200{
 						font-size: $subtitle - 3;
@@ -196,7 +196,7 @@
 				.sub_title{
 					font-size: $font-body - 1;
 					margin: 10px 0 0;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					
 					@include min1200{
 						font-size: $font-body + 1;
@@ -219,7 +219,7 @@
 				right: 20px;
 				width: 45px;
 				height: 45px;
-				background: $light-color;
+				background: $light-color; @include sct-light-box($light-color, false);
 				padding: 15px;
 				border-radius: 50px;
 				@include justify-center-flex;
@@ -235,7 +235,7 @@
 
 			&:hover{
 				.sct_img_link{
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, false);
 					img{
 						filter: brightness(0) invert(1);
 					}
@@ -422,15 +422,15 @@
 		}
 	}
 	.sct_gray_side {
-		background-color: #b1baab; /* For browsers that do not support gradients */
+		background-color: #b1baab; @include sct-light-box(#b1baab, false); /* For browsers that do not support gradients */
   		background-image: linear-gradient(#b1baab, #678d82); /* Standard syntax (must be last) */
 	}
 	.sct_pink_side {
-		background-color: #b0219a; /* For browsers that do not support gradients */
+		background-color: #b0219a; @include sct-light-box(#b0219a, false); /* For browsers that do not support gradients */
   		background-image: linear-gradient(#b0219a, #eb529d); /* Standard syntax (must be last) */
 	}
 	.sct_orange_side {
-		background-color: #fea92e; /* For browsers that do not support gradients */
+		background-color: #fea92e; @include sct-light-box(#fea92e, false); /* For browsers that do not support gradients */
   		background-image: linear-gradient(#c0780f, #fea92e); /* Standard syntax (must be last) */
 	}
 }
@@ -454,7 +454,7 @@
 		margin-bottom: 0;
 	}
 	p {
-		color: $body-color;
+		color: sct-dk($body-color);
 		margin: 20px 0 45px;
 		@media (max-width: 1199px){
 			margin: 20px 0 35px;
@@ -493,7 +493,7 @@
 			bottom: 0;
 			margin: auto;
 			a {
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				background: transparent;
 				border: none;
 				font-weight: bold;
@@ -534,11 +534,11 @@
 			color: fade-out($light-color, 0.5);
 			border-bottom: 1px solid fade-out($light-color, 0.5);
 			&:-webkit-autofill{
-				background-color:  $light-color !important;
+				background-color:  $light-color !important; @include sct-light-box($light-color, false);
 				+ .input-group-btn{
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, false);
 					.js_subscribe_btn{
-						color: $light-color;
+						color: sct-oc($light-color, $primary);
 					}
 				}
 			}
@@ -634,14 +634,14 @@
 			}
 			p {
 				font-size: $font-size-base-scita;
-				color: fade-out($dark-color, 0.5);
+				color: sct-dka(fade-out($dark-color, 0.5));
 				@media (max-width: 767px){
 					margin-bottom: 5px;
 				}
 			}
 			h3 {
 				font-size: $title;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				font-weight: 700;
 				margin-bottom: 0;
 			}
@@ -705,7 +705,7 @@
 				content: '';
 				width: 1px;
 				height: 50px;
-				background: $dark-color;
+				background: $dark-color; @include sct-light-box($dark-color, false);
 				left: 0;
 				right: 0;
 				top: -50px;
@@ -740,7 +740,7 @@
 				padding: 0 20px;
 				margin-top: 25px;
 				line-height: 45px;
-				background: fade-out($dark-color, 0.2);
+				background: fade-out($dark-color, 0.2); @include sct-light-box(fade-out($dark-color, 0.2), true);
 				width: 85%;
 				@media (max-width: 1600px){
 					width: 100%;
@@ -755,7 +755,7 @@
 			}
 			a.btn {
 				background: transparent !important;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				font-size: $title + 4;
 				font-weight: bold;
 				position: relative;
@@ -772,11 +772,11 @@
 					bottom: -8px;
 					width: 50%;
 					height: 2px;
-					background:$dark-color;
+					background:$dark-color; @include sct-light-box($dark-color, false);
 					@include transition(all, 0.5s, ease);
 				}
 				&:hover{
-					color:$dark-color;
+					color:sct-dk($dark-color);
 					&:after{
 						width:100%;
 						@include transition(all, 0.5s, ease);
@@ -795,7 +795,7 @@
 	.lower-row {
 		margin-top: 50px;
 		text-align: left;
-		color: $dark-color;
+		color: sct-dk($dark-color);
 		@media (max-width: 1199px){
 			margin-top: 30px;
 		}
@@ -813,7 +813,7 @@
 			height: 75%;
 			max-width: 200px;
 			margin: auto;
-			background: $light-color;
+			background: $light-color; @include sct-light-box($light-color, false);
 			border: 4px solid $dark-color;
 			padding: 50px 40px 50px 23px;
 			@media (max-width: 1199px){
@@ -827,12 +827,12 @@
 			p {
 				text-transform: uppercase;
 				letter-spacing: 2px;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				font-weight: 600;
 			}
 			.title-text {
 				font-size: $subtitle + 10;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				text-transform: uppercase;
 				font-weight: bold;
 				@media (max-width: 1023px){
@@ -841,7 +841,7 @@
 			}
 			a.btn {
 				background: transparent !important;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				font-size: $title + 4;
 				font-weight: bold;
 				position: relative;
@@ -858,11 +858,11 @@
 					bottom: -8px;
 					width: 50%;
 					height: 2px;
-					background:$dark-color;
+					background:$dark-color; @include sct-light-box($dark-color, false);
 					@include transition(all, 0.5s, ease);
 				}
 				&:hover{
-					color:$dark-color;
+					color:sct-dk($dark-color);
 					&:after{
 						width:100%;
 						@include transition(all, 0.5s, ease);
@@ -965,7 +965,7 @@
 			right: 0;
 			top: 40px;
 			bottom: 40px;
-			background: fade-out($light-color, 0.5);
+			background: fade-out($light-color, 0.5); @include sct-light-box(fade-out($light-color, 0.5), false);
 			width: auto;
 			height: auto;
 			z-index: 1;
@@ -986,7 +986,7 @@
 			p {
 				padding: 0 20px;
 				margin-bottom: 0;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				font-size: $font-body;
 			}
 		}
@@ -1009,8 +1009,8 @@
 						padding-right: 10px;
     				}
 					.box_degit {
-						background: $light-color;
-						color: $dark-color;
+						background: $light-color; @include sct-light-box($light-color, true);
+						color: sct-dk($dark-color);
 						padding: 5px 0 8px;
 						-webkit-box-shadow: 0px 15px 44px -13px rgba(82,11,32,0.7);
 						-moz-box-shadow: 0px 15px 44px -13px rgba(82,11,32,0.7);
@@ -1040,7 +1040,7 @@
 								right: auto;
 								width: 4px;
 								height: 4px;
-								background:$dark-color;
+								background:$dark-color; @include sct-light-box($dark-color, false);
 								border-radius: 50%;
 								margin: auto;
 								@media (max-width: 1023px){
@@ -1052,7 +1052,7 @@
 								top: auto;
 								width: 4px;
 								height: 4px;
-								background:$dark-color;
+								background:$dark-color; @include sct-light-box($dark-color, false);
 							}
 						}
 					}
@@ -1083,14 +1083,14 @@
 		}
 		.sct_deal_btn {
 			a {
-				color: $dark-color;
+				color: sct-dk($dark-color);
 				font-size: $title - 2;
 				font-weight: bold;
 				padding: 5px 10px;
 				border-color: transparent;
 				&:hover{
 					background:transparent;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 				}
 			}
 		}
@@ -1170,25 +1170,25 @@
 			}
 			.sct_per_text {
 				font-size: $subtitle + 10;
-				color: $primary;
+				color: sct-pc($primary);
 				font-weight: 700;
 				font-style: italic;
 			}
 			.sct_simple_text {
 				font-size: $title;
-				color: $dark-color;
+				color: sct-dk($dark-color);
 			}
 			.sct_adv_btn {
 				margin-top: 10px;
 				a {
 					background: transparent !important;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					padding: 0;
 					border: none;
 					font-weight: 700;
 					&:hover{
 						background:transparent;
-						color: $dark-color;
+						color: sct-dk($dark-color);
 						border: none;
 					}
 				}
@@ -1201,7 +1201,7 @@
 			}
 			.sct_text_content {
 				position: absolute;
-				background: fade-out($dark-color, 0.2);
+				background: fade-out($dark-color, 0.2); @include sct-light-box(fade-out($dark-color, 0.2), false);
 				padding: 10px;
 				width: 100%;
 				top: 50%;
@@ -1284,7 +1284,7 @@
                     right: 10px;
                     bottom: 10px;
                     top: 10px;
-                    background: rgba(255, 255, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.3); @include sct-light-box(rgba(255, 255, 255, 0.3), false);
                     z-index: 0;
                     @media (min-width: 1024px){
                     display: none;
@@ -1321,7 +1321,7 @@
 				padding: 35px 26px;
 			}
 			&:hover{
-				color: $dark-color;
+				color: sct-dk($dark-color);
 			}
         }
 		.promo-block{
@@ -1341,7 +1341,7 @@
         padding: 40px 20px 40px;
         height: 100%;
         display: block;
-        color: $dark-color;
+        color: sct-dk($dark-color);
 		@include min768{
 			padding: 70px 20px 70px;
 		}
@@ -1426,7 +1426,7 @@
 /*it about us snippet end*/
 /*it service snippet*/
 .it_grids_service {
-	background-color: #f6f6f6;
+	background-color: #f6f6f6; @include sct-light-box(#f6f6f6, false);
 	padding: 50px 0;
 
 	@include min992{
@@ -1471,7 +1471,7 @@
 						}
 					}
 					.sct_img_content_block{
-						background-color: $light-color;
+						background-color: $light-color; @include sct-light-box($light-color, false);
 						padding: 40px 30px 30px;
 						height: 100%;
 
@@ -1529,7 +1529,7 @@
 					right: 0;
 					top: 0;
 					bottom: 0;
-					background: rgba($black, 0.5);
+					background: rgba($black, 0.5); @include sct-light-box(rgba($black, 0.5), false);
 				}
 				
 				.sct_cst_btn{
@@ -1545,7 +1545,7 @@
 /*it service snippet end*/
 /*it lets talk snippet*/
 .it_letstalk{
-	background: #e5f2ff;
+	background: #e5f2ff; @include sct-light-box(#e5f2ff, false);
 	padding: 50px 0;
 	@include min992{
 		padding: 60px 0;
@@ -1599,7 +1599,7 @@
 			}
 			i{
 				font-size: $subtitle + 2;
-				color: $primary;
+				color: sct-pc($primary);
 				@include min992{
 					font-size: $subtitle + 22;
 				}
@@ -1674,7 +1674,7 @@
 /*it testimonial snippet*/
 .it_our_team {
 	padding: 50px 0;
-	background-color: #f2f2f2;
+	background-color: #f2f2f2; @include sct-light-box(#f2f2f2, false);
 	@include min992{
 		padding: 60px 0;
 	}
@@ -1709,7 +1709,7 @@
 			padding-bottom: 20px;
 
 			.image-container {
-				background: $light-color;
+				background: $light-color; @include sct-light-box($light-color, false);
 				padding: 15px;
 				border-radius: 10px;
 				text-align: center;
@@ -1729,7 +1729,7 @@
 				    }
 				}
 				.name {
-					background: rgba($light-color, 0.7);
+					background: rgba($light-color, 0.7); @include sct-light-box(rgba($light-color, 0.7), false);
 					width: auto;
 					border-radius: 10px;
 					padding: 10px;
@@ -1742,7 +1742,7 @@
 					.sct_title {
 						font-size: $title - 1;
 						font-weight: 500;
-						color: $dark-color;
+						color: sct-dk($dark-color);
 						margin-bottom: 2px;
 
 						@include min992{
@@ -1769,15 +1769,15 @@
 						@include justify-align-content;
 						font-size: $title -2;
 						font-weight: bold;
-						color: $primary;
+						color: sct-pc($primary, $light-color);
 						border: 1px solid $primary;
 						border-radius: 50%;
 						margin: 0 5px;
 						@include transition(all, 0.3s, ease-in);
 
 						&:hover{
-							background: $primary;
-							color: $light-color;
+							background: $primary; @include sct-light-box($primary, true);
+							color: sct-oc($light-color, $primary);
 						}
 					}
 				}
@@ -1899,7 +1899,7 @@
 /*it brand snippet end*/
 /*it blog snippet*/
 .scita_blog_slider {
-	background: rgba($primary ,0.03);
+	background: rgba($primary ,0.03); @include sct-light-box(rgba($primary ,0.03), false);
 	@include bg-nore-cover;
 	padding: 50px 0;
 	@include min992{
@@ -1947,7 +1947,7 @@
 				.section-post-media {
 					width: 100%;
 					background-size: cover;
-					background-color: $light-color;
+					background-color: $light-color; @include sct-light-box($light-color, false);
 					&:after {
 						content: ' ';
 					    padding-bottom: 73%;
@@ -1969,7 +1969,7 @@
 					.sct_blog_name {
 						margin: 0;
 						font-size: $title;
-						color: $dark-color;
+						color: sct-dk($dark-color);
 						display: -webkit-box;
 						-webkit-line-clamp: 1;
 						-webkit-box-orient: vertical;
@@ -1988,7 +1988,7 @@
 						.date, .author{
 							font-size: $font-size-base-scita;
 							margin: 5px 0;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 						}
 					}
 					.blog_link{
@@ -2009,7 +2009,7 @@
 						}
 						&:hover{
 							.arrow_link{
-								background-color: $primary;
+								background-color: $primary; @include sct-light-box($primary, false);
 								border-color: $primary;
 
 								img{
@@ -2024,7 +2024,7 @@
 				.sct_blog_desc{
 					.it_blog_img{
 						.sct_blog_name{
-							color: $primary;
+							color: sct-pc($primary, rgba($primary ,0.03));
 						}
 					}
 				}
@@ -2085,7 +2085,7 @@
 						border: none;
 						font-size: $title + 2;
 						font-weight: bold;
-						color: rgba($dark-color, 0.4);
+						color: sct-dka(rgba($dark-color, 0.55));
 						padding: 0 20px 20px;
 						position: relative;
 
@@ -2095,13 +2095,13 @@
 							content: '';
 							height: 4px;
 							bottom: 0;
-							background: $primary;
+							background: $primary; @include sct-light-box($primary, false);
 							left: 0;
 							right: 0;
 							@include transition(all, 0.5s, ease);
 						}
 						&:hover, &.active{
-							color: $primary;
+							color: sct-pc($primary);
 							&:after{
 								@include transition(all, 0.5s, ease);
 								width: 100%;
@@ -2222,7 +2222,7 @@
 					width: 10px;
 					height: 10px;
 					border-radius: 50%;
-					background: $light-color;
+					background: $light-color; @include sct-light-box($light-color, false);
 					bottom: -5px;
 				}
 				&:after{
@@ -2245,7 +2245,7 @@
 									width: 10px;
 									height: 10px;
 									border-radius: 50%;
-									background: $light-color;
+									background: $light-color; @include sct-light-box($light-color, false);
 									bottom: -4px;
 									left: 0;
 									z-index: 2;
@@ -2253,7 +2253,7 @@
 							}
 						}
 						.nav-link {
-							color: $primary;
+							color: sct-pc($primary);
 							background: transparent;
 							border: none;
 							position: relative;
@@ -2298,7 +2298,7 @@
 									}
 								}
 								.tab_title {
-									color: $primary;
+									color: sct-pc($primary);
 								}
 								&:before{
 									position: absolute;
@@ -2308,7 +2308,7 @@
 									bottom: 0;
 									width: 100%;
 									height: 1px;
-									background: $primary;
+									background: $primary; @include sct-light-box($primary, false);
 								}
 								&:after{
 									position: absolute;
@@ -2317,7 +2317,7 @@
 									bottom: -22px;
 									font-size: 35px;
 									line-height: normal;
-									color: $primary;
+									color: sct-pc($primary);
 									left: 0;
 									right: 0;
 									margin: auto;
@@ -2360,7 +2360,7 @@
 		.sct_simple_text{
 			max-width: 860px;
 			margin: 30px auto;
-			color: fade-out($dark-color, 0.2);
+			color: sct-dka(fade-out($dark-color, 0.2));
 			@media (max-width: 1023px){
 				margin: 20px auto;
 			}
@@ -2412,7 +2412,7 @@
 								&:before{
 									position:absolute;
 									content: '';
-									background: fade-out($dark-color, 0.2);
+									background: fade-out($dark-color, 0.2); @include sct-light-box(fade-out($dark-color, 0.2), false);
 									left: 20px;
 									right: 20px;
 									top: 20px;
@@ -2470,15 +2470,15 @@
 					.sct_simple_text {
 						padding-left: 20px;
 						padding-right: 20px;
-						color: fade-out($dark-color, 0.2);
+						color: sct-dka(fade-out($dark-color, 0.2));
 					}
 					.sct_pers_desig {
 						font-style: italic;
-						color: fade-out($dark-color, 0.5);
+						color: sct-dka(fade-out($dark-color, 0.5));
 					}
 					.sct_pers_name {
 						font-size: $title + 8;
-						color: $dark-color;
+						color: sct-dk($dark-color);
 						font-weight: bold;
 						line-height: normal;
 						@media (max-width: 1023px){
@@ -2595,7 +2595,7 @@
 							}
 						}
 						&.active, &:hover {
-							background: $primary;
+							background: $primary; @include sct-light-box($primary, false);
 							border: 1px solid $primary;
 							.light_img {
 								display: block;
@@ -2637,12 +2637,12 @@
 			}
 			.sct_right_side {
 				.sct_title {
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, true);
 					text-align: center;
 					padding: 10px;
 					font-size: $title;
 					font-weight: bold;
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 					margin: -26px 30px 15px;
 					z-index: 1;
 					position: relative;
@@ -2660,7 +2660,7 @@
 					}
 				}
 				.sct_simple_text{
-					color: fade-out($dark-color, 0.2);
+					color: sct-dka(fade-out($dark-color, 0.2));
     				position: relative;
     				width: 100%;
 					display: -webkit-box;
@@ -2689,7 +2689,7 @@
 .health_location_snippet {
 	// default background (was inline in the block): only while no colour preset is chosen
 	&:not(.o_cc) {
-		background-color: #f5f2f8;
+		background-color: #f5f2f8; @include sct-light-box(#f5f2f8, false);
 	}
 	padding: 50px 0 20px; 
 	@include min992{
@@ -2709,7 +2709,7 @@
 			box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 			border-radius: 5px;
 			padding: 30px;
-			background-color: $light-color;
+			background-color: $light-color; @include sct-light-box($light-color, false);
 			@media(max-width: 991px){
 				padding: 25px;
 			}
@@ -2734,29 +2734,29 @@
 			margin-bottom: 0;
 		}
 		.sct_simple_text {
-			color: fade-out($dark-color, 0.5);
+			color: sct-dka(fade-out($dark-color, 0.5));
 			margin-bottom: 0;
 			span {
 				display: block;
 				a {
-					color: fade-out($dark-color, 0.5);
+					color: sct-dka(fade-out($dark-color, 0.5));
 					&:hover{
-						color: fade-out($dark-color, 0.2);
+						color: sct-dka(fade-out($dark-color, 0.2));
 					}
 				}
 			}
 			.phone{
-				color: $black;
+				color: sct-dk($black);
 				font-weight: 600;
 				margin-top: auto;
 				padding-top: 20px;
 				a{
-					color: $black;
+					color: sct-dk($black);
 				}
 			}
 			.email{
 				a{
-					color: $primary;
+					color: sct-pc($primary);
 				}
 			}
 		}
@@ -2801,7 +2801,7 @@
    }
     .section-title{
         font-weight: bolder;
-        color: #003B1D;
+        color: sct-dk(#003B1D);
         margin-bottom: 0;
 		font-size: 25px;
 		@include min768{
@@ -2833,7 +2833,7 @@
             font-size: 14px;
             line-height:normal;
             font-weight: normal;
-            color: $dark-color;
+            color: sct-dk($dark-color);
             margin-bottom: 10px;
             @media (min-width: 1024px){
                 padding: 12px 37px;
@@ -2850,7 +2850,7 @@
         font-style: italic;
         font-weight:normal;
         line-height:1;
-        color: #496146;
+        color: sct-dk(#496146);
     }
 }
 
@@ -2868,7 +2868,7 @@
 		}
 	}
 	.case_study_box {
-		background: rgba($primary, 0.1);
+		background: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), false);
 		padding: 30px;
 		border-radius: 10px;
 		height: 100%;
@@ -2904,7 +2904,7 @@
 /*testimonial snippet 3*/
 .testinomial_varient_3 {
 	padding: 50px 0 20px;
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	@include min992{
 		padding: 60px 0 30px;
 	}
@@ -2915,7 +2915,7 @@
 		height: 100%;
 		@include flex;
 		@include flexwrap;
-		background-color: $light-color;
+		background-color: $light-color; @include sct-light-box($light-color, false);
 		-webkit-box-shadow: 0px 2px 22px 0px rgba($black,0.2);
 		box-shadow: 0px 2px 22px 0px rgba($black,0.2);
 		border-radius: 10px;
@@ -2926,7 +2926,7 @@
 				margin-bottom: 0;					
 			}
 			i{
-				color: rgba($black, 0.5);
+				color: sct-dka(rgba($black, 0.5));
 				// font-size: $title + 4;
 				margin-bottom: 5px;
 				display: block;
@@ -2935,8 +2935,8 @@
 		.sct_msg_box {
 			@include flex;
 			@include align-content;
-			background: darken($secondary, 10%);
-			color: $light-color;
+			background: darken($secondary, 10%); @include sct-light-box(darken($secondary, 10%), true);
+			color: sct-oc($light-color, darken($secondary, 10%));
 		    padding: 10px 20px;
 			margin-top: auto;
 			width: 100%;
@@ -2945,12 +2945,14 @@
 				font-weight: bold;
 				font-size: $title - 2;
 				margin-bottom: 2px;
+				// (a heading: on a dark page the white card's dark heading colour would reach it)
+				@if $-sct-dark-page { color: inherit; }
 			}
 			.test_desig {
 				margin-bottom: 0;
 				font-weight: 300;
 				font-size: $font-body - 2;
-				color: rgba($white, 0.8);
+				color: sct-oc(rgba($white, 0.8), darken($secondary, 10%));
 			}
 				
 			.sct_left_side {
@@ -2972,7 +2974,7 @@
 				@include content-sb;
 				align-items: flex-end;
 				.s_rating{
-					background: rgba($white, 0.8);
+					background: rgba($white, 0.8); @include sct-light-box(rgba($white, 0.8), false);
 					padding: 1px 5px;
 					border-radius: 3px;
 					i{
@@ -2980,6 +2982,7 @@
 					}
 					.s_rating_text{
 						margin-left: 2px;
+						// on its own 80% white badge: dark on any page
 						color: $dark-grey-color;
 					}
 				}
@@ -3037,7 +3040,7 @@
 			.s_rating{
 				margin-bottom: 10px;
 				.s_rating_inactive_icons, .s_rating_active_icons{
-					color: #F0B419;
+					color: sct-dk(#F0B419);
 				}
 			}
 		}
@@ -3077,7 +3080,7 @@
 /*service snippet 7*/
 .service_varient_11 {
 	padding: 50px 0 25px;
-	background-color: $dark-color;
+	background-color: $dark-color; @include sct-light-box($dark-color, false);
 
 	@include min992{
 		padding: 60px 0 35px;
@@ -3108,10 +3111,10 @@
 				}
 				.fa{
 					border-radius: 10px;
-					background: $primary;
+					background: $primary; @include sct-light-box($primary, true);
 					padding: 12px;
 					font-size: 25px;
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 				}
 			}
 			.sct_text_info{
@@ -3179,7 +3182,7 @@
 		}
 		&.sct_service_long_block{
 			.sct_sers_box{
-				background: rgba($light-color, 0.32);
+				background: rgba($light-color, 0.32); @include sct-light-box(rgba($light-color, 0.32), false);
 				border-color: transparent;
 			}
 		}
@@ -3217,7 +3220,7 @@
 				width: 50px;
 				.fa {
 					font-size: 38px;
-					color: $primary;
+					color: sct-pc($primary);
 				}
 			}
 			.sct_text_info {
@@ -3265,7 +3268,7 @@
 			border-radius: 12px;
 			position: relative;
 			margin: 0px 10px;
-			background: $light-color;
+			background: $light-color; @include sct-light-box($light-color, false);
 
 			@media (max-width: 1023px){
 				padding: 15px;
@@ -3274,7 +3277,7 @@
 				content: '';
 				width: calc(100% + 20px);
 				height: calc(100% - 30px);
-				background: $primary;
+				background: $primary; @include sct-light-box($primary, false);
 				position: absolute;
 				z-index: -1;
 				border-radius: 12px;
@@ -3286,7 +3289,7 @@
 			.service_icon {
 				width: 60px;
 				height: 60px;
-				background: $primary;
+				background: $primary; @include sct-light-box($primary, false);
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
@@ -3300,7 +3303,7 @@
 				}
 				.fa {
 					font-size: 28px;
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 					
 					@media (min-width: 992px) {
 						font-size: 34px;
@@ -3311,7 +3314,7 @@
 				.sct_title {
 					font-size: $title + 2;
 					margin: 15px 0;
-					color: $primary;
+					color: sct-pc($primary, $light-color);
 					font-weight: bold;
 				}
 				.sct_simple_text {
@@ -3330,7 +3333,7 @@
 
 /*pricing snippet 2*/
 .pricing_table_v2 {
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 50px 0 20px;
 	@include min992{
 		padding: 60px 0 30px;
@@ -3358,7 +3361,7 @@
 				@include justify-align-content;
 			    margin-bottom: 50px;
 				@include inline-flex;
-				background: $light-color;
+				background: $light-color; @include sct-light-box($light-color, false);
 				padding: 10px;
 				border-radius: 50px;
 				@media (max-width: 1023px){
@@ -3371,7 +3374,7 @@
 				}
 				.nav-link {
 					font-weight: bold;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					border: none;
 					border-radius: 30px;
 					font-size: $title - 1;
@@ -3379,9 +3382,9 @@
 					width: 150px;
 					text-align: center;
 					&.active, &:hover{
-						color:$light-color;
+						color:sct-oc($light-color, $primary);
 						border: none;
-						background: $primary;
+						background: $primary; @include sct-light-box($primary, true);
 					}
 					@media (max-width: 1023px){
 						padding: 10px 30px;
@@ -3395,7 +3398,7 @@
 				.sct_pri_thumb {					
 					.package {
 						position: relative;
-						background-color: $light-color;
+						background-color: $light-color; @include sct-light-box($light-color, false);
 						padding: 30px;
 						-webkit-box-shadow: 1px 1px 30px 5px rgba(0,0,0,0.1);
 						box-shadow: 1px 1px 30px 0px rgba(0,0,0,0.1);
@@ -3430,17 +3433,17 @@
 							}
 							.sct_dev_mon{
 								font-size: $title - 2;
-								color: $dark-grey-color;
+								color: sct-dk($dark-grey-color);
 							}
 							.sct_per_month {
-								background: rgba($primary, 0.3);
+								background: rgba($primary, 0.3); @include sct-light-box(rgba($primary, 0.3), false);
 								padding: 5px 20px;
 								border-radius: 5px;
 								.sct_rs {
 									font-size: $subtitle - 10;
 									font-weight: bold;
 									line-height: normal;
-									color: $primary;
+									color: sct-pc($primary, mix($primary, $light-color, 30%));
 								}
 							}
 						}
@@ -3453,7 +3456,7 @@
 							li {
 								font-size: $font-body;
 								.fa {
-									color: $primary;
+									color: sct-pc($primary, $light-color);
 									margin-right: 10px;
 								}
 								+ li {
@@ -3503,7 +3506,7 @@
 		overflow: hidden;
 		height: 100%;
 		.sct_base_class {		
-			background-color: rgba($primary, 0.1);
+			background-color: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), false);
 			text-align: center;
 			padding: 30px;
 			
@@ -3531,7 +3534,7 @@
 			display: inline-block;
 			margin-bottom: 0;
 			.sct_mont {
-				color:$dark-grey-color;
+				color:sct-dk($dark-grey-color);
 				font-size: $title;
 				font-weight: normal;				
 			}
@@ -3589,7 +3592,7 @@
 			
 			.package {
 				border-radius: 12px;		
-				background-color: rgba($primary, 0.15);
+				background-color: rgba($primary, 0.15); @include sct-light-box(rgba($primary, 0.15), false);
 				height: 100%;
 				padding: 30px;
 				@include flex;
@@ -3605,7 +3608,7 @@
 						display: block;
 					}
 					.sct_price_descrtiption{
-						color: $dark-grey-color;
+						color: sct-dk($dark-grey-color);
 
 					}
 					.sct_price_heading{
@@ -3615,11 +3618,11 @@
 						.sct_price_icon{
 							width: 40px;
 							height: 40px;
-							background: $primary;
+							background: $primary; @include sct-light-box($primary, true);
 							@include flex;
 							@include justify-align-content;
 							border-radius: 50%;
-							color: $light-color;
+							color: sct-oc($light-color, $primary);
 							font-size: $title;
 							margin-right: 10px;
 						}
@@ -3640,7 +3643,7 @@
 					.sct_text {
 						display: inline-block;
 						font-weight: normal;
-						color: $dark-grey-color;
+						color: sct-dk($dark-grey-color);
 					}
 					p {
 						margin-bottom: 0;
@@ -3649,7 +3652,7 @@
 				}
 				.sct_unorder_list {					
     				padding: 20px 20px 20px 40px;
-					background-color: rgba($primary, 0.1);
+					background-color: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), false);
 					border-radius: 12px;
 					@media (max-width: 991px) {
     					padding: 15px 15px 15px 35px;						
@@ -3689,8 +3692,8 @@
 	}
 	.sct_test_box {
 		padding: 30px;
-		background-color: rgba($primary, 0.1);
-		color: $dark-color;
+		background-color: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), true);
+		color: sct-dk($dark-color);
 		position: relative;
 		border-radius: 10px;
 		height: 100%;
@@ -3709,7 +3712,7 @@
 			top: -25px;
 			@include flex;
 			@include justify-align-content;
-			background-color: $primary;
+			background-color: $primary; @include sct-light-box($primary, false);
 			border-radius: 50%;
 			overflow: hidden;
 
@@ -3720,7 +3723,7 @@
 			}
 			.fa {
 				font-size: $title + 8;
-				color: $light-color;
+				color: sct-oc($light-color, $primary);
 			}
 		}
 		.sct-title-side {
@@ -3753,7 +3756,7 @@
 	}
 	.sct_btm_row {
 		.sct_news_box {
-			background: $primary;
+			background: $primary; @include sct-light-box($primary, false);
 			padding: 60px 100px;
 			@media (max-width: 1599px){
 				padding: 60px 80px;
@@ -3765,7 +3768,7 @@
 				.sct_title {
 					font-weight: bold;
 					font-size: $subtitle;
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 					margin-bottom: 15px;
 					@media (max-width: 1023px){
 						font-size: $subtitle - 10;
@@ -3773,12 +3776,12 @@
 				}
 				.sct_simple_text {
 					margin-bottom: 0;
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 				}
 			}
 		}
 		.sct_control_box {
-			background: $dark-color;
+			background: $dark-color; @include sct-light-box($dark-color, false);
 			padding: 60px 100px;
 			@include flex;
 			@include align-content;
@@ -3828,9 +3831,9 @@
 						&:hover, &:focus, &:active{
 							background:transparent;
 							box-shadow: none !important;
-							color: $primary;
+							color: sct-pc($primary, $dark-color);
 							@media (max-width: 767px){
-								background-color: $white;
+								background-color: $white; @include sct-light-box($white, false); color: sct-pc($primary, $white);
 								border: 1px solid $white;
 							}
 						}
@@ -3864,7 +3867,7 @@
 /*our team snippet minor changes end*/
 /*our team snippet 1*/
 .our_team_varient_2 {
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 60px 0;
 	@media (max-width: 1199px){
 		padding: 50px 0;
@@ -3880,7 +3883,7 @@
 		.v-2-image-container {
 			border: 2px solid $light-color;
 			.follow {
-				background-color: $dark-color;
+				background-color: $dark-color; @include sct-light-box($dark-color, false);
 				padding: 20px;
 				@include flex;
 				a {
@@ -3978,7 +3981,7 @@
 /*our team snippet 2 end*/
 /*our team snippet 3*/
 .our_team_varient_4 {
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 60px 0;
 	@media (max-width: 1199px){
 		padding: 50px 0;
@@ -4001,7 +4004,7 @@
 					bottom: 0;
 					top: 0;
 					margin: auto;
-					background-color: fade-out($primary, 0.5);
+					background-color: fade-out($primary, 0.5); @include sct-light-box(fade-out($primary, 0.5), false);
 					display: none;
 					@include justify-align-content;
 					a {
@@ -4017,7 +4020,7 @@
 				padding: 20px;
 				.sct_title {
 					font-weight: bold;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					margin-bottom: 0;
 				}
 			}
@@ -4030,7 +4033,7 @@
 					display: inline-block;
 					width: 20px;
 					font-size: 18px;
-					color: $primary;
+					color: sct-pc($primary, $light-grey-color);
 					vertical-align: middle;
 					margin-right: 10px;
 				}
@@ -4038,7 +4041,7 @@
 					display: inline-block;
 					vertical-align: middle;
 					max-width: 90%;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					font-size: $font-body;
 					word-break: break-all;
     				word-wrap: break-word;
@@ -4048,7 +4051,7 @@
 				}
 			}
 			&:hover{
-				background-color: $light-color;
+				background-color: $light-color; @include sct-light-box($light-color, false);
 				.sct_hover_follow {
 					@include flex;
 				}
@@ -4086,7 +4089,7 @@
 					margin-top: 20px;
 				}
 				.sct_job_desig {
-					color: $primary;
+					color: sct-pc($primary);
 					font-size: $font-body;
 					margin-bottom: 0;
 				}
@@ -4177,12 +4180,12 @@
 				top: 0;
 				left: 0;
 				right: 0;
-				background: lighten($primary, 0.4);
+				background: lighten($primary, 0.4); @include sct-light-box(lighten($primary, 0.4), false);
 				padding: 70px 10px 20px;
 				background: linear-gradient(90deg, $dark-color 0%, $primary 100%);
 
 				.sct_emp_desc{
-					color: $light-color;
+					color: sct-oc($light-color, lighten($primary, 0.4));
 					font-size: $title - 4;
 					margin-bottom: 6px;
 				}
@@ -4192,7 +4195,7 @@
 					
 					a{
 						padding: 4px;
-						background-color: $light-color;
+						background-color: $light-color; @include sct-light-box($light-color, false);
 						margin: 0 4px;
 						width: 28px;
 						height: 28px;
@@ -4250,7 +4253,7 @@
 				.sct_job_desig {
 					font-weight: bold;
 					font-size: $title - 2;
-					color: $primary;
+					color: sct-pc($primary);
 				}
 				.sct_title {
 					font-weight: bold;
@@ -4265,7 +4268,7 @@
 						height: 1px;
 						left: 0;
 						bottom: 0;
-						background-color: $primary;
+						background-color: $primary; @include sct-light-box($primary, false);
 					}
 				}
 				.follow {
@@ -4276,7 +4279,7 @@
 						height: 35px;
 						@include flex;
 						@include justify-align-content;
-						color: fade-out($dark-color, 0.5);
+						color: sct-dka(fade-out($dark-color, 0.5));
 						border: 1px solid fade-out($dark-color, 0.5);
 						border-radius: 50%;
 						font-size: $font-body;
@@ -4331,7 +4334,7 @@
 			@include justify-align-content;
 			.fa {
 				font-size: 26px;
-				color: $primary;
+				color: sct-pc($primary);
 				margin-right: 15px;				
 			}
 			
@@ -4346,9 +4349,9 @@
 			.sct_simple_text {
 				margin-bottom: 0;		
 				margin-top: 10px;	
-				color: $dark-grey-color; 
+				color: sct-dk($dark-grey-color); 
 				a {
-					color: $dark-grey-color; 
+					color: sct-dk($dark-grey-color); 
 				}
 			}
 		}
@@ -4397,7 +4400,7 @@
 			.sct_no_detail {
 				width: 80%;
 				text-align: center;
-				background-color: $dark-color;
+				background-color: $dark-color; @include sct-light-box($dark-color, false);
 				padding: 5%;
 				position: relative;
 				margin-top: 30px;
@@ -4426,7 +4429,7 @@
 					}
 				}
 				a {
-					color: $primary;
+					color: sct-pc($primary, $dark-color);
 					font-weight: bold;
 					font-size: $subtitle;
 					margin-bottom: 10px;
@@ -4507,7 +4510,7 @@
 				box-shadow: 1px 1px 10px 0px rgba($primary,0.1);
 				border-radius: 20px;
 				border: 1px solid rgba($primary ,0.3);
-				background-color: lighten($primary, 55%);
+				background-color: lighten($primary, 55%); @include sct-light-box(lighten($primary, 55%), false, true);
 				.sct_work_heading{
 					padding: 20px 0;
 					margin: 0 20px;
@@ -4546,7 +4549,7 @@
 
 /*how it work snippet 3*/
 .how_it_work_v_3 {	
-	background-color: rgba($primary ,0.2);
+	background-color: rgba($primary ,0.2); @include sct-light-box(rgba($primary ,0.2), false);
 	padding: 50px 0 20px;
 	@include min992{
 		padding: 60px 0;
@@ -4556,7 +4559,7 @@
 
 		.section-title {
 			.red_text {
-				color: $primary;
+				color: sct-pc($primary, rgba($primary ,0.2));
 			}
 		}
 		.sct_simple_text {
@@ -4609,7 +4612,7 @@
 
 				.sct_work_box{
 					padding: 0;
-					background-color: $light-color;
+					background-color: $light-color; @include sct-light-box($light-color, false);
 				}
 			}
 			.sct_work_icon {
@@ -4655,7 +4658,7 @@
 			.sct_work_title {
 				font-weight: bold;
 				margin-bottom: 20px;
-				color: rgba($dark-color, 0.5);
+				color: sct-dka(rgba($dark-color, 0.5));
 			
 			}					
 			.sct_work_btn{
@@ -4666,7 +4669,7 @@
 					border: 0;
 					box-shadow: none;
 					border-bottom: 1px solid $primary;
-					color: $primary;
+					color: sct-pc($primary, $light-color);
 					border-radius: 0;
 					transition: 0.3s ease-in;
 					background: transparent;
@@ -4685,7 +4688,7 @@
 /*how it work snippet 3 end*/
 /*how it work snippet 4*/
 .how_it_work_v_4 {
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 50px 0;
 	@include min992{
 		padding: 60px 0;
@@ -4694,10 +4697,10 @@
 		
 		.sct_simple_text {
 			margin-bottom: 10px;
-			background-color: $primary;
+			background-color: $primary; @include sct-light-box($primary, true);
 			padding: 2px 5px;
 			display: inline-block;
-			color: $light-color;
+			color: sct-oc($light-color, $primary);
 		}
 	}
 	.sct_btm_row {
@@ -4721,7 +4724,7 @@
 				.sct_simple_text {
 					font-weight: bold;
 					font-size: $title - 2;
-					color: fade-out($dark-color, 0.4);
+					color: sct-dka(fade-out($dark-color, 0.4));
 				}
 			}
 			.sct_work_info {
@@ -4749,7 +4752,7 @@
 					content: '';
 					width: 20px;
 					height: 20px;
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, false);
 					-webkit-box-shadow: 1px 0px 10px 3px fade-out($primary, 0.5);
 					box-shadow: 1px 0px 10px 3px fade-out($primary, 0.5);
 					border-radius: 50%; 
@@ -4763,7 +4766,7 @@
 					height: 100%;
 					left: 10px;
 					top: 5px;
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, false);
 				}
 				.sct_work_title {
 					font-weight: bold;
@@ -4804,7 +4807,7 @@
 	.sct_top_row {
 		margin-bottom: 30px;
 		.sct_three_dots {
-			color: $primary;
+			color: sct-pc($primary);
 		}
 		.section-title {
 			margin-bottom: 15px;
@@ -4860,7 +4863,7 @@
 					right: 0;
 					top: 0;
 					bottom: 0;
-					background-color: rgba($black, 0.4);
+					background-color: rgba($black, 0.4); @include sct-light-box(rgba($black, 0.4), false);
 				}
 				@include min768{
 					display: flex;
@@ -4987,7 +4990,7 @@
 				li {
 					font-size: $font-body;
 					.fa {
-						color:$primary;
+						color:sct-pc($primary);
 						font-size: 18px;
 						margin-right: 10px;
 					}
@@ -5019,7 +5022,7 @@
 				padding-bottom: 40px;
 			}
 			.sct_cmp_info{
-				background-color: $dark-color;
+				background-color: $dark-color; @include sct-light-box($dark-color, false);
 				padding: 40px 20px;
 				position: relative;
 				z-index: 1;
@@ -5064,7 +5067,7 @@
 .about_us_v_4 {
 	// default grey only while no colour preset (o_cc) is chosen in the editor: the preset must win
 	&:not(.o_cc) {
-		background-color: #f7f7f7;
+		background-color: #f7f7f7; @include sct-light-box(#f7f7f7, false);
 	}
 	// with a colour preset the tab labels take the preset's text colour ($dark-color below
 	// was unreadable on the dark presets); the active tab keeps its light pill
@@ -5099,7 +5102,7 @@
 						.nav-link {
 							border:none;
 							border-radius: 20px;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 							font-size: $font-body;
 							padding: 5px 10px;
 							isolation: auto;
@@ -5110,16 +5113,16 @@
 								padding: 10px 20px;
 							}
 							&.active{
-								background-color: lighten($primary, 70%);
-								color: $primary;
+								background-color: lighten($primary, 70%); @include sct-light-box(lighten($primary, 70%), true);
+								color: sct-pc($primary);
 							}
 						}
 					}
 				}
 				.tab-content {
 					margin-top: 15px;
-					background: $dark-color;
-					background: linear-gradient(45deg, $primary 0%, $dark-color 100%);
+					background: $dark-color; @include sct-light-box($dark-color, false);
+					background: linear-gradient(45deg, sct-pc($primary, #ffffff) 0%, $dark-color 100%);
 					border-radius: 30px;
 					padding: 25px;
 					
@@ -5190,15 +5193,15 @@
 					display: inline-block;
 					font-weight: bold;
 					margin-right: 15px;
-					color: fade-out($dark-color, 0.5);
+					color: sct-dka(fade-out($dark-color, 0.5));
 				}
 				> a.btn {
 					border-radius: 50%;
-					background-color: $primary;
+					background-color: $primary; @include sct-light-box($primary, true);
 					width: 40px;
 					height: 40px;
 					line-height: 40px;
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 					padding: 0;
 					text-align: center;
 					@include inline-flex;
@@ -5219,7 +5222,7 @@
 /*about snippet 4 end*/
 /*statics snippet 1*/
 .expertise_statistics_4 {
-	background-color: $dark-color;
+	background-color: $dark-color; @include sct-light-box($dark-color, false);
 	padding: 50px 0 20px;
 	@include min992{
 		padding: 60px 0 30px;
@@ -5232,12 +5235,12 @@
 			.progress-img {
 				width: 60px;
 				height: 60px;
-				background: $primary;
+				background: $primary; @include sct-light-box($primary, false);
 				border-radius: 50%;
 				@include flex;
 				@include justify-align-content;
 				.fa {
-					color: $light-color;
+					color: sct-oc($light-color, $primary);
 					font-size: 24px;
 				}
 			}
@@ -5292,7 +5295,7 @@
 				right: 0;
 				top: 0;
 				bottom: 0;
-				background: rgba($black, 0.5);
+				background: rgba($black, 0.5); @include sct-light-box(rgba($black, 0.5), false);
 			}
 			@media (max-width: 1023px){
 				padding: 60px 30px;
@@ -5334,7 +5337,7 @@
 					&:before, &:after{
 						content: '';
 						position: absolute;						
-						background-color: rgba($primary ,0.3);
+						background-color: rgba($primary ,0.3); @include sct-light-box(rgba($primary ,0.3), false);
 						margin: auto;
 					}
 					&:after{
@@ -5385,7 +5388,7 @@
 						.progress-value {
 							font-size: 146px;
 							font-weight: bold;
-							color:rgba($primary, 0.2);
+							color:rgba(sct-pc-on($primary, $-sct-page-bg), 0.2);
 							line-height: 1;
 						}
 					}
@@ -5433,12 +5436,12 @@
 		}
 		.prog_statics {
 			margin: auto 0 0;
-			background-color: $primary;			
+			background-color: $primary; @include sct-light-box($primary, false);			
 			border-radius: 10px;			
 			
 			.prg_static_box {
 				text-align: center;
-				color: $light-color;	
+				color: sct-oc($light-color, $primary);	
 				padding: 20px 10px;			
 				.progress-value {
 					font-weight: bold;
@@ -5460,7 +5463,7 @@
 		}		
 		.sct_info_box{			
 			padding: 20px;
-			background-color: darken($primary, 30%);
+			background-color: darken($primary, 30%); @include sct-light-box(darken($primary, 30%), false);
 			height: 100%;
 			@include flex;
 			@include flex-column;
@@ -5468,7 +5471,7 @@
 				border-radius: 10px;
 			}
 			.sct_stat_content{
-				color: $light-color;
+				color: sct-oc($light-color, darken($primary, 30%));
 				@include flex;
 				@include flex-column;
 				padding-top: 20px;
@@ -5524,15 +5527,15 @@
 				}
 				.sct_cst_btn {
 					.btn {
-						background-color: $light-color;
-						color: $primary;
+						background-color: $light-color; @include sct-light-box($light-color, true);
+						color: sct-pc($primary, $light-color);
 
 						&::after{
 							border-color: $primary;
 						}
 						&:hover{
-							background-color: $primary;
-							color: $light-color;
+							background-color: $primary; @include sct-light-box($primary, true);
+							color: sct-oc($light-color, $primary);
 
 							&::after{
 								border-color: $light-color;
@@ -5554,11 +5557,11 @@
 		padding: 60px 0;
 	}
 	.sct_content_box {
-		background-color: $light-color;
+		background-color: $light-color; @include sct-light-box($light-color, false);
 		box-shadow: 0px 0px 10px 0px rgba($black,0.5);
 		@media (max-width: 767px){			
 			box-shadow: none;
-			background-color: rgba($light-color, 0.8);
+			background-color: rgba($light-color, 0.8); @include sct-light-box(rgba($light-color, 0.8), false);
 			padding: 24px;
 		}		
 		.sct_icon{		
@@ -5566,8 +5569,8 @@
 				font-size: $title;
 				border: 1px solid $primary;
 				border-radius: 50%;
-				background-color: $primary;
-				color: $light-color;
+				background-color: $primary; @include sct-light-box($primary, true);
+				color: sct-oc($light-color, $primary);
 			}
 		}
 		
@@ -5595,7 +5598,7 @@
 				margin: 0;
 				border-bottom: 0;
 				margin-bottom: 20px;
-				background-color: rgba($primary, 0.1) !important;
+				background-color: rgba($primary, 0.1) !important; @include sct-light-box(rgba($primary, 0.1), false);
 				border-radius: 30px !important;
 				border: 0;
 				box-shadow: 0px 0px 4px 0px rgba($primary, 0.3);
@@ -5607,7 +5610,7 @@
 					padding-right: 45px;
 					position: relative;
 					font-weight: 600;
-					color: $primary !important;
+					color: sct-pc($primary, rgba($primary, 0.1)) !important;
 					font-size: $font-body;
 					background-color: transparent;
 
@@ -5668,7 +5671,7 @@
 		.sct_timeline_count {
 			padding: 15px;
 			text-align: center;	
-			background-color: $primary;
+			background-color: $primary; @include sct-light-box($primary, false);
 			position: relative;
 			border-radius: 20px 20px 0 0;
 			margin: 0 30px;		
@@ -5690,7 +5693,7 @@
 			.sct_count_title {
 				font-weight: bold;
 				font-size: $title;
-				color: $light-color;
+				color: sct-oc($light-color, $primary);
 				margin-bottom: 0;
 				display: inline-block;
 				@include min1340{
@@ -5706,7 +5709,7 @@
 			}
 		}
 		.sct_timeline_info {
-			background-color: $light-grey-color;
+			background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 			padding: 25px 20px 20px;
 			@include flex;
 			@include flexwrap;
@@ -5786,7 +5789,7 @@
 					border: none;
 					background-color: transparent;
 					border-radius: 0;
-					color: fade-out($dark-color, 0.4);
+					color: sct-dka(fade-out($dark-color, 0.4));
 					font-size: $title;
 					padding-left: 20px;
 					padding-right: 20px;
@@ -5801,7 +5804,7 @@
 						border: none;
 						background-color: transparent;
 						border-radius: 0;
-						color: $primary;
+						color: sct-pc($primary);
 					}
 				}
 				+ .nav-item {
@@ -5815,7 +5818,7 @@
 							top: 0;
 							bottom: 0;
 							margin: auto;
-							background-color: fade-out($dark-color, 0.4);
+							background-color: fade-out($dark-color, 0.4); @include sct-light-box(fade-out($dark-color, 0.4), false);
 							-webkit-transform: rotate(20deg);
 							-ms-transform: rotate(20deg);
 							transform: rotate(20deg);
@@ -5850,11 +5853,11 @@
 		.sct_title {
 			margin-bottom: 20px;
 			.sct_per {
-				color: $primary;
+				color: sct-pc($primary);
 			}
 		}
 		.sct_simple_text {
-			color: $dark-color;
+			color: sct-dk($dark-color);
 			margin-bottom: 30px;
 		}
 		.timer_counter_div {
@@ -5862,7 +5865,7 @@
 	    		p {
 	    			font-weight: bold;
 	    			margin-bottom: 15px;
-	    			color: $primary;
+	    			color: sct-pc($primary);
 	    		}
 	    	}
 			.counter_timer_div {
@@ -5884,13 +5887,13 @@
 						margin-bottom: 30px;
 					}
 					.box_degit {
-						background-color: $light-color;
+						background-color: $light-color; @include sct-light-box($light-color, false);
 						-webkit-box-shadow: 0px 0px 29px 0px rgba(0, 0, 0, 0.1);
 					    -moz-box-shadow: 0px 0px 29px 0px rgba(0, 0, 0, 0.1);
 					    box-shadow: 0px 0px 29px 0px rgba(0, 0, 0, 0.1);
 					    padding: 5px 10px 10px;
 					    .d-count {
-					    	color: $dark-color;
+					    	color: sct-dk($dark-color);
 					    	font-size: $subtitle;
 					    	font-weight: bold;
 					    	line-height: normal;
@@ -5899,7 +5902,7 @@
 					    	display: block;
 					    	margin-top: 5px;
 					    	font-size: $title;
-					    	color: $dark-color;
+					    	color: sct-dk($dark-color);
 					    	line-height: normal;
 					    }
 					}
@@ -5912,7 +5915,7 @@
 /*deal of the day snippet 1 end*/
 /*deal of the day snippet 2*/
 .deal_of_day_banner_2 {
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 60px 0;
 	padding-top: 0;
 	@media (max-width: 1439px){
@@ -5938,7 +5941,7 @@
 		.sct_inner_text_content {
 			max-width: 320px;
 			margin: auto;
-			background: $light-color;
+			background: $light-color; @include sct-light-box($light-color, false);
 			-webkit-box-shadow: 0px 10px 29px 0px rgba(0, 0, 0, 0.1);
 		    -moz-box-shadow: 0px 10px 29px 0px rgba(0, 0, 0, 0.1);
 		    box-shadow: 0px 10px 29px 0px rgba(0, 0, 0, 0.1);
@@ -5953,7 +5956,7 @@
 		    .sct_text_title {
 		    	margin-bottom: 10px;
 		    	font-weight: bold;
-		    	color: $dark-color;
+		    	color: sct-dk($dark-color);
 		    	font-size: $font-body;
 		    	padding-bottom: 10px;
 		    	border-bottom: 1px solid fade-out($dark-color, 0.7);
@@ -5978,7 +5981,7 @@
 		    			.box_degit {
 		    				.d-count {
 		    					font-weight: bold;
-		    					color: $primary;
+		    					color: sct-pc($primary, $light-color);
 		    					font-size: 18px;
 		    					line-height: normal;
 		    					margin-bottom: 5px;
@@ -5987,7 +5990,7 @@
 		    				.d-block {
 		    					font-weight: bold;
 		    					font-size: 12px;
-		    					color: fade-out($dark-color, 0.6);
+		    					color: sct-dka(fade-out($dark-color, 0.6));
 		    					line-height: normal;
 		    				}
 		    			}
@@ -6014,7 +6017,7 @@
     			margin-bottom: 0;
     			font-weight: bold;
     			font-size: $title + 2;
-    			color: fade-out($dark-color, 0.3);
+    			color: sct-dka(fade-out($dark-color, 0.3));
     			text-decoration: line-through;
     			margin-right: 10px;
     		}
@@ -6024,7 +6027,7 @@
     			margin-bottom: 0;
     			font-weight: bold;
     			font-size: $title + 2;
-    			color: $primary;
+    			color: sct-pc($primary, $light-grey-color);
     		}
 		}
 		.sct_deal_btn {
@@ -6037,7 +6040,7 @@
 /*client snippet 3*/
 .third-client-slider {
 	padding: 50px 0;
-	background-color: #f6f6f6;
+	background-color: #f6f6f6; @include sct-light-box(#f6f6f6, false);
 	@include min992{
 		padding: 60px 0;
 	}
@@ -6085,7 +6088,7 @@
 			}
 			.sct_base_class{
 				.sct_test_content{
-					background-color: $light-color;
+					background-color: $light-color; @include sct-light-box($light-color, false);
 					border-radius: 20px;
 					padding: 30px 24px 20px;
 					
@@ -6139,7 +6142,7 @@
 						height: 70px;
 						border-radius: 50%;
 						overflow: hidden;
-						background: $light-color;
+						background: $light-color; @include sct-light-box($light-color, false);
 						border: 3px solid $light-color;
 						
 						@include min768{
@@ -6172,7 +6175,7 @@
 			@include justify-align-content;
 			height: 100%;
 			padding: 5px;
-			background-color: $light-color;
+			background-color: $light-color; @include sct-light-box($light-color, false);
 
 			img{
 				height: 100%;
@@ -6228,7 +6231,7 @@
 					-webkit-transform: translateY(-50%);
 					-ms-transform: translateY(-50%);
 					transform: translateY(-50%);
-					background: fade-out($black, 0.2);
+					background: fade-out($black, 0.2); @include sct-light-box(fade-out($black, 0.2), true);
 					color: $white;
 					font-weight: bold;
 					font-size: $title;
@@ -6319,7 +6322,7 @@
             @include transition(all, 0.3s, ease);
            a{
              &:hover{
-                color: $primary;
+                color: sct-pc($primary);
                 @include transition(all, 0.3s, ease);
 
 				.category-logo{
@@ -6333,7 +6336,7 @@
                 border-radius: 50%;
                 height: 120px;
                 width: 120px;
-                background-color: lighten($light-grey-color, 3%);
+                background-color: lighten($light-grey-color, 3%); @include sct-light-box(lighten($light-grey-color, 3%), false);
 				border: 1px solid transparent;
 				@include transition(all, 0.3s, ease-in);
 				overflow: hidden;
@@ -6397,7 +6400,7 @@
 		}
 		.sct_sub_title {
 			font-size: $font-size-base-scita;
-			color: $dark-color;
+			color: sct-dk($dark-color);
 			margin-bottom: 5px;
 		}
 		.fancy {
@@ -6412,12 +6415,12 @@
 				left: 0;
 				width: 140px;
 				height: 1px;
-				background-color: $dark-color;
+				background-color: $dark-color; @include sct-light-box($dark-color, false);
 			}
 		}
 		.sct_simple_text {
 			margin-bottom: 0;
-			color: rgba($body-color, 0.7);
+			color: sct-dka(rgba($body-color, 0.7));
 		}
 	}
 	.blog_slider_wrap{
@@ -6448,7 +6451,7 @@
 								padding-right: 8px;
 								display: inline-block;
 								position: relative;
-								color: $dark-color;
+								color: sct-dk($dark-color);
 					
 								&::after{
 									content: '';
@@ -6457,7 +6460,7 @@
 									top: 0;
 									bottom: 0;
 									margin: auto;
-									background: $dark-color;
+									background: $dark-color; @include sct-light-box($dark-color, false);
 									width: 1px;
 									height: 14px;
 								}
@@ -6485,7 +6488,7 @@
 							-webkit-line-clamp: 2;
 							-webkit-box-orient: vertical;  
 							overflow: hidden;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 							font-size: $font-size-base-scita;
 
 							@include min1200{
@@ -6500,7 +6503,7 @@
 								.date, .author{
 									font-size: $font-size-base-scita;
 									margin: 5px 0;
-									color: $dark-color;
+									color: sct-dk($dark-color);
 									line-height: 1.2;
 								}
 							}
@@ -6538,7 +6541,7 @@
 /*blog snippet 4 end*/
 /*blog snippet 7*/
 .blog_4_custom {
-	background: $light-grey-color;
+	background: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	padding: 60px 0;
 	@media (max-width: 1199px){
 		padding: 50px 0;
@@ -6569,7 +6572,7 @@
 					.sct_img_content {
 						width: 68px;
 						height: 68px;
-						background: $primary;
+						background: $primary; @include sct-light-box($primary, false);
 						position: absolute;
 						left: 0;
 						bottom: 0;
@@ -6579,7 +6582,7 @@
 						p {
 							line-height: normal;
 							margin-bottom: 0;
-							color: $light-color;
+							color: sct-oc($light-color, $primary);
 							text-align: center;
 							font-size: $title;
 							.day {
@@ -6594,7 +6597,7 @@
 			}
 			.it_blog_content{
 				> .sct_img_content {
-					background: $light-color;
+					background: $light-color; @include sct-light-box($light-color, false);
 					padding: 20px 30px;
 					border:1px solid fade-out($dark-color,0.5);
 					@media (max-width: 767px){
@@ -6620,7 +6623,7 @@
 			}
 			.sct_blog_desc {
 				padding: 20px 30px;
-				background: $light-color;
+				background: $light-color; @include sct-light-box($light-color, false);
 				@include flex;
 				@include flexwrap;
 				border:1px solid fade-out($dark-color,0.5);
@@ -6631,14 +6634,14 @@
 				.sct_left_side {
 					width: 68px;
 					height: 68px;
-					background: $primary;
+					background: $primary; @include sct-light-box($primary, false);
 					@include flex;
 					@include flexwrap;
 					@include justify-align-content;
 					p {
 						line-height: normal;
 						margin-bottom: 0;
-						color: $light-color;
+						color: sct-oc($light-color, $primary);
 						text-align: center;
 						font-size: $title;
 						.day {
@@ -6669,11 +6672,11 @@
 						font-weight: bold;
 						margin-bottom: 10px;
 						font-size: $title;
-						/*color: $dark-color;*/
+						/*color: sct-dk($dark-color);*/
 					}
 					.blog-content {
 						margin-bottom: 0;
-						/*color: $dark-color;*/
+						/*color: sct-dk($dark-color);*/
 					}
 				}
 				+ .sct_blog_desc {
@@ -6688,7 +6691,7 @@
 /*timeline snippet 3*/
 .timeline_snippet_3 {
 	padding: 50px 0;
-	background-color: $light-grey-color;
+	background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 	@include min992{
 		padding: 60px 0;
 	}
@@ -6698,7 +6701,7 @@
 				.sct-left-side {
 					.nav-tabs {
 						border-bottom: none;
-						background: rgba($primary, 90%);
+						background: rgba($primary, 90%); @include sct-light-box(rgba($primary, 90%), false);
 						border-radius: 20px;
 						padding: 15px;
 						@media (max-width: 767px) {
@@ -6736,7 +6739,7 @@
 											margin-right: 5px;
 										}
 										.sct_title {
-											color: $light-color;
+											color: sct-oc($light-color, rgba($primary, 90%));
 											font-size: $title + 6;
 											font-weight: bold;
 											margin-bottom: 0;
@@ -6756,7 +6759,7 @@
 											font-weight: bold;
 											font-size: $title;
 											margin-bottom: 0;
-											color: $light-color;
+											color: sct-oc($light-color, rgba($primary, 90%));
 											transition: 0.3s ease-in;
 											@media (max-width: 1023px){
 												font-size: $title - 2;
@@ -6765,16 +6768,16 @@
 									}
 								}
 								&:hover,&.active {
-									background: $light-grey-color;
+									background: $light-grey-color; @include sct-light-box($light-grey-color, false);
 									.sct_nav_base {
 										.sct_nav_left {
 											.sct_title {
-												color: $dark-color;
+												color: sct-dk($dark-color);
 											}
 										}
 										.sct_nav_right {
 											.sct_sub_title {
-												color: $dark-color;
+												color: sct-dk($dark-color);
 											}
 										}
 									}
@@ -6797,7 +6800,7 @@
 					.tab-content{
 						height: 100%;
 						padding: 20px;
-						background: $light-color;
+						background: $light-color; @include sct-light-box($light-color, false);
 						border-radius: 20px;
 					}
 					.sct_thumb {
@@ -6822,7 +6825,7 @@
 /*Category slider 2 star*/
 .scita_category_slider_4 {
 	padding: 50px 0 40px;
-    background-color: #f6f6f6;
+    background-color: #f6f6f6; @include sct-light-box(#f6f6f6, false);
     @include min992{
 		padding: 60px 0 50px;
     }
@@ -6842,7 +6845,7 @@
 			}
 		}
         .cs-cat {
-			background-color: $light-color;
+			background-color: $light-color; @include sct-light-box($light-color, false);
 			@include transition(all, 0.3s, ease-in);
 			border-radius: 20px;
 			border: 1px solid transparent;
@@ -6869,7 +6872,7 @@
 				}
 			}
             .sct_cat_content {
-                background: $light-color;
+                background: $light-color; @include sct-light-box($light-color, false);
 				padding: 10px 5px 14px;
 				@include flex;
 				@include content-sb;
@@ -6885,7 +6888,7 @@
 					margin: 0;
 				}
 				.pwpi-title{
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					font-size: $font-size-base-scita;
 
 					@include min992{
@@ -6955,13 +6958,13 @@
 
 /*brand and product/category snippet */
 .custom_scita_pro_brand_slider {
-	background:$primary;
+	background:$primary; @include sct-light-box($primary, false);
 	text-align: center;
 	padding: 50px 0;
 	.custom-title-block {
 		h4 {
 			font-size: 30px;
-			color: #fff;
+			color: sct-oc(#fff, $primary);
 			font-weight: bold;
 			margin-bottom: 20px; 
 		}
@@ -6981,7 +6984,7 @@
 			justify-content: center;
 			width: 16.666667%;
 			&:hover{
-				background:rgba(0,0,0,0.15);
+				background:rgba(0,0,0,0.15); @include sct-light-box(rgba(0,0,0,0.15), false);
 			}
 			@media (max-width: 1199px){
 				width:25%;
@@ -6996,7 +6999,7 @@
 				padding: 20px 20px 0 20px;
 				p {
 					font-size: 16px;
-					color: #ffffff;
+					color: sct-oc(#ffffff, $primary);
 					padding-top: 10px;
 				}
 			}
@@ -7009,7 +7012,7 @@
 /*Html Snippet builder*/
 .deal_of_day_banner_5 {
 	padding: 50px 0;
-	background-color: #f0f0f0;
+	background-color: #f0f0f0; @include sct-light-box(#f0f0f0, false);
 
 	@include min992{
 		padding: 60px 0;
@@ -7087,7 +7090,7 @@
 					flex-direction: row;
 				}
    				.d-count {
-   					color: $primary;
+   					color: sct-pc($primary, #f0f0f0);
    					font-size: $subtitle + 10;
    					font-weight: bold;
    					display: block;
@@ -7103,7 +7106,7 @@
    					}
    				}
    				.d-block {
-   					color: $dark-color;
+   					color: sct-dk($dark-color);
    					padding-bottom: 5px;
    					font-size: $title - 4;
    					display: block;
@@ -7120,7 +7123,7 @@
    				margin: 2rem 0;
    				p {
    					font-weight: bold;
-   					color: $primary;
+   					color: sct-pc($primary, #f0f0f0);
    					font-size: $title;
    					margin-bottom: 0;
    				}
@@ -7166,14 +7169,14 @@
 			@include justify-center-flex;
 			box-shadow: 0px 0px 4px 0px rgba($black, 0.15);
 			position: relative;
-			background: $light-color;
+			background: $light-color; @include sct-light-box($light-color, false);
 			@include transition(all , 0.3s , ease-in);
 			@include min1024{
 				height: 40px;
 				width: 40px;
 			}
 			&:hover{
-				background: $secondary !important;
+				background: $secondary !important; @include sct-light-box($secondary, false);
 				@include transition(all , 0.3s , ease-in);
 			   span{
 				filter: brightness(0) invert(1);
@@ -7298,7 +7301,7 @@
                     right: 10px;
                     bottom: 10px;
                     top: 10px;
-                    background: rgba(255, 255, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.3); @include sct-light-box(rgba(255, 255, 255, 0.3), false);
                     z-index: 0;
                     @include min1024{
                     display: none;
@@ -7345,7 +7348,7 @@
         padding: 70px 20px 70px;
         height: 100%;
         display: block;
-        color: $dark-color;
+        color: sct-dk($dark-color);
         &.bakery , &.breakfast{
             padding: 0;
         } 
@@ -7426,7 +7429,7 @@
             @include transition(all, 0.3s, ease);
            a{
              &:hover{
-                color: #78B33D;
+                color: sct-dk(#78B33D);
                 @include transition(all, 0.3s, ease);
              }
            }
@@ -7436,7 +7439,7 @@
                 border-radius: 100%;
                 height: 120px;
                 width: 120px;
-                background-color: #f6f6f6;
+                background-color: #f6f6f6; @include sct-light-box(#f6f6f6, false);
                 @include min768{
                     height: 135px;
                     width: 135px;
@@ -7516,7 +7519,7 @@
    }
     .section-title{
         font-weight: bolder;
-        color: #003B1D;
+        color: sct-dk(#003B1D);
         margin-bottom: 0;
     }
     .offer-tag{
@@ -7544,7 +7547,7 @@
             font-size: 14px;
             line-height:normal;
             font-weight: normal;
-            color: $dark-color;
+            color: sct-dk($dark-color);
             margin-bottom: 10px;
             @include min1024{
                 padding: 12px 37px;
@@ -7561,7 +7564,7 @@
         font-style: italic;
         font-weight:normal;
         line-height:1;
-        color: #496146;
+        color: sct-dk(#496146);
     }
 }
 
@@ -7573,7 +7576,7 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: $theme;
+    background-color: $theme; @include sct-light-box($theme, false);
     padding:30px 0 10px 0;
     @include min768{
         padding: 40px 0 15px 0;
@@ -7596,7 +7599,7 @@
                 padding: 0 15px;
             }
             .dealers-block{
-                background: $light-color;
+                background: $light-color; @include sct-light-box($light-color, false);
                 padding: 15px;
                 margin-bottom: 20px;
                 @include min768{
@@ -7613,9 +7616,9 @@
                     .product-disc{
                         .title{
                             font-size: 15px;
-                            color: $dark-grey-color;
+                            color: sct-dk($dark-grey-color);
                             padding: 5px;
-                            background: #F6F7F9;
+                            background: #F6F7F9; @include sct-light-box(#F6F7F9, true);
                             text-align: right;
                             font-weight: normal;
                             max-width: max-content;
@@ -7640,17 +7643,17 @@
                         li{
                             position: relative;
                             font-size: 15px;
-                            color: $dark-grey-color;
+                            color: sct-dk($dark-grey-color);
                             padding-left: 34px;
                             @include min768{
                                 font-size: 16px;
                             }
                             a{
                                 font-size: 15px;
-                                color: $dark-grey-color;
+                                color: sct-dk($dark-grey-color);
                                 @include transition(all, 0.3s, ease);
                                 &:hover{
-                                    color: $secondary;
+                                    color: sct-pc($secondary, $light-color);
                                     @include transition(all, 0.3s, ease);  
                                 }
                                 @include min768{
@@ -7754,7 +7757,7 @@
 		}
 		.client_right_side{
 			text-align: center;
-			background: rgba($light-grey-color, 0.5);
+			background: rgba($light-grey-color, 0.5); @include sct-light-box(rgba($light-grey-color, 0.5), false);
 			padding: 40px 0 60px;
 			@include flex;
 			@include justify-content-column-flex;
@@ -7768,7 +7771,7 @@
 		.sct_health_title{
 			.simple_text{
 				text-transform: uppercase;
-				color: $dark-grey-color;
+				color: sct-dk($dark-grey-color);
 				font-weight: 700;
 				margin-bottom: 10px;
 				display: block;
@@ -7846,19 +7849,19 @@
 // product section css
 .four-client-snippet {
 	padding: 40px 0 20px;
-	background-color: $primary;
+	background-color: $primary; @include sct-light-box($primary, false);
 	@include min992 {
 		padding: 50px 0 20px;
 	}
 	.section-title-wrapper {
 		.section-title {
-			color: $white;
+			color: sct-oc($white, $primary);
 		}
 	}
 	.dealers-block-inner {
 		margin-bottom: 30px;
 		.dealers-block {
-			background: $white;
+			background: $white; @include sct-light-box($white, false);
 			padding: 15px;
 			height: 100%;
 			border-radius: 10px;
@@ -7887,7 +7890,7 @@
 					max-width: calc(100% - 100px);
 					padding-left: 10px;
 					.title {
-						color: $primary;
+						color: sct-pc($primary, $white);
 						margin: 0;
 						font-weight: normal;
 						font-size: 16px;
@@ -7911,7 +7914,7 @@
 						p {
 							max-width: calc(100% - 25px);
 							padding-left: 10px;
-							color: $dark-grey-color;
+							color: sct-dk($dark-grey-color);
 							margin: 0;
 							font-size: 16px;
 						}
@@ -7985,7 +7988,7 @@
 	}
 	// Expertise 11: white titles on its own dark boxes, which keep their colour
 	.expertise_statistics_11.o_cc .sct_info_box .sct_stat_title {
-		color: #fff;
+		color: sct-dk(#fff);
 	}
 	// - Text in the theme colour (a title's highlighted word, the active tab): mixed with the
 	//   preset's text colour, so still in the theme colour but lighter on a dark preset, darker
@@ -8013,7 +8016,7 @@
 	.timeline_snippet_1.o_cc .sct_timeline_info,
 	.timeline_snippet_3.o_cc .tab-content,
 	.service_varient_7.o_cc .sct_sers_box {
-		color: #212529;
+		color: sct-dk(#212529);
 		// the headings the preset coloured (others keep the block's colours)
 		:is(.sct_title, h4.sct_work_title, .sct_work_sub_title, .sct_pers_name, .section-title,
 			.section-title-big, .title-20, .title-36, .sct_img_content_block > h4, .simple_text) {
@@ -8022,6 +8025,6 @@
 	}
 	// (its title keeps the theme colour)
 	.service_varient_7.o_cc .sct_sers_box .sct_title:is(h1, h2, h3, h4, h5, h6) {
-		color: $primary;
+		color: sct-pc($primary);
 	}
 }

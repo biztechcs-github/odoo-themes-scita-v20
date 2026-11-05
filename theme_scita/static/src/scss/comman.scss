@@ -12,9 +12,9 @@
   unicode-range: U+E800-E87C;
 }
 
-.o_theme_customize_color_theme {background:$primary !important;}
+.o_theme_customize_color_theme {background:$primary !important; @include sct-light-box($primary, false);}
 body .modal.o_technical_modal .modal-content .modal-header {
-	background-color: #fcfcfc;
+	background-color: #fcfcfc; @include sct-light-box(#fcfcfc, false);
 }
 /*admin snippet styling end*/
 /*container styling*/
@@ -31,7 +31,7 @@ body .modal.o_technical_modal .modal-content .modal-header {
 }
 h2 {
 	font-size: $subtitle - 8;
-	/*color: $dark-color;*/
+	/*color: sct-dk($dark-color);*/
 	font-weight: bold;
 	@media (max-width: 767px){
 		font-size: $subtitle - 10;
@@ -121,7 +121,7 @@ input.form-control {
 	border:1px solid #dc3545 !important;
 }
 .o_website_rating_static {
-	color: $dark-color;
+	color: sct-dk($dark-color);
 }
 .form-control {
 	&:focus{
@@ -130,22 +130,52 @@ input.form-control {
 }
 .oe_login_buttons {
 	.btn-link {
-		color: $primary;
+		color: sct-pc($primary);
 	}
 }
 /*end container styling*/
 /*overwrite bootstrap css for theme color start*/
 a{
-	color: $body-color;
+	color: sct-dk($body-color);
 	&:hover{
-		color: $primary;
+		color: sct-pc($primary);
+	}
+}
+// links in Odoo's notice boxes (login, terms, checkout): the hover colour above is made for the
+// page; on the boxes' light tints a shade that reads on all of them
+$-sct-alert-hover: $primary;
+@each $-sct-alert-bg in (#D1ECF1, #CFF4FC, #FFF3CD, #F8D7DA, #D4EDDA, #D1E7DD) {
+	$-sct-alert-hover: sct-pc-on($-sct-alert-hover, $-sct-alert-bg);
+}
+@if $-sct-alert-hover != $primary {
+	.alert a:not(.btn):hover {
+		color: $-sct-alert-hover;
+	}
+}
+// links in a card header (Bootstrap's 3% grey tint, about #F8F8F9): same, on that tint
+@if not $-sct-dark-page and sct-pc-on($primary, #F8F8F9) != $primary {
+	:is(.card-header a, a.card-header):not(.btn):hover {
+		color: sct-pc-on($primary, #F8F8F9);
+	}
+}
+// dark page: a card set to white / light grey (bg-white, bg-light, bg-100..400: Odoo's selected
+// checkout address) keeps dark text; Odoo 20 gives the card body the page's text colour
+// (#wrapwrap: to win over Odoo's `:where(.card) .card-body:not()`)
+@if $-sct-dark-page {
+	#wrapwrap .card:is(.bg-white, .bg-light, .bg-100, .bg-200, .bg-300, .bg-400) {
+		.card-body {
+			@include sct-light-box(#CED4DA, false);
+		}
+		:is(.card-header a, a.card-header):not(.btn):hover {
+			color: sct-pc-on($primary, #F8F8F9);
+		}
 	}
 }
 .border-primary {
 	border-color: $primary !important;
 }
 .bg-primary {
-    background-color: $primary !important;
+    background-color: $primary !important; @include sct-light-box($primary, false);
 }
 .form-check-input:focus, .form-select:focus{
 	border-color: $primary;
@@ -169,7 +199,7 @@ a{
 /*notice cookie*/
 #website_cookie_notice {
 	position: fixed;
-	background: $dark-color;
+	background: $dark-color; @include sct-light-box($dark-color, true);
 	color: $light-color;
 	border:none;
 	border-radius: 0;
@@ -195,10 +225,10 @@ a{
 .btn-secondary {
 	background: transparent;
 	border: 1px solid $dark-color;
-	color: $dark-color;
+	color: sct-dk($dark-color);
 
 	&:hover{
-		background: $dark-color;
+		background: $dark-color; @include sct-light-box($dark-color, true);
 		color: $light-color;
 	}
 }
@@ -244,7 +274,7 @@ header{
 							.dropdown-item {
 								padding: 5px 10px;
 								&:hover {
-									color: #fff !important;
+									color: sct-dk(#fff) !important;
 								}
 							}
 						}
@@ -259,9 +289,9 @@ header{
 		min-width: unset;
 		margin-top: 0;
 		.dropdown-item {
-			color: $dark-color !important;
+			color: sct-dk($dark-color) !important;
 			&:focus, &:hover, &:active, &.active {
-				background:$dark-color;
+				background:$dark-color; @include sct-light-box($dark-color, true);
 				color: $light-color !important;
 			}
 		}
@@ -273,7 +303,7 @@ header{
 		.h-cart-inner{
 		    display: none !important;
 		    position: absolute;
-		    background: #ffffff;
+		    background: #ffffff; @include sct-light-box(#ffffff, false);
 		    width: 250px;
 		    right: 0;
 		    top: 100%;
@@ -319,12 +349,12 @@ header{
 					}
 					a {
 						font-size: 14px;
-						color: $dark-color;
+						color: sct-dk($dark-color);
 					}
 					span.price {
 						display: inline-block;
 						a {
-							color: fade-out($dark-color, 0.6) !important;
+							color: sct-dka(fade-out($dark-color, 0.6)) !important;
 						}
 					}
 				}
@@ -343,14 +373,14 @@ header{
 					vertical-align: middle;
 					font-size: $head-label !important;
 					&.view-all {
-						background: #d5d5d5;
+						background: #d5d5d5; @include sct-light-box(#d5d5d5, true);
 						color: $light-color;
 					}
 					&.proceed {
-						background: $dark-color;
+						background: $dark-color; @include sct-light-box($dark-color, true);
 						color: $light-color;
 						&:hover{
-							color:$primary !important;
+							color:sct-pc($primary, $dark-color) !important;
 						}
 					}
 				}
@@ -363,7 +393,7 @@ header{
 				}
 				button {
 					width: 100% !important;
-					background:$dark-color;
+					background:$dark-color; @include sct-light-box($dark-color, true);
 					color: $light-color; 
 					border-radius: 0;
 					padding: 0.375rem 0.75rem;
@@ -372,7 +402,7 @@ header{
 						border:1px solid $dark-color !important;
 						outline: none;
 						background: transparent;
-						color: $dark-color;
+						color: sct-dk($dark-color);
 						box-shadow: none;
 					}
 				}
@@ -412,12 +442,12 @@ header{
 					a {
 						color: $light-color;
 						font-size: $head-label;
-						background: $dark-color;
+						background: $dark-color; @include sct-light-box($dark-color, true);
 						border-radius: 0;
 						&:focus, &:active, &:hover {
 							border:1px solid $dark-color;
 							background: transparent;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 							box-shadow: none;
 							outline: none;
 						}
@@ -443,7 +473,7 @@ header{
 									background: transparent;
 									&:focus, &:active, &:hover{
 										border:none;
-										background: $dark-color;
+										background: $dark-color; @include sct-light-box($dark-color, false);
 									}
 								}
 							}
@@ -503,7 +533,7 @@ header{
 		li {
 			a {
 				font-size: $font-body;
-				color: fade-out($body-color, 0.5);
+				color: sct-dka(fade-out($body-color, 0.5));
 				@include transition(all, 0.5s, ease);
 				font-weight: 600;
 				&:hover{
@@ -514,13 +544,13 @@ header{
 	}
 	.sct-scocial-icon-footer{
 		a {
-			background: #949494;
+			background: #949494; @include sct-light-box(#949494, true);
 			@include inline-flex;
 			@include justify-align-content;
 			width: 34px;
 			height: 34px;
 			border-radius: 50%;
-			color: #f1f1f1;
+			color: sct-dk(#f1f1f1);
 			font-size: 20px;
 			margin-right: 5px;
 			margin-top: 10px;
@@ -529,7 +559,7 @@ header{
 				margin-right:0;
 			}
 			&:hover{
-				background: fade-in($body-color, 0.5);
+				background: fade-in($body-color, 0.5); @include sct-light-box(fade-in($body-color, 0.5), false);
 			}
 		}
 	}
@@ -551,7 +581,7 @@ header{
 
 /*button styling*/
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
-	background: $dark-color;
+	background: $dark-color; @include sct-light-box($dark-color, false);
 	border-color: $dark-color;
 }
 .form-control:focus {
@@ -574,14 +604,14 @@ header{
 	}
 	.btn {
 		background: transparent !important;
-		color: $primary !important;
+		color: sct-pc($primary) !important;
 		line-height: normal;
 		border: 1px solid transparent !important;
 		font-size: $head-label;
 		padding-right: 0;
 		&:hover{
 			background: transparent !important;
-			color: $primary !important;
+			color: sct-pc($primary) !important;
 			line-height: normal;
 			border: 1px solid transparent;
 		}
@@ -613,13 +643,13 @@ header{
 			.td-wish-btn{
 				.o_wish_add{
 					width: 100%;
-					background: $primary;
-					color: $light-color;
+					background: $primary; @include sct-light-box($primary, true);
+					color: sct-oc($light-color, $primary);
 					border: 1px solid $primary;
 
 					&:hover{
 						background: transparent;
-						color: $primary;
+						color: sct-pc($primary);
 					}
 				}
 			}
@@ -674,8 +704,8 @@ header{
 						}
 
 						&:hover{
-							background: $primary;
-							color: $light-color;
+							background: $primary; @include sct-light-box($primary, true);
+							color: sct-oc($light-color, $primary);
 						}
 					}
 				}
@@ -728,7 +758,7 @@ header{
 		position: fixed;
 		right: 20px;
 		bottom: 0;
-		background: $dark-color;
+		background: $dark-color; @include sct-light-box($dark-color, true);
 		width: 35px;
 		height: 35px;
 		padding-left: 10px;
@@ -746,7 +776,7 @@ header{
 		}
 		&:hover{
 			.fa {
-				color: $primary;
+				color: sct-pc($primary, $dark-color);
 				@include transition(all, 1s, ease);
 				-webkit-transform: rotate(360deg);
 				-ms-transform: rotate(360deg);
@@ -774,7 +804,7 @@ header{
 	#blog_right_column {
 		section {
 		    padding: 15px;
-		    background: fade-out($primary, 0.9);
+		    background: fade-out($primary, 0.9); @include sct-light-box(fade-out($primary, 0.9), false);
 		    margin: 0 0 30px !important;
 		    h4 {
 		    	font-weight: bold;
@@ -782,7 +812,7 @@ header{
 		    }
 		}
 		a {
-			color: $primary;
+			color: sct-pc($primary);
 			.fa {
 				font-size: $title + 6;
 			}
@@ -792,8 +822,8 @@ header{
 				padding: 10px;
 				border-radius: 0;
 				&.active{
-					background: $primary;
-					color: $light-color;
+					background: $primary; @include sct-light-box($primary, true);
+					color: sct-oc($light-color, $primary);
 				}
 			}
 		}
@@ -819,21 +849,21 @@ body {
 				padding-top: 15px;
 			}
 			.modal-content {
-				background: $dark-color;
+				background: $dark-color; @include sct-light-box($dark-color, false);
 				border: none;
 			}
 			.modal-header {
-				color: $dark-color !important;
+				color: sct-dk($dark-color) !important;
 				opacity: 1;
 				@include align-content;
-				background-color: $light-color; 
+				background-color: $light-color; @include sct-light-box($light-color, true); 
 				.btn-close {
 					padding: 0;
 					margin: 0;
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					opacity: 1;
 					&:hover{
-						color:$dark-color !important;
+						color:sct-dk($dark-color) !important;
 					}
 				}
 			}
@@ -856,7 +886,7 @@ body {
 							&.checked {
 								border: 2px solid $light-color;
 								color: $light-color;
-								background: fade-out($black, 0.4) !important;
+								background: fade-out($black, 0.4) !important; @include sct-light-box(fade-out($black, 0.4), true);
 							}
 						}
 						> img {
@@ -1221,7 +1251,7 @@ span.sct_img_effect_wrap {
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: $sct-img-effect-flash;
+		background-color: $sct-img-effect-flash; @include sct-light-box($sct-img-effect-flash, false);
 		width: 150px;
 		height: 100%;
 		z-index: 1;
@@ -1260,7 +1290,7 @@ span.sct_img_effect_wrap {
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: $sct-img-effect-flash;
+		background-color: $sct-img-effect-flash; @include sct-light-box($sct-img-effect-flash, false);
 		z-index: 1;
 		pointer-events: none;
 		left: 50%;
@@ -1318,7 +1348,7 @@ span.sct_img_effect_wrap {
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: $sct-img-effect-flash;
+		background-color: $sct-img-effect-flash; @include sct-light-box($sct-img-effect-flash, false);
 		z-index: 1;
 		pointer-events: none;
 		left: 50%;
@@ -1394,7 +1424,7 @@ span.sct_img_effect_wrap {
 	&:before{
 		position:absolute;
 		content: '';
-		background-color: $sct-img-effect-flash;
+		background-color: $sct-img-effect-flash; @include sct-light-box($sct-img-effect-flash, false);
 		z-index: 1;
 		pointer-events: none;
 		left: 50%;
@@ -1490,7 +1520,7 @@ span.sct_img_effect_wrap {
 						font-size: $font-body + 1;
 						margin-bottom: 15px;
 						a {
-							color: $primary;
+							color: sct-pc($primary);
 						}
 					}
 					.sct-cart-modal-btn {
@@ -1512,14 +1542,14 @@ span.sct_img_effect_wrap {
 	top: 10px;
 	padding: 3px 5px;
 	font-size: $font-base-label - 2;
-	color: $dark-color;
+	color: sct-dk($dark-color);
 	font-weight: 600;
 	z-index: 2;
 	&.style1 {
 		left: 10px;
 		right: auto;
-		background-color: $primary;
-		color: $light-color;
+		background-color: $primary; @include sct-light-box($primary, true);
+		color: sct-oc($light-color, $primary);
 	}
 	&.style2 {
 	    right: 10px;
@@ -1535,7 +1565,7 @@ span.sct_img_effect_wrap {
 		    padding: 5px 10px;
 		    display: block;
 			background: transparent !important;
-		    color: $black !important;
+		    color: sct-dk($black) !important;
 		    right: 0px;
 		    top: 10px;
 		}
@@ -1547,7 +1577,7 @@ span.sct_img_effect_wrap {
 			left: 0;
 			width: 50%;
 			height: 100%;
-			background: rgba($primary, 0.4);
+			background: rgba($primary, 0.4); @include sct-light-box(rgba($primary, 0.4), false);
 			@include transition(all, 0.3s, ease-in);
 		}
 
@@ -1583,13 +1613,13 @@ span.sct_img_effect_wrap {
 		    opacity: 0.8;
 		}
 		.sct-tag-name {
-			color: $light-color;
+			color: sct-oc($light-color, $primary);
 		    position: relative;
 		    right: 10px;
 		    display: block;
 		    padding: 3px 10px;
 		    text-align: center;
-		    background: $primary;
+		    background: $primary; @include sct-light-box($primary, true);
 		    &:before {
 		    	position:absolute;
 		    	content: '';
@@ -1600,7 +1630,7 @@ span.sct_img_effect_wrap {
 			    bottom: 0px;
 			    left: -9px;
 			    width: 22px;
-			    background-color: #ffffff;
+			    background-color: #ffffff; @include sct-light-box(#ffffff, false);
 			    -webkit-filter: blur(6px) opacity(0.7);
 			    filter: blur(6px) opacity(0.7);
 			    -webkit-transform: skewX(-25deg);
@@ -1817,7 +1847,7 @@ body{
 								a{
 									display:inline-block;
 									font-size:14px;
-									color:$primary;
+									color:sct-pc($primary);
 									font-weight: 600;
 									margin-bottom:5px;
 								}
@@ -1825,7 +1855,7 @@ body{
 							.cart_qty_amt{
 								margin: 0px;
 								font-size: 12px;
-								color:$dark-color;
+								color:sct-dk($dark-color);
 								font-weight: 600;
 							}
 							.css_quantity{
@@ -1836,7 +1866,7 @@ body{
 									text-align: center;
 									font-size: 14px;
 									min-height: 32px !important;
-									background-color: #fefefe;
+									background-color: #fefefe; @include sct-light-box(#fefefe, false);
 									line-height: 16px;
 									min-width: 46px;
 								}
@@ -1861,7 +1891,7 @@ body{
 								}
 							}
 							.scita_cart_popup_remove{
-								color:$dark-color;
+								color:sct-dk($dark-color);
     							position: absolute;
     							width: 20px;
     							height: 20px;
@@ -1912,12 +1942,12 @@ body{
 						.view-all{
 							display: block;
 							line-height: 32px;
-							background-color:#fff;
-							color:#000;
+							background-color:#fff; @include sct-light-box(#fff, true);
+							color:sct-dk(#000);
 							border-color:#000;
 							&:hover{
-								background-color:#000;
-								color:#fff;
+								background-color:#000; @include sct-light-box(#000, true);
+								color:sct-dk(#fff);
 								border-color:#000;
 							}
 						}
@@ -1925,8 +1955,8 @@ body{
 							display: block;
 							line-height: 32px;
 							&:hover{
-								background-color:#fff;
-								color:#000;
+								background-color:#fff; @include sct-light-box(#fff, true);
+								color:sct-dk(#000);
 								border-color:#000;
 							}
 						}
@@ -1943,7 +1973,7 @@ body{
 .oe_website_login_container {
 	form {
 		label {
-			color: $dark-color;
+			color: sct-dk($dark-color);
 		}
 	}
 }
@@ -1985,12 +2015,12 @@ body header .navbar-expand-lg .navbar-collapse {
 	.popup_notification_button{
 		.oe_popup_notification{
 			padding-top: 12px;
-			color: #d31515;
+			color: sct-dk(#d31515);
 			font-size: 20px;
 		}
 		span{
 			position: absolute;
-			color: #fff;
+			color: sct-dk(#fff);
 			top: -4px;
 		}
 	}
@@ -2026,16 +2056,16 @@ body header .navbar-expand-lg .navbar-collapse {
 	
 		.dropdown-item{
 			&:nth-child(odd){
-				background-color: rgba($light-grey-color, 0.3);
+				background-color: rgba($light-grey-color, 0.3); @include sct-light-box(rgba($light-grey-color, 0.3), false);
 			}
 			&:hover{
-				background-color: rgba($primary, 0.1);
-				color: $dark-color !important;
+				background-color: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), true);
+				color: sct-dk($dark-color) !important;
 				
 				.o_search_result_item{
 					.o_search_result_item_detail, > div{
 						h6, .btn-link, .text-nowrap{
-							color: $dark-color!important;
+							color: sct-dk($dark-color)!important;
 						}
 					}
 				}
@@ -2063,16 +2093,16 @@ body header .navbar-expand-lg .navbar-collapse {
 			position: sticky;
 			bottom: -1px;
 			z-index: 1;
-			background: $primary;
-			color: $light-color !important;
+			background: $primary; @include sct-light-box($primary, true);
+			color: sct-oc($light-color, $primary) !important;
 			padding: 10px !important;
 			font-size: 18px;
 			border: 0;
 			border-top: 1px solid $primary;
 	
 			&:hover{
-				background: $light-color;
-				color: $primary !important;
+				background: $light-color; @include sct-light-box($light-color, true);
+				color: sct-pc($primary, $light-color) !important;
 			}
 		}
 	}
@@ -2088,14 +2118,14 @@ body header .navbar-expand-lg .navbar-collapse {
 			padding: 16px 10px !important;
 
 			&:nth-child(odd){
-				background-color: rgba($light-grey-color, 0.3);
+				background-color: rgba($light-grey-color, 0.3); @include sct-light-box(rgba($light-grey-color, 0.3), false);
 			}
 			&:last-child{
 				border-bottom: 0;
 			}
 			&:active{
-				background-color: $primary;
-				color: $dark-color;
+				background-color: $primary; @include sct-light-box($primary, true);
+				color: sct-dk($dark-color);
 			}
 			.o_search_result_item{
 				img{
@@ -2121,8 +2151,8 @@ body header .navbar-expand-lg .navbar-collapse {
 				}
 			}
 			&:hover{
-				background-color: rgba($primary, 0.1);
-				color: $dark-color !important;
+				background-color: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), true);
+				color: sct-dk($dark-color) !important;
 				
 				.o_search_result_item{
 					.o_search_result_item_detail{
@@ -2131,13 +2161,13 @@ body header .navbar-expand-lg .navbar-collapse {
 							@include transition(all, .5s, ease-in);
 						}
 						h6, .btn-link{
-							color: $dark-color!important;
+							color: sct-dk($dark-color)!important;
 						}
 					}
 				}
 			}
 			b.text-nowrap{
-				color: $primary;
+				color: sct-pc($primary);
 			}
 		}
 	}
@@ -2156,7 +2186,7 @@ header{
 							font-size: 16px;
 						}
 						.text-primary{
-							color: $primary;
+							color: sct-pc($primary);
 						}
 					}
 					div{
@@ -2174,7 +2204,7 @@ header{
 		.table-responsive{
 			.dropdown-item{
 				&:active{
-					background-color: $light-grey-color;
+					background-color: $light-grey-color; @include sct-light-box($light-grey-color, false);
 				}
 			}
 		}
@@ -2184,7 +2214,7 @@ header{
 			.dropdown-item{
 				.o_search_result_item_detail{
 					.text-primary{
-						color: $primary;
+						color: sct-pc($primary);
 					}
 				}
 			}
@@ -2193,16 +2223,16 @@ header{
 	.o_wblog_post{
 		.o_wblog_post_short_tag_section{
 			.o_post_link_js_loaded{
-				color: $primary !important;
+				color: sct-pc($primary) !important;
 			}
 		}
 	}
 	.o_searchbar_form{
 		.input-group{
 			.oe_search_button{
-				background-color: $primary;
+				background-color: $primary; @include sct-light-box($primary, true);
 				border-color: $primary;
-				color: $white;
+				color: sct-oc($white, $primary);
 			}
 		}
 	}
@@ -2227,7 +2257,7 @@ header{
 					@include justify-align-content;
 				}
 				.o_animate_blink{
-					background-color: $primary !important;
+					background-color: $primary !important; @include sct-light-box($primary, false);
 				}
 			}
 		}
@@ -2268,11 +2298,11 @@ html::-webkit-scrollbar{
 	width: 6px;
 }
 *::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-thumb {
-	background: rgba(0, 0, 0, 0.3);
+	background: rgba(0, 0, 0, 0.3); @include sct-light-box(rgba(0, 0, 0, 0.3), false);
 	border-radius: 8px;
 }
 *::-webkit-scrollbar-track, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar-track, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-track {
-	background: #f5f5f5;
+	background: #f5f5f5; @include sct-light-box(#f5f5f5, false);
 }
 
 
@@ -2281,13 +2311,13 @@ html::-webkit-scrollbar{
     width: 10px;
     height: 10px;
     border-radius: 100%;
-    background-color: #ccc;
+    background-color: #ccc; @include sct-light-box(#ccc, false);
     border:unset;
     transition: 0.3s ease-in;
     &.active{
         width: 30px;
-        color:$secondary;
-        background-color: $secondary;
+        color:sct-pc($secondary);
+        background-color: $secondary; @include sct-light-box($secondary, true);
         border-radius: 30px;
         transition: 0.3s ease-in;
     }
@@ -2303,17 +2333,17 @@ html::-webkit-scrollbar{
         @include justify-center-flex;
         box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.15);
         position: relative;
-        background: $light-color;
+        background: $light-color; @include sct-light-box($light-color, false);
         @include transition(all , 0.3s , ease-in);
         @media (min-width: 1024){
             height: 40px;
             width: 40px;
         }
         &:hover{
-            background: $secondary !important;
+            background: $secondary !important; @include sct-light-box($secondary, false);
             @include transition(all , 0.3s , ease-in);
            span{
-            filter: brightness(0) invert(1);
+            filter: if(contrast-ratio($secondary, #ffffff) >= 3.05, brightness(0) invert(1), brightness(0));
             @include transition(all , 0.3s , ease);
            }
         }
@@ -2357,7 +2387,7 @@ html::-webkit-scrollbar{
 .section-title-big{
     font-size: 23px;
     font-weight: bolder;
-    color: $dark-color;
+    color: sct-dk($dark-color);
     @media (min-width: 768px){
         font-size: 28px;
     }
@@ -2372,14 +2402,14 @@ html::-webkit-scrollbar{
     }
 }
 .green-font{
-	color: $primary;
+	color: sct-pc($primary);
 }
 .theme-color{
-	color: $secondary;
+	color: sct-pc($secondary);
 }
 
 .section-title{
-    color: $dark-color;
+    color: sct-dk($dark-color);
     font-size: 22px;
     line-height: 1; 
     font-weight: bold;
@@ -2402,7 +2432,7 @@ html::-webkit-scrollbar{
     display: block;
     font-size: 14px;
     line-height:normal; 
-    color: $dark-color;
+    color: sct-dk($dark-color);
     @include min768{
         font-size: 16px;
     }
@@ -2414,7 +2444,7 @@ html::-webkit-scrollbar{
     font-size: 18px;
     line-height: normal;
     font-weight: bolder;
-    color: $dark-color;
+    color: sct-dk($dark-color);
     text-transform: capitalize;
     @include min768{
         font-size: 22px;
@@ -2430,7 +2460,7 @@ html::-webkit-scrollbar{
     font-size: 20px;
     line-height: normal;
     font-weight: bolder;
-    color: $dark-color;
+    color: sct-dk($dark-color);
     text-transform: capitalize;
     @include min768{
         font-size: 28px;
@@ -2444,7 +2474,7 @@ html::-webkit-scrollbar{
     
 }
 .title-26{
-    color: $dark-color;
+    color: sct-dk($dark-color);
     font-size: 16px;
     line-height:normal;
     font-style: normal;
@@ -2489,7 +2519,7 @@ html::-webkit-scrollbar{
 		.toast-body{
 			.btn-primary{
 				&:hover{
-					color: $primary;
+					color: sct-pc($primary);
 				}
 			}
 		}
@@ -2505,7 +2535,7 @@ html::-webkit-scrollbar{
 		&:hover{
 			background-color: transparent;
 			// Odoo 20's cart toast has no .o_notification_fade, so the hover colour above no longer applies
-			color: $primary;
+			color: sct-pc($primary);
 
 			&::after{
 				border-color: $black;
@@ -2640,12 +2670,12 @@ html::-webkit-scrollbar{
 									padding: 3px 10px;
 									font-size: $title - 3;
 									border-radius: 10px;
-									color: $primary;
+									color: sct-pc($primary);
 									@include transition(all, 0.3s, ease-in);
 
 									&:hover{
-										background: $primary;
-										color: $light-color;
+										background: $primary; @include sct-light-box($primary, true);
+										color: sct-oc($light-color, $primary);
 									}
 								}
 							}
@@ -2653,7 +2683,7 @@ html::-webkit-scrollbar{
 								.btn{
 									font-size: $title - 3;
 									padding: 7px 12px;
-									color: $primary;
+									color: sct-pc($primary);
 									background: transparent;
 									border-radius: 10px;
 
@@ -2665,8 +2695,8 @@ html::-webkit-scrollbar{
 									}
 
 									&:hover{
-										background: $primary;
-										color: $light-color;
+										background: $primary; @include sct-light-box($primary, true);
+										color: sct-oc($light-color, $primary);
 									}
 								}
 							}
@@ -2746,7 +2776,7 @@ html::-webkit-scrollbar{
 				}
 				.o_sale_product_configurator_qty{
 					.css_quantity{
-						background-color: lighten($light-grey-color, 2%);
+						background-color: lighten($light-grey-color, 2%); @include sct-light-box(lighten($light-grey-color, 2%), false);
 						padding: 4px;
 						border-radius: 50px !important;
 
@@ -2763,8 +2793,8 @@ html::-webkit-scrollbar{
 						.btn{
 							border-radius: 50px !important;
 							padding: 7px !important;
-							background-color: $light-color;
-							color: $secondary;
+							background-color: $light-color; @include sct-light-box($light-color, true);
+							color: sct-pc($secondary, $light-color);
 							border: 0;
 							font-size: 13px;
 							display: flex !important;
@@ -2779,7 +2809,7 @@ html::-webkit-scrollbar{
 							}
 
 							&:hover {
-								background-color: $secondary;
+								background-color: $secondary; @include sct-light-box($secondary, true);
 								color: color-contrast($secondary);
 							}
 
@@ -2879,7 +2909,7 @@ common search for categories and products (22/05/2025)
     border: 1px solid #d1d1d1;
     border-radius: 10px;
     font-size: 14px;
-    color: #242323;
+    color: sct-dk(#242323);
     padding: 6px 12px;
     white-space: nowrap;
 }
@@ -2896,8 +2926,8 @@ common search for categories and products (22/05/2025)
 
 .comparator-popover.popover{
 	.popover-header{
-		background-color: $primary;
-		color: $light-color;
+		background-color: $primary; @include sct-light-box($primary, true);
+		color: sct-oc($light-color, $primary);
 		font-size: 20px;
 	}
 	.popover-body{
@@ -2944,22 +2974,22 @@ common search for categories and products (22/05/2025)
 
 // compare popup design css start 
 .compare_popup_header {
-	background-color: $primary !important;
+	background-color: $primary !important; @include sct-light-box($primary, false);
 }
 .compare_btn {
-	background-color: $primary !important;
+	background-color: $primary !important; @include sct-light-box($primary, false);
 	&:hover {
-		background-color: rgba($primary, 0.6) !important; 
+		background-color: rgba($primary, 0.6) !important; @include sct-light-box(rgba($primary, 0.6), false); 
 	}
 }
 .timer-bar {
-	background-color: $primary !important;
+	background-color: $primary !important; @include sct-light-box($primary, false);
 }
 #product_detail {
 	#product_details {
 		.js_product #request_modal_close.btn-primary:hover {
 			&:hover {
-				color: $primary !important;
+				color: sct-pc($primary) !important;
 			}
 		}
 	}
@@ -2972,7 +3002,7 @@ common search for categories and products (22/05/2025)
 	// was `:hover` (no &), which targeted children and never applied: on hover the
 	// product-page rule made the background transparent and the white text vanished
 	&:hover, &:focus {
-		color: $primary !important;
+		color: sct-pc($primary) !important;
 		border-color: $primary !important;
 	}
 }
@@ -2995,7 +3025,7 @@ common search for categories and products (22/05/2025)
         font-weight: 700;
     }
     .sct-brands-subtitle {
-        color: rgba($body-color, .65);
+        color: sct-dka(rgba($body-color, .65));
     }
     .sct-brands-search {
         position: relative;
@@ -3007,7 +3037,7 @@ common search for categories and products (22/05/2025)
             top: 50%;
             left: 18px;
             transform: translateY(-50%);
-            color: rgba($body-color, .45);
+            color: sct-dka(rgba($body-color, .45));
             pointer-events: none;
         }
         .form-control {
@@ -3015,7 +3045,7 @@ common search for categories and products (22/05/2025)
             padding-left: 44px;
             border-radius: 50px;
             border-color: rgba($black, .12);
-            background: $white;
+            background: $white; @include sct-light-box($white, false);
 
             &:focus {
                 border-color: $primary;
@@ -3047,8 +3077,8 @@ common search for categories and products (22/05/2025)
             padding: 0 10px;
             border-radius: 50px;
             border: 1px solid rgba($primary, .35);
-            background: $white;
-            color: $primary;
+            background: $white; @include sct-light-box($white, true);
+            color: sct-pc($primary, $white);
             font-weight: 600;
             line-height: 36px;
             transition: background-color .2s, color .2s, border-color .2s;
@@ -3056,11 +3086,11 @@ common search for categories and products (22/05/2025)
             // not the active chip: its text is white, the light hover background hid it
             &:hover:not(:disabled):not(.active) {
                 border-color: $primary;
-                background: rgba($primary, .08);
+                background: rgba($primary, .08); @include sct-light-box(rgba($primary, .08), false);
             }
             &.active {
                 border-color: $primary;
-                background: $primary;
+                background: $primary; @include sct-light-box($primary, true);
                 color: color-contrast($primary);
             }
             &[data-letter="all"] {
@@ -3071,7 +3101,7 @@ common search for categories and products (22/05/2025)
             &:disabled {
                 border-color: transparent;
                 background: transparent;
-                color: rgba($body-color, .3);
+                color: sct-dka(rgba($body-color, .3));
                 opacity: 1;
             }
         }
@@ -3093,9 +3123,9 @@ common search for categories and products (22/05/2025)
         height: 100%;
         border: 1px solid rgba($black, .08);
         border-radius: 14px;
-        background: $white;
+        background: $white; @include sct-light-box($white, true);
         overflow: hidden;
-        color: $body-color;
+        color: sct-dk($body-color);
         text-decoration: none;
         transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
 
@@ -3109,7 +3139,7 @@ common search for categories and products (22/05/2025)
                 transform: scale(1.05);
             }
             .sct-brand-cta {
-                color: $primary;
+                color: sct-pc($primary, $white);
                 gap: 10px;
             }
         }
@@ -3121,7 +3151,7 @@ common search for categories and products (22/05/2025)
         aspect-ratio: 4 / 3;
         padding: 18px;
         // white like most logos' own background, divided from the text below
-        background: $white;
+        background: $white; @include sct-light-box($white, false);
         border-bottom: 1px solid rgba($black, .06);
 
         img {
@@ -3142,7 +3172,7 @@ common search for categories and products (22/05/2025)
         width: 72px;
         height: 72px;
         border-radius: 50%;
-        background: $primary;
+        background: $primary; @include sct-light-box($primary, true);
         color: color-contrast($primary);
         font-size: 26px;
         font-weight: 700;
@@ -3163,7 +3193,7 @@ common search for categories and products (22/05/2025)
     }
     .sct-brand-count {
         font-size: 13px;
-        color: rgba($body-color, .6);
+        color: sct-dka(rgba($body-color, .6));
     }
     .sct-brand-cta {
         display: inline-flex;
@@ -3172,13 +3202,13 @@ common search for categories and products (22/05/2025)
         margin-top: 6px;
         font-size: 13px;
         font-weight: 600;
-        color: rgba($body-color, .75);
+        color: sct-dka(rgba($body-color, .75));
         transition: color .2s, gap .2s;
     }
     .sct-brands-empty {
         padding: 40px 0;
         text-align: center;
-        color: rgba($body-color, .6);
+        color: sct-dka(rgba($body-color, .6));
     }
 }
 // Off the first screen: the footer (below the fold) and the closed mobile menu are not drawn

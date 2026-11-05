@@ -27,7 +27,7 @@ body #wrapwrap{
 		background: transparent;
 		border: none;
 		font-size: 24px;
-		color: #252629;
+		color: sct-dk(#252629);
 		text-transform: uppercase;
 		padding: 0 50px;
 		position: relative;
@@ -37,14 +37,14 @@ body #wrapwrap{
 		&:hover {
 			background:transparent !important;
 			border: none;
-			color: #252629 !important;
+			color: sct-dk(#252629) !important;
 		}
 		&:after, &:before{
 			position: absolute;
 			content: '';
 			width: 35px;
 			height: 1px;
-			background: #252629;
+			background: #252629; @include sct-light-box(#252629, false);
 			top: 0;
 			bottom: 0;
 			margin: auto;
@@ -77,11 +77,11 @@ body #wrapwrap{
 		}
 		&.dark_btn {
 			color: $light-color;
-			background: $dark-color;
+			background: $dark-color; @include sct-light-box($dark-color, true);
 			border: 1px solid $dark-color;
 		}
 		&.light_btn {
-			color: $dark-color;
+			color: sct-dk($dark-color);
 			background: transparent;
 			border: 1px solid $dark-color;
 		}
@@ -92,7 +92,7 @@ body #wrapwrap{
 		border-radius: 0;
 		background: transparent;
 		border: 1px solid $dark-color;
-		color: $dark-color;
+		color: sct-dk($dark-color);
 		border-left: 0;
 		border-right: 0;
 		padding:5px 0px;
@@ -149,7 +149,7 @@ body #wrapwrap{
 	&:before{
 		position:absolute;
 		content: '';
-		background: #3a147d;
+		background: #3a147d; @include sct-light-box(#3a147d, false);
 		width: 30px;
 		height: 2px;
 		left: -45px;
@@ -320,16 +320,16 @@ body #wrapwrap{
 		    	width: 100%;
 		    }
 		    .modal-footer {
-		    	background-color: #ffffff;
+		    	background-color: #ffffff; @include sct-light-box(#ffffff, false);
 		    	text-align: right;
 		    	-webkit-box-pack: end;
 		    	-ms-flex-pack: end;
 		    	justify-content: flex-end;
 		    	.sct-save {
-		    		background-color: #dc3545;
+		    		background-color: #dc3545; @include sct-light-box(#dc3545, true);
     				border-color: #dc3545;
     				border-radius: 0.25rem;
-    				color: #ffffff;
+    				color: sct-dk(#ffffff);
 		    		-webkit-box-ordinal-group: 3;
 		    		-ms-flex-order: 2;
 		    		order: 2;
@@ -391,13 +391,13 @@ body #wrapwrap{
     width: 10px;
     height: 10px;
     border-radius: 100%;
-    background-color: #ccc;
+    background-color: #ccc; @include sct-light-box(#ccc, false);
     border:unset;
     transition: 0.3s ease-in;
     &.active{
         width: 30px;
-        color:$secondary;
-        background-color: $secondary;
+        color:sct-pc($secondary);
+        background-color: $secondary; @include sct-light-box($secondary, true);
         border-radius: 30px;
         transition: 0.3s ease-in;
     }
@@ -427,7 +427,7 @@ body #wrapwrap{
             border: unset;
             &:hover{
                 background-color: transparent;
-                color: $secondary;
+                color: sct-pc($secondary);
                 span{
                      border-color: $secondary;
                 }
@@ -483,7 +483,7 @@ body #wrapwrap{
 	.carousel-item{
 		border-radius: 25px;
 		overflow: hidden;
-		background-color: #efefef;
+		background-color: #efefef; @include sct-light-box(#efefef, false);
 	}
 	.content {
 		@include justify-align-content;
@@ -496,7 +496,7 @@ body #wrapwrap{
 			right: 0;
 			top: 0;
 			bottom: 0;
-			background-color: rgba($body-color, 0.2);
+			background-color: rgba($body-color, 0.2); @include sct-light-box(rgba($body-color, 0.2), false);
 			z-index: 0;
 		}
 		@media (max-width: 991px) {
@@ -585,15 +585,15 @@ body #wrapwrap{
                 width: 10px;
                 height: 10px;
                 border-radius: 100%;
-                background-color: $light-color;
+                background-color: $light-color; @include sct-light-box($light-color, false);
                 border:unset;
                 @media (min-width: 1024px){
-                    background-color: #ccc;
+                    background-color: #ccc; @include sct-light-box(#ccc, false);
                 }
                 &.active{
                     width: 30px;
-                    color:$secondary;
-                    background-color: $secondary;
+                    color:sct-pc($secondary);
+                    background-color: $secondary; @include sct-light-box($secondary, true);
                     border-radius: 30px;
                 }
             }
@@ -645,7 +645,7 @@ body #wrapwrap{
                     right: 10px;
                     bottom: 10px;
                     top: 10px;
-                    background: rgba(1, 1, 1, 0.1);
+                    background: rgba(1, 1, 1, 0.1); @include sct-light-box(rgba(1, 1, 1, 0.1), false);
                     z-index: 0;
                     border-radius: 30px;
 
@@ -745,7 +745,7 @@ body #wrapwrap{
                         right: 10px;
                         bottom:10px;
                         top:10px;
-                        background: rgba(1, 1, 1, 0.1);
+                        background: rgba(1, 1, 1, 0.1); @include sct-light-box(rgba(1, 1, 1, 0.1), false);
                         z-index: 0;
 						border-radius: 30px;
                         @media (min-width: 1024px){
@@ -768,12 +768,12 @@ body #wrapwrap{
                         }
                         .title-20{
 							margin-bottom: 5px;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 							line-height: 1;
                         }
 						.title-26{
 							margin-bottom: 30px;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 							line-height: 1;
 
 							@include min1440{
@@ -782,7 +782,7 @@ body #wrapwrap{
 						}
                         .title-30{
                             margin-bottom: 10px;
-							color: $dark-color;
+							color: sct-dk($dark-color);
 							font-weight: bolder;
 							line-height: 1;                            
                         }
@@ -802,7 +802,7 @@ body #wrapwrap{
 			margin-top: auto;
 			&:hover{
 				border: 1px solid $black;
-				background-color: $white;
+				background-color: $white; @include sct-light-box($white, false);
 				img{
 					filter: initial;
 				}
@@ -949,7 +949,7 @@ body #wrapwrap{
 			}
 			.sct_banner_content, .slider-content{
 				.solid-btn{
-					color: $dark-color;
+					color: sct-dk($dark-color);
 					padding: 0 3px 4px 0;
 					border: 0;
 					border-bottom: 1px solid $dark-color;
@@ -993,15 +993,15 @@ body #wrapwrap{
                 width: 10px;
                 height: 10px;
                 border-radius: 100%;
-                background-color: $light-color;
+                background-color: $light-color; @include sct-light-box($light-color, false);
                 border:unset;
                 @media (min-width: 1024px){
-                    background-color: #ccc;
+                    background-color: #ccc; @include sct-light-box(#ccc, false);
                 }
                 &.active{
                     width: 30px;
-                    color:$secondary;
-                    background-color: $secondary;
+                    color:sct-pc($secondary);
+                    background-color: $secondary; @include sct-light-box($secondary, true);
                     border-radius: 30px;
                 }
             }
@@ -1011,7 +1011,7 @@ body #wrapwrap{
             .carousel-item{
                 padding: 30px 20px 50px 20px;
                 height: 100%;
-				background-color: #f8f3ef;
+				background-color: #f8f3ef; @include sct-light-box(#f8f3ef, false);
 
                 @media (min-width: 768px){
                     padding: 60px 30px;
@@ -1064,7 +1064,7 @@ body #wrapwrap{
 				@include flex;
 				flex-direction: column;
 				@include content-sb;
-				background-color: #f8f3ef;
+				background-color: #f8f3ef; @include sct-light-box(#f8f3ef, false);
 				
 				@media (min-width: 768px){
 					padding: 0 25px 40px;
@@ -1103,7 +1103,7 @@ body #wrapwrap{
 				position: relative;
 				z-index: 1;
 				height: 100%;
-				background-color: #f8f3ef;
+				background-color: #f8f3ef; @include sct-light-box(#f8f3ef, false);
 				display: flex;
 				align-items: centers;
 				
@@ -1138,7 +1138,7 @@ body #wrapwrap{
 					margin: 10px 0;
 				}
 				.theme-color{
-					color: $primary;
+					color: sct-pc($primary, #f8f3ef);
 				}
 			}
 		}

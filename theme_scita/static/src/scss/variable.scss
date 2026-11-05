@@ -26,3 +26,154 @@ $dark-grey-color:	#484848;
 
  /*$img-path:         '../img/';*/
 
+
+// ---------------------------------------------------------------------------------------------
+// Colour palettes: Scita's blocks show text in the palette's primary / secondary colour, white
+// text on those colours and dark titles on the page. With a very light primary colour or a dark
+// palette that text could not be read. These functions keep Scita's colour whenever it reaches
+// 3:1 on its background (so with the colours Scita was designed for the CSS does not change),
+// otherwise they pick a readable one.
+// ---------------------------------------------------------------------------------------------
+$-sct-page-bg: o-color('o-cc1-bg');
+@if type-of($-sct-page-bg) != 'color' {
+    $-sct-page-bg: #ffffff;
+}
+// a colour whose opacity is written in % (rgba($primary, 90%)): the compiler keeps 90 as its
+// opacity and writes the colour out opaque, while mix() and contrast-ratio() fail on it; the
+// colour as it is shown (opaque)
+@function sct-norm($c) {
+    @if type-of($c) == 'color' and alpha($c) > 1 {
+        @return rgba(red($c), green($c), blue($c), 1);
+    }
+    @return $c;
+}
+// the page is dark: Scita's dark titles would not show on it
+$-sct-dark-page: contrast-ratio($-sct-page-bg, #202020) < 3.05;
+
+// fixed text colour on a background: kept when readable, else white or dark text
+@function sct-oc($fg, $bg) {
+    $fg: sct-norm($fg); $bg: sct-norm($bg);
+    // (a see-through background: what shows is mostly what is behind it, keep Scita's colour)
+    @if type-of($fg) != 'color' or type-of($bg) != 'color' or alpha($bg) < 0.8 {
+        @return $fg;
+    }
+    // see-through text: measured as it shows on the background
+    $a: alpha($fg);
+    @if contrast-ratio($bg, mix(rgba($fg, 1), $bg, $a * 100%)) >= 3.05 {
+        @return $fg;
+    }
+    $c: if(contrast-ratio($bg, #ffffff) >= 3.05, #ffffff, #202020);
+    @return if($a < 1 and contrast-ratio($bg, mix($c, $bg, $a * 100%)) >= 3.05, rgba($c, $a), $c);
+}
+
+// text in a colour on a background: a darker (lighter on a dark background) shade of the same
+// colour that reaches 3:1 (keeps the palette's hue), else white or dark text
+@function sct-pc-on($fg, $bg) {
+    $fg: sct-norm($fg); $bg: sct-norm($bg);
+    @if type-of($fg) != 'color' or type-of($bg) != 'color' or contrast-ratio($bg, $fg) >= 3.05 {
+        @return $fg;
+    }
+    $c: $fg;
+    $i: 0;
+    // a colour that has to change gets a small margin, so it also reads on the near-white
+    // (or near-black) boxes around the background it is made for
+    @while contrast-ratio($bg, $c) < 3.4 and $i < 20 {
+        $c: if(lightness($bg) > 50%, darken($c, 5%), lighten($c, 5%));
+        $i: $i + 1;
+    }
+    @return sct-oc($c, $bg);
+}
+
+// see-through text in a colour (rgba($primary, .9)) on the page: a darker shade (same opacity)
+// when the colour as it shows on the page is below 3:1
+@function sct-pca($fg, $a, $bg: $-sct-page-bg) {
+    $fg: sct-norm($fg);
+    @if type-of($fg) != 'color' or type-of($bg) != 'color' {
+        @return rgba($fg, $a);
+    }
+    $c: $fg;
+    $i: 0;
+    @while contrast-ratio($bg, mix($c, $bg, $a * 100%)) < 3.05 and $i < 20 {
+        $c: if(lightness($bg) > 50%, darken($c, 5%), lighten($c, 5%));
+        $i: $i + 1;
+    }
+    @return rgba($c, $a);
+}
+
+// text in the primary / secondary colour on the page. On a dark page Scita's light boxes (white
+// cards, light grey sections) keep their light background: there the darker shade is used
+// (--sct-tp / --sct-ts, set by sct-light-box below).
+@function sct-pc($fg, $bg: null) {
+    $fg: sct-norm($fg); $bg: sct-norm($bg);
+    @if $bg != null and type-of($bg) == 'color' {
+        // a see-through box: its colour over the page
+        @if alpha($bg) < 0.8 {
+            $bg: mix(rgba($bg, 1), $-sct-page-bg, alpha($bg) * 100%);
+        }
+        @return sct-pc-on($fg, $bg);
+    }
+    $c: sct-pc-on($fg, $-sct-page-bg);
+    @if $-sct-dark-page and type-of($fg) == 'color' and sct-pc-on($fg, #ffffff) != $c {
+        @if $fg == $primary {
+            @return var(--sct-tp, #{$c});
+        }
+        @if $fg == $secondary {
+            @return var(--sct-ts, #{$c});
+        }
+    }
+    @return $c;
+}
+
+// see-through dark text (rgba($dark-color, .5)): on a dark page, the same see-through amount of
+// the text colour of where it sits
+@function sct-dka($c) {
+    $c: sct-norm($c);
+    @if $-sct-dark-page and type-of($c) == 'color' and contrast-ratio($-sct-page-bg, rgba($c, 1)) < 3.05 {
+        @return color-mix(in srgb, var(--sct-text, currentColor) #{round(alpha($c) * 100%)}, transparent);
+    }
+    @return $c;
+}
+
+// a box painted with its own colour: on a dark page a light box keeps dark text (it inherited the
+// page's light text) and the primary / secondary texts inside take the shade made for the box.
+// Nothing on a light page.
+// $mid: a mid-light box (white text below 3:1 on it) gets the dark text too
+@mixin sct-light-box($bg, $has-color: false, $mid: false) {
+    $bg: sct-norm($bg);
+    @if $-sct-dark-page and type-of($bg) == 'color' and alpha($bg) > 0.8 {
+        --sct-text: initial;
+        @if lightness($bg) > 75% or ($mid and contrast-ratio($bg, #ffffff) < 3.05) {
+            @if not $has-color {
+                color: #212529;
+            }
+            --sct-text: #212529;
+            // Odoo's plain buttons (variant pills...) take the text colour from --body-color
+            --body-color: #212529;
+            // ...and Odoo's list groups / form fields their background from --body-bg (the page's)
+            --body-bg: #{$bg};
+            // (Odoo 20 sets the list groups' own background on .list-group itself)
+            .list-group { --list-group-bg: #{$bg}; }
+            // Odoo's headings and Scita's simple text read these
+            --heading-color: #212529;
+            --color: #212529;
+            // Odoo's muted text and links inside the box (shop cards: their own muted colour)
+            --secondary-color: rgba(33, 37, 41, 0.75);
+            --o-wsale-card-info-muted: rgba(33, 37, 41, 0.75);
+            --link-color: #{sct-pc-on($primary, $bg)};
+            --link-color-rgb: #{to-rgb(sct-pc-on($primary, $bg))};
+            --link-hover-color: #{sct-pc-on($primary, $bg)};
+            --link-hover-color-rgb: #{to-rgb(sct-pc-on($primary, $bg))};
+        }
+        --sct-tp: #{sct-pc-on($primary, $bg)};
+        --sct-ts: #{sct-pc-on($secondary, $bg)};
+    }
+}
+
+// Scita's dark text: on a dark page it takes the text colour of where it sits (the page or the
+// section's colour preset), see the light cards in palette_contrast.scss
+@function sct-dk($fg) {
+    @if $-sct-dark-page and type-of($fg) == 'color' and contrast-ratio($-sct-page-bg, $fg) < 3.05 {
+        @return currentColor;
+    }
+    @return $fg;
+}

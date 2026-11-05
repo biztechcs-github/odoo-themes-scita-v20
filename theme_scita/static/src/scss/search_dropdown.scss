@@ -20,14 +20,14 @@
         align-items: center;
         gap: 6px;
         margin-bottom: 12px !important;
-        color: rgba($dark-color, 0.55) !important;
+        color: sct-dka(rgba($dark-color, 0.55)) !important;
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
 
         .fa {
-            color: $primary !important;
+            color: sct-pc($primary) !important;
             font-size: 13px;
         }
     }
@@ -46,8 +46,8 @@
             padding: 9px 12px !important;
             border: 1px solid rgba($primary, 0.12);
             border-radius: 12px;
-            background: $light-color !important;
-            color: $dark-color !important;
+            background: $light-color !important; @include sct-light-box($light-color, true);
+            color: sct-dk($dark-color) !important;
             font-size: 13px;
             font-weight: 600;
             line-height: 1.3;
@@ -59,18 +59,18 @@
             .fa {
                 flex: 0 0 auto;
                 margin: 0 !important;
-                color: $primary;
+                color: sct-pc($primary, $light-color);
                 transition: color 0.2s ease-in;
             }
             &:hover {
                 border-color: $primary;
-                background: $primary !important;
-                color: $light-color !important;
+                background: $primary !important; @include sct-light-box($primary, true);
+                color: sct-oc($light-color, $primary) !important;
                 transform: translateY(-1px);
                 box-shadow: 0 6px 14px rgba($primary, 0.25);
 
                 .fa {
-                    color: $light-color;
+                    color: sct-oc($light-color, $primary);
                 }
             }
         }
@@ -94,7 +94,7 @@
             padding: 4px 14px 4px 4px;
             border: 1px solid rgba($primary, 0.15);
             border-radius: 50px;
-            background: $light-color;
+            background: $light-color; @include sct-light-box($light-color, false);
             transition: all 0.2s ease-in;
 
             img {
@@ -103,7 +103,7 @@
                 margin: 0 !important;
                 padding: 3px;
                 border-radius: 50%;
-                background: rgba($primary, 0.06);
+                background: rgba($primary, 0.06); @include sct-light-box(rgba($primary, 0.06), false);
                 object-fit: contain;
             }
             .o_search_result_item_detail {
@@ -111,13 +111,13 @@
 
                 .h6 {
                     margin: 0;
-                    color: $dark-color !important;
+                    color: sct-dk($dark-color) !important;
                     font-size: 13px;
                 }
             }
             &:hover {
                 border-color: $primary;
-                background: rgba($primary, 0.06);
+                background: rgba($primary, 0.06); @include sct-light-box(rgba($primary, 0.06), false);
                 box-shadow: 0 4px 12px rgba($primary, 0.15);
             }
         }
@@ -154,7 +154,7 @@
                     padding: 5px;
                     border: 1px solid rgba($primary, 0.08);
                     border-radius: 12px;
-                    background: $light-color;
+                    background: $light-color; @include sct-light-box($light-color, false);
                     object-fit: contain;
                     transition: transform 0.3s ease-in;
                 }
@@ -169,7 +169,7 @@
                         -webkit-box-orient: vertical;
                         overflow: hidden;
                         margin-bottom: 2px !important;
-                        color: $dark-color;
+                        color: sct-dk($dark-color);
                         font-size: 15px;
                         font-weight: 600 !important;
                     }
@@ -178,7 +178,7 @@
                         -webkit-line-clamp: 1;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
-                        color: rgba($dark-color, 0.55);
+                        color: sct-dka(rgba($dark-color, 0.55));
                         font-size: 13px !important;
                     }
                 }
@@ -186,15 +186,15 @@
                     display: inline-block;
                     padding: 5px 12px;
                     border-radius: 50px;
-                    background: rgba($primary, 0.08);
-                    color: $primary;
+                    background: rgba($primary, 0.08); @include sct-light-box(rgba($primary, 0.08), true);
+                    color: sct-pc($primary, rgba($primary, 0.08));
                     font-size: 14px;
                     font-weight: 700;
                 }
             }
             &:hover, &:focus, &.focus {
                 border-color: rgba($primary, 0.12) !important;
-                background: rgba($primary, 0.05) !important;
+                background: rgba($primary, 0.05) !important; @include sct-light-box(rgba($primary, 0.05), false);
                 box-shadow: 0 6px 16px rgba($dark-color, 0.06);
 
                 .o_search_result_item {
@@ -202,11 +202,11 @@
                         transform: scale(1.06);
                     }
                     .h6, .h6 * {
-                        color: $primary !important; // incl. the highlighted search term
+                        color: sct-pc($primary, rgba($primary, 0.05)) !important; // incl. the highlighted search term
                     }
                     .pro_price b {
-                        background: $primary;
-                        color: $light-color !important;
+                        background: $primary; @include sct-light-box($primary, true);
+                        color: sct-oc($light-color, $primary) !important;
                     }
                 }
             }

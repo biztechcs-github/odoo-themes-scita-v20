@@ -1,6 +1,16 @@
+// Odoo's link colour, darkened further when it is still below 3:1 (a light yellow primary colour)
+$-scita-pa-link: $link-color;
+$-scita-pa-i: 0;
+@while type-of($-scita-pa-link) == 'color' and contrast-ratio($body-bg, $-scita-pa-link) < 3.05 and $-scita-pa-i < 20 {
+    $-scita-pa-link: if(lightness($body-bg) > 50%, darken($-scita-pa-link, 5%), lighten($-scita-pa-link, 5%));
+    $-scita-pa-i: $-scita-pa-i + 1;
+}
 .o_scita_price_alert {
     .o_scita_price_alert_toggle {
-        color: var(--o-color-1, $primary);
+        // the primary colour, or Odoo's link colour (a readable shade of it) when it is too light to read
+        $-scita-pa-color: if(contrast-ratio($body-bg, $primary) >= 3.05, var(--o-color-1, #{$primary}), $-scita-pa-link);
+        // dark page: inside one of Scita's light boxes (product page card) its primary text colour
+        color: if(lightness($body-bg) < 50%, var(--sct-tp, #{$-scita-pa-color}), $-scita-pa-color);
         font-size: 0.9rem;
 
         &:hover,

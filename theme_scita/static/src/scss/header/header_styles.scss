@@ -2822,7 +2822,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 }
 
                 .oe_search_button {
-                    background: darken($light-grey-color, 9%) !important;
+                    background: darken($light-grey-color, 9%) !important; @include sct-light-box(darken($light-grey-color, 9%), false);
                     border: 0;
                     box-shadow: none;
                     border-radius: 0 !important;
@@ -3728,7 +3728,8 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
 @if o-website-value('header-template')=='scita_header_5' {
     header {
-        background: $white;
+        // the site header only (Odoo 20's shop pages have a <header> of their own)
+        &:where(#wrapwrap > *) { background: $white; }
 
         nav {
             &.navbar {
@@ -4087,6 +4088,9 @@ header {
                     width: 210px;
                     padding: 10px;
                     background: #ffffff;
+                    // always a white box: its currency / language buttons take the text colour from it
+                    // (Odoo's .btn-secondary uses currentcolor, the header's colour otherwise)
+                    color: $black; @include sct-light-box(#ffffff, true);
                     z-index: 99;
                     -webkit-box-shadow: 0px 5px 17px -5px rgba(0, 0, 0, 0.75);
                     -moz-box-shadow: 0px 5px 17px -5px rgba(0, 0, 0, 0.75);
@@ -4160,6 +4164,8 @@ header {
                                 &.show {
                                     border-color: rgba($secondary, 0.2);
                                     background: rgba($secondary, 0.2);
+                                    // (Odoo's .btn-secondary turns its text white on hover: lost on this light tint)
+                                    color: $black;
                                 }
                             }
                         }
@@ -4180,6 +4186,7 @@ header {
                                     &.show {
                                         border-color: rgba($secondary, 0.2);
                                         background: rgba($secondary, 0.2) !important;
+                                        color: $black;
                                     }
                                 }
                             }
@@ -4353,7 +4360,7 @@ header {
                 .dropup {
                     .btn.dropdown-toggle {
                         border-radius: 0;
-                        color: $black;
+                        color: sct-dk($black);
 
                         &:focus {
                             box-shadow: none;
@@ -6272,6 +6279,27 @@ $-sct-menu-color: o-color('menu-custom') or o-color('menu');
                 }
             }
         }
+        // the compare icon takes its link's colour on hover (light on a dark header), but in
+        // Headers 1 and 3, and in the phone header, it sits in a light grey circle: black there
+        .o_header_mobile .o_wsale_my_compare:hover .compare_link i.fa-exchange {
+            color: $black !important;
+        }
+        @if index((scita_header_1, scita_header_3), $-sct-header) {
+            .navbar:not(.o_header_mobile) .menu_right .o_wsale_my_compare:hover .compare_link i.fa-exchange {
+                color: $black !important;
+            }
+        }
+        // Header 4: its icon buttons get a light grey circle on hover, the icons are black on it
+        @if $-sct-header == scita_header_4 {
+            .navbar:not(.o_header_mobile) .menu_right :is(.delivery_icon, .top-link-checkout, .o_navlink_background_hover, .account_icon, .compare_link):hover {
+                .fa {
+                    color: $black !important;
+                }
+                img[src*="sct_"] {
+                    filter: brightness(0);
+                }
+            }
+        }
 
         // Headers 2 and 4: the menu bar is the header background too, its links were black
         @if index((scita_header_2, scita_header_4), $-sct-header) {
@@ -6348,4 +6376,377 @@ header .o_header_mobile button[data-bs-toggle="offcanvas"] {
 .offcanvas .offcanvas-body .o_nav-link_secondary {
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+
+// ---------------------------------------------------------------------------------------------
+// Colour palettes: Scita draws some header bars in the palette's primary / secondary colour with
+// white text on them (and a few texts in a fixed red / black). On a light primary or secondary
+// colour (or a dark header) that text could not be read. Each rule below only applies when
+// Scita's own colour does not reach 3:1 on its background: then the text turns dark (or white).
+// With the colours Scita was designed for nothing changes.
+// ---------------------------------------------------------------------------------------------
+@function sct-on($bg) {
+    @return if(contrast-ratio($bg, $white) >= 3.05, $white, $dark-color);
+}
+@function sct-readable($fg, $bg) {
+    @return if(contrast-ratio($bg, $fg) >= 3.05, $fg, sct-on($bg));
+}
+
+// darker (lighter on a dark header) shade of the same colour that reaches 3:1 (keeps the palette's hue)
+// (no shade reaches 3:1, e.g. red on a mid yellow: dark or white text)
+@function sct-darken-to($fg, $bg) {
+    $i: 0;
+    @while contrast-ratio($bg, $fg) < 3.05 and $i < 20 {
+        $fg: if(lightness($bg) > 50%, darken($fg, 5%), lighten($fg, 5%));
+        $i: $i + 1;
+    }
+    @return if(contrast-ratio($bg, $fg) >= 3.05, $fg, sct-on($bg));
+}
+
+$-sct-hdr: o-website-value('header-template');
+$-sct-hdr-bg: o-color('menu-custom') or o-color('menu');
+@if type-of($-sct-hdr-bg) != 'color' {
+    $-sct-hdr-bg: $white;
+}
+$-sct-on-primary: sct-on($primary);
+$-sct-on-secondary: sct-on($secondary);
+
+@if str-index($-sct-hdr, 'scita_header_') == 1 {
+    #wrapwrap > header {
+        // white text / icons on a primary-colour bar
+        @if $-sct-on-primary != $white {
+            @if index((scita_header_3, scita_header_4), $-sct-hdr) {
+                // top belt ("Buy one get one free...", "Track your order", "30 Days Online Returns")
+                .header_belt {
+                    &, .belt_inner, .belt_inner a, .belt_inner .btn, .belt_inner i, .belt_inner p, .belt_inner span, .belt_inner small {
+                        color: $-sct-on-primary !important;
+                    }
+                    .belt_inner img[src*="sct_"] {
+                        filter: brightness(0);
+                    }
+                }
+            }
+            @if $-sct-hdr == scita_header_3 {
+                // "Todays deal" box
+                #o_main_nav .head_deal {
+                    &, p, span, .nav-link, .deal_right, .deal_right .nav-link, .deal_right a {
+                        color: $-sct-on-primary !important;
+                    }
+                }
+            }
+            @if $-sct-hdr == scita_header_5 {
+                // menu bar
+                .bottom-header .bottom-header-menu > .top_menu > .nav-item > .nav-link:not(.nav-pills > .nav-item > .active) {
+                    &, span {
+                        color: $-sct-on-primary !important;
+                    }
+                    &.dropdown-toggle::after {
+                        border-top-color: currentColor;
+                        border-left-color: currentColor;
+                    }
+                }
+                .o_searchbar_form .oe_search_button {
+                    color: $-sct-on-primary;
+                    img[src*="sct_"] {
+                        filter: brightness(0);
+                    }
+                }
+            }
+        }
+        // Headers 3 and 4, top belt: the currency / language buttons get a 20% tint of the
+        // secondary colour on hover, a light secondary colour takes the belt's text below 3:1
+        @if index((scita_header_3, scita_header_4), $-sct-hdr) {
+            $-sct-belt-hover: mix($secondary, $primary, 20%);
+            $-sct-belt-text: if($-sct-on-primary != $white, $-sct-on-primary, $white);
+            @if contrast-ratio($-sct-belt-hover, $-sct-belt-text) < 3.05 {
+                .header_belt .belt_inner :is(.o_pricelist_dropdown, .js_language_selector) .btn:hover {
+                    &, span, i {
+                        color: sct-on($-sct-belt-hover) !important;
+                    }
+                }
+            }
+            // Header 4, currency button (Odoo's btn-secondary): it kept the text colour of Odoo's
+            // secondary button, but it sits on the belt; like Header 3 and the language button
+            // beside it, the belt's text colour
+            @if $-sct-hdr == scita_header_4 {
+                .header_belt .belt_inner .o_pricelist_dropdown .btn {
+                    &, span, i {
+                        color: $-sct-belt-text !important;
+                    }
+                }
+            }
+        }
+        // Header 3: the menu bar is the primary colour, 30% darker
+        @if $-sct-hdr == scita_header_3 {
+            $-sct-h3-nav: darken($primary, 30%);
+            // "All categories" on hover: its background goes transparent (menu bar colour)
+            @if sct-on($-sct-h3-nav) != $white or $-sct-on-secondary != $white {
+                .navbar #o_main_nav .category_dropdown:hover > .nav-link,
+                .navbar #o_main_nav .category_dropdown > .nav-link:hover {
+                    &, span, i, .fa {
+                        color: sct-on($-sct-h3-nav) !important;
+                    }
+                    &::after {
+                        border-top-color: currentColor !important;
+                        border-left-color: currentColor !important;
+                    }
+                    img[src*="sct_"] {
+                        filter: if(sct-on($-sct-h3-nav) == $white, none, brightness(0));
+                    }
+                }
+            }
+            @if sct-on($-sct-h3-nav) != $white {
+                .navbar:not(.o_header_mobile) #o_main_nav #top_menu > .nav-item > .nav-link {
+                    &, span {
+                        color: sct-on($-sct-h3-nav) !important;
+                    }
+                }
+            }
+        }
+        // Header 5, active menu item in the pill style: the pill is the secondary colour (not the
+        // primary colour the pill rule above is made for), its text the secondary colour's text
+        @if $-sct-hdr == scita_header_5 {
+            @include media-breakpoint-up(lg) {
+                .bottom-header .bottom-header-menu > #top_menu.nav-pills > .nav-item > .nav-link.active {
+                    &, &:is(:hover, :focus, :focus-visible, .show) {
+                        &, span {
+                            color: $-sct-on-secondary !important;
+                        }
+                    }
+                }
+            }
+        }
+        // white text / icons on a secondary-colour background
+        @if $-sct-on-secondary != $white {
+            @if index((scita_header_3, scita_header_4, scita_header_5), $-sct-hdr) {
+                // "All categories" button
+                .navbar #o_main_nav .category_dropdown > .nav-link {
+                    &, span, i, .fa {
+                        color: $-sct-on-secondary !important;
+                    }
+                    &::after {
+                        border-top-color: currentColor !important;
+                        border-left-color: currentColor !important;
+                    }
+                    img[src*="sct_"] {
+                        filter: brightness(0);
+                    }
+                }
+            }
+            @if $-sct-hdr == scita_header_4 {
+                #o_main_nav .head_deal .phone-icon {
+                    &, i, .fa {
+                        color: $-sct-on-secondary;
+                    }
+                }
+            }
+            @if $-sct-hdr == scita_header_5 {
+                // top belt
+                .sct_shipping_box {
+                    &, .belt_inner, .belt_inner a, .belt_inner i, .belt_inner p, .belt_inner span, .belt_inner small {
+                        color: $-sct-on-secondary !important;
+                    }
+                    .belt_inner img[src*="sct_"] {
+                        filter: brightness(0);
+                    }
+                }
+                // active menu item (pill style: secondary-colour pill)
+                .bottom-header .bottom-header-menu > .top_menu.nav-pills > .nav-item > .nav-link.active {
+                    &, span {
+                        color: $-sct-on-secondary !important;
+                    }
+                }
+            }
+            // cart / wishlist / compare counters
+            .my_cart_quantity, .my_wish_quantity, .compare_quantity {
+                color: $-sct-on-secondary !important;
+            }
+        }
+        // Header 3: "Hello, ..." / "Select your address" links take the palette's link colour,
+        // which Odoo keeps just under 3:1 on white with a light primary colour
+        @if $-sct-hdr == scita_header_3 and contrast-ratio($-sct-hdr-bg, $primary) < 3.05 {
+            .top-header .menu_right .delivery_details_header a:not(.btn),
+            .top-header .menu_right .delivery_details_header a:not(.btn):hover {
+                color: sct-darken-to($primary, $-sct-hdr-bg);
+            }
+        }
+        // Header 4: phone number in the secondary colour on the header background
+        @if $-sct-hdr == scita_header_4 and sct-readable($secondary, $-sct-hdr-bg) != $secondary
+                and color-contrast($-sct-hdr-bg) == $color-contrast-dark {
+            #o_main_nav .head_deal .deal_right a {
+                color: sct-readable($secondary, $-sct-hdr-bg);
+            }
+        }
+        // Headers 2 and 4, default link style: active menu item in a fixed red (2) / black (4)
+        @if index((scita_header_2, scita_header_4), $-sct-hdr) and not index((block, fill, pills), o-website-value('header-links-style')) {
+            $-sct-active: if($-sct-hdr == scita_header_2, $theme, $black);
+            @if sct-readable($-sct-active, $-sct-hdr-bg) != $-sct-active {
+                .navbar:not(.o_header_mobile) #top_menu > .nav-item > .nav-link.active {
+                    &, span {
+                        color: sct-readable($-sct-active, $-sct-hdr-bg) !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Phone bottom bar: white icons on primary / secondary-colour buttons (and on Header 4's
+// primary-colour bar). Same rule as above: only when white does not reach 3:1.
+@if str-index($-sct-hdr, 'scita_header_') == 1 {
+    .ab-mob-view .ab-icons {
+        @if $-sct-hdr == scita_header_4 {
+            @if $-sct-on-primary != $white {
+                .btn-link svg {
+                    fill: rgba($-sct-on-primary, 0.6);
+                }
+                &.active .btn-link svg {
+                    fill: $-sct-on-primary;
+                }
+            }
+            @if $-sct-on-secondary != $white {
+                &.ab-home .btn-link svg {
+                    fill: $-sct-on-secondary !important;
+                }
+            }
+            // the compare icon is a fixed grey (#929292)
+            @if contrast-ratio(#929292, $primary) < 3.05 {
+                &.ab-compare .btn-link a i.fa-exchange {
+                    color: rgba($-sct-on-primary, 0.6);
+                    fill: rgba($-sct-on-primary, 0.6);
+                }
+            }
+        } @else if $-sct-hdr == scita_header_1 {
+            // Header 1: the active icon is drawn in the primary colour on the white bar
+            @if contrast-ratio($primary, $light-color) < 3.05 {
+                &.active .btn-link svg {
+                    fill: sct-darken-to($primary, $light-color);
+                }
+            }
+        } @else {
+            @if $-sct-on-secondary != $white {
+                &.active .btn-link svg {
+                    fill: $-sct-on-secondary;
+                }
+            }
+            @if $-sct-hdr == scita_header_3 and $-sct-on-primary != $white {
+                &.ab-home .btn-link svg {
+                    fill: $-sct-on-primary !important;
+                }
+            }
+        }
+    }
+}
+
+// Hover colours: Scita colours hovered links with the primary (or secondary) colour. When that
+// colour does not reach 3:1 on the background, the hover uses a darker shade of the same colour
+// (a lighter one on a dark background).
+@mixin sct-hover-color($c, $bg, $important: false) {
+    @if contrast-ratio($bg, $c) < 3.05 {
+        @if $important {
+            color: sct-darken-to($c, $bg) !important;
+        } @else {
+            color: sct-darken-to($c, $bg);
+        }
+    }
+}
+@if str-index($-sct-hdr, 'scita_header_') == 1 {
+    #wrapwrap > header {
+        // links in dropdowns / mega menus / the options menu (dark text on white)
+        @if $-sct-hdr == scita_header_1 {
+            .navbar .scita_top_menu li.def_mega_menu .dropdown-menu .nav a:hover,
+            #o_main_nav .scita_top_menu .nav-item .mega-dropdown-menu a:hover {
+                @include sct-hover-color($primary, $white);
+            }
+        }
+        @if $-sct-hdr == scita_header_2 {
+            nav #top_menu .o_extra_menu_items a:hover {
+                @include sct-hover-color($primary, $white);
+            }
+        }
+        @if index((scita_header_3, scita_header_4), $-sct-hdr) {
+            #o_main_nav .dropdown-menu .dropdown-header a:hover {
+                @include sct-hover-color($primary, $white);
+            }
+            #o_main_nav .dropdown-menu .categories:hover a {
+                @include sct-hover-color($secondary, $white, true);
+            }
+            // phone menu
+            .o_header_mobile #o_main_nav .navbar-nav .nav-link:hover,
+            .o_header_mobile #o_main_nav .navbar-nav .category_dropdown .nav-link:hover {
+                @include sct-hover-color($primary, $-sct-hdr-bg, true);
+            }
+        }
+        .menu_right .toggle-config .options .o_no_autohide_item a:hover {
+            &, .fa {
+                @include sct-hover-color($primary, $white, true);
+            }
+        }
+        // top bar phone / e-mail links: Odoo's link hover colour (a shade of the primary colour);
+        // the top bar can carry a light tint of the primary colour (measured on a 10% tint)
+        .top-header .h-left a:hover {
+            @include sct-hover-color($primary, mix($primary, $-sct-hdr-bg, 10%));
+        }
+        .o_wsale_my_compare:hover .compare_link i.fa-exchange {
+            @include sct-hover-color($primary, $-sct-hdr-bg);
+        }
+        // menu bar links
+        @if $-sct-hdr == scita_header_3 and sct-on(darken($primary, 30%)) == $white {
+            .navbar:not(.o_header_mobile) #o_main_nav #top_menu > .nav-item > .nav-link:hover,
+            .navbar:not(.o_header_mobile) #o_main_nav #top_menu > .nav-item > .nav-link.show {
+                &, span {
+                    @include sct-hover-color($primary, darken($primary, 30%), true);
+                }
+            }
+        }
+        @if $-sct-hdr == scita_header_4 {
+            .navbar:not(.o_header_mobile) #o_main_nav .nav-link:not(.dropdown-item, .category_dropdown > .nav-link):hover,
+            .navbar:not(.o_header_mobile) #o_main_nav .nav-link:not(.dropdown-item, .category_dropdown > .nav-link).show {
+                &, span {
+                    @include sct-hover-color($primary, $-sct-hdr-bg, true);
+                }
+            }
+        }
+    }
+}
+// Product page: the header carries an 8% tint of the primary colour there (product_style.scss,
+// unless Header > Background is dark), so Header 4's hovered menu links are measured on that tint
+$-sct-pp-hdr: o-color('menu-custom') or o-color('menu');
+@if $-sct-hdr == scita_header_4 and not ($-sct-pp-hdr and color-contrast($-sct-pp-hdr) != $color-contrast-dark) {
+    body.sct-cst-pro-page:has(#product_detail) #wrapwrap > header .navbar:not(.o_header_mobile) #o_main_nav .nav-link:not(.dropdown-item, .category_dropdown > .nav-link) {
+        &:hover, &.show {
+            &, span {
+                @include sct-hover-color($primary, mix($primary, $-sct-hdr-bg, 8%), true);
+            }
+        }
+    }
+}
+
+// Menu in the "pills" / "block" style: the current page's pill keeps its text colour when hovered or
+// opened (Scita's menu links turn the primary colour on hover, which is the pill's own background)
+// and, with a light primary colour, also at rest (Header 3 makes its menu links white)
+// (#o_main_nav / #top_menu: to win over the headers' own hover colours, set with the same ids)
+// The pill is drawn on the header preset's primary button colour (as Odoo computes it for
+// `.o_ccN .nav-pills .nav-link.active`), the theme's primary colour without a preset
+$-sct-pill: '#wrapwrap > header .nav-pills > .nav-item > .nav-link.active, #wrapwrap > header #o_main_nav .nav-pills > .nav-item > .nav-link.active, #wrapwrap > header #o_main_nav #top_menu.nav-pills > .nav-item > .nav-link.active';
+$-sct-pill-cc: map-get($o-color-palette, 'menu');
+$-sct-pill-color: $primary;
+@if type-of($-sct-pill-cc) == 'number' and not o-color('menu-custom') {
+    $-sct-pill-btn: map-get($colors, 'o-cc#{$-sct-pill-cc}-btn-primary');
+    @if $-sct-pill-btn and type-of(o-color($-sct-pill-btn)) == 'color' {
+        $-sct-pill-color: o-color($-sct-pill-btn);
+    }
+}
+// ...at rest too when its text would not read: a light pill (white text), or Header 1's dark
+// pill (Header 1 makes every menu link black)
+$-sct-pill-rest: contrast-ratio($-sct-pill-color, $white) < 3.05 or (o-website-value('header-template') == 'scita_header_1' and contrast-ratio($-sct-pill-color, $black) < 3.05);
+#{selector-append($-sct-pill, ':is(:hover, :focus, :focus-visible, .show)')}#{if($-sct-pill-rest, ', ' + $-sct-pill, '')} {
+    &, span {
+        color: sct-on($-sct-pill-color) !important;
+    }
+    &.dropdown-toggle::after {
+        border-top-color: currentColor !important;
+        border-left-color: currentColor !important;
+    }
 }
