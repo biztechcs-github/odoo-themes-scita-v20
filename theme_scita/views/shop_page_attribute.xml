@@ -60,4 +60,11 @@
             </t>
         </xpath>
     </template>
+    <!-- Shop category filmstrip: Odoo inlines every category picture as base64 in the page (about 6 KB
+         each, all downloaded before the page can paint on phones); the same picture by its (cached) URL -->
+    <template id="scita_filmstrip_image_url" inherit_id="website_sale.filmstrip_categories">
+        <div name="o_wsale_filmstrip_image" position="attributes">
+            <attribute name="t-attf-style">background-image:url('#{website.image_url(c, 'image_128')}')</attribute>
+        </div>
+    </template>
 </odoo>

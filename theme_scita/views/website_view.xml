@@ -162,19 +162,8 @@
             </xpath>
         </template>
 
-        <!-- Break the @import chain for the self-hosted Google font. See
-             website._scita_google_font_css_hrefs for why: the font CSS is
-             @imported from inside web.assets_frontend, so without this the
-             browser only discovers it after the whole bundle has parsed, and
-             the woff2 files only after that again. Preloading the exact same
-             URL here makes that fetch parallel instead of serial. -->
-        <template id="theme_scita_preload_google_font" inherit_id="website.layout" name="Preload Self-Hosted Google Font CSS">
-            <xpath expr="//head" position="inside">
-                <t t-foreach="website._scita_google_font_css_hrefs() if website else []" t-as="scita_font_href">
-                    <link rel="preload" as="style" t-att-href="scita_font_href"/>
-                </t>
-            </xpath>
-        </template>
+        <!-- theme_scita_preload_google_font: dropped in 20, Odoo itself links the fonts the website
+             uses in <head> (website.font_links); it preloaded every locally hosted font, used or not -->
 
         <!-- Rows of products of each "Multi Product Snippet 1" configuration, for the height its
              placeholder reserves until the products are loaded (snippets.scss) -->

@@ -79,6 +79,10 @@ self.addEventListener('fetch', function(ev) {
         // pages: always from the network (fresh session/CSRF); offline page only when offline
         ev.respondWith(
             fetch(req).catch(function () {
+                // online but the request failed (server restarting...): not the offline page
+                if (navigator.onLine) {
+                    return Response.error();
+                }
                 return caches.open(PWA_CACHE_NAME).then(function (cache) {
                     return cache.match('/theme_scita/pwa/offline');
                 }).then(function (res) {

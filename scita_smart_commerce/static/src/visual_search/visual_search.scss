@@ -473,15 +473,24 @@
         border-radius: 0 !important;
         box-shadow: none !important;
 
+        // Thin outline to match the header's line icons: Odoo's Material Symbols font is
+        // static (no weight axis), so font-weight can't thin the photo_camera glyph. Drawn on
+        // the <i> itself with a fixed box: the editor puts a zero-width space inside the icon,
+        // which would wrap under a block ::before and push the icon up.
         i {
-            font-size: 1.2em;
-            opacity: 0.75;
-            transition: opacity 0.15s, transform 0.15s;
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E") center / contain no-repeat;
+            transition: transform 0.15s;
+
+            &::before {
+                display: none;
+            }
         }
 
         &:hover i,
         &:focus-visible i {
-            opacity: 1;
             transform: scale(1.1);
         }
     }

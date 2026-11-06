@@ -546,53 +546,6 @@ class website(models.Model):
                     config.id, -(-count // 2), -(-count // 3), -(-count // 4)))
         return ''.join(rules)
 
-    def _scita_google_font_css_hrefs(self):
-        """Hrefs of the locally-hosted Google-font stylesheets, for preloading.
-
-        Odoo's "host fonts locally" feature pulls the font CSS in with an
-        ``@import`` from *inside* web.assets_frontend
-        (addons/website/static/src/scss/website.scss). An @import nested in a
-        render-blocking stylesheet is the worst case for discovery: the
-        browser cannot request the font CSS until the whole ~1.4MB bundle has
-        downloaded and parsed, and cannot request the woff2 files until that
-        CSS in turn arrives. Measured on the 17 Aug 2026 mobile run that is a
-        4-level critical chain, 2.03s of maximum critical path latency for a
-        1.1KB file.
-
-        Emitting a preload for the same URL in the initial HTML (see
-        theme_scita_preload_google_font in views/website_view.xml) lets it be
-        fetched in parallel with the bundle instead of serially after it; the
-        @import then resolves from cache. The URL has to match the one the
-        SCSS builds byte for byte or it would be a second request, hence the
-        '/web/content/<id>/google-font-<name>' shape below.
-
-        Attachment ids differ per database, so this is looked up rather than
-        hard-coded. Any failure returns an empty list: a performance hint must
-        never be able to break a page.
-        """
-        return list(self._scita_google_font_css_hrefs_cached())
-
-    @api.model
-    @api.ormcache(cache='assets')
-    def _scita_google_font_css_hrefs_cached(self):
-        """The lookup above, once: a LIKE on ir.attachment's name scans the whole table, on every
-        page of the site (~9ms). Fonts are only added or removed through the website's style
-        customisations, which clear the 'assets' cache."""
-        try:
-            attachments = self.env['ir.attachment'].sudo().search([
-                ('name', 'like', '% (google-font)'),
-                ('mimetype', '=', 'text/css'),
-            ])
-            hrefs = []
-            for attachment in attachments:
-                font_name = attachment.name.replace(' (google-font)', '').strip()
-                if not font_name:
-                    continue
-                hrefs.append('/web/content/%s/google-font-%s' % (attachment.id, font_name))
-            return tuple(hrefs)
-        except Exception:  # noqa: BLE001
-            return ()
-
 
 class WebsiteSnippetFilter(models.Model):
     _inherit = 'website.snippet.filter'

@@ -1564,8 +1564,8 @@ span.sct_img_effect_wrap {
 			position: relative;
 		    padding: 5px 10px;
 		    display: block;
-			background: transparent !important;
-		    color: sct-dk($black) !important;
+			background: transparent;
+		    color: sct-dk($black);
 		    right: 0px;
 		    top: 10px;
 		}
@@ -2982,6 +2982,18 @@ common search for categories and products (22/05/2025)
 		background-color: rgba($primary, 0.6) !important; @include sct-light-box(rgba($primary, 0.6), false); 
 	}
 }
+// Product page: Odoo caps these sections at 520px for its plain layout; in Scita's white card
+// that left the right padding about three times the left. A single specifications table used
+// half of the page, with nothing beside it.
+#product_details {
+	--o-wsale-product-details-content-section-max-width: none;
+}
+#product_specifications .row > .col-lg-6:only-child {
+	flex: 0 0 100%;
+	max-width: 100%;
+	width: 100%;
+}
+
 .timer-bar {
 	background-color: $primary !important; @include sct-light-box($primary, false);
 }

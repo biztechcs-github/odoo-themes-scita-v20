@@ -365,6 +365,16 @@ body.editor_enable .o_scita_assistant {
     #wrapwrap > .ab-mob-view ~ .o_scita_assistant {
         --scita-assistant-lift: 60px;
     }
+    // smaller and closer to the edge: it covered the product cards' buttons
+    .o_scita_assistant {
+        left: 10px;
+        bottom: calc(10px + var(--scita-assistant-lift, 0px));
+
+        .o_scita_assistant_toggle {
+            width: 44px;
+            height: 44px;
+        }
+    }
 }
 
 // An off-canvas panel is open (mobile menu, shop filters): the closed assistant button was drawn

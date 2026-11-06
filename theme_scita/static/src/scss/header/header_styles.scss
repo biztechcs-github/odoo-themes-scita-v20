@@ -19,6 +19,28 @@ header#top {
     }
 }
 
+// Thin outlines to match the header's line images. Drawn on the icon element itself, in a fixed
+// box: FontAwesome and Odoo's Material Symbols have no lighter weight, and the editor puts a
+// zero-width space in icons, which would wrap under a block ::before.
+@mixin sct-header-line-icon($size, $shape) {
+    width: $size;
+    height: $size;
+    background: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E#{$shape}%3C/svg%3E") center / contain no-repeat;
+
+    &::before {
+        display: none;
+    }
+}
+header#top {
+    .compare_link .fa-exchange {
+        @include sct-header-line-icon(20px, "%3Cpath d='M17 3l4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3'/%3E");
+    }
+    .oe_search_button .oi {
+        @include sct-header-line-icon(18px, "%3Ccircle cx='11' cy='11' r='7.5'/%3E%3Cpath d='M21 21l-4.6-4.6'/%3E");
+    }
+}
+
 .sct-footer-logo img {
     height: 40px;
     width: auto;
@@ -6211,6 +6233,22 @@ header .o_pricelist_dropdown .dropdown-menu {
             align-items: center;
         }
     }
+    // Until Odoo's auto_hide_menu has moved the overflowing items into "+" (.o_menu_loading),
+    // every item is in the bar: they shrank and their labels wrapped onto many lines, the header
+    // was up to 280px tall, then the page jumped up when the script ran (layout shift).
+    // (!important: comman.scss has a global `.btn-link, a { white-space: normal !important }`)
+    #wrapwrap > header nav.navbar .scita_top_menu.o_menu_loading > .nav-item > .nav-link {
+        white-space: nowrap !important;
+    }
+}
+
+// "All Categories" burger icon: the global `img { width: var(--sct-w, auto); height: auto }` overrode
+// its width/height attributes, so until the (lazy) image loaded its alt text took its place and the
+// button grew to three lines (the header moved down, then back). Its size, from the markup.
+#wrapwrap > header #allCategory > img {
+    box-sizing: content-box; // its padding stays outside the picture, as with `width: auto`
+    width: 18px;
+    height: 14px;
 }
 
 // Menu items moved into the "+" overflow menu kept Bootstrap's small triangle while the menu bar

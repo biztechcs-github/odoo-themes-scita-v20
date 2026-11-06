@@ -7652,7 +7652,8 @@ $sct-btn: '.o_wsale_product_btn .btn';
         clip-path: polygon(calc(100% - var(--f)) 0, 0 0, 0 100%, calc(50% - var(--f) / 2) calc(100% - var(--r)), calc(100% - var(--f)) 100%, calc(100% - var(--f)) var(--f), 100% var(--f));
     }
 }
-:is(.oe_product, .o_carousel_product_card):has(.o_ribbons.o_right:not(:empty)) .img_lbl.right {
+:is(.oe_product, .o_carousel_product_card):has(.o_ribbons.o_right:not(:empty)) .img_lbl.right,
+.o_wishlist_table .o_wishlist_item:not(:has(.o_ribbons.o_left:not(:empty))) .img_lbl.right {
     right: auto;
     left: 10px;
 

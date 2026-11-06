@@ -527,7 +527,8 @@
 
 .retial_newsletter_2{
 	.section-title, p {
-		color: fade-out($light-color, 0.5);
+		color: $light-color;
+		text-shadow: 0 1px 6px rgba($black, 0.55); // readable on any background photo
 	}
 	.newsletter_box{
 		.popup_subscribe_email {

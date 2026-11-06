@@ -136,8 +136,9 @@
 }
 
 // Wishlist page: Odoo's remove button sits in the top-right corner of the card, where Scita's
-// right-hand product labels (Sale, New...) are too: it covered them. It moves below the label.
-.o_wishlist_table .o_wishlist_item:has(.img_lbl.right) .o_wish_rm {
+// right-hand product labels (Sale, New...) are too: it covered them. The label takes the left
+// corner (product_hover_effect.scss); with an Odoo ribbon there, the button moves below the label.
+.o_wishlist_table .o_wishlist_item:has(.img_lbl.right):has(.o_ribbons.o_left:not(:empty)) .o_wish_rm {
     top: 62px !important;
 }
 
@@ -149,6 +150,7 @@
 // or gets the `disabled` class when added; both show a filled heart in Odoo's wishlist
 // colour, as the product cards do (!important: the quick view's own grey `.disabled` rule).
 .o_add_wishlist_dyn.o_add_wishlist_dyn:is([disabled], .disabled) {
+    opacity: 1;
     opacity: 1;
 
     i.fa::before,

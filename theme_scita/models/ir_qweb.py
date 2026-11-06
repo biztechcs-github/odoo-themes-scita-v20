@@ -354,11 +354,13 @@ class IrQweb(models.AbstractModel):
     def _scita_theme_image_size(self, src):
         """(width, height) of a theme-shipped image given by URL, or None."""
         path = self._scita_theme_image_path(src)
-        if not path or not path.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')):
-            return None  # svg & co: no reliable pixel size
+        if not path or not path.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg')):
+            return None
         try:
             full_path = file_path(path.lstrip('/'))
-            if path.lower().endswith('.webp'):
+            if path.lower().endswith('.svg'):
+                width, height = _svg_size(full_path)  # header icons: lazy, alt text took their room
+            elif path.lower().endswith('.webp'):
                 width, height = _webp_size(full_path)  # Odoo keeps PIL's WebP plugin off
             else:
                 from PIL import Image
@@ -367,6 +369,18 @@ class IrQweb(models.AbstractModel):
         except Exception:  # noqa: BLE001
             return None
         return (width, height) if width and height else None
+
+
+def _svg_size(path):
+    """(width, height) from the root <svg> tag's own width/height when given in pixels, else None
+    (a size in %, em... or only a viewBox is no pixel size)."""
+    with open(path, 'rb') as f:
+        head = f.read(2048).decode('utf-8', 'ignore')
+    tag = re.search(r'<svg\b[^>]*>', head)
+    if not tag:
+        return None
+    size = [re.search(r'\s%s="\s*(\d+(?:\.\d+)?)(?:px)?\s*"' % name, tag.group()) for name in ('width', 'height')]
+    return (round(float(size[0].group(1))), round(float(size[1].group(1)))) if all(size) else None
 
 
 def _webp_size(path):
