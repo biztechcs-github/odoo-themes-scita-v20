@@ -5,6 +5,9 @@ import { rpc } from "@web/core/network/rpc";
 // Vendored @google/model-viewer (self-contained ES module, ~1 MB). Kept out of the
 // asset bundles and injected on the first 3D/AR open only.
 const MODEL_VIEWER_SRC = "/scita_smart_commerce/static/lib/model-viewer/model-viewer.min.js";
+// a slow network must end in a message, not in an endless "Loading..."
+const MODEL_VIEWER_TIMEOUT = 30000;
+const MODEL_TIMEOUT = 60000;
 let modelViewerPromise = null;
 
 export function loadModelViewer() {
@@ -17,16 +20,35 @@ export function loadModelViewer() {
             script.type = "module";
             script.src = MODEL_VIEWER_SRC;
             script.dataset.scitaModelViewer = "1";
-            script.onerror = () => {
+            const fail = () => {
                 modelViewerPromise = null;
                 script.remove();
                 reject(new Error("model-viewer failed to load"));
             };
+            const timeout = setTimeout(fail, MODEL_VIEWER_TIMEOUT);
+            script.onerror = () => {
+                clearTimeout(timeout);
+                fail();
+            };
             document.head.appendChild(script);
-            window.customElements.whenDefined("model-viewer").then(resolve);
+            window.customElements.whenDefined("model-viewer").then(() => {
+                clearTimeout(timeout);
+                resolve();
+            });
         });
     }
     return modelViewerPromise;
+}
+
+function hasWebGL() {
+    try {
+        const canvas = document.createElement("canvas");
+        const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+        gl?.getExtension("WEBGL_lose_context")?.loseContext(); // browsers limit live contexts
+        return Boolean(gl);
+    } catch {
+        return false;
+    }
 }
 
 let arSupportPromise = null;
@@ -249,6 +271,13 @@ export async function openArViewer(product, options = {}) {
     });
 
     const stage = modalEl.querySelector(".o_scita_ar_stage");
+    const modelFailed = () => {
+        status.textContent = _t("This 3D model could not be displayed.");
+    };
+    if (!hasWebGL()) {
+        modelFailed();
+        return;
+    }
     try {
         await loadModelViewer();
     } catch {
@@ -285,7 +314,9 @@ export async function openArViewer(product, options = {}) {
     arSlot.hidden = true;
     viewer.appendChild(arSlot);
 
+    const modelTimeout = setTimeout(modelFailed, MODEL_TIMEOUT);
     viewer.addEventListener("load", () => {
+        clearTimeout(modelTimeout);
         initialFov = viewer.getFieldOfView?.() || null;
         toolbar.classList.remove("d-none");
         status.textContent = window.matchMedia("(pointer: coarse)").matches
@@ -299,7 +330,8 @@ export async function openArViewer(product, options = {}) {
         }
     });
     viewer.addEventListener("error", () => {
-        status.textContent = _t("This 3D model could not be displayed.");
+        clearTimeout(modelTimeout);
+        modelFailed();
     });
     stage.replaceChildren(viewer);
     status.textContent = _t("Loading 3D model...");

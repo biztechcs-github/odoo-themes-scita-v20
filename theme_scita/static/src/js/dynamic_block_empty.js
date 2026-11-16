@@ -9,7 +9,7 @@ import { rpcBus } from "@web/core/network/rpc";
  * the data arrives made every such block grow from 0px once loaded and shove the page down
  * (layout shift). So the placeholder keeps its space while invisible (snippets.scss), and only
  * blocks still showing it once the page's requests are done (not configured, no published
- * products...) are hidden here.
+ * products...) are hidden here. Video, top dealers and trending blocks load with $.get, not rpc.
  */
 
 const SETTLE_DELAY = 1000;
@@ -35,16 +35,21 @@ function schedule() {
     timer = setTimeout(check, SETTLE_DELAY);
 }
 
-rpcBus.addEventListener("RPC:REQUEST", () => {
+function onRequest() {
     pending++;
     clearTimeout(timer);
-});
-rpcBus.addEventListener("RPC:RESPONSE", () => {
+}
+
+function onResponse() {
     pending = Math.max(0, pending - 1);
     if (!pending) {
         schedule();
     }
-});
+}
+
+rpcBus.addEventListener("RPC:REQUEST", onRequest);
+rpcBus.addEventListener("RPC:RESPONSE", onResponse);
+$(document).on("ajaxSend", onRequest).on("ajaxComplete", onResponse);
 
 if (document.readyState === "complete") {
     schedule();

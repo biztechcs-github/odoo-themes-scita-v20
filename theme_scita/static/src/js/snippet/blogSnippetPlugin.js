@@ -160,7 +160,7 @@ import { rpc } from "@web/core/network/rpc";
 // ---------------------------------------------
 // BlogSlider Modal + Plugins
 // ---------------------------------------------
-async function openBlogSliderModal(snippetEl, parentPlugin) {
+async function openBlogSliderModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.scita_blog_slider_block");
     document.body.appendChild(modalEl);
 
@@ -184,22 +184,6 @@ async function openBlogSliderModal(snippetEl, parentPlugin) {
     const cancelBtn = modalEl.querySelector("#cancel");
     const submitBtn = modalEl.querySelector("#blog_sub_data");
 
-    // Fetch blog options
-    const res = await rpc("/theme_scita/blog_get_options", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach((item) => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = item.name;
-        sliderTypeSelect.appendChild(opt);
-    });
-
-    // Pre-fill if exists
-    const currentType = snippetEl.getAttribute("data-blog-slider-type");
-    if (currentType) {
-        sliderTypeSelect.value = currentType;
-    }
-
     submitBtn?.addEventListener("click", () => {
         const selectedOption =
             sliderTypeSelect.options[sliderTypeSelect.selectedIndex];
@@ -217,13 +201,17 @@ async function openBlogSliderModal(snippetEl, parentPlugin) {
         snippetEl.innerHTML = `
             <div class="container">
                 <div class="block-title">
-                    <h3 class="fancy">${typeText}</h3>
+                    <h3 class="fancy"></h3>
                 </div>
                 <div class="category-slider-placeholder">
                     <img src="/theme_scita/static/src/img/blog1.png" alt="Blog Slider" class="img-fluid"/>
                 </div>
             </div>
         `;
+        // a record name is text, not HTML
+        snippetEl.querySelector(".fancy").textContent = typeText;
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -234,20 +222,37 @@ async function openBlogSliderModal(snippetEl, parentPlugin) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Fetch blog options
+    const res = await rpc("/theme_scita/blog_get_options", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = item.name;
+        sliderTypeSelect.appendChild(opt);
+    });
+
+    // Pre-fill if exists
+    const currentType = snippetEl.getAttribute("data-blog-slider-type");
+    if (currentType) {
+        sliderTypeSelect.value = currentType;
+    }
+    submitBtn.disabled = false;
 }
 
 class BlogSliderSnippetPlugin extends Plugin {
     static id = "blogSliderSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".scita_blog_slider"],
     };
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("scita_blog_slider")) return;
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
-        openBlogSliderModal(snippetEl, this);
+        openBlogSliderModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -257,8 +262,9 @@ registry.category("website-plugins").add(
 
 export class BlogSliderModifyBtnAction extends BuilderAction {
     static id = "blogSliderModifyBtn";
+    static dependencies = ["history"];
     apply({ editingElement, params: { mainParam } }) {
-        if (mainParam === "open") openBlogSliderModal(editingElement);
+        if (mainParam === "open") openBlogSliderModal(editingElement, () => this.dependencies.history.commit());
     }
     isApplied() {
         return false;
@@ -270,7 +276,6 @@ class BlogSliderModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".scita_blog_slider";
     resources = {
-        so_content_addition_selector: [".scita_blog_slider"],
         builder_actions: {
             BlogSliderModifyBtnAction,
         },
@@ -284,7 +289,7 @@ registry.category("website-plugins").add(
 // ---------------------------------------------
 // Blog4Custom Modal + Plugins
 // ---------------------------------------------
-async function openBlog4CustomModal(snippetEl, parentPlugin) {
+async function openBlog4CustomModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.scita_blog_slider_block");
     document.body.appendChild(modalEl);
 
@@ -294,22 +299,6 @@ async function openBlog4CustomModal(snippetEl, parentPlugin) {
     const sliderTypeSelect = modalEl.querySelector("#blog_slider_type");
     const cancelBtn = modalEl.querySelector("#cancel");
     const submitBtn = modalEl.querySelector("#blog_sub_data");
-
-    // Fetch blog options
-    const res = await rpc("/theme_scita/blog_get_options", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach((item) => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = item.name;
-        sliderTypeSelect.appendChild(opt);
-    });
-
-    // Pre-fill if exists
-    const currentType = snippetEl.getAttribute("data-blog-slider-type");
-    if (currentType) {
-        sliderTypeSelect.value = currentType;
-    }
 
     submitBtn?.addEventListener("click", () => {
         const selectedOption =
@@ -328,13 +317,17 @@ async function openBlog4CustomModal(snippetEl, parentPlugin) {
         snippetEl.innerHTML = `
             <div class="container">
                 <div class="block-title">
-                    <h2 class="fancy">${typeText}</h2>
+                    <h2 class="fancy"></h2>
                 </div>
                 <div class="category-slider-placeholder">
                     <img src="/theme_scita/static/src/img/blog3.png" alt="Blog Slider" class="img-fluid"/>
                 </div>
             </div>
         `;
+        // a record name is text, not HTML
+        snippetEl.querySelector(".fancy").textContent = typeText;
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -345,20 +338,37 @@ async function openBlog4CustomModal(snippetEl, parentPlugin) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Fetch blog options
+    const res = await rpc("/theme_scita/blog_get_options", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = item.name;
+        sliderTypeSelect.appendChild(opt);
+    });
+
+    // Pre-fill if exists
+    const currentType = snippetEl.getAttribute("data-blog-slider-type");
+    if (currentType) {
+        sliderTypeSelect.value = currentType;
+    }
+    submitBtn.disabled = false;
 }
 
 class Blog4CustomSnippetPlugin extends Plugin {
     static id = "blog4CustomSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".blog_4_custom"],
     };
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("blog_4_custom")) return;
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
-        openBlog4CustomModal(snippetEl, this);
+        openBlog4CustomModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -368,8 +378,9 @@ registry.category("website-plugins").add(
 
 export class Blog4CustomModifyBtnAction extends BuilderAction {
     static id = "blog4CustomModifyBtn";
+    static dependencies = ["history"];
     apply({ editingElement, params: { mainParam } }) {
-        if (mainParam === "open") openBlog4CustomModal(editingElement);
+        if (mainParam === "open") openBlog4CustomModal(editingElement, () => this.dependencies.history.commit());
     }
     isApplied() {
         return false;
@@ -381,7 +392,6 @@ class Blog4CustomModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".blog_4_custom";
     resources = {
-        so_content_addition_selector: [".blog_4_custom"],
         builder_actions: {
             Blog4CustomModifyBtnAction,
         },
@@ -395,7 +405,7 @@ registry.category("website-plugins").add(
 // ---------------------------------------------
 // Blog2Custom Modal + Plugins
 // ---------------------------------------------
-async function openBlog2CustomModal(snippetEl, parentPlugin) {
+async function openBlog2CustomModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.scita_blog_slider_block");
     document.body.appendChild(modalEl);
 
@@ -405,22 +415,6 @@ async function openBlog2CustomModal(snippetEl, parentPlugin) {
     const sliderTypeSelect = modalEl.querySelector("#blog_slider_type");
     const cancelBtn = modalEl.querySelector("#cancel");
     const submitBtn = modalEl.querySelector("#blog_sub_data");
-
-    // Fetch blog options
-    const res = await rpc("/theme_scita/blog_get_options", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach((item) => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = item.name;
-        sliderTypeSelect.appendChild(opt);
-    });
-
-    // Pre-fill if exists
-    const currentType = snippetEl.getAttribute("data-blog-slider-type");
-    if (currentType) {
-        sliderTypeSelect.value = currentType;
-    }
 
     submitBtn?.addEventListener("click", () => {
         const selectedOption =
@@ -439,13 +433,17 @@ async function openBlog2CustomModal(snippetEl, parentPlugin) {
         snippetEl.innerHTML = `
             <div class="container">
                 <div class="block-title">
-                    <h2 class="fancy">${typeText}</h2>
+                    <h2 class="fancy"></h2>
                 </div>
                 <div class="category-slider-placeholder">
                     <img src="/theme_scita/static/src/img/blog2.png" alt="Blog Slider" class="img-fluid"/>
                 </div>
             </div>
         `;
+        // a record name is text, not HTML
+        snippetEl.querySelector(".fancy").textContent = typeText;
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -456,20 +454,37 @@ async function openBlog2CustomModal(snippetEl, parentPlugin) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Fetch blog options
+    const res = await rpc("/theme_scita/blog_get_options", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = item.name;
+        sliderTypeSelect.appendChild(opt);
+    });
+
+    // Pre-fill if exists
+    const currentType = snippetEl.getAttribute("data-blog-slider-type");
+    if (currentType) {
+        sliderTypeSelect.value = currentType;
+    }
+    submitBtn.disabled = false;
 }
 
 class Blog2CustomSnippetPlugin extends Plugin {
     static id = "blog2CustomSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".blog_2_custom"],
     };
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("blog_2_custom")) return;
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
-        openBlog2CustomModal(snippetEl, this);
+        openBlog2CustomModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -479,8 +494,9 @@ registry.category("website-plugins").add(
 
 export class Blog2CustomModifyBtnAction extends BuilderAction {
     static id = "blog2CustomModifyBtn";
+    static dependencies = ["history"];
     apply({ editingElement, params: { mainParam } }) {
-        if (mainParam === "open") openBlog2CustomModal(editingElement);
+        if (mainParam === "open") openBlog2CustomModal(editingElement, () => this.dependencies.history.commit());
     }
     isApplied() {
         return false;
@@ -492,7 +508,6 @@ class Blog2CustomModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".blog_2_custom";
     resources = {
-        so_content_addition_selector: [".blog_2_custom"],
         builder_actions: {
             Blog2CustomModifyBtnAction,
         },
@@ -506,7 +521,7 @@ registry.category("website-plugins").add(
 // ---------------------------------------------
 // Blog5Custom Modal + Plugins
 // ---------------------------------------------
-async function openBlog5CustomModal(snippetEl, parentPlugin) {
+async function openBlog5CustomModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.scita_blog_slider_block");
     document.body.appendChild(modalEl);
 
@@ -516,22 +531,6 @@ async function openBlog5CustomModal(snippetEl, parentPlugin) {
     const sliderTypeSelect = modalEl.querySelector("#blog_slider_type");
     const cancelBtn = modalEl.querySelector("#cancel");
     const submitBtn = modalEl.querySelector("#blog_sub_data");
-
-    // Fetch blog options
-    const res = await rpc("/theme_scita/blog_get_options", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach((item) => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = item.name;
-        sliderTypeSelect.appendChild(opt);
-    });
-
-    // Pre-fill if exists
-    const currentType = snippetEl.getAttribute("data-blog-slider-type");
-    if (currentType) {
-        sliderTypeSelect.value = currentType;
-    }
 
     submitBtn?.addEventListener("click", () => {
         const selectedOption =
@@ -550,13 +549,17 @@ async function openBlog5CustomModal(snippetEl, parentPlugin) {
         snippetEl.innerHTML = `
             <div class="container">
                 <div class="block-title">
-                    <h3 class="fancy">${typeText}</h3>
+                    <h3 class="fancy"></h3>
                 </div>
                 <div class="category-slider-placeholder">
                     <img src="/theme_scita/static/src/img/blog4.png" alt="Blog Slider" class="img-fluid"/>
                 </div>
             </div>
         `;
+        // a record name is text, not HTML
+        snippetEl.querySelector(".fancy").textContent = typeText;
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -567,20 +570,37 @@ async function openBlog5CustomModal(snippetEl, parentPlugin) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Fetch blog options
+    const res = await rpc("/theme_scita/blog_get_options", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = item.name;
+        sliderTypeSelect.appendChild(opt);
+    });
+
+    // Pre-fill if exists
+    const currentType = snippetEl.getAttribute("data-blog-slider-type");
+    if (currentType) {
+        sliderTypeSelect.value = currentType;
+    }
+    submitBtn.disabled = false;
 }
 
 class Blog5CustomSnippetPlugin extends Plugin {
     static id = "blog5CustomSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".blog_5_custom"],
     };
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("blog_5_custom")) return;
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
-        openBlog5CustomModal(snippetEl, this);
+        openBlog5CustomModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -590,8 +610,9 @@ registry.category("website-plugins").add(
 
 export class Blog5CustomModifyBtnAction extends BuilderAction {
     static id = "blog5CustomModifyBtn";
+    static dependencies = ["history"];
     apply({ editingElement, params: { mainParam } }) {
-        if (mainParam === "open") openBlog5CustomModal(editingElement);
+        if (mainParam === "open") openBlog5CustomModal(editingElement, () => this.dependencies.history.commit());
     }
     isApplied() {
         return false;
@@ -603,7 +624,6 @@ class Blog5CustomModifyPlugin extends Plugin {
     static dependencies = ["history", "media"];
     selector = ".blog_5_custom";
     resources = {
-        so_content_addition_selector: [".blog_5_custom"],
         builder_actions: {
             Blog5CustomModifyBtnAction,
         },

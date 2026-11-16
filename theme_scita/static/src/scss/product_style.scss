@@ -1358,7 +1358,17 @@
 // leaves the field out of the page for visitors, and renders it empty for editors. Hidden in
 // both cases outside the editor (the editor still shows it, to fill it)
 body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description:not(:empty))) {
-	display: none;
+	&:not(:has(#reviews)) {
+		display: none;
+	}
+	// the Reviews tab lives in this section too: keep it, without the empty Description tab
+	#description_reviews_tabs li:has(a[href="#description"]),
+	#description {
+		display: none;
+	}
+	#reviews {
+		display: block;
+	}
 }
 .sct-description-tab {
 	padding: 15px 0;
@@ -2277,32 +2287,11 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 	}
 }
 #products_grid {
-	.o_wsale_filmstip_container{
+	// the same margin as at rest: Odoo drops it on hover for a thicker scrollbar, Scita's stays 3px
+	.o_wsale_filmstrip_container{
 		&:hover{
-			.o_wsale_filmstip_wrapper{
-				margin-bottom: 0.5rem;	
-			}
-		}
-	}
-	.o_wsale_filmstip{
-		li{
-			.btn{
-				background-color: $light-color; @include sct-light-box($light-color, true);
-				padding: 5px 10px;
-				font-size: 15px;
-				margin: 0;
-				color: sct-dk($dark-grey-color);
-				border-radius: 11px;
-
-				.oe_img_bg{
-					width: 30px;
-					height: 30px;
-					background-size: cover;
-					margin-right: 10px !important;
-				}
-				> span{
-					white-space: nowrap;
-				}
+			.o_wsale_filmstrip_wrapper{
+				margin-bottom: 0.25rem;
 			}
 		}
 	}

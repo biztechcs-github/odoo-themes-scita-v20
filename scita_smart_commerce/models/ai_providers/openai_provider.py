@@ -52,7 +52,7 @@ class OpenAIProvider(BaseProvider):
         except ImportError as e:
             raise AIProviderError("The 'openai' Python package is not installed on the server "
                                   "(pip install openai).", admin=True) from e
-        client = openai.OpenAI(api_key=self.api_key, timeout=self.timeout, max_retries=2)
+        client = openai.OpenAI(api_key=self.api_key, timeout=self.timeout, max_retries=1)
         params = {
             'model': self.model,
             'messages': _to_openai_messages(system, messages),

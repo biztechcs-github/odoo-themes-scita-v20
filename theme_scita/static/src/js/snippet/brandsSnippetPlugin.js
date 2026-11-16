@@ -151,7 +151,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 // ---------------------------------------------
 // Shared Modal Logic
 // ---------------------------------------------
-async function openBrandSliderModal(snippetEl, { template, defaultLabel }) {
+async function openBrandSliderModal(snippetEl, { template, defaultLabel, onChange }) {
     // Render modal
     const modalEl = renderToElement(template);
     document.body.appendChild(modalEl);
@@ -177,6 +177,64 @@ async function openBrandSliderModal(snippetEl, { template, defaultLabel }) {
     const submitBtn = modalEl.querySelector("#pro_brand_sub_data");
     const cancelBtn = modalEl.querySelector("#cancel");
 
+    // Handle submit
+    submitBtn.addEventListener("click", () => {
+        const selectedOption =
+            sliderTypeSelect.selectedOptions[0]?.text || _t(defaultLabel);
+
+        snippetEl.setAttribute("data-brand-config-type", sliderTypeSelect.value);
+        snippetEl.setAttribute("data-brand-config-id", sliderTypeSelect.value);
+
+        // Brand Slider 1 keeps its sample (brand_snippets.xml): only the title changes. The content
+        // is replaced, not edited in place: a change inside this non-editable block is not saved
+        if (snippetEl.classList.contains("box_brand_slider")) {
+            const copy = snippetEl.cloneNode(true);
+            const title = copy.querySelector("#snippet-title span");
+            if (title) {
+                title.textContent = _t(selectedOption);
+            }
+            snippetEl.innerHTML = copy.innerHTML;
+            onChange?.();
+            myModal.hide();
+            return;
+        }
+        const placeholderImg = "/theme_scita/static/src/img/brand1.png";
+
+        // Use the original placeholder template structure to maintain consistency
+        snippetEl.innerHTML = `
+            <div class="container">
+                <div class="row our-brands">
+                    <div class="col-md-12">
+                        <h3 class="section-title style1" id="snippet-title">
+                            <span></span>
+                        </h3>
+                        <div class="category-slider-placeholder">
+                            <img src="${placeholderImg}" alt="Category Slider" class="img-fluid"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // a record name is text, not HTML
+        snippetEl.querySelector("#snippet-title span").textContent = _t(selectedOption);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
+        myModal.hide();
+    });
+
+    // Handle cancel
+    cancelBtn?.addEventListener("click", () => {
+        myModal.hide();
+    });
+
+    // Cleanup
+    modalEl.addEventListener("hidden.bs.modal", () => {
+        modalEl.remove();
+    });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
     // Fetch options
     const res = await rpc("/theme_scita/brand_get_options", {});
     sliderTypeSelect.innerHTML = "";
@@ -191,54 +249,7 @@ async function openBrandSliderModal(snippetEl, { template, defaultLabel }) {
     if (snippetEl.dataset.brandConfigId) {
         sliderTypeSelect.value = snippetEl.dataset.brandConfigId;
     }
-
-    // Handle submit
-    submitBtn.addEventListener("click", () => {
-        const selectedOption =
-            sliderTypeSelect.selectedOptions[0]?.text || _t(defaultLabel);
-
-        snippetEl.setAttribute("data-brand-config-type", sliderTypeSelect.value);
-        snippetEl.setAttribute("data-brand-config-id", sliderTypeSelect.value);
-
-        // Brand Slider 1 keeps its sample (brand_snippets.xml): only the title changes. The content
-        // is replaced, not edited in place: a change inside this non-editable block is not saved
-        if (snippetEl.classList.contains("box_brand_slider")) {
-            const copy = snippetEl.cloneNode(true);
-            copy.querySelector("#snippet-title span").textContent = _t(selectedOption);
-            snippetEl.innerHTML = copy.innerHTML;
-            myModal.hide();
-            return;
-        }
-        const placeholderImg = "/theme_scita/static/src/img/brand1.png";
-
-        // Use the original placeholder template structure to maintain consistency
-        snippetEl.innerHTML = `
-            <div class="container">
-                <div class="row our-brands">
-                    <div class="col-md-12">
-                        <h3 class="section-title style1" id="snippet-title">
-                            <span>${_t(selectedOption)}</span>
-                        </h3>
-                        <div class="category-slider-placeholder">
-                            <img src="${placeholderImg}" alt="Category Slider" class="img-fluid"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        myModal.hide();
-    });
-
-    // Handle cancel
-    cancelBtn?.addEventListener("click", () => {
-        myModal.hide();
-    });
-
-    // Cleanup
-    modalEl.addEventListener("hidden.bs.modal", () => {
-        modalEl.remove();
-    });
+    submitBtn.disabled = false;
 }
 
 // ---------------------------------------------
@@ -255,11 +266,10 @@ function makeSnippetPlugins({
 }) {
     class SnippetPlugin extends Plugin {
         static id = id;
-        static dependencies = [];
+        static dependencies = ["history"];
 
         resources = {
             on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-            so_content_addition_selector: [selector],
         };
 
         async onSnippetDropped({ snippetEl }) {
@@ -271,6 +281,7 @@ function makeSnippetPlugins({
             openBrandSliderModal(snippetEl, {
                 template: modalTemplate,
                 defaultLabel,
+                onChange: () => this.dependencies.history.commit(),
             });
         }
     }
@@ -281,7 +292,6 @@ function makeSnippetPlugins({
         selector = selector;
 
         resources = {
-            so_content_addition_selector: [selector],
             builder_actions: {
                 [actionId]: ModifyBtnAction,
             },
@@ -290,12 +300,14 @@ function makeSnippetPlugins({
 
     class ModifyBtnAction extends BuilderAction {
         static id = actionId;
+        static dependencies = ["history"];
 
         apply({ editingElement, params: { mainParam } }) {
             if (mainParam === "open") {
                 openBrandSliderModal(editingElement, {
                     template: modalTemplate,
                     defaultLabel,
+                    onChange: () => this.dependencies.history.commit(),
                 });
             }
         }

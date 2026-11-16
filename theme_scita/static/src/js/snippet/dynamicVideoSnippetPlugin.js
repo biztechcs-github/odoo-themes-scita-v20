@@ -104,7 +104,6 @@ class VideoBannerSnippetPlugin extends Plugin {
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".dynamic_video_banner"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -113,7 +112,6 @@ class VideoBannerSnippetPlugin extends Plugin {
         }
 
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
 
         // ✅ open modal once after drop
         openVideoBannerModal(snippetEl, () => this.dependencies.history.commit());
@@ -150,7 +148,6 @@ class VideoBannerModifyPlugin extends Plugin {
     selector = ".dynamic_video_banner";
 
     resources = {
-        so_content_addition_selector: [".dynamic_video_banner"],
         builder_actions: {
             VideoBannerModifyBtnAction,
         },

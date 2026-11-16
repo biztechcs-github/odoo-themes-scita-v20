@@ -1,4 +1,9 @@
-from odoo import fields, models
+from datetime import timedelta
+
+from odoo import api, fields, models
+
+# Usage rows hold hashed visitor identifiers: kept long enough to look at the costs, not forever
+RETENTION_DAYS = 90
 
 
 class ScitaAiUsage(models.Model):
@@ -27,3 +32,7 @@ class ScitaAiUsage(models.Model):
     output_tokens = fields.Integer(default=0)
 
     _unique_usage = models.UniqueIndex('(date, website_id, feature, visitor_key)')
+
+    @api.autovacuum
+    def _gc_old_usage(self):
+        self.sudo().search([('date', '<', fields.Date.context_today(self) - timedelta(days=RETENTION_DAYS))]).unlink()

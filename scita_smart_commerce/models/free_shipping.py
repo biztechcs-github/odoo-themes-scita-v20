@@ -103,6 +103,8 @@ class Website(models.Model):
             [('company_id', 'in', [False, (order.company_id or self.company_id).id])],
         ])
         Template = self.env['product.template'].sudo()
+        if 'quote_request' in Template._fields:  # no price to show either
+            sellable &= Domain('quote_request', '=', False)
         related = Template.browse(related.ids).filtered_domain(sellable)
 
         def priced(templates):

@@ -351,7 +351,7 @@ export class ScitaAssistant extends Interaction {
             view.className = "btn btn-sm btn-outline-primary";
             view.textContent = _t("View");
             actions.appendChild(view);
-            if (product.in_stock && !product.hide_price) {
+            if (product.can_add_to_cart) {
                 const add = document.createElement("button");
                 add.type = "button";
                 add.className = "btn btn-sm btn-primary o_scita_assistant_add";

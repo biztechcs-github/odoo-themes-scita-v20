@@ -29,11 +29,15 @@ patch(ProductPage.prototype, {
         await super._onChangeCombination(...arguments);
         const scope = parent.closest(".modal-content, #product_detail, main") || document;
         const skuWrap = scope.querySelector(".sct-sku-display-div");
-        if (!skuWrap || skuWrap.dataset.show !== "1" || !combination.product_id) {
+        if (!skuWrap || skuWrap.dataset.show !== "1") {
             return;
         }
         // Fast variant clicks: only the latest answer may write the SKU.
         const requestId = (this._skuRequest = (this._skuRequest || 0) + 1);
+        if (!combination.product_id) {
+            skuWrap.replaceChildren(); // no variant yet: no reference, not the previous one's
+            return;
+        }
         const data = await rpc("/shop/variant_change", { pro_id: combination.product_id });
         if (requestId !== this._skuRequest) {
             return;

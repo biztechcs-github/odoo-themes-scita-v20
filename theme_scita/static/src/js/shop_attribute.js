@@ -12,6 +12,10 @@ publicWidget.registry.ScitaProductPreviewAttribute = publicWidget.Widget.extend(
         // Odoo 20 shop cards are <article class="oe_product_cart">, Scita snippet cards are still forms
         const card = this.el.closest('form') || this.el.closest('.oe_product_cart');
         this.imageEl = card ? card.querySelector('img') : null;
+        // Odoo 20 card images have a srcset, which the browser shows instead of src: keep the
+        // original ones to put back
+        this.defaultSrc = this.imageEl && this.imageEl.getAttribute('src');
+        this.defaultSrcset = this.imageEl && this.imageEl.getAttribute('srcset');
         return this._super.apply(this, arguments);
     },
     _onMouseEnterSwatch: function (ev) {
@@ -28,6 +32,14 @@ publicWidget.registry.ScitaProductPreviewAttribute = publicWidget.Widget.extend(
         if (!this.imageEl) {
             return;
         }
-        this.imageEl.src = src || this.el.dataset.defaultImgSrc;
+        if (src) {
+            this.imageEl.removeAttribute('srcset'); // else the variant image never shows
+            this.imageEl.src = src;
+            return;
+        }
+        this.imageEl.src = this.defaultSrc || this.el.dataset.defaultImgSrc;
+        if (this.defaultSrcset) {
+            this.imageEl.setAttribute('srcset', this.defaultSrcset);
+        }
     },
 });

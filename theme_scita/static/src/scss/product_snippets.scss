@@ -3018,7 +3018,7 @@
 				.time_over_msg{
 					p{
 						background-color: transparent;
-						color: $white;
+						color: sct-oc($white, $secondary);
 						padding: 0;
 					}
 				}

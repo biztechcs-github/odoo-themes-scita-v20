@@ -21,7 +21,8 @@
     </template>
 
     <template id="multi_deal_seller_slider_view" name="Deal Seller Product Snippet">
-        <div class="container">
+        <!-- configuration deleted or without products: nothing rendered, the block stays empty (dynamic_block_empty.js) -->
+        <div class="container" t-if="slider_header and slider_details">
             <div class="row deal-wrapper">
                 <div class="col-lg-6 col-xl-7 deal-inner">
                     <div class="section-title-wrapper d-flex flex-wrap">
@@ -34,7 +35,7 @@
                     </div>
                     <div class="best-seller-row">
                         <div class="left-side oe_img_bg"
-                             t-att-style="'background-image: url('+ website.image_url(slider_header, 'img_banner') +')'">
+                             t-att-style="slider_header.img_banner and 'background-image: url(%s)' % website.image_url(slider_header, 'img_banner')">
                             <div class="left-disc">
                                 <h3 class="title-30" t-out='slider_header.banner_text'></h3>
                                 <a t-att-href="slider_header.banner_btn_url" alt-="Shop now" title="Shop now"
@@ -174,7 +175,9 @@
         </section>
     </template>
     <template id="theme_scita_deal_of_the_day_view" name="Deal of the day 6">
-        <div class="container">
+        <t t-set="deal_products" t-value="deal.product_ids._scita_on_website()[:4]"/>
+        <!-- configuration deleted or without products: nothing rendered, the block stays empty (dynamic_block_empty.js) -->
+        <div class="container" t-if="deal_products">
             <div class="deal_day_wrap">
                 <div class="deal_day_top_inner">
                     <div class="title-block">
@@ -197,15 +200,39 @@
                     </div>
                 </div>
                 <div class="deal_day_bottom_inner d-flex flex-wrap justify-content-between">
-                    <t t-foreach="deal.product_ids._scita_on_website()[:4]" t-as="deal_product">
+                    <t t-foreach="deal_products" t-as="deal_product">
                         <t t-set="combination_info"
                            t-value="deal_product._get_combination_info(only_template=True, add_qty=add_qty or 1)"/>
                         <div class="col-lg-3 col-6">
                             <form>
                                 <div class="cs-product o_carousel_product_card" data-publish="on">
                                     <div class="pwp-img">
+                                        <t t-set="product" t-value="deal_product"/>
+                                        <t t-call="theme_scita.sct_card_ribbon"/>
                                         <!-- "3D" button (Scita Smart Commerce, when installed) -->
                                         <t t-if="'scita_has_ar' in deal_product._fields and deal_product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="deal_product"/>
+                                        <div t-if="deal_product.product_style_tag_id.style=='style1'" t-att-class="'img_lbl %s' % deal_product.product_style_tag_id.style +' %s'% deal_product.product_style_tag_id.position" t-att-style="'border-bottom-color:%s' % deal_product.product_style_tag_id.color_code">
+                                            <span t-att-style="'color:%s' % deal_product.product_style_tag_id.font_color_code"  t-out="deal_product.product_style_tag_id.name"/>
+                                        </div>
+                                        <div t-if="deal_product.product_style_tag_id.style=='style2'" t-att-class="'img_lbl %s' % deal_product.product_style_tag_id.style +' %s'% deal_product.product_style_tag_id.position" t-att-style="'background-color: %s' % deal_product.product_style_tag_id.color_code">
+                                            <span t-att-style="'color:%s' % deal_product.product_style_tag_id.font_color_code"  t-out="deal_product.product_style_tag_id.name"/>
+                                        </div>
+                                        <div t-if="deal_product.product_style_tag_id.style=='style3' and deal_product.product_style_tag_id.position=='right'" t-att-class="'img_lbl %s' % deal_product.product_style_tag_id.style +' %s'% deal_product.product_style_tag_id.position">
+                                            <span class="sct-top-right-part" t-att-style="'border-right-color: %s;' % deal_product.product_style_tag_id.color_code"/>
+                                            <span class='sct-tag-name' t-att-style="'background-color: %s;' % deal_product.product_style_tag_id.color_code +'color:%s' % deal_product.product_style_tag_id.font_color_code"  t-out="deal_product.product_style_tag_id.name"/>
+                                        </div>
+                                        <div t-if="deal_product.product_style_tag_id.style=='style3' and deal_product.product_style_tag_id.position=='left'" t-att-class="'img_lbl %s' % deal_product.product_style_tag_id.style +' %s'% deal_product.product_style_tag_id.position">
+                                            <span class="sct-top-right-part" t-att-style="'border-left-color: %s;' % deal_product.product_style_tag_id.color_code"/>
+                                            <span class='sct-tag-name' t-att-style="'background-color: %s;' % deal_product.product_style_tag_id.color_code +'color:%s' % deal_product.product_style_tag_id.font_color_code"  t-out="deal_product.product_style_tag_id.name"/>
+                                        </div>
+                                        <div t-if="deal_product.product_style_tag_id.style=='style4'" t-att-class="'img_lbl %s' % deal_product.product_style_tag_id.style +' %s'% deal_product.product_style_tag_id.position">
+                                            <span class="sct-top-right-part" t-att-style="' border-left-color: %s;' % deal_product.product_style_tag_id.color_code"/>
+                                            <span class='sct-tag-name' t-att-style="'background-color: %s;' % deal_product.product_style_tag_id.color_code +'color:%s' % deal_product.product_style_tag_id.font_color_code"  t-out="deal_product.product_style_tag_id.name"/>
+                                            <span class="sct-top-left-part" t-att-style="'border-top-color: %s;' % deal_product.product_style_tag_id.color_code"/>
+                                        </div>
+                                        <div t-if="deal_product.product_style_tag_id.style=='style5'" t-att-class="'img_lbl %s' % deal_product.product_style_tag_id.style +' %s'% deal_product.product_style_tag_id.position" t-att-style="'background-color:%s' % deal_product.product_style_tag_id.color_code">
+                                            <span t-att-style="'color:%s' % deal_product.product_style_tag_id.font_color_code"  t-out="deal_product.product_style_tag_id.name"/>
+                                        </div>
                                         <a t-att-href="deal_product.website_url">
                                             <img class="img img-fluid" t-att-alt="deal_product.name"
                                                     t-att-title="deal_product.name"

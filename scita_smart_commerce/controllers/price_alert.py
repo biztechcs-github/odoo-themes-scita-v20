@@ -1,16 +1,23 @@
 import time
+from datetime import timedelta
 
-from odoo import http, tools
+from odoo import fields, http, tools
 from odoo.http import request
 from odoo.tools import consteq
 
-from ..models.ai_service import ip_key
+from ..models.ai_service import IP_KEY_PREFIX, ip_key
 from ..models.price_alert import MAX_ACTIVE_ALERTS_PER_EMAIL, OPEN_STATES
 
 # Per browser session: at most this many alert submissions per rolling day
 MAX_SUBMISSIONS_PER_SESSION = 10
 # Per client IP address and day (survives clearing cookies; several shoppers may share an IP)
 MAX_SUBMISSIONS_PER_IP = 30
+# One alert's confirmation email is sent at most once per this interval (no mail bomb by re-sending
+# the form), and a website sends at most this many a day (IP limits can be got around)
+CONFIRMATION_COOLDOWN = timedelta(minutes=15)
+MAX_CONFIRMATIONS_PER_SITE = 300
+# usage row of those emails: "ip:" keeps it out of the visitors' usage report
+CONFIRMATIONS_KEY = IP_KEY_PREFIX + 'site-confirmations'
 SESSION_KEY = 'scita_price_alert_submissions'
 
 
@@ -30,7 +37,7 @@ class ScitaPriceAlertController(http.Controller):
 
     def _record_submission(self, website):
         request.session[SESSION_KEY] = request.session.get(SESSION_KEY, []) + [time.time()]
-        self._ip_usage(website).request_count += 1
+        request.env['scita.ai']._bump_usage(website, 'price_alert', ip_key(), requests=1)
 
     @http.route('/scita/price_alert/create', type='jsonrpc', auth='public', website=True, methods=['POST'])
     def create_price_alert(self, product_id=None, email=None, target_price=None, website_url=None,
@@ -101,6 +108,9 @@ class ScitaPriceAlertController(http.Controller):
             ('email_normalized', '=', email), ('product_id', '=', product.id),
             ('website_id', '=', website.id), ('state', 'in', OPEN_STATES),
         ], limit=1)
+        if existing and existing.partner_id != partner:
+            # an account's address can be changed at will: it only vouches for its own alerts
+            confirmed = not website.scita_price_alert_guest_confirm
         if existing and not confirmed and existing.state != 'pending':
             # Someone who can't prove they own this address (guest, or a signed-in shopper
             # typing another address) must not change an alert its owner already confirmed,
@@ -114,7 +124,10 @@ class ScitaPriceAlertController(http.Controller):
                              "the price %(condition)s.", email=email,
                              condition=Alert.new({**values, 'product_id': product.id})._scita_condition_text()),
             }
+        send_confirmation = True
         if existing:
+            # write_date: the last time this form was sent, before the write below
+            send_confirmation = fields.Datetime.now() - existing.write_date >= CONFIRMATION_COOLDOWN
             if confirmed:
                 values['state'] = 'active'
             existing.write(values)
@@ -135,7 +148,11 @@ class ScitaPriceAlertController(http.Controller):
         self._record_submission(website)
         condition = alert._scita_condition_text()
         if alert.state == 'pending':
-            alert._scita_send_confirmation()
+            if send_confirmation:
+                if not env['scita.ai']._bump_usage(website, 'price_alert', CONFIRMATIONS_KEY, actions=1,
+                                                   limit=MAX_CONFIRMATIONS_PER_SITE):
+                    return self._error(_('This feature is very busy today. Please try again tomorrow.'))
+                alert._scita_send_confirmation()
             return {
                 'ok': True,
                 'updated': bool(existing),
@@ -170,12 +187,9 @@ class ScitaPriceAlertController(http.Controller):
 
     @staticmethod
     def _my_alerts_domain(partner):
-        """Alerts of a signed-in shopper: made while signed in, or confirmed from their mailbox."""
-        domain = [('partner_id', '=', partner.id)]
-        if partner.email_normalized:
-            domain = ['|'] + domain + ['&', ('email_normalized', '=', partner.email_normalized),
-                                       ('state', '!=', 'pending')]
-        return domain
+        """Alerts of a signed-in shopper. Never by address: a portal user can change theirs to
+        anyone's. Alerts confirmed from the mailbox while signed in join the account (see below)."""
+        return [('partner_id', '=', partner.id)]
 
     def _alert_status(self, alert):
         return {
@@ -235,7 +249,8 @@ class ScitaPriceAlertController(http.Controller):
 
     def _alert_from_token(self, alert_id, token):
         alert = request.env['scita.price.alert'].sudo().browse(alert_id).exists()
-        if alert and consteq(alert.access_token or '', token or ''):
+        # consteq() raises on non-ASCII text
+        if alert and token and token.isascii() and consteq(alert.access_token or '', token):
             return alert
         return request.env['scita.price.alert']
 
@@ -247,6 +262,9 @@ class ScitaPriceAlertController(http.Controller):
         alert = self._alert_from_token(alert_id, token)
         if alert and alert.state == 'pending' and request.httprequest.method == 'POST':
             alert.action_confirm()
+            # the token proves the mailbox: only then an address alert joins the account
+            if not alert.partner_id and not request.env.user._is_public():
+                alert.partner_id = request.env.user.partner_id
         return request.render('scita_smart_commerce.price_alert_confirmed', {
             'valid': bool(alert) and alert.state in ('pending', 'active', 'notified'),
             'pending': bool(alert) and alert.state == 'pending',

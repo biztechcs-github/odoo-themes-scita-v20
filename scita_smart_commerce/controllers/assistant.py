@@ -2,6 +2,7 @@ import json
 import re
 import logging
 import math
+import time
 
 from odoo import http
 from odoo.fields import Domain
@@ -17,6 +18,7 @@ _logger = logging.getLogger(__name__)
 MAX_TURNS = 8               # conversation turns accepted from the client
 MAX_MESSAGE_CHARS = 500     # per client message
 MAX_TOOL_ITERATIONS = 3     # model <-> tool round trips per request
+MAX_CONVERSATION_SECONDS = 45  # no new AI call after this long: the shopper is waiting
 MAX_SEARCH_RESULTS = 8
 MAX_ADD_QTY = 50
 
@@ -95,8 +97,8 @@ class ScitaAssistantController(http.Controller):
         try:
             reply = self._run_conversation(website, conversation, state)
         except AIProviderError as e:
+            Ai.release_use(website, 'assistant')
             return {'error': Ai.public_error(e)}
-        Ai.count_use(website, 'assistant')
         return {
             'reply': reply,
             'products': self._mentioned_products(list(state['products'].values()), reply)[:MAX_SEARCH_RESULTS],
@@ -170,7 +172,10 @@ class ScitaAssistantController(http.Controller):
         system = self._system_prompt(website)
         messages = [dict(m) for m in conversation]
         response = None
+        deadline = time.monotonic() + MAX_CONVERSATION_SECONDS
         for i in range(MAX_TOOL_ITERATIONS):
+            if time.monotonic() > deadline:
+                break
             last_round = i == MAX_TOOL_ITERATIONS - 1
             call_messages = messages
             if last_round and i:
@@ -244,7 +249,7 @@ class ScitaAssistantController(http.Controller):
         # sold out = tracked stock, nothing available, no backorders (website_sale_stock)
         in_stock = not product or not product._is_sold_out()
         # Theme Scita's hide-price rule (Request a Quote / login to see price): no price, no cart
-        hide_price = request.env.website._scita_hide_price(template)
+        hide_price = bool(info.get('hide_price') or request.env.website._scita_hide_price(template))
         compare = info.get('compare_list_price') or 0
         card = {
             'id': template.id,
@@ -258,7 +263,11 @@ class ScitaAssistantController(http.Controller):
             'url': template.website_url,
             'image_url': '/web/image/product.template/%s/image_512' % template.id,
             'in_stock': bool(in_stock),
-            'has_variants': template.product_variant_count > 1,
+            # the shopper has to choose: variants, custom or no-variant attributes, combo items
+            'has_variants': bool(template.product_variant_count > 1 or template.has_configurable_attributes
+                                 or template.type == 'combo'),
+            # as the shop pages: Theme Scita's "Hide Add Cart Button", sold out, no sale at 0...
+            'can_add_to_cart': bool(not hide_price and (product or template)._website_show_quick_add()),
             'category': template.public_categ_ids[:1].name or '',
         }
         return card
@@ -272,7 +281,7 @@ class ScitaAssistantController(http.Controller):
             'in_stock': card['in_stock'],
             'category': card['category'],
         }
-        if card['hide_price']:
+        if not card['can_add_to_cart']:
             data['can_add_to_cart'] = False
         if card['compare_price_text']:
             data['compare_at_price'] = card['compare_price_text']
@@ -330,7 +339,7 @@ class ScitaAssistantController(http.Controller):
             templates = details[0].get('results', request.env['product.template'])[:limit]
         if price_filter:
             # "Request a Quote" products must not be found by price range
-            templates = templates.filtered(lambda t: not t.sudo().website_hide_price)
+            templates = templates.filtered(lambda t: not website._scita_hide_price(t))
         results = []
         for template in templates:
             card = self._product_card(template)
@@ -362,14 +371,18 @@ class ScitaAssistantController(http.Controller):
             state['products'].setdefault(template.id, self._product_card(template))
             raise ToolError('This product is sold on quotation only: it cannot be added to the cart. '
                             'Tell the shopper to open the product page to request a quote (or sign in).')
-        if template.product_variant_count > 1:
+        card = self._product_card(template)
+        if not card['can_add_to_cart']:
+            state['products'].setdefault(template.id, card)
+            raise ToolError('This product cannot be added to the cart from the chat. '
+                            'Tell the shopper to open the product page.')
+        if card['has_variants']:
             # variants (colour, size...) must be chosen by the shopper on the product page
-            card = self._product_card(template)
             state['products'].setdefault(template.id, card)
             raise ToolError(
-                'This product has several variants (%s): the shopper must choose one. Tell them to use the '
+                'This product has options to choose (%s): the shopper must choose them. Tell them to use the '
                 '"Add to cart" button on the product card or the product page.' %
-                ', '.join(template.attribute_line_ids.attribute_id.mapped('name')))
+                (', '.join(template.attribute_line_ids.attribute_id.mapped('name')) or 'combo items'))
         product = template.product_variant_id
         if not product or not product._is_add_to_cart_allowed():
             raise ToolError('This product cannot be added to the cart.')

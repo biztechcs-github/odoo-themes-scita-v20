@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Product configurator: a product whose price Scita hides (Request Quote, Hide Price, login
+         to see price) comes with price 0 and can't be sold: show "Not available for sale" only,
+         not "$ 0.00" -->
+    <t t-inherit="sale.product_price" t-inherit-mode="extension">
+        <span name="sale_product_configurator_formatted_price" position="attributes">
+            <attribute name="t-if">this.props.can_be_sold !== false or this.props.price</attribute>
+        </span>
+    </t>
+</templates>

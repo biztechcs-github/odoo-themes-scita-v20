@@ -198,8 +198,15 @@ class website(models.Model):
 
     @api.model
     def theme_scita_payment_icons(self):
-        return self.env['payment.method'].sudo().search([
-            ('brand_ids.active', '=', True)], limit=5).brand_ids
+        # what this website can actually be paid with
+        website = self.env.website
+        methods = self.env['payment.method'].sudo().search([('provider_id', 'any', [
+            ('active', '=', True),
+            ('is_published', '=', True),
+            ('company_id', '=', website.company_id.id),
+            ('website_id', 'in', [False, website.id]),
+        ])])
+        return methods.brand_ids.filtered('active')[:5]
 
     # for product brand
     def get_product_brands(self, category, **post):
@@ -209,24 +216,18 @@ class website(models.Model):
             if category != None:
                 for ids in category:
                     cat_id.append(ids.id)
-                domain += ['|', ('public_categ_ids.id', 'in', cat_id),
-                           ('public_categ_ids.parent_id', 'in', cat_id)]
+                domain += [('public_categ_ids', 'child_of', cat_id)]
         else:
             domain = []
         # only products this website sells (not unpublished ones or another website's)
-        domain += [('is_published', '=', True), ('sale_ok', '=', True)] + list(self.website_domain())
+        domain += [('is_published', '=', True), ('sale_ok', '=', True),
+                   ('company_id', 'in', [False, self.company_id.id])] + list(self.website_domain())
         product_ids = self.env["product.template"].sudo(
         ).search(domain)
         domain_brand = [
             ('product_ids', 'in', product_ids.ids or []), ('product_ids', '!=', False)]
         brands = self.env['product.brands'].sudo().search(domain_brand)
         return brands
-
-    # for hr.employee
-    def get_snippet_employee(self):
-        employee = self.env['hr.employee'].sudo().search(
-            [('include_inourteam', '=', True)])
-        return employee
 
     def get_snippet_blog_post(self):
         post = self.env['blog.post'].sudo().search(
@@ -236,11 +237,11 @@ class website(models.Model):
     # For pages megamenu
     def get_megamenu_pages(self, submenu):
         # child_id is prefetched for the whole menu tree: no query per menu
-        return submenu.sudo().child_id
+        return submenu.sudo().child_id.filtered('is_visible')
 
     # For pages megamenu count
     def get_megamenu_pages_count(self, submenu):
-        return len(submenu.sudo().child_id)
+        return len(self.get_megamenu_pages(submenu))
 
     def _scita_megamenu_categories(self):
         """The categories shown in megamenus (include_in_megamenu), by name, searched once per
@@ -350,7 +351,7 @@ class website(models.Model):
 
     def get_categories(self, category=None):
         cat = {}
-        shop_category = request.env['product.public.category'].sudo().search(
+        shop_category = request.env['product.public.category'].search(
             Domain('parent_id', '=', False) & self.website_domain(), order='name asc')
         cat.update({'categ': shop_category})
         return cat
@@ -395,14 +396,14 @@ class website(models.Model):
         return bool(
             not self.website_show_price
             or (self.login_see_price and self.env.user._is_public())
-            or (line and line.product_id.website_hide_price)
+            or (line and (line.product_id.website_hide_price or line.product_id.quote_request))
         )
 
     def _sct_hide_order_prices(self, order):
         """Cart / checkout totals: hidden as soon as one line's price is, since they'd reveal it."""
         self.ensure_one()
         return self._sct_hide_line_price(False) or bool(
-            order and any(order.website_order_line.product_id.mapped('website_hide_price'))
+            order and any(self._sct_hide_line_price(line) for line in order.website_order_line)
         )
 
 

@@ -318,8 +318,8 @@
                                 </div>
 
                                 <div class="carousel-indicators" role="tablist">
-                                    <button type="button" data-bs-target="#myCarousel1557120239396" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
-                                    <button type="button" data-bs-target="#myCarousel1557120239396" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>                                    
+                                    <button type="button" data-bs-target="#myQuoteCarousel_2" data-bs-slide-to="0" class="active" aria-label="Slide 1" role="tab" aria-selected="true"/>
+                                    <button type="button" data-bs-target="#myQuoteCarousel_2" data-bs-slide-to="1" aria-label="Slide 2" role="tab" aria-selected="false"/>                                    
                                 </div>
                             </div>
                         </section>

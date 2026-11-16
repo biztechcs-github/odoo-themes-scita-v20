@@ -13,15 +13,15 @@
                         <div class="row">
                             <div class="col-12 sct-static-link">
                                 <ul>
-                                    <li><a href="#">Home</a></li>
+                                    <li><a href="/">Home</a></li>
                                     <li><a href="#">Sliders</a></li>
                                     <li><a href="#">Headers</a></li>
                                     <li><a href="#">Page Features</a></li>
                                     <li><a href="#">Other Features</a></li>
                                     <li><a href="#">Elements</a></li>
                                     <li><a href="#">Portfolio</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Shop</a></li>
+                                    <li><a href="/blog">Blog</a></li>
+                                    <li><a href="/shop">Shop</a></li>
                                 </ul>
                             </div>
                             <div class="col-12 sct-foot-logo" t-if="website.footer_logo">
@@ -101,7 +101,7 @@
                 <t t-foreach="request.env.website.theme_scita_payment_icons()" t-as="pm_to_display_sudo">
                      <span t-out="pm_to_display_sudo.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
-                          t-att-title="title"
+                          t-att-title="pm_to_display_sudo.name"
                           data-bs-toggle="tooltip"
                           data-bs-placement="top"
                           data-bs-delay="0"
@@ -155,7 +155,7 @@
                                     <a href="#">Conditions of Sales</a>
                                 </li>
                                 <li>
-                                    <a href="#">Privacy policy</a>
+                                    <a href="/privacy">Privacy policy</a>
                                 </li>
                                 <li>
                                     <a href="#">Returns and refunds</a>
@@ -186,12 +186,12 @@
                             </ul>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12 sct-fot-social">
-                            <div class="sct-payment-icons" t-if='len(request.env.website.theme_scita_payment_icons()) &gt; 1'>
+                            <div class="sct-payment-icons" t-if='request.env.website.theme_scita_payment_icons()'>
                                 <h4 >PAYMENT OPTIONS</h4>
                                 <t t-foreach="request.env.website.theme_scita_payment_icons()" t-as="pm_to_display_sudo">
                                      <span t-out="pm_to_display_sudo.image_payment_form"
                                           t-options="{'widget': 'image', 'alt-field': 'name'}"
-                                          t-att-title="title"
+                                          t-att-title="pm_to_display_sudo.name"
                                           data-bs-toggle="tooltip"
                                           data-bs-placement="top"
                                           data-bs-delay="0"
@@ -315,7 +315,7 @@
                                         <a href="#">Conditions of Sales</a>
                                     </li>
                                     <li>
-                                        <a href="#">Privacy policy</a>
+                                        <a href="/privacy">Privacy policy</a>
                                     </li>
                                     <li>
                                         <a href="#">Returns and refunds</a>
@@ -567,13 +567,13 @@
                                               <a href="#" title="Returns &amp; Exchanges">Returns &amp; Exchanges</a>
                                             </li>
                                             <li>
-                                              <a href="#" title="Privacy policy">Privacy policy</a>
+                                              <a href="/privacy" title="Privacy policy">Privacy policy</a>
                                             </li>
                                             <li>
                                               <a href="#" title="Terms &amp; Conditions">Terms &amp; Conditions</a>
                                             </li>
                                             <li>
-                                                <a href="#" title="Contact us">Contact us</a>
+                                                <a href="/contactus" title="Contact us">Contact us</a>
                                             </li>
                                           </ul>
                                     </div>
@@ -586,16 +586,16 @@
                                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                         <ul class="accordion-body">
                                             <li>
-                                                <a href="#" title="My account">My account</a>
+                                                <a href="/my" title="My account">My account</a>
                                               </li>
                                               <li>
-                                                <a href="#" title="Order history">Order history</a>
+                                                <a href="/my/orders" title="Order history">Order history</a>
                                               </li>
                                               <li>
-                                                <a href="#" title="Wishlist">Wishlist</a>
+                                                <a href="/shop/wishlist" title="Wishlist">Wishlist</a>
                                               </li>
                                               <li>
-                                                <a href="#" title="Compare">Compare</a>
+                                                <a href="/shop/compare" title="Compare">Compare</a>
                                               </li>
                                               <li>
                                                 <a href="#" title="Feature">Feature</a>
@@ -623,12 +623,15 @@
                                             </div>
                                         </div>
                                     </t> -->
-                                    <t t-if="request.env['ir.module.module'].sudo().search([('name', '=', 'mass_mailing'),('state','=','installed')])">
+                                    <!-- .js_subscribe lives in website_mass_mailing; xmlid lookup is cached. Like Odoo's
+                                         newsletter blocks, this form needs a public mailing list: first one, none = no form -->
+                                    <t t-set="sct_newsletter_list" t-value="request.env['ir.model.data']._xmlid_to_res_id('website_mass_mailing.s_newsletter_subscribe_form') and request.env['mailing.list'].sudo().search([('is_public', '=', True)], limit=1)"/>
+                                    <t t-if="sct_newsletter_list">
                                         <div class='newsletter_title'>
                                             <h4 class="links_title title-20">Newsletter</h4>
                                             <p>If you are unable to load any pages, check your comput.</p>
                                         </div>
-                                        <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe_wrap js_subscribe"  data-list-id="1" data-name="Newsletter Form">
+                                        <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe_wrap js_subscribe" t-att-data-list-id="sct_newsletter_list.id" data-name="Newsletter Form">
                                             <div class="input-group js_subscribe_wrap">
                                                 <input type="email" name="email" class="js_subscribe_value form-control" placeholder="your email..."/>
                                                 <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
@@ -636,31 +639,36 @@
                                             <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit js_subscribed_wrap" disabled="disabled">Thanks</a>
                                         </div>
                                     </t>
-                                    <div class="social-media-wrapper" t-if="website.company_id.sudo().social_facebook or website.company_id.sudo().social_twitter or website.company_id.sudo().social_linkedin or website.company_id.sudo().social_youtube or website.company_id.sudo().social_instagram">
+                                    <div class="social-media-wrapper" t-if="website.company_id.sudo().social_facebook or website.company_id.sudo().social_twitter or website.company_id.sudo().social_linkedin or website.company_id.sudo().social_youtube or website.company_id.sudo().social_github or website.company_id.sudo().social_instagram">
                                         <h4 class="title-20">Follow Us On</h4>
                                         <ul class="social-media">
-                                            <li>
-                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_facebook" t-if="website.company_id.sudo().social_facebook">
+                                            <li t-if="website.company_id.sudo().social_facebook">
+                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_facebook">
                                                     <i class="fa  fa-facebook"/>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_twitter" t-if="website.company_id.sudo().social_twitter">
+                                            <li t-if="website.company_id.sudo().social_twitter">
+                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_twitter">
                                                     <i class="fa  fa-twitter"/>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_linkedin" t-if="website.company_id.sudo().social_linkedin">
+                                            <li t-if="website.company_id.sudo().social_linkedin">
+                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_linkedin">
                                                     <i class="fa fa-linkedin"/>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_youtube" t-if="website.company_id.sudo().social_youtube">
+                                            <li t-if="website.company_id.sudo().social_youtube">
+                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_youtube">
                                                     <i class="fa fa-youtube-play"/>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_instagram" t-if="website.company_id.sudo().social_instagram">
+                                            <li t-if="website.company_id.sudo().social_github">
+                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_github">
+                                                    <i class="fa  fa-github"/>
+                                                </a>
+                                            </li>
+                                            <li t-if="website.company_id.sudo().social_instagram">
+                                                <a class="btn btn-sm btn-link" t-att-href="website.company_id.sudo().social_instagram">
                                                     <i class="fa  fa-instagram"/>
                                                 </a>
                                             </li>

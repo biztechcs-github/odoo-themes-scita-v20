@@ -18,6 +18,7 @@
 		                                            <div class="col-md-3 col-sm-6 list-items">
 		                                                <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
 		                                                    <div class="pwp-img">
+		                                                        <t t-call="theme_scita.sct_card_ribbon"/>
 		                                                        <!-- "3D" button (Scita Smart Commerce, when installed) -->
 		                                                        <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
 		                                                        <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger btn_unpub" title="This product is unpublished.">Unpublished</a>
@@ -76,7 +77,7 @@
 		                                                                    <span t-field='product.name'/>
 		                                                                </a>
 		                                                            </h3>
-		                                                            <p class="price">
+		                                                            <p class="price" t-if="not product._sct_price_hidden()">
 		                                                                <b>
 		                                                                    <t t-if="True">
 		                                                                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-out="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
@@ -86,6 +87,11 @@
 		                                                                    <span itemprop="priceCurrency" style="display:none;" t-out="website.currency_id.name" />
 		                                                                </b>
 		                                                            </p>
+		                                                            <!-- the "Hidden price message" in the price's place -->
+		                                                            <t t-set="sct_hidden_price_message" t-value="product._sct_hidden_price_message()"/>
+		                                                            <div t-if="sct_hidden_price_message" class="sct_hidden_price_message small text-muted">
+		                                                                <span t-out="sct_hidden_price_message"/>
+		                                                            </div>
 		                                                        </div>
 		                                                        <div class="sct-hover-info product_price ajax_cart_template">
 		                                                            <form action="/shop/cart/update" method="post">
@@ -101,10 +107,33 @@
 		                                                                    <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
 		                                                                    <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="lni lni-heart"></span></a>
 		                                                                </t>
-		                                                                <button t-if="not combination_info.get('prevent_sale')" type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id"><span class="lni lni-cart-1"></span></button>
+		                                                                <button t-if="not combination_info.get('prevent_sale') and not product._sct_price_hidden() and not (website.add_to_cart and request.env.user._is_public())" type="button" class="button btn btn-cart a-submit cart_view_sct_btn" t-att-data-id="product.id"><span class="lni lni-cart-1"></span></button>
 		                                                                <!-- can't be sold online (e.g. priced 0 with "Prevent sale of zero priced products"): Contact Us, as on the shop page -->
 		                                                                <a t-if="combination_info.get('prevent_sale') and not (website and (not website.website_show_price or product.website_hide_price or (website.login_see_price and request.env.user._is_public())))" t-att-href="website._get_contact_us_url(product.display_name)"
 		                                                                   class="button btn btn-cart sct-contact-us-btn" title="Contact Us"><span class="lni lni-envelope-1 cart_icon"/><span class="add_to_cart_text">Contact Us</span></a>
+		                                                                <t t-if="website">
+		                                                                    <!-- CASE 1: Public user -->
+		                                                                    <t t-if="request.env.user._is_public() and website.login_see_price">
+		                                                                        <a t-attf-href="/web/login?redirect={{ request.httprequest.path }}"
+		                                                                           class="btn btn-outline-primary login-price-btn">
+		                                                                            Login to see price
+		                                                                        </a>
+		                                                                    </t>
+		                                                                    <!-- CASE 3 & 4: Logged-in user but price hidden -->
+		                                                                    <t t-elif="(product.website_hide_price or not website.website_show_price)">
+		                                                                        <div class="o_wsale_product_request_quote">
+		                                                                            <a href="#" role="button"
+		                                                                               data-bs-toggle="modal"
+		                                                                               data-bs-target="#cfp_pop_up"
+		                                                                               t-att-data-product_id="product.id"
+		                                                                               t-att-data-product-name="product.name"
+		                                                                               id="request_for_quote_button"
+		                                                                               class="btn request_for_quote_button">
+		                                                                                Request Quote
+		                                                                            </a>
+		                                                                        </div>
+		                                                                    </t>
+		                                                                </t>
 		                                                            </form>
 		                                                        </div>
 		                                                    </div>

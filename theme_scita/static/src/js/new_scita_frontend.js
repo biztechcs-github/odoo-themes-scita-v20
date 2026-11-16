@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { browser } from '@web/core/browser/browser';
 import { countdownParts, renderCountdown } from "@theme_scita/js/countdown_dom";
+import { sctCartAddDone, sctCartAddFailed } from "@theme_scita/js/scita_fronted";
 
 function bannerTimerMarkup([days, hours, minutes, seconds]) {
     return "<div class='counter_timer_div'><span class='col-3 text-center box_degit_wrapper'><div class='box_degit'><span id='days' class='d-count  t_days_hr_min_sec_digit o_default_snippet_text'>"+    days +"</span><span id='day_lbl' class='d-block'>DAYS</span></div></span><span class='col-3 text-center box_degit_wrapper'><div class='box_degit'><span id='hours' class='d-count  t_days_hr_min_sec_digit o_default_snippet_text'>"+hours+"</span><span id='h_lbl' class='d-block'>HOURS</span></div></span><span class='col-3 text-center box_degit_wrapper'><div class='box_degit'><span id='minutes' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>"+minutes+"</span><span id='m_lbl' class=' d-block'>MINS</span></div></span><span class='col-3 text-center box_degit_wrapper'><div class='box_degit'><span id='seconds' class='d-count t_days_hr_min_sec_digit o_default_snippet_text'>"+seconds+"</span><span id='s_lbl' class='d-block'>SECS</span></div></span></div>";
@@ -101,13 +102,11 @@ publicWidget.registry.deal_seller_multi_product_custom_snippet = publicWidget.Wi
                     this._observer = observer;
                 }
             } else {
-                // Only call redrow() when not in editable mode
-                this.redrow();
                 var slider_deals = self.$target.attr('data-multi-deal-of-day-type');
                 rpc("/deal/product_multi_get_dynamic_seller", {
                     'slider-deal': self.$target.attr('data-multi-deal-of-day-type') || '',
                 }).then(function(data) {
-                    if (data) {
+                    if (data && data.trim()) {
                         var sct_rtl = false;
                         if ($('#wrapwrap').hasClass('o_rtl')) {
                             sct_rtl = true;
@@ -115,6 +114,7 @@ publicWidget.registry.deal_seller_multi_product_custom_snippet = publicWidget.Wi
                         self.$target.empty();
                         self.$target.append(data);
                         $(".deal_multi_product_slider").removeClass('hidden');
+                        self.build(); // the timer needs the content (and shows an expired deal)
 
                         rpc('/theme_scita/product_multi_deal_seller_config', {
                             'slider_deals': slider_deals,
@@ -392,7 +392,7 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
         "mouseenter .scita_attribute_li": "_onMouseEnterSwatch",
         "mouseleave .css_attribute_color": "_onMouseLeave",
         "click .js_add_cart": "_onClickAddToCart",
-        'click .cart_view_sct_btn': 'cartViewData',
+        'click .cart_view_sct_btn:not(.js_add_cart)': 'cartViewData',
         "click .js_add_cart_json": "_onClickUpdateQty",
     },
     
@@ -460,7 +460,7 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
             rpc("/deal/deal_of_the_day_new", {
                 'slider-deal': self.$target.attr('data-deal-snippet-id') || '',
             }).then(function(data) {
-                if (data) {
+                if (data && data.trim()) {
                     self.$target.empty();
                     self.$target.append(data);
                     $(".oe_deal_of_the_day").removeClass('hidden');
@@ -508,7 +508,7 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
                 const self = this;
                 
                 // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
-                // the same click opens Scita's own confirmation (cartViewData, .cart_view_sct_btn).
+                // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                 rpc("/shop/cart/add", {
                     product_id: productID,
                     product_template_id: productTemplateID,
@@ -517,8 +517,9 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
                     if (data && data.cart_quantity) {
                         self._updateCartIcon(data.cart_quantity);
                     }
+                    sctCartAddDone(self, $btn[0], data);
                 }).catch((err) => {
-                    // Silent error handling
+                    sctCartAddFailed(self, err);
                 });
             },
 

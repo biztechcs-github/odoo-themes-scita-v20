@@ -12,6 +12,13 @@
 }
 
 // "View in 3D" button (product page)
+.o_scita_ar_btn {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 10px;
+    font-size: 12px;
+}
 .o_scita_ar_btn_icon {
     font-size: 1.1em;
     margin-inline-end: 0.25rem;
@@ -19,7 +26,7 @@
 
 // the card button filled with the theme colour, "View in 3D" spelled out
 @mixin scita-ar-card-btn-open {
-    padding-inline-end: 16px;
+    padding-inline-end: 12px;
     border-color: $primary;
     background: $primary;
     color: color-contrast($primary);
@@ -44,29 +51,35 @@
     z-index: 3;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    height: 40px;
-    min-width: 40px;
-    padding: 0 13px 0 11px;
+    gap: 5px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0 9px 0 7px;
     border: 1px solid #e6ded6;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.94);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     color: #1f1f1f;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
     line-height: 1;
     white-space: nowrap;
     cursor: pointer;
     transition: background-color 0.15s, color 0.15s, border-color 0.15s, transform 0.3s ease-in;
 
+    // keeps a comfortable tap area around the smaller button
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -6px;
+    }
     svg {
         flex: none;
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         fill: none;
         stroke: currentColor;
-        stroke-width: 1.7;
+        stroke-width: 1.5;
         stroke-linejoin: round;
     }
     // the long label stays readable by screen readers while only "3D" shows
@@ -96,15 +109,12 @@
     @include media-breakpoint-down(sm) {
         left: 6px;
         bottom: 6px;
-        height: 36px;
-        min-width: 36px;
-        padding: 0 11px 0 9px;
-        gap: 5px;
-        font-size: 13px;
+        gap: 4px;
+        font-size: 11px;
 
         svg {
-            width: 16px;
-            height: 16px;
+            width: 13px;
+            height: 13px;
         }
     }
 }

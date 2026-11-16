@@ -30,6 +30,7 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                     return;
                 }
                 $("#shop_quick_view_modal").html(data).modal("show");
+                this._syncCustomValues($("#shop_quick_view_modal")[0]);
 
                 $(".quick_cover").css("display", "block");
 
@@ -78,9 +79,24 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                                 }
                             }
                             // Step 1: Add or update cart line via custom controller
+                            // the same choices as Odoo's AddToCart: attributes that make no
+                            // variant, and the text of a custom value
+                            const noVariantInputs = form.querySelectorAll(
+                                "input.no_variant.js_variant_change:checked, select.no_variant.js_variant_change"
+                            );
                             const response = await rpc("/custom/cart/add_or_update", {
                                 product_id: product_id,
-                                quantity: quantity
+                                quantity: quantity,
+                                no_variant_attribute_value_ids: Array.from(noVariantInputs, (el) => parseInt(el.value)),
+                                product_custom_attribute_values: Array.from(
+                                    form.querySelectorAll(".variant_custom_value"),
+                                    (el) => ({
+                                        custom_product_template_attribute_value_id: parseInt(
+                                            el.dataset.customProductTemplateAttributeValueId
+                                        ),
+                                        custom_value: el.value,
+                                    })
+                                ),
                             });
 
                             if (response.error) {
@@ -93,19 +109,6 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                                 return;
                             }
 
-                            const line_id = response.line_id;
-                            const qty = response.quantity;
-
-                            // Step 2: Update cart via official Odoo 19 cart update
-                            const params = {
-                                product_id: product_id,
-                                quantity: qty,
-                                line_id: line_id
-                            };
-
-                            const data = await rpc("/shop/cart/update", params);
-
-                            // Step 3: Update cart navbar safely
                             // Optional: Update quantity input in modal
                             if (quantityInput) {
                                 quantityInput.value = quantity;
@@ -218,6 +221,9 @@ odoo.define('theme_scita.quick_view', [], function (require) {
             if (!templateId) {
                 return;
             }
+            if ($product.closest('.modal').length) {
+                this._syncCustomValues($product[0]);
+            }
             const requestId = (this._combinationRequest = (this._combinationRequest || 0) + 1);
             const combinationInfo = await rpc('/website_sale/get_combination_info', {
                 product_template_id: templateId,
@@ -243,7 +249,7 @@ odoo.define('theme_scita.quick_view', [], function (require) {
             }
             if (typeof combinationInfo.price === 'number') {
                 $product.find('.oe_price .oe_currency_value').text(
-                    formatFloat(combinationInfo.price, { digits: [69, 2] })
+                    formatFloat(combinationInfo.price, { digits: [69, combinationInfo.currency_precision] })
                 );
             }
             const $scope = $product.closest('.modal').length ? $product.closest('.modal') : $product;
@@ -265,23 +271,88 @@ odoo.define('theme_scita.quick_view', [], function (require) {
                 : `/web/image/product.template/${templateId}/image_1920`);
         },
 
+        /**
+         * Text field of a custom attribute value, as ProductPage.handleCustomValues: Odoo's
+         * product page interaction does not run in the quick view modal.
+         */
+        _syncCustomValues: function (container) {
+            for (const el of container.querySelectorAll('input[type="radio"].js_variant_change:checked, select.js_variant_change')) {
+                const isSelect = el.matches('select');
+                const variantContainer = isSelect ? el.closest('li') : el.closest('ul')?.closest('li');
+                const customInput = isSelect ? el.querySelector(`option[value="${el.value}"]`) : el;
+                const customValue = variantContainer?.querySelector('.variant_custom_value');
+                if (customInput?.dataset.isCustom !== 'True') {
+                    customValue?.remove();
+                } else if (customValue?.dataset.customProductTemplateAttributeValueId !== customInput.dataset.valueId) {
+                    customValue?.remove();
+                    const field = document.createElement('input');
+                    field.type = 'text';
+                    field.dataset.customProductTemplateAttributeValueId = customInput.dataset.valueId;
+                    field.classList.add('variant_custom_value', 'custom_value_radio', 'form-control', 'mt-2');
+                    field.placeholder = customInput.dataset.valueName;
+                    variantContainer?.appendChild(field);
+                }
+            }
+        },
+
 
 
 
         //----------------------------------------------------------------------
         // Cart View Modal
         //----------------------------------------------------------------------
-        cartViewData: function (ev) {
+        cartViewData: async function (ev) {
             // the button sits in a <form action="/shop/cart/update">: never submit it
             ev.preventDefault();
             const element = ev.currentTarget;
             const product_id = $(element).attr('data-id');
+            // .js_add_cart buttons (blocks) add through their own handler on this same click;
+            // the others (Deals of the day page) have to add here, before saying it is added
+            if (!element.classList.contains('js_add_cart') && !(await this._addToCart(element))) {
+                return;
+            }
             rpc('/theme_scita/shop/cart_view', { product_id }).then(function (data) {
                 if (!data) {
                     return;
                 }
                 $("#shop_cart_view_modal").html(data).modal("show");
             });
+        },
+
+        /**
+         * Add the product of a card button to the cart.
+         *
+         * @returns {Promise<boolean>} whether the cart received it
+         */
+        _addToCart: async function (element) {
+            const templateId = parseInt(element.dataset.id);
+            const variantId = parseInt(element.closest('form')?.querySelector('input[name="product_id"]')?.value);
+            if (!templateId) {
+                return false; // block preview (snippet studio): no product
+            }
+            let data;
+            try {
+                // no variant yet (dynamic attributes): none to add without the product page
+                data = variantId && await rpc('/shop/cart/add', {
+                    product_template_id: templateId,
+                    product_id: variantId,
+                    quantity: 1,
+                });
+            } catch {
+                data = false; // e.g. a combo: its items are chosen on the product page
+            }
+            if (!data) {
+                window.location.href = `/shop/${templateId}`;
+                return false;
+            }
+            try {
+                wSaleUtils.updateCartNavBar(data);
+            } catch {
+                // header without the cart icon
+            }
+            const warning = data.notifications.find((notification) => notification.type === 'warning');
+            this.services.cart.showWarning(warning?.data.warning_message);
+            return data.notifications.some((notification) => notification.type === 'item_added');
         },
     });
 

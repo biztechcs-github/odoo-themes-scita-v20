@@ -150,10 +150,14 @@ class Website(models.Model):
             return True
         if self.login_see_price and self.env.user._is_public():
             return True
-        return bool(product and product.sudo().website_hide_price)
+        if not product:
+            return False
+        product = product.sudo()
+        # quote_request comes from Theme Scita
+        return bool(product.website_hide_price or ('quote_request' in product._fields and product.quote_request))
 
     def _scita_hide_order_prices(self, order):
         """Cart amounts are hidden as soon as one line's price is (the total would reveal it)."""
         self.ensure_one()
         return self._scita_hide_price() or any(
-            order.sudo().website_order_line.product_id.mapped('website_hide_price'))
+            self._scita_hide_price(product) for product in order.sudo().website_order_line.product_id)

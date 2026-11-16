@@ -40,11 +40,13 @@ def _resized(key, width, read):
     return data
 
 
-def _response(data, mimetype, unique):
+def _response(data, mimetype, unique, public=True):
     if not data:
         raise NotFound()
     # the URL names the version of the picture (unique=): a changed picture gets a new URL
-    cache = 'public, max-age=31536000, immutable' if unique else 'public, max-age=86400'
+    # shared caches must not keep a picture reserved to some visitors
+    scope = 'public' if public else 'private'
+    cache = f'{scope}, max-age=31536000, immutable' if unique else f'{scope}, max-age=86400'
     return request.make_response(data, headers=[('Content-Type', mimetype), ('Cache-Control', cache)])
 
 
@@ -80,4 +82,4 @@ class ScitaResponsiveImage(http.Controller):
         if attachment.type != 'binary' or attachment.mimetype not in _MIMETYPES.values():
             raise NotFound()
         return _response(_resized(('ir.attachment', attachment.id, attachment.checksum), width,
-                                  lambda: attachment.raw), attachment.mimetype, unique)
+                                  lambda: attachment.raw), attachment.mimetype, unique, attachment.public)

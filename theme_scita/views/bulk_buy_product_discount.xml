@@ -14,7 +14,7 @@
 
             <!-- Hidden with the price: request quote, prices hidden on the website, or
                  "login to see price" for visitors (the tier prices are prices too) -->
-            <t t-set="sct_bulk_hide_price" t-value="not website.website_show_price or product.website_hide_price or website.website_hide_price or (website.login_see_price and request.env.user._is_public())"/>
+            <t t-set="sct_bulk_hide_price" t-value="product._sct_price_hidden()"/>
             <!-- Always render container so JS can show/hide on variant change -->
             <div id="o_bulk_price_section" t-attf-class="{{'d-none' if (not rules or sct_bulk_hide_price) else ''}}">
                 <h5 class="mt-3 mb-2">Big savings with bulk buys</h5>

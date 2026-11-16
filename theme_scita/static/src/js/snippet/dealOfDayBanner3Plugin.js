@@ -7,31 +7,37 @@ import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 // A missing / invalid date must not block the editor with a browser alert() (it freezes the
-// whole builder until dismissed) nor save a "nan" countdown: flag the field in the dialog
-// and keep the dialog open.
-function rejectInvalidDate(dateInput, date) {
+// whole builder until dismissed) nor save a "nan" countdown, and a time out of range ("25:0:0")
+// is an Invalid Date for the timer, which then freezes: flag the field in the dialog and keep
+// the dialog open.
+const TIME_MAX = { hours: 23, minutes: 59, second: 59 };
+
+function rejectInvalidDate(dateInput, date, timeInputs) {
     const feedbackClass = "o_scita_date_feedback";
-    let feedback = dateInput.parentElement.querySelector("." + feedbackClass);
-    if (!isNaN(date.getTime())) {
-        dateInput.classList.remove("is-invalid");
-        feedback?.remove();
+    const invalidInput = isNaN(date.getTime())
+        ? dateInput
+        : timeInputs.find(({ id, value }) => !/^\d*$/.test(value.trim()) || Number(value) > TIME_MAX[id]);
+    for (const input of [dateInput, ...timeInputs]) {
+        input.classList.toggle("is-invalid", input === invalidInput);
+    }
+    dateInput.closest(".modal").querySelector("." + feedbackClass)?.remove();
+    if (!invalidInput) {
         return false;
     }
-    dateInput.classList.add("is-invalid");
-    if (!feedback) {
-        feedback = document.createElement("div");
-        feedback.className = `invalid-feedback d-block ${feedbackClass}`;
-        feedback.textContent = _t("Please choose the date when the deal ends.");
-        dateInput.after(feedback);
-    }
-    dateInput.focus();
+    const feedback = document.createElement("div");
+    feedback.className = `invalid-feedback d-block ${feedbackClass}`;
+    feedback.textContent = invalidInput === dateInput
+        ? _t("Please choose the date when the deal ends.")
+        : _t("Enter hours from 0 to 23, minutes and seconds from 0 to 59.");
+    invalidInput.after(feedback);
+    invalidInput.focus();
     return true;
 }
 
 // -------------------------------------------------
 // Shared Modal Logic
 // -------------------------------------------------
-async function openDealOfDayBanner3Modal(snippetEl) {
+async function openDealOfDayBanner3Modal(snippetEl, onChange) {
     // Render modal template (custom template without Deals dropdown)
     const modalEl = renderToElement("theme_scita.deal_of_day_banner_5_configration");
     document.body.appendChild(modalEl);
@@ -91,7 +97,7 @@ async function openDealOfDayBanner3Modal(snippetEl) {
     submitBtn.addEventListener("click", () => {
         // local midnight: a bare "YYYY-MM-DD" is read as UTC (the day before, west of UTC)
         const date = new Date(`${dateInput.value}T00:00`);
-        if (rejectInvalidDate(dateInput, date)) {
+        if (rejectInvalidDate(dateInput, date, [hourInput, minInput, secInput])) {
             return;
         }
         const hours = parseInt(hourInput.value) || 0;
@@ -159,6 +165,8 @@ async function openDealOfDayBanner3Modal(snippetEl) {
             }
         }
 
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -178,11 +186,10 @@ async function openDealOfDayBanner3Modal(snippetEl) {
 // -------------------------------------------------
 class DealOfDayBanner3SnippetPlugin extends Plugin {
     static id = "dealOfDayBanner3Snippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".deal_of_day_banner_3"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -191,7 +198,7 @@ class DealOfDayBanner3SnippetPlugin extends Plugin {
         }
 
         // open modal after drop
-        await openDealOfDayBanner3Modal(snippetEl);
+        await openDealOfDayBanner3Modal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -204,10 +211,11 @@ registry.category("website-plugins").add(
 // -------------------------------------------------
 export class DealOfDayBanner3ModifyBtnAction extends BuilderAction {
     static id = "dealOfDayBanner3ModifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openDealOfDayBanner3Modal(editingElement);
+            openDealOfDayBanner3Modal(editingElement, () => this.dependencies.history.commit());
         }
     }
 

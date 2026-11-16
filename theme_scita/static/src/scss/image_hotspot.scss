@@ -55,7 +55,7 @@
         }
     }
 }
-.popover{
+.popover:has(.hotspot-tooltip){
 	--popover-max-width: auto;
 	border: 0;
 	.popover-body{

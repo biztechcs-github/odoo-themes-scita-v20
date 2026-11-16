@@ -8,6 +8,10 @@
 .fa-twitter.fa {
     font-family: 'odoo_ui_icons' !important;
     font-feature-settings: 'liga';
+    text-transform: none;
+    letter-spacing: normal;
+    text-rendering: geometricPrecision;
+    word-break: keep-all;
 
     &::before {
         content: 'oi_x';

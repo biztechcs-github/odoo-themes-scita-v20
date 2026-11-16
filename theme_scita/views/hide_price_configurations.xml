@@ -5,8 +5,10 @@
         
         <!-- 🧩 Request Quote / Login button in the wishlist action row.
              Odoo 20: it takes the Add to Cart slot, so it stays on one line
-             with the compare / quick view buttons. -->
-        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/button[@name='add_to_cart']" position="before">
+             with the compare / quick view buttons. First of the row's
+             t-if / t-else, so that only one of the three buttons shows:
+             between Contact Us and Add to Cart it left Add to Cart next to Contact Us. -->
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/a[contains(@t-if, 'prevent_sale')]" position="before">
             <t t-if="website and (
                 (not website.website_show_price)
                 or wish.product_id.website_hide_price
@@ -31,7 +33,7 @@
                    data-bs-toggle="modal"
                    data-bs-target="#cfp_pop_up"
                    href="#"
-                   t-att-data-product_id="wish.product_id.id"
+                   t-att-data-product_id="wish.product_id.product_tmpl_id.id"
                    t-att-data-product-name="wish.product_id.name"
                    class="o_wsale_product_btn_primary btn btn-primary"
                    title="Request Quote" aria-label="Request Quote">
@@ -41,6 +43,15 @@
                     </span>
                 </a>
             </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/a[contains(@t-if, 'prevent_sale')]" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="t-elif">combination_info['prevent_sale']</attribute>
+        </xpath>
+        <!-- "Hide Add Cart Button" (visitors), as on the product page -->
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/button[@name='add_to_cart']" position="attributes">
+            <attribute name="t-else"/>
+            <attribute name="t-elif">not (website.add_to_cart and request.env.user._is_public())</attribute>
         </xpath>
 
         <!-- the "Hidden price message" in the hidden price's place -->
@@ -60,12 +71,6 @@
                 and not (website.login_see_price and request.env.user._is_public())
             </attribute>
         </xpath>
-
-        <!-- 🧱 Hide 'Add to Cart' button when price is hidden (it carries t-else,
-             so hide it with a class instead of t-if) -->
-        <xpath expr="//div[hasclass('o_wsale_product_action_row')]/button[@name='add_to_cart']" position="attributes">
-            <attribute name="t-attf-class">o_wsale_product_btn_primary btn btn-primary {{'' if (website and website.website_show_price and not wish.product_id.website_hide_price and not (website.login_see_price and request.env.user._is_public())) else 'd-none'}}</attribute>
-        </xpath>
     </template>
 
            
@@ -79,6 +84,7 @@
                 and website.website_show_price
                 and not product.website_hide_price
                 and not product.quote_request
+                and not website.hide_price
                 and not (website.login_see_price and request.env.user._is_public())
             </attribute>
         </xpath>
@@ -94,7 +100,7 @@
                 <!-- Case 1: User is public and must log in -->
                 <t t-if="website.login_see_price and request.env.user._is_public()">
                     
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ request.httprequest.path }}"
                     class="btn btn-outline-primary mt-2 login-price-btn">
                         Login to see price
                     </a>
@@ -174,8 +180,10 @@
                 <span t-out="sct_hidden_price_message"/>
             </div>
         </xpath>
-        <!-- 🧩 Add Request Quote / Login button before price -->
-        <xpath expr="//span[@t-out=&quot;combination_info['price']&quot;]" position="before">
+        <!-- 🧩 Request Quote / Login button in the Add to Cart slot: first of the column's
+             t-if / t-else, so that only one action shows (as on the wishlist above).
+             Not next to the price: Odoo's span around it is off exactly when it must show. -->
+        <xpath expr="//div[@id='o_comparelist_product_name']/div/a[contains(@t-if, 'prevent_sale')]" position="before">
             <t t-if="website and (
                 (not website.website_show_price)
                 or product.website_hide_price
@@ -183,9 +191,10 @@
             )">
                 
                 <!-- Case 1: User not logged in and login_see_price is enabled -->
+                <!-- full_path: the page is empty without its ?products= -->
                 <t t-if="website.login_see_price and request.env.user._is_public()">
                     
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ request.httprequest.full_path }}"
                     class="btn btn-outline-primary mt-2 login-price-btn">
                         Login to see price
                     </a>
@@ -198,7 +207,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#cfp_pop_up"
                     href="#"
-                    t-att-data-product_id="product.id"
+                    t-att-data-product_id="product.product_tmpl_id.id"
                     t-att-data-product-name="product.name"
                     class="btn btn-primary mt-2">
                         Request Quote
@@ -206,21 +215,14 @@
                 </t>
             </t>
         </xpath>
-
-        <!-- 🧱 Hide price span when price is hidden -->
-        <xpath expr="//span[@t-out=&quot;combination_info['price']&quot;]" position="attributes">
-            <attribute name="t-if">
-                website 
-                and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+        <xpath expr="//div[@id='o_comparelist_product_name']/div/a[contains(@t-if, 'prevent_sale')]" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="t-elif">combination_info['prevent_sale']</attribute>
         </xpath>
-
-        <!-- 🧱 Hide 'Add to Cart' button in same conditions -->
-        <!-- Odoo 20: the button carries t-else, so hide it with a class instead of t-if -->
-        <xpath expr="//button[@name='add_to_cart']" position="attributes">
-            <attribute name="t-attf-class">btn btn-primary {{'' if (website and website.website_show_price and not product.website_hide_price and not (website.login_see_price and request.env.user._is_public())) else 'd-none'}}</attribute>
+        <!-- "Hide Add Cart Button" (visitors), as on the product page -->
+        <xpath expr="//div[@id='o_comparelist_product_name']//button[@name='add_to_cart']" position="attributes">
+            <attribute name="t-else"/>
+            <attribute name="t-elif">not (website.add_to_cart and request.env.user._is_public())</attribute>
         </xpath>
 
         <!-- 🧱 The sticky mini overview at the top of the page shows prices too -->
@@ -286,9 +288,10 @@
             )">
 
                 <!-- Case 1: User not logged in & login required -->
+                <!-- rendered through an RPC: the request path is that route, not a page -->
                 <t t-if="website.login_see_price and request.env.user._is_public()">
                     
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ product.website_url }}"
                     class="btn btn-outline-primary mt-2 login-price-btn">
                         Login to see price
                     </a>
@@ -314,16 +317,14 @@
     
     <!-- ========================================================= -->
     <!-- 🔒 Universal "Hide or Login to See Price" logic for Scita snippet -->
+    <!-- The snippets are rendered through RPCs (the request path is that route, not a -->
+    <!-- page), so their Login links come back to the product's own page. -->
     <!-- ========================================================= -->
 
     <!-- 🧩 Product image snippet -->
     <template id="product_image_snippet_price" inherit_id="theme_scita.sct_product_snippet_2_view">
         <xpath expr="//p[hasclass('price')]" position="attributes">
-            <attribute name="t-if">
-                website and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-if">website and not product._sct_price_hidden()</attribute>
         </xpath>
 
         <xpath expr="//div[hasclass('ajax_cart_template')]" position="attributes">
@@ -337,7 +338,7 @@
         <xpath expr="//div[hasclass('ajax_cart_template')]" position="after">
             <t t-if="website">
                 <t t-if="request.env.user._is_public() and website.login_see_price">
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ product.website_url }}"
                     class="btn btn-outline-primary login-price-btn">
                     Login to see price
                     </a>
@@ -363,11 +364,7 @@
     <!-- 🧩 Fashion Multi Category Slider -->
     <template id="fashion_multi_cat_slider_snippet_price" inherit_id="theme_scita.fashion_multi_slider_products">
         <xpath expr="//p[hasclass('price')]" position="attributes">
-            <attribute name="t-if">
-                website and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-if">website and not product._sct_price_hidden()</attribute>
         </xpath>
         <xpath expr="//div[hasclass('ajax_cart_template')]" position="attributes">
             <attribute name="t-if">
@@ -382,7 +379,7 @@
             <t t-if="website">
                 <!-- CASE 1: Public user -->
                 <t t-if="request.env.user._is_public() and website.login_see_price">
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ product.website_url }}"
                     class="btn btn-outline-primary login-price-btn">
                     Login to see price
                     </a>
@@ -409,11 +406,7 @@
     <!-- 🧩 Multi Deal Seller Slider -->
     <template id="multi_deal_seller_snippet_price" inherit_id="theme_scita.multi_deal_seller_slider_view">
         <xpath expr="//p[hasclass('price')]" position="attributes">
-            <attribute name="t-if">
-                website and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-if">website and not product._sct_price_hidden()</attribute>
         </xpath>
     </template>
 
@@ -421,11 +414,7 @@
     <!-- 🧩 Deal of the Day -->
     <template id="deal_of_the_day_snippet_price" inherit_id="theme_scita.theme_scita_deal_of_the_day_view">
         <xpath expr="//p[hasclass('price')]" position="attributes">
-            <attribute name="t-if">
-                website and website.website_show_price 
-                and not deal_product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-if">website and not deal_product._sct_price_hidden()</attribute>
         </xpath>
         <xpath expr="//button[hasclass('cart_view_sct_btn', 'js_add_cart')]" position="attributes">
             <attribute name="t-if">
@@ -433,6 +422,7 @@
                 and not deal_product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
                 and not combination_info.get('prevent_sale')
+                and not (website.add_to_cart and request.env.user._is_public())
             </attribute>
         </xpath>
 
@@ -440,7 +430,7 @@
             <t t-if="website">
                 <!-- CASE 1: Public user -->
                 <t t-if="request.env.user._is_public() and website.login_see_price">
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ deal_product.website_url }}"
                     class="btn btn-outline-primary login-price-btn">
                     Login to see price
                     </a>
@@ -467,11 +457,7 @@
     <!-- 🧩 Product Snippet 1 -->
     <template id="sct_product_snippet_1_price" inherit_id="theme_scita.sct_product_snippet_1_view">
         <xpath expr="//p[hasclass('price')]" position="attributes">
-            <attribute name="t-if">
-                website and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-if">website and not product._sct_price_hidden()</attribute>
         </xpath>
         <xpath expr="//button[hasclass('cart_view_sct_btn')]" position="attributes">
             <attribute name="t-if">
@@ -479,6 +465,7 @@
                 and not product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
                 and not combination_info.get('prevent_sale')
+                and not (website.add_to_cart and request.env.user._is_public())
             </attribute>
         </xpath>
 
@@ -486,7 +473,7 @@
         <t t-if="website">
                 <!-- CASE 1: Public user -->
                 <t t-if="request.env.user._is_public() and website.login_see_price">
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ product.website_url }}"
                     class="btn btn-outline-primary login-price-btn">
                     Login to see price
                     </a>
@@ -513,11 +500,7 @@
     <!-- 🧩 Trending Products -->
     <template id="trending_products_view_snippet" inherit_id="theme_scita.theme_scita_trending_products_view">
         <xpath expr="//p[hasclass('price')]" position="attributes">
-            <attribute name="t-if">
-                website and website.website_show_price 
-                and not product.website_hide_price
-                and not (website.login_see_price and request.env.user._is_public())
-            </attribute>
+            <attribute name="t-if">website and not product._sct_price_hidden()</attribute>
         </xpath>
         <xpath expr="//button[hasclass('cart_view_sct_btn', 'js_add_cart')]" position="attributes">
             <attribute name="t-if">
@@ -525,6 +508,7 @@
                 and not product.website_hide_price
                 and not (website.login_see_price and request.env.user._is_public())
                 and not combination_info.get('prevent_sale')
+                and not (website.add_to_cart and request.env.user._is_public())
             </attribute>
         </xpath>
 
@@ -532,7 +516,7 @@
             <t t-if="website">
                 <!-- CASE 1: Public user -->
                 <t t-if="request.env.user._is_public() and website.login_see_price">
-                    <a t-attf-href="/web/login"
+                    <a t-attf-href="/web/login?redirect={{ product.website_url }}"
                     class="btn btn-outline-primary login-price-btn">
                     Login to see price
                     </a>
@@ -579,8 +563,18 @@
                 website 
                 and website.website_show_price 
                 and not product.website_hide_price
+                and not product.quote_request
                 and not (website.login_see_price and request.env.user._is_public())
             </attribute>
+        </xpath>
+    </template>
+
+
+    <!-- 🧩 No "+ $20" on the attribute values while the price is hidden. Through ptav: it is
+         all this template is sure to have, whoever calls it. -->
+    <template id="sct_hide_badge_extra_price" inherit_id="website_sale.badge_extra_price" name="Scita: hide extra price badge">
+        <xpath expr="//span[@t-if='ptav.show_price_extra and price_extra']" position="attributes">
+            <attribute name="t-if">ptav.show_price_extra and price_extra and not ptav.product_tmpl_id._sct_price_hidden()</attribute>
         </xpath>
     </template>
 
@@ -721,10 +715,36 @@
 
     <!-- Subtotal / taxes / total (cart, checkout, payment, confirmation).
          Hidden with d-none, not removed: Odoo's checkout JS updates these rows
-         when the delivery method changes and crashes if they are missing. -->
+         when the delivery method changes and crashes if they are missing.
+         The amounts are zeroed too: what is under d-none is still in the page source. -->
     <template id="sct_hide_cart_total" inherit_id="website_sale.total" name="Scita: hide cart totals">
         <xpath expr="//div[contains(@t-attf-class, 'o_cart_total')]" position="attributes">
             <attribute name="t-attf-class">o_cart_total #{_cart_total_classes} #{'d-none' if website and website._sct_hide_order_prices(website_sale_order) else ''}</attribute>
+        </xpath>
+        <xpath expr="//table[@name='cart_total_table']" position="before">
+            <t t-set="sct_hide_total" t-value="website and website._sct_hide_order_prices(website_sale_order)"/>
+        </xpath>
+        <xpath expr="//span[@t-out='website_sale_order.amount_delivery']" position="attributes">
+            <attribute name="t-out">0 if sct_hide_total else website_sale_order.amount_delivery</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='website_sale_order.amount_untaxed']" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">0 if sct_hide_total else website_sale_order.amount_untaxed</attribute>
+        </xpath>
+        <xpath expr="//strong[@t-field='website_sale_order.amount_total']" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">0 if sct_hide_total else website_sale_order.amount_total</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='website_sale_order.amount_paid']" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">0 if sct_hide_total else website_sale_order.amount_paid</attribute>
+        </xpath>
+    </template>
+
+    <!-- The tax lines of those totals (the tbody stays: the checkout JS replaces it) -->
+    <template id="sct_hide_cart_tax_lines" inherit_id="website_sale.order_tax_lines" name="Scita: hide cart tax lines">
+        <xpath expr="//t[contains(@t-if, 'website_sale_order.tax_totals')]" position="attributes">
+            <attribute name="t-if">website_sale_order.tax_totals and website_sale_order.tax_totals['subtotals'] and not (website and website._sct_hide_order_prices(website_sale_order))</attribute>
         </xpath>
     </template>
 
@@ -732,13 +752,26 @@
     <template id="sct_hide_checkout_mobile_total" inherit_id="website_sale.checkout_layout" name="Scita: hide mobile summary total">
         <xpath expr="//span[@id='amount_total_summary']" position="attributes">
             <attribute name="t-attf-class">monetary_field ms-auto #{'d-none' if website and website._sct_hide_order_prices(website_sale_order) else ''}</attribute>
+            <attribute name="t-field"/>
+            <attribute name="t-out">0 if website and website._sct_hide_order_prices(website_sale_order) else website_sale_order.amount_total</attribute>
         </xpath>
     </template>
 
     <!-- Quick reorder panel on the cart page -->
     <template id="sct_hide_quick_reorder_price" inherit_id="website_sale.quick_reorder_history" name="Scita: hide quick reorder price">
         <xpath expr="//small[hasclass('o_wsale_quick_reorder_product_price')]" position="attributes">
-            <attribute name="t-if">not website._sct_hide_line_price(order_line)</attribute>
+            <attribute name="t-if">not order_line.product_id.product_tmpl_id._sct_price_hidden()</attribute>
+        </xpath>
+        <!-- the unit price would still be in the page (Odoo's JS only needs it to update the small above) -->
+        <xpath expr="//input[hasclass('o_wsale_quick_reorder_qty_input')]" position="attributes">
+            <attribute name="t-att-data-price-unit">None if order_line.product_id.product_tmpl_id._sct_price_hidden() else combination_info['price']</attribute>
+        </xpath>
+    </template>
+
+    <!-- Boxed product page layout: core prints the unit price with no hidden-price check -->
+    <template id="sct_hide_boxed_base_unit_price" inherit_id="website_sale.cta_wrapper_boxed" name="Scita: hide boxed unit price">
+        <xpath expr="//t[@t-call='website_sale.base_unit_price']" position="attributes">
+            <attribute name="t-if">'base_unit_price' in combination_info and not combination_info.get('hide_price')</attribute>
         </xpath>
     </template>
 
@@ -746,13 +779,16 @@
          price h6 and used after it, so hide its children rather than the h6) -->
     <template id="sct_hide_suggested_product_price" inherit_id="website_sale.suggested_products_list" name="Scita: hide suggested product price">
         <xpath expr="//del[@name='suggested_product_list_price']" position="attributes">
-            <attribute name="t-if">not (website._sct_hide_line_price(False) or product.website_hide_price)</attribute>
+            <attribute name="t-if">not (website._sct_hide_line_price(False) or product.website_hide_price or product.quote_request)</attribute>
         </xpath>
         <xpath expr="//span[@name='suggested_product_price']" position="attributes">
-            <attribute name="t-if">not (website._sct_hide_line_price(False) or product.website_hide_price)</attribute>
+            <attribute name="t-if">not (website._sct_hide_line_price(False) or product.website_hide_price or product.quote_request)</attribute>
         </xpath>
         <xpath expr="//t[@t-call='website_sale.base_unit_price']" position="attributes">
-            <attribute name="t-if">combination_info.get('base_unit_price') and not (website._sct_hide_line_price(False) or product.website_hide_price)</attribute>
+            <attribute name="t-if">combination_info.get('base_unit_price') and not (website._sct_hide_line_price(False) or product.website_hide_price or product.quote_request)</attribute>
+        </xpath>
+        <xpath expr="//button[@name='add_to_cart']" position="attributes">
+            <attribute name="t-if">not product.product_tmpl_id._sct_price_hidden()</attribute>
         </xpath>
     </template>
     <!-- Request Quote / login to see price: no checkout. The server blocks it too

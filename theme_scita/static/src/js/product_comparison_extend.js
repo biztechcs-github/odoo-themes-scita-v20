@@ -118,7 +118,8 @@ publicWidget.registry.ComparePopupNotification = publicWidget.Widget.extend({
         }
 
         // Add product
-        comparisonUtils.addComparisonProduct(productId);
+        // the bus refreshes Odoo's comparison bar at the bottom of the screen
+        comparisonUtils.addComparisonProduct(productId, this.services["public.interactions"].env.bus);
         el.disabled = true; el.classList.add('disabled');
         el.querySelector('span')?.classList.add('text-primary');
 
@@ -326,105 +327,4 @@ publicWidget.registry.ComparePopupNotification = publicWidget.Widget.extend({
         }
     },
 
-});
-
-// Widget to update compare count when products are removed from comparison page
-publicWidget.registry.CompareCountUpdate = publicWidget.Widget.extend({
-    selector: '.o_product_comparison_table',
-    events: {
-        'click .o_comparelist_remove': '_onRemoveProduct',
-    },
-    
-    /**
-     * @override
-     */
-    start: function () {
-        this._updateCompareCount();
-        
-        // Create MutationObserver to watch for DOM changes (when products are removed)
-        this._setupMutationObserver();
-        
-        return this._super.apply(this, arguments);
-    },
-
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (this._observer) {
-            this._observer.disconnect();
-        }
-        return this._super.apply(this, arguments);
-    },
-
-    _setupMutationObserver() {
-        // Watch for changes in the comparison table
-        this._observer = new MutationObserver(() => {
-            this._updateCompareCount();
-        });
-        
-        if (this.el) {
-            this._observer.observe(this.el, {
-                childList: true,
-                subtree: true,
-            });
-        }
-    },
-
-    _onRemoveProduct(ev) {
-        // Wait for removal to complete then update count
-        setTimeout(() => {
-            this._updateCompareCount();
-        }, 200);
-    },
-
-    _updateCompareCount() {
-        // Force read from localStorage to get latest count
-        let comparisonIds = comparisonUtils.getComparisonProductIds();
-        
-        // Double-check localStorage directly as backup
-        if (!comparisonIds || comparisonIds.length === 0) {
-            try {
-                const stored = localStorage.getItem('product_comparison_ids');
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    if (parsed && Array.isArray(parsed)) {
-                        comparisonIds = parsed;
-                    }
-                }
-            } catch (e) {
-                console.warn('[CompareCountUpdate] Failed to read comparison IDs:', e);
-            }
-        }
-        
-        const count = comparisonIds.length;
-        const compareBadges = document.querySelectorAll('.compare_quantity');
-                
-        compareBadges.forEach((badge, index) => {
-            badge.textContent = count;
-            badge.setAttribute('data-compare-count', count);
-            if (count > 0) {
-                badge.classList.remove('d-none', 'hidden');
-                badge.style.display = 'flex';
-                badge.style.visibility = 'visible';
-                badge.style.opacity = '1';
-            } else {
-                badge.classList.add('d-none');
-                badge.style.display = 'none';
-            }
-        });
-
-        // Update compare link href
-        const compareLinks = document.querySelectorAll('.ab-compare .compare_link, .ab-compare .redirect-compare-page, a.compare_link, a.redirect-compare-page');
-        const compareUrl = count > 0
-            ? `/shop/compare?products=${encodeURIComponent(comparisonIds.join(','))}`
-            : '/shop/compare';
-        
-        compareLinks.forEach(link => {
-            // Extra safety check: skip if link contains cart-related classes or hrefs
-            if (!link.classList.contains('redirect-cart-page') && !link.href.includes('/shop/cart')) {
-                link.setAttribute('href', compareUrl);
-            }
-        });
-    },
 });

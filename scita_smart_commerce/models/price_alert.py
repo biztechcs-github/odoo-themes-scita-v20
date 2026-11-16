@@ -183,7 +183,9 @@ class ScitaPriceAlert(models.Model):
         """Price the alert's variant as the shopper saw it when subscribing: same website,
         pricelist and tax mapping. Returned in the alert's currency."""
         self.ensure_one()
-        tmpl = self.product_tmpl_id.sudo().with_context(website_id=self.website_id.id, lang=self.lang or None)
+        # the website's company: core keeps the taxes of env.company
+        tmpl = self.product_tmpl_id.sudo().with_company(self.company_id).with_context(
+            website_id=self.website_id.id, lang=self.lang or None)
         pricelist = self.pricelist_id
         if not pricelist:
             # what an anonymous visitor of that website pays (catalog price if no pricelist)
@@ -207,7 +209,9 @@ class ScitaPriceAlert(models.Model):
         self.ensure_one()
         website = self.website_id.sudo()
         partner = self.partner_id.sudo()
-        return bool(website.website_hide_price or self.product_tmpl_id.sudo().website_hide_price
+        tmpl = self.product_tmpl_id.sudo()
+        return bool(website.website_hide_price or tmpl.website_hide_price
+                    or ('quote_request' in tmpl._fields and tmpl.quote_request)
                     or (partner and not partner.website_show_price)
                     or (website.login_see_price and not partner.user_ids))
 

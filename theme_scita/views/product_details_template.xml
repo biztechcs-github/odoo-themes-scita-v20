@@ -159,6 +159,10 @@
         <xpath expr="//div[hasclass('sct-price-option')]" position="before">
             <t t-if="website and not website.is_view_active('website_sale.cta_wrapper_boxed')">
                 <t t-call="website_sale.product_price"/>
+                <!-- core's call sits in the price section Scita removes -->
+                <t t-if="'base_unit_price' in combination_info and not combination_info['hide_price']"
+                   t-call="website_sale.base_unit_price"
+                   base_unit_price="combination_info['base_unit_price']"/>
             </t>
         </xpath>
     </template>

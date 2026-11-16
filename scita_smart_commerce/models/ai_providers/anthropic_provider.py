@@ -38,7 +38,7 @@ class AnthropicProvider(BaseProvider):
             raise AIProviderError(
                 "The 'anthropic' Python package is not installed on the server "
                 "(pip install anthropic).", admin=True) from e
-        return anthropic, anthropic.Anthropic(api_key=self.api_key, timeout=self.timeout, max_retries=2)
+        return anthropic, anthropic.Anthropic(api_key=self.api_key, timeout=self.timeout, max_retries=1)
 
     def chat(self, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None,
              allow_tool_calls=True):
@@ -62,7 +62,8 @@ class AnthropicProvider(BaseProvider):
             params['output_config'] = output_config
         if self.model in FALLBACK_MODELS:
             params['betas'] = [FALLBACK_BETA]
-            params['fallbacks'] = 'default'
+            # not a parameter of the installed SDK yet (0.96): sent as is
+            params['extra_body'] = {'fallbacks': 'default'}
         try:
             response = client.beta.messages.create(**params)
         except anthropic.AuthenticationError as e:
@@ -81,6 +82,10 @@ class AnthropicProvider(BaseProvider):
             raise AIProviderError('The AI service is temporarily unavailable.', retryable=True) from e
         except anthropic.APIConnectionError as e:
             raise AIProviderError('Could not reach the AI service.', retryable=True) from e
+        except TypeError as e:  # the SDK refuses arguments it does not know
+            _logger.warning('Anthropic SDK rejected the request: %s', e)
+            raise AIProviderError("The installed 'anthropic' Python package is too old for this "
+                                  "request (pip install -U anthropic).", admin=True) from e
 
         # A refusal (after server-side fallbacks, when enabled) carries no usable answer.
         if response.stop_reason == 'refusal':

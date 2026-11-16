@@ -55,11 +55,25 @@
             </div>
         </div>
     </template>
+    <!-- Odoo's product ribbon on a Scita card, unless the product has a Scita label (they share
+         the same corner). combination_info: the card's. No "Sale" ribbon when the price is hidden. -->
+    <template id="sct_card_ribbon" name="Scita card ribbon">
+        <t t-if="not product.product_style_tag_id">
+            <t t-set="ribbon" t-value="product._get_ribbon(None if product._sct_price_hidden() else combination_info)"/>
+            <t t-if="ribbon">
+                <t t-set="bg_color" t-value="ribbon.bg_color"/>
+                <t t-set="text_color" t-value="ribbon.text_color"/>
+                <t t-call="website_sale.product_ribbon"/>
+            </t>
+        </t>
+    </template>
+
     <template id='fashion_multi_slider_products'>
         <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1)"/>
             <form> 
                 <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
                     <div class="pwp-img">
+                        <t t-call="theme_scita.sct_card_ribbon"/>
                         <!-- "3D" button (Scita Smart Commerce, when installed) -->
                         <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                         <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href"
@@ -330,7 +344,8 @@
     <template id="sct_product_snippet_1_view" name="Multi Product Snippet Configuration 1">
         <t t-set="products" t-value="products if products else []"/>
         <t t-set="slider_header" t-value="slider_header or None"/>
-        <div class='sct-snippet-full'>
+        <!-- no products: nothing rendered, the block stays empty (dynamic_block_empty.js) -->
+        <div class='sct-snippet-full' t-if="products">
             <div class="container">
                 <div class="row top">
                     <div class="content col-md-12">
@@ -350,6 +365,7 @@
                             <form>
                                 <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
                                     <div class="pwp-img">
+                                        <t t-call="theme_scita.sct_card_ribbon"/>
                                         <!-- "3D" button (Scita Smart Commerce, when installed) -->
                                         <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                                         <a role="button" t-if="not show_publish and not product.website_published"
@@ -589,13 +605,6 @@
                             </t>
                         </t>
                     </t>
-                    <t t-else="">
-                        <div class="col-12">
-                            <div role="status" class="alert alert-info text-center">
-                                <p>No products configured. Please configure products in the snippet options.</p>
-                            </div>
-                        </div>
-                    </t>
                 </div>
             </div>
         </div>
@@ -626,7 +635,8 @@
     <template id="sct_product_snippet_2_view" name="Product Image Snippet Configuration View">
         <t t-set="products" t-value="products if products else []"/>
         <t t-set="slider_header" t-value="slider_header or None"/>
-        <div class='sct-snippet-full'>
+        <!-- no products: nothing rendered, the block stays empty (dynamic_block_empty.js) -->
+        <div class='sct-snippet-full' t-if="products">
             <div class="container">
                 <div class="row top">
                     <div class="content col-md-12">
@@ -659,6 +669,7 @@
                             <form>
                                 <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
                                     <div class="pwp-img">
+                                        <t t-call="theme_scita.sct_card_ribbon"/>
                                         <!-- "3D" button (Scita Smart Commerce, when installed) -->
                                         <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                                         <a role="button" t-if="not show_publish and not product.website_published"
@@ -914,13 +925,6 @@
                             </t>
                         </t>
                     </t>
-                    <t t-else="">
-                        <div class="col-12">
-                            <div role="status" class="alert alert-info text-center">
-                                <p>No products configured. Please configure products in the snippet options.</p>
-                            </div>
-                        </div>
-                    </t>
                         </div>
                     </div>
                 </div>
@@ -936,6 +940,7 @@
         <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1)"/>
         <div class="cs-product" t-att-data-publish="product.website_published and 'on' or 'off'">
             <div class="pwp-img">
+                <t t-call="theme_scita.sct_card_ribbon"/>
                 <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href"
                    class="btn btn-secondary btn-sm btn-danger btn_unpub" title="This product is unpublished.">
                     Unpublished
@@ -1086,7 +1091,10 @@
         </section>
     </template>
     <template id="fashion_multi_cat_slider_view" name="Fashion Multi Product Tabs Snippet">
-        <div class='fashion_featured_product_1'>
+        <!-- the same configuration can be dropped twice on a page: its tabs must not share ids -->
+        <t t-set="tab_uid" t-value="int(time.time() * 1000000)"/>
+        <!-- no products: nothing rendered, the block stays empty (dynamic_block_empty.js) -->
+        <div class='fashion_featured_product_1' t-if="(slider_details.collection_1_ids | slider_details.collection_2_ids | slider_details.collection_3_ids | slider_details.collection_4_ids | slider_details.collection_5_ids)._scita_on_website()">
             <div class="container">
                 <div class="lns-inner latest-news-section">
                     <div class="row">
@@ -1104,13 +1112,13 @@
 
                                     <t t-if="slider_details.no_of_collection == '2'">
                                         <li class="my-test">
-                                            <a t-att-href="'#fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab" class="active show">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
                                         <li class="my-test">
-                                            <a t-att-href="'#fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
@@ -1119,19 +1127,19 @@
 
                                     <t t-if="slider_details.no_of_collection == '3'">
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab" class="active show">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_3'/>
                                             </a>
@@ -1140,25 +1148,25 @@
 
                                     <t t-if="slider_details.no_of_collection == '4'">
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab" class="active show">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_3'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_4'/>
                                             </a>
@@ -1167,31 +1175,31 @@
 
                                     <t t-if="slider_details.no_of_collection == '5'">
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab" class="active show">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_3'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_4'/>
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a t-att-href="'#fashion-collection5-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                            <a t-att-href="'#fashion-collection5-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                data-bs-toggle="tab">
                                                 <t t-out='slider_details.label_collection_5'/>
                                             </a>
@@ -1202,9 +1210,9 @@
                                 <div class="tab-content">
                                     <t t-if="slider_details.no_of_collection == '2'">
                                         <div class="active multi_hide"
-                                             t-att-id="'fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1212,9 +1220,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1225,9 +1233,9 @@
 
                                     <t t-if="slider_details.no_of_collection == '3'">
                                         <div class="active multi_hide"
-                                             t-att-id="'fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1235,9 +1243,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1245,9 +1253,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_3_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1258,9 +1266,9 @@
 
                                     <t t-if="slider_details.no_of_collection == '4'">
                                         <div class="active multi_hide"
-                                             t-att-id="'fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1268,9 +1276,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1278,9 +1286,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_3_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1288,9 +1296,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_4_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1301,9 +1309,9 @@
 
                                     <t t-if="slider_details.no_of_collection == '5'">
                                         <div class="active multi_hide"
-                                             t-att-id="'fashion-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_1_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1311,9 +1319,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_2_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1321,9 +1329,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_3_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1331,9 +1339,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_4_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>
@@ -1341,9 +1349,9 @@
                                             </div>
                                         </div>
                                         <div class="multi_hide"
-                                             t-att-id="'fashion-collection5-%s-%s' %(slider_header.no_of_collection, slider_details.id)">
+                                             t-att-id="'fashion-collection5-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
-                                                 t-att-id="'multi-collection5-%s-%s' %(slider_header.no_of_collection, slider_details.id)"
+                                                 t-att-id="'multi-collection5-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
                                                  t-if="slider_details">
                                                 <t t-foreach="slider_details.collection_5_ids._scita_on_website()" t-as="product">
                                                     <t t-call='theme_scita.fashion_multi_slider_products'/>

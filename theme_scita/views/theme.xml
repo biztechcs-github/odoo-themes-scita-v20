@@ -1274,7 +1274,7 @@
              <attribute name='class' add="oe_cart col-12 col-lg-7 col-xl-8" separator=" "></attribute>
         </xpath>
         <xpath expr="//div[hasclass('card-body', 'p-lg-4', 'pt-lg-3')]/div" position="attributes">
-             <attribute name='class' add="len(website_sale_order.website_order_line) &gt; 4 and 'o_wsale_scrollable_table mt-n4 me-n4 pt-4 pe-4 custom_scroller'" separator=" "></attribute>
+             <attribute name="t-attf-class">d-none d-lg-block #{'o_wsale_scrollable_table mt-n4 me-n4 pt-4 pe-4 custom_scroller' if len(website_sale_order.website_order_line) &gt; 4 else ''}</attribute>
         </xpath>
     </template>    
 <!--  Quick view  popup start-->
@@ -1368,7 +1368,7 @@
                                                         </button>
                                                     </div>
                                                     <!-- **Quantity update end** -->
-                                                    <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit" href="#">
+                                                    <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit #{'d-none' if website.add_to_cart and request.env.user._is_public() else ''}" href="#">
                                                         <i class="icon-basket me-2"/> 
                                                         Add to cart
                                                     </a>  

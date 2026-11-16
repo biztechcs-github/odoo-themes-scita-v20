@@ -47,19 +47,19 @@
                                         <t t-out="'/web/image/theme_scita.sct_trending_product_bg'"/>
                                     </t>
                                 </t>
-                                <ul id="trending_products_categories" class="nav nav-tabs" t-att-style="'background-image: url(%s);' % bg_url">
+                                <ul class="trending_products_categories nav nav-tabs" t-att-style="'background-image: url(%s);' % bg_url">
                                     <t t-set="count" t-value="1"/>
                                     <t t-foreach="trending_products_categories_details" t-as="trend_product">
                                         <t t-if="count == 1">
                                             <li class="trend_prod_tab" t-att-data-category-id="trend_product.id">
-                                                <a data-bs-toggle="tab" class="cat_tab show active" href="#multi-collection1-2-1">
+                                                <a class="cat_tab show active" href="#">
                                                     <span t-out="trend_product.name"/>
                                                 </a>
                                             </li>
                                         </t>
                                         <t t-else="">
                                             <li class="trend_prod_tab" t-att-data-category-id="trend_product.id">
-                                                <a data-bs-toggle="tab" href="#multi-collection2-2-1" class="cat_tab">
+                                                <a href="#" class="cat_tab">
                                                     <t t-out="trend_product.name"/>
                                                 </a>
                                             </li>
@@ -68,8 +68,8 @@
                                     </t>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="active multi_hide tab_content_inner" id="multi-collection1-2-1" data-title="Automotive Parts">
-                                        <div class="owl-carousel owl-loaded owl-drag tab_inner_wrap" id="product_slider">
+                                    <div class="active multi_hide tab_content_inner" data-title="Automotive Parts">
+                                        <div class="owl-carousel owl-loaded owl-drag tab_inner_wrap trend_product_slider">
                                             <div class="owl-stage-outer">
                                                 <div class="owl-stage" style="transform: translate3d(-1905px, 0px, 0px); transition: all 0.25s ease 0s; width: 3175px;">
                                                     <t t-foreach="product_details" t-as="product">
@@ -78,6 +78,7 @@
                                                             <form>
                                                                 <div class="cs-product" data-publish="on">
                                                                     <div class="pwp-img">
+                                                                        <t t-call="theme_scita.sct_card_ribbon"/>
                                                                         <!-- "3D" button (Scita Smart Commerce, when installed) -->
                                                                         <t t-if="'scita_has_ar' in product._fields and product.scita_has_ar" t-call="scita_smart_commerce.card_3d_button" ar_product="product"/>
                                                                     <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger btn_unpub" title="This product is unpublished.">Unpublished</a>

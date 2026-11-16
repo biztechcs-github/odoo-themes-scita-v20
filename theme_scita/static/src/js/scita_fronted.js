@@ -6,6 +6,43 @@ import publicWidget from "@theme_scita/js/compat/public_widget";
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { browser } from '@web/core/browser/browser';
 
+// Result of /shop/cart/add on a product card (`widget`, button clicked): Scita's "added" modal
+// opens only when the product really went in the cart, else the reason is shown (no stock...)
+export function sctCartAddDone(widget, buttonEl, data) {
+    const warning = data?.notifications?.find((item) => item.type === "warning")?.data.warning_message
+        || (!data?.quantity && _t("This product could not be added to your cart."));
+    if (warning) {
+        widget.services.notification.add(warning, { type: "warning" });
+    }
+    if (data?.quantity && buttonEl.classList.contains("cart_view_sct_btn")) {
+        widget.cartViewData({ currentTarget: buttonEl });
+    }
+}
+
+// /shop/cart/add refused (combo product, no variant, not allowed...). Only Odoo's own messages
+// are for visitors, not the text of a crash.
+export function sctCartAddFailed(widget, error) {
+    const message = error?.exceptionName?.startsWith("odoo.exceptions")
+        ? error.data.message
+        : _t("This product could not be added to your cart.");
+    widget.services.notification.add(message, { type: "danger" });
+}
+
+// Run `callback` once the window stopped resizing (after owl's own refresh), until `_stopResize`
+function sctOnResize(widget, callback) {
+    widget._stopResize?.();
+    let timer;
+    const onResize = () => {
+        clearTimeout(timer);
+        timer = setTimeout(callback, 300);
+    };
+    window.addEventListener("resize", onResize);
+    widget._stopResize = () => {
+        clearTimeout(timer);
+        window.removeEventListener("resize", onResize);
+    };
+}
+
 $(document).ready(function(){
     if($(".oe_website_sale").length === 0){
         $("div#wrap").addClass("oe_website_sale");
@@ -144,11 +181,31 @@ $(document).ready(function(){
                         self.$target.empty();
                         self.$target.append(data);
                         $('[data-bs-toggle="popover"]').popover();
+                        self._keepPopoverOpenOnHover();
                         $(".oe_img_hotspot").removeClass('o_hidden');
                     }
                 });
             }
-        }
+        },
+        // The popover holds the product's links, but it closed as soon as the pointer left the dot.
+        // It now stays open while the pointer is on it (the dots' hide delay covers the gap).
+        _keepPopoverOpenOnHover: function() {
+            this.el.querySelectorAll(".ripple-btn").forEach((dotEl) => {
+                const popover = Popover.getOrCreateInstance(dotEl);
+                dotEl.addEventListener("hide.bs.popover", (ev) => {
+                    if (popover.tip?.matches(":hover")) {
+                        ev.preventDefault();
+                    }
+                });
+                dotEl.addEventListener("shown.bs.popover", () => {
+                    popover.tip.onmouseleave = () => setTimeout(() => {
+                        if (!dotEl.matches(":hover") && document.activeElement !== dotEl) {
+                            popover.hide();
+                        }
+                    }, 200);
+                });
+            });
+        },
     });
     //End
 
@@ -161,7 +218,7 @@ $(document).ready(function(){
             "mouseenter .scita_attribute_li": "_onMouseEnterSwatch",
             "mouseleave .css_attribute_color": "_onMouseLeave",
             "click .js_add_cart": "_onClickAddToCart",
-            'click .cart_view_sct_btn': 'cartViewData',
+            'click .cart_view_sct_btn:not(.js_add_cart)': 'cartViewData',
             "click .js_add_cart_json": "_onClickUpdateQty",
         },
         
@@ -239,7 +296,7 @@ $(document).ready(function(){
                 rpc("/fashion/fashion_product_multi_get_dynamic_slider", {
                     'slider-type': self.$target.attr('data-multi-cat-slider-type') || '',
                 }).then(function(data) {
-                    if (data) {
+                    if (data && data.trim()) {
                         self.$target.empty();
                         self.$target.append(data);
                         $(".fashion_multi_category_slider").removeClass('o_hidden');
@@ -289,15 +346,17 @@ $(document).ready(function(){
                                 $(ev.currentTarget).next().toggleClass("o_hidden")
                             });
                         
+                        var fitImages = function() {
+                            var divWidth = $('.fashion_featured_product_1 .cs-product .pwp-img a').width();
+                            if (divWidth == 0) {
+                                divWidth = $('.retail_featured_product_1 .cs-product .pwp-img a:visible').width();
+                            }
+                            $('.fashion_featured_product_1 .cs-product .pwp-img a').height(divWidth);
+                        };
                         $(document).ajaxComplete(function() {
-                            setTimeout(function(){
-                                var divWidth = $('.fashion_featured_product_1 .cs-product .pwp-img a').width();
-                                if (divWidth == 0) {
-                                    divWidth = $('.retail_featured_product_1 .cs-product .pwp-img a:visible').width();
-                                }
-                                $('.fashion_featured_product_1 .cs-product .pwp-img a').height(divWidth);
-                            },100);
+                            setTimeout(fitImages, 100);
                         });
+                        sctOnResize(self, fitImages);
                     }
                 });
             }
@@ -330,7 +389,7 @@ $(document).ready(function(){
                 const self = this;
                 
                 // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
-                // the same click opens Scita's own confirmation (cartViewData, .cart_view_sct_btn).
+                // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                 rpc("/shop/cart/add", {
                     product_id: productID,
                     product_template_id: productTemplateID,
@@ -339,8 +398,9 @@ $(document).ready(function(){
                     if (data && data.cart_quantity) {
                         self._updateCartIcon(data.cart_quantity);
                     }
+                    sctCartAddDone(self, $btn[0], data);
                 }).catch((err) => {
-                    // Silent error handling
+                    sctCartAddFailed(self, err);
                 });
             },
 
@@ -416,6 +476,9 @@ $(document).ready(function(){
         },
         
         destroy: function() {
+            if (this._stopResize) {
+                this._stopResize();
+            }
             // Clean up observer if it exists
             if (this._observer) {
                 this._observer.disconnect();
@@ -490,7 +553,7 @@ $(document).ready(function(){
                 rpc("/shop/get_box_brand_slider", {
                     'slider-type': slider_type || '',
                 }).then(function(data) {
-                    if (data) {
+                    if (data && data.trim()) {
                         self.$target.empty().append(data);
                         var sct_rtl = false;
                         if ($('#wrapwrap').hasClass('o_rtl')) {
@@ -624,7 +687,7 @@ $(document).ready(function(){
                 rpc("/shop/get_it_brand", {
                     'slider-type': slider_type || '',
                 }).then(function(data) {
-                    if (data) {
+                    if (data && data.trim()) {
                         self.$target.empty();
                         self.$target.empty().append(data);
                         $(".it_brand_slider").removeClass('o_hidden');
@@ -1767,7 +1830,7 @@ $(document).ready(function(){
                 "mouseenter .scita_attribute_li": "_onMouseEnterSwatch",
                 "mouseleave .css_attribute_color": "_onMouseLeave",
                 "click .js_add_cart": "_onClickAddToCart",
-                'click .cart_view_sct_btn': 'cartViewData',
+                'click .cart_view_sct_btn:not(.js_add_cart)': 'cartViewData',
                 "click .js_add_cart_json": "_onClickUpdateQty",
             },
             
@@ -1884,16 +1947,11 @@ $(document).ready(function(){
                         rpc("/product_column_five", {
                             'slider-type': slider_type,
                         }).then(function(response) {
-                            if (response && response.html) {
-                                // Odoo 19 format - response has html property
-                                var html = response.html;
+                            // the HTML, or {html: ...}. Nothing to show (no products, configuration
+                            // deleted...): the block stays empty, see dynamic_block_empty.js
+                            var html = (response && response.html) || response;
+                            if (typeof html === 'string' && html.trim()) {
                                 self._injectContent(html);
-                            } else if (response && typeof response === 'string') {
-                                // Legacy format - direct HTML string
-                                self._injectContent(response);
-                            } else if (response) {
-                                // Fallback
-                                self._injectContent(response);
                             }
                         }).catch(function(error) {
                             console.error('Error loading product snippet data:', error);
@@ -1915,13 +1973,15 @@ $(document).ready(function(){
                 }
                 
                 $(".sct_product_snippet_1").removeClass('hidden');
-                setTimeout(function(){
+                var fitImages = function(){
                     var $imgLinks = $('.sct_product_snippet_1 .cs-product .pwp-img a');
                     if ($imgLinks.length) {
                         var divWidth = $imgLinks.first().width(); 
                         $imgLinks.height(divWidth);
                     }
-                }, 400);
+                };
+                setTimeout(fitImages, 400);
+                sctOnResize(self, fitImages);
             },
             cartViewData: function (ev) {
                     const element = ev.currentTarget;
@@ -1951,7 +2011,7 @@ $(document).ready(function(){
                     const self = this;
                     
                     // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
-                    // the same click opens Scita's own confirmation (cartViewData, .cart_view_sct_btn).
+                    // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                     rpc("/shop/cart/add", {
                         product_id: productID,
                         product_template_id: productTemplateID,
@@ -1960,8 +2020,9 @@ $(document).ready(function(){
                         if (data && data.cart_quantity) {
                             self._updateCartIcon(data.cart_quantity);
                         }
+                        sctCartAddDone(self, $btn[0], data);
                     }).catch((err) => {
-                        // Silent error handling
+                        sctCartAddFailed(self, err);
                     });
                 },
 
@@ -2035,6 +2096,9 @@ $(document).ready(function(){
         },
         
         destroy: function() {
+            if (this._stopResize) {
+                this._stopResize();
+            }
             // Clean up observer if it exists (like brand snippet)
             if (this._observer) {
                 this._observer.disconnect();
@@ -2052,7 +2116,7 @@ $(document).ready(function(){
                 "mouseenter .scita_attribute_li": "_onMouseEnterSwatch",
                 "mouseleave .css_attribute_color": "_onMouseLeave",
                 "click .js_add_cart": "_onClickAddToCart",
-                'click .cart_view_sct_btn': 'cartViewData',
+                'click .cart_view_sct_btn:not(.js_add_cart)': 'cartViewData',
                 "click .js_add_cart_json": "_onClickUpdateQty",
             },
             
@@ -2154,16 +2218,11 @@ $(document).ready(function(){
                         rpc("/product_column_five_two", {
                             'slider-type': slider_type,
                         }).then(function(response) {
-                            if (response && response.html) {
-                                // Odoo 19 format - response has html property
-                                var html = response.html;
+                            // the HTML, or {html: ...}. Nothing to show (no products, configuration
+                            // deleted...): the block stays empty, see dynamic_block_empty.js
+                            var html = (response && response.html) || response;
+                            if (typeof html === 'string' && html.trim()) {
                                 self._injectContent(html);
-                            } else if (response && typeof response === 'string') {
-                                // Legacy format - direct HTML string
-                                self._injectContent(response);
-                            } else if (response) {
-                                // Fallback
-                                self._injectContent(response);
                             }
                         }).catch(function(error) {
                             console.error('Error loading product snippet 2 data:', error);
@@ -2185,13 +2244,15 @@ $(document).ready(function(){
                 }
                 
                 $(".sct_product_snippet_2").removeClass('hidden');
-                setTimeout(function(){
+                var fitImages = function(){
                     var $imgLinks = $('.sct_product_snippet_2 .cs-product .pwp-img a');
                     if ($imgLinks.length) {
                         var divWidth = $imgLinks.first().width(); 
                         $imgLinks.height(divWidth);
                     }
-                }, 400);
+                };
+                setTimeout(fitImages, 400);
+                sctOnResize(self, fitImages);
             },
             cartViewData: function (ev) {
                     const element = ev.currentTarget;
@@ -2221,7 +2282,7 @@ $(document).ready(function(){
                     const self = this;
                     
                     // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
-                    // the same click opens Scita's own confirmation (cartViewData, .cart_view_sct_btn).
+                    // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                     rpc("/shop/cart/add", {
                         product_id: productID,
                         product_template_id: productTemplateID,
@@ -2230,8 +2291,9 @@ $(document).ready(function(){
                         if (data && data.cart_quantity) {
                             self._updateCartIcon(data.cart_quantity);
                         }
+                        sctCartAddDone(self, $btn[0], data);
                     }).catch((err) => {
-                        // Silent error handling
+                        sctCartAddFailed(self, err);
                     });
                 },
 
@@ -2340,6 +2402,9 @@ $(document).ready(function(){
         },
         
         destroy: function() {
+            if (this._stopResize) {
+                this._stopResize();
+            }
             // Clean up observer if it exists
             if (this._observer) {
                 this._observer.disconnect();
@@ -2567,14 +2632,15 @@ $(document).ready(function(){
             "mouseenter .scita_attribute_li": "_onMouseEnterSwatch",
             "mouseleave .css_attribute_color": "_onMouseLeave",
             "click .js_add_cart": "_onClickAddToCart",
-            'click .cart_view_sct_btn': 'cartViewData',
+            'click .cart_view_sct_btn:not(.js_add_cart)': 'cartViewData',
             "click .js_add_cart_json": "_onClickUpdateQty",
+            "click .trend_prod_tab": "_onClickTrendingTab",
         },
         
         _restorePlaceholder: function() {
             var self = this;
             // Check if this is rendered content (has trending products content)
-            var hasRenderedContent = self.$target.find('.trending_products_categories, .trend_prod_tab, #product_slider, .owl-carousel, .cs-product, .retail_trending_products, .latest-trendy-section, .lns-inner').length > 0;
+            var hasRenderedContent = self.$target.find('.trending_products_categories, .trend_prod_tab, .trend_product_slider, .owl-carousel, .cs-product, .retail_trending_products, .latest-trendy-section, .lns-inner').length > 0;
             var hasPlaceholder = self.$target.find('.category-slider-placeholder').length > 0;
             
             // Only restore if we have rendered content and no placeholder
@@ -2654,97 +2720,64 @@ $(document).ready(function(){
                 $.get("/theme_scita/trending_products_categories", {
                     'slider-id': slider_id || '',
                 }).then(function(data) {
-                    self.$target.empty();
-                    self.$target.append(data);
-                    const firstTab = $(".trend_prod_tab")[0];
+                    const firstTab = new DOMParser().parseFromString(data, 'text/html').querySelector('.trend_prod_tab');
                     if (!firstTab) {
-                        return; // configuration without categories: nothing to load
+                        return; // no categories / configuration deleted: stays empty (dynamic_block_empty.js)
                     }
-                    const categoryId = firstTab.getAttribute('data-category-id');
-                     $.get("/theme_scita/get_trending_prducts", {
-                        'category': categoryId,
-                        'slider-id': slider_id || '',
-                    }).then(function(data) {
-                        self.$target.empty();
-                        self.$target.append(data);
-                        $(".theme_scita_trending_products").removeClass('o_hidden');
-                        $('div#product_slider').owlCarousel({
-                            margin: 30,
-                            items:4,
-                            loop:false,
-                            autoplay:true,
-                            rewind:true,
-                            dots:false,
-                            autoplayTimeout:5000,
-                            autoplayHoverPause:true,
-                            nav: true,
-                            responsive: {
-                                0: {
-                                    items: 2
-                                },
-                                992: {
-                                    items: 3
-                                },
-                                1400: {
-                                    items: 4
-                                },
-                            },
-                        });
-                    });
-                });
-                $(document).on("click", ".trend_prod_tab", function (ev) {
-                    const categoryId = ev.currentTarget.getAttribute('data-category-id');
-                    $(ev.currentTarget).find('a').addClass('active')
-                    $.get("/theme_scita/get_trending_prducts", {
-                        'category': categoryId,
-                        'slider-id': self.$target.attr('data-cat-slider-id') || '',
-                    }).then(function(data) {
-                        self.$target.empty();
-                        self.$target.append(data);
-                        $(".theme_scita_trending_products").removeClass('o_hidden');
-                        for(let ele of $("#trending_products_categories").find("li.trend_prod_tab > a")){
-                            if(ele.classList.contains("active") && ele.classList.contains("show")){
-                                ele.classList.remove("active");
-                                ele.classList.remove("show");
-                            }
-                            // if(ele.parentElement.getAttribute('data-category-id') == ev.currentTarget.getAttribute('data-category-id')){
-                            //     ele.classList.add("show","active")
-                            // }
-                            if (ele.parentElement.getAttribute('data-category-id') == $(ev.currentTarget).attr('data-category-id')) {
-                                ele.classList.add("show", "active");
-                            }
-                        }
-                        $('div#product_slider').owlCarousel({
-                            margin: 30,
-                            items:4,
-                            loop:false,
-                            autoplay:true,
-                            rewind:true,
-                            dots:false,
-                            autoplayTimeout:5000,
-                            autoplayHoverPause:true,
-                            nav: true,
-                            responsive: {
-                                0: {
-                                    items: 2
-                                },
-                                480: {
-                                    items: 3
-                                },
-                                768: {
-                                    items: 4
-                                },
-                                1024: {
-                                    items: 3
-                                },
-                                1500: {
-                                    items: 4
-                                },
-                            },
-                        });
-                    });
+                    self._loadTrendingCategory(firstTab.getAttribute('data-category-id'));
                 });
             }
+        },
+        _loadTrendingCategory: function (categoryId) {
+            var self = this;
+            if (self._trendingStopped) {
+                return;
+            }
+            var requestId = self._trendingRequestId = (self._trendingRequestId || 0) + 1;
+            $.get("/theme_scita/get_trending_prducts", {
+                'category': categoryId,
+                'slider-id': self.$target.attr('data-cat-slider-id') || '',
+            }).then(function(data) {
+                if (self._trendingStopped || requestId !== self._trendingRequestId) {
+                    return; // another tab was clicked since
+                }
+                self.$target.empty();
+                self.$target.append(data);
+                self.$target.removeClass('o_hidden');
+                self.$target.find('.trend_prod_tab > a').removeClass('show active');
+                self.$target.find(`.trend_prod_tab[data-category-id="${categoryId}"] > a`).addClass('show active');
+                self.$target.find('div.trend_product_slider').owlCarousel({
+                    margin: 30,
+                    items:4,
+                    loop:false,
+                    autoplay:true,
+                    rewind:true,
+                    dots:false,
+                    autoplayTimeout:5000,
+                    autoplayHoverPause:true,
+                    nav: true,
+                    responsive: {
+                        0: {
+                            items: 2
+                        },
+                        992: {
+                            items: 3
+                        },
+                        1400: {
+                            items: 4
+                        },
+                    },
+                });
+            });
+        },
+        _onClickTrendingTab: function (ev) {
+            ev.preventDefault();
+            if (this.editableMode) {
+                return;
+            }
+            this.$target.find('.trend_prod_tab > a').removeClass('show active');
+            $(ev.currentTarget).find('a').addClass('show active');
+            this._loadTrendingCategory(ev.currentTarget.getAttribute('data-category-id'));
         },
         cartViewData: function (ev) {
                 const element = ev.currentTarget;
@@ -2774,7 +2807,7 @@ $(document).ready(function(){
                 const self = this;
                 
                 // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
-                // the same click opens Scita's own confirmation (cartViewData, .cart_view_sct_btn).
+                // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                 rpc("/shop/cart/add", {
                     product_id: productID,
                     product_template_id: productTemplateID,
@@ -2783,8 +2816,9 @@ $(document).ready(function(){
                     if (data && data.cart_quantity) {
                         self._updateCartIcon(data.cart_quantity);
                     }
+                    sctCartAddDone(self, $btn[0], data);
                 }).catch((err) => {
-                    // Silent error handling
+                    sctCartAddFailed(self, err);
                 });
             }, 
 
@@ -2857,6 +2891,7 @@ $(document).ready(function(){
         },
         
         destroy: function() {
+            this._trendingStopped = true;
             // Clean up observer if it exists
             if (this._observer) {
                 this._observer.disconnect();
@@ -2866,3 +2901,55 @@ $(document).ready(function(){
         }
     });
     // Dynamic Trending Products Snippet End
+
+    // A carousel nested in a block keeps its template id when the block is dropped twice (Odoo
+    // only renews the id of a dropped s_carousel_wrapper root): the arrows and dots of the second
+    // copy drove the first one. On the website, so pages saved that way are fixed as well.
+    let sctCarouselCount = 0;
+    publicWidget.registry.sct_carousel_unique_id = publicWidget.Widget.extend({
+        selector: ".s_carousel_wrapper .carousel[id]",
+        start: function () {
+            const oldId = this.el.id;
+            if (document.querySelector(`[id="${oldId}"]`) === this.el) {
+                return;
+            }
+            const newId = `sctCarousel${Date.now()}${++sctCarouselCount}`;
+            const rootEl = this.el.closest(".s_carousel_wrapper");
+            this.el.id = newId;
+            for (const el of rootEl.querySelectorAll(`[data-bs-target="#${oldId}"]`)) {
+                el.setAttribute("data-bs-target", `#${newId}`);
+            }
+            for (const el of rootEl.querySelectorAll(`[href="#${oldId}"]`)) {
+                el.setAttribute("href", `#${newId}`);
+            }
+        },
+    });
+
+    // Same for accordion blocks: with two on a page, a click in the second closed the open item
+    // of the first, because data-bs-parent resolves to the first element with that id.
+    publicWidget.registry.sct_accordion_unique_id = publicWidget.Widget.extend({
+        selector: ".accordion[id]",
+        start: function () {
+            const oldId = this.el.id;
+            if (document.querySelector(`[id="${oldId}"]`) === this.el) {
+                return;
+            }
+            const newId = `sctAccordion${Date.now()}${++sctCarouselCount}`;
+            this.el.id = newId;
+            for (const el of this.el.querySelectorAll(`[data-bs-parent="#${oldId}"]`)) {
+                el.setAttribute("data-bs-parent", `#${newId}`);
+            }
+        },
+    });
+
+    // Google Map block without a map chosen yet: its "Google Map Address" editor label stays out
+    // of the website.
+    publicWidget.registry.sct_map_empty_label = publicWidget.Widget.extend({
+        selector: ".google_map_v1 > .map_container > span, .google_map_v2 .map_data_container > span",
+        start: function () {
+            this.el.parentElement.classList.add("d-none");
+        },
+        destroy: function () {
+            this.el.parentElement.classList.remove("d-none");
+        },
+    });

@@ -8,24 +8,30 @@ import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 // A missing / invalid date must not block the editor with a browser alert() (it freezes the
-// whole builder until dismissed) nor save a "nan" countdown: flag the field in the dialog
-// and keep the dialog open.
-function rejectInvalidDate(dateInput, date) {
+// whole builder until dismissed) nor save a "nan" countdown, and a time out of range ("25:0:0")
+// is an Invalid Date for the timer, which then freezes: flag the field in the dialog and keep
+// the dialog open.
+const TIME_MAX = { hours: 23, minutes: 59, second: 59 };
+
+function rejectInvalidDate(dateInput, date, timeInputs) {
     const feedbackClass = "o_scita_date_feedback";
-    let feedback = dateInput.parentElement.querySelector("." + feedbackClass);
-    if (!isNaN(date.getTime())) {
-        dateInput.classList.remove("is-invalid");
-        feedback?.remove();
+    const invalidInput = isNaN(date.getTime())
+        ? dateInput
+        : timeInputs.find(({ id, value }) => !/^\d*$/.test(value.trim()) || Number(value) > TIME_MAX[id]);
+    for (const input of [dateInput, ...timeInputs]) {
+        input.classList.toggle("is-invalid", input === invalidInput);
+    }
+    dateInput.closest(".modal").querySelector("." + feedbackClass)?.remove();
+    if (!invalidInput) {
         return false;
     }
-    dateInput.classList.add("is-invalid");
-    if (!feedback) {
-        feedback = document.createElement("div");
-        feedback.className = `invalid-feedback d-block ${feedbackClass}`;
-        feedback.textContent = _t("Please choose the date when the deal ends.");
-        dateInput.after(feedback);
-    }
-    dateInput.focus();
+    const feedback = document.createElement("div");
+    feedback.className = `invalid-feedback d-block ${feedbackClass}`;
+    feedback.textContent = invalidInput === dateInput
+        ? _t("Please choose the date when the deal ends.")
+        : _t("Enter hours from 0 to 23, minutes and seconds from 0 to 59.");
+    invalidInput.after(feedback);
+    invalidInput.focus();
     return true;
 }
 
@@ -48,7 +54,7 @@ function prefillTimer(modalEl, storedDate, storedMsg) {
     }
 }
 
-async function openDealMultiProductModal(snippetEl) {
+async function openDealMultiProductModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.multi_product_deal_custom_slider_configuration");
     document.body.appendChild(modalEl);
 
@@ -74,7 +80,8 @@ async function openDealMultiProductModal(snippetEl) {
 
     prefillTimer(modalEl, snippetEl.dataset.date, snippetEl.dataset.msg);
 
-    // Load options dynamically
+    // Load options dynamically (Apply stays off until they are there)
+    $submit.disabled = true;
     rpc('/theme_scita/deal_get_options', {}).then((res) => {
         $sliderDeals.innerHTML = "";
         res.forEach((r) => {
@@ -86,6 +93,7 @@ async function openDealMultiProductModal(snippetEl) {
         if (snippetEl.dataset.multiDealOfDayType) {
             $sliderDeals.value = snippetEl.dataset.multiDealOfDayType;
         }
+        $submit.disabled = false;
     });
 
     // Submit handler
@@ -93,7 +101,8 @@ async function openDealMultiProductModal(snippetEl) {
         const dateVal = modalEl.querySelector("input#date").value;
         // local midnight: a bare "YYYY-MM-DD" is read as UTC (the day before, west of UTC)
         const date = new Date(`${dateVal}T00:00`);
-        if (rejectInvalidDate(modalEl.querySelector("input#date"), date)) {
+        const timeInputs = ["hours", "minutes", "second"].map((id) => modalEl.querySelector(`input#${id}`));
+        if (rejectInvalidDate(modalEl.querySelector("input#date"), date, timeInputs)) {
             return;
         }
 
@@ -124,7 +133,7 @@ async function openDealMultiProductModal(snippetEl) {
                     <div class="col-md-12">
                         <div class="title-block">
                             <h4 id="snippet-title" class="section-title style1">
-                                <span>${_t(type)}</span>
+                                <span></span>
                             </h4>
                         </div>
                         <div class="category-slider-placeholder">
@@ -135,6 +144,10 @@ async function openDealMultiProductModal(snippetEl) {
             </div>
         `;
 
+        // a record name is text, not HTML
+        snippetEl.querySelector("#snippet-title span").textContent = _t(type);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -153,18 +166,17 @@ async function openDealMultiProductModal(snippetEl) {
 // -------------------------------------------------
 class DealSellerMultiProductSnippetPlugin extends Plugin {
     static id = "dealSellerMultiProductSnippet";
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".deal_multi_product_slider"],
     };
 
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("deal_multi_product_slider")) {
             return;
         }
-        snippetEl.innerHTML = "";
-        openDealMultiProductModal(snippetEl);
+        openDealMultiProductModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -177,10 +189,11 @@ registry.category("website-plugins").add(
 // -------------------------------------------------
 export class DealSellerMultiProductModifyAction extends BuilderAction {
     static id = "dealSellerMultiProductModify";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openDealMultiProductModal(editingElement);
+            openDealMultiProductModal(editingElement, () => this.dependencies.history.commit());
         }
     }
 
@@ -198,7 +211,6 @@ class DealSellerMultiProductModifyPlugin extends Plugin {
     selector = ".deal_multi_product_slider";
 
     resources = {
-        so_content_addition_selector: [".deal_multi_product_slider"],
         builder_actions: {
             DealSellerMultiProductModifyAction,
         },

@@ -10,7 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 // ------------------------------------------------------
 // Shared Modal Logic for Category Slider
 // ------------------------------------------------------
-async function openCategorySliderModal(snippetEl) {
+async function openCategorySliderModal(snippetEl, onChange) {
     // Render modal template
     const modalEl = renderToElement("theme_scita.scita_dynamic_category_slider");
     document.body.appendChild(modalEl);
@@ -36,6 +36,44 @@ async function openCategorySliderModal(snippetEl) {
     const cancelBtn = modalEl.querySelector("#cancel");
     const submitBtn = modalEl.querySelector("#cat_sub_data");
 
+    // Submit handler
+    submitBtn.addEventListener("click", () => {
+        const selectedOpt = sliderTypeSelect.options[sliderTypeSelect.selectedIndex];
+        const type = selectedOpt ? selectedOpt.text : _t("Category Slider");
+
+        snippetEl.setAttribute("data-cat-slider-id", sliderTypeSelect.value);
+
+        // Use the original placeholder template structure to maintain consistency
+        snippetEl.innerHTML = `
+            <div class="container">
+                <div class="block-title">
+                    <h3 class="fancy"></h3>
+                </div>
+                <div class="category-slider-placeholder">
+                    <img src="/theme_scita/static/src/img/cat_slide_1.webp" alt="Category Slider" class="img-fluid"/>
+                </div>
+            </div>
+        `;
+
+        // a record name is text, not HTML
+        snippetEl.querySelector(".fancy").textContent = _t(type);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
+        myModal.hide();
+    });
+
+    // Cancel handler
+    cancelBtn?.addEventListener("click", () => {
+        myModal.hide();
+    });
+
+    // Cleanup modal after close
+    modalEl.addEventListener("hidden.bs.modal", () => {
+        modalEl.remove();
+    });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
     // Fetch category options
     const res = await rpc("/theme_scita/category_get_options", {});
     sliderTypeSelect.innerHTML = "";
@@ -51,38 +89,7 @@ async function openCategorySliderModal(snippetEl) {
     if (currentType) {
         sliderTypeSelect.value = currentType;
     }
-
-    // Submit handler
-    submitBtn.addEventListener("click", () => {
-        const selectedOpt = sliderTypeSelect.options[sliderTypeSelect.selectedIndex];
-        const type = selectedOpt ? selectedOpt.text : _t("Category Slider");
-
-        snippetEl.setAttribute("data-cat-slider-id", sliderTypeSelect.value);
-
-        // Use the original placeholder template structure to maintain consistency
-        snippetEl.innerHTML = `
-            <div class="container">
-                <div class="block-title">
-                    <h3 class="fancy">${_t(type)}</h3>
-                </div>
-                <div class="category-slider-placeholder">
-                    <img src="/theme_scita/static/src/img/cat_slide_1.webp" alt="Category Slider" class="img-fluid"/>
-                </div>
-            </div>
-        `;
-
-        myModal.hide();
-    });
-
-    // Cancel handler
-    cancelBtn?.addEventListener("click", () => {
-        myModal.hide();
-    });
-
-    // Cleanup modal after close
-    modalEl.addEventListener("hidden.bs.modal", () => {
-        modalEl.remove();
-    });
+    submitBtn.disabled = false;
 }
 
 // ------------------------------------------------------
@@ -90,11 +97,10 @@ async function openCategorySliderModal(snippetEl) {
 // ------------------------------------------------------
 class CategorySliderPlugin extends Plugin {
     static id = "categorySliderSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".cat_slider_3"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -102,10 +108,9 @@ class CategorySliderPlugin extends Plugin {
             return;
         }
         snippetEl.classList.remove("o_hidden");
-        snippetEl.innerHTML = "";
 
         // open modal once after drop
-        openCategorySliderModal(snippetEl);
+        openCategorySliderModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -118,10 +123,11 @@ registry.category("website-plugins").add(
 // ------------------------------------------------------
 export class CategorySliderModifyBtnAction extends BuilderAction {
     static id = "cat_slider1_modifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openCategorySliderModal(editingElement);
+            openCategorySliderModal(editingElement, () => this.dependencies.history.commit());
         }
     }
 
@@ -137,7 +143,6 @@ class CategorySliderModifyPlugin extends Plugin {
     selector = ".cat_slider_3";
 
     resources = {
-        so_content_addition_selector: [".cat_slider_3"],
         builder_actions: {
             CategorySliderModifyBtnAction,
         },

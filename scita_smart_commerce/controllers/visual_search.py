@@ -115,7 +115,7 @@ class ScitaVisualSearch(Controller):
     # ------------------------------------------------------------------ catalogue
     def _product_domain(self, website):
         return (Domain('is_published', '=', True) & Domain('sale_ok', '=', True)
-                & website.website_domain())
+                & website.website_domain() & Domain('company_id', 'in', [False, website.company_id.id]))
 
     def _vocabulary(self, website):
         """Category names, attribute values and tags used by published products of this
@@ -319,13 +319,13 @@ class ScitaVisualSearch(Controller):
             raw, media_type = decode_image(image, request.env)
         except ValueError as e:
             return {'error': str(e)}
+        if not request.env['product.template'].sudo().search_count(self._product_domain(website), limit=1):
+            return {'error': _('There are no products to search yet.')}
         try:
             Ai.check_rate_limit(website, 'visual_search')
         except AIProviderError as e:
             return {'error': Ai.public_error(e)}
 
-        if not request.env['product.template'].sudo().search_count(self._product_domain(website), limit=1):
-            return {'error': _('There are no products to search yet.')}
         categories, attributes, tags = self._vocabulary(website)
         vocabulary = {'categories': categories, 'attribute_values': attributes, 'tags': tags}
         system = (
@@ -345,8 +345,8 @@ class ScitaVisualSearch(Controller):
             response = Ai.chat(website, 'visual_search', system, messages, max_tokens=4096,
                                effort='low', json_schema=VISION_SCHEMA)
         except AIProviderError as e:
+            Ai.release_use(website, 'visual_search')
             return {'error': Ai.public_error(e)}
-        Ai.count_use(website, 'visual_search')
         if response.stop_reason == 'refusal':
             return {'error': _('We could not analyse this photo. Please try another one.')}
         try:

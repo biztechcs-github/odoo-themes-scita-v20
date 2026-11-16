@@ -1,8 +1,10 @@
 import hashlib
+import ipaddress
 import logging
+import time
 
 from markupsafe import Markup
-from psycopg2 import IntegrityError
+from psycopg2 import errors
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -18,12 +20,43 @@ USER_KEY_PREFIX = 'user:'
 AI_FEATURES = ('assistant', 'visual_search', 'compare')
 # share of the daily token budget after which only logged-in customers may still use AI
 GUEST_BUDGET_SHARE = 0.8
+# attempts of the short usage transactions: this cursor is REPEATABLE READ, so two requests
+# updating the same row at the same moment make one of them start over
+OWN_TRANSACTION_ATTEMPTS = 4
+USAGE_UPSERT = """
+    INSERT INTO scita_ai_usage AS u
+        (date, website_id, feature, visitor_key, action_count, request_count, input_tokens, output_tokens,
+         create_uid, write_uid, create_date, write_date)
+    VALUES (%(date)s, %(website)s, %(feature)s, %(key)s, GREATEST(%(actions)s, 0), %(requests)s,
+            %(input_tokens)s, %(output_tokens)s, %(uid)s, %(uid)s,
+            now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC')
+    ON CONFLICT (date, website_id, feature, visitor_key) DO UPDATE SET
+        action_count = GREATEST(u.action_count + %(actions)s, 0),
+        request_count = u.request_count + EXCLUDED.request_count,
+        input_tokens = u.input_tokens + EXCLUDED.input_tokens,
+        output_tokens = u.output_tokens + EXCLUDED.output_tokens,
+        write_uid = EXCLUDED.write_uid,
+        write_date = EXCLUDED.write_date
+    WHERE %(limit)s = 0 OR u.action_count < %(limit)s
+    RETURNING u.id
+"""
 
 
 def ip_key():
-    """Hashed client IP: clearing the session cookie must not reset a visitor's allowance."""
+    """Hashed client IP: clearing the session cookie must not reset a visitor's allowance.
+    One IPv6 customer owns a whole /64, so that is what counts. Salted: the IPv4 space is small
+    enough to reverse a plain hash."""
     ip = request and request.httprequest.remote_addr or 'no-ip'
-    return IP_KEY_PREFIX + hashlib.sha256(ip.encode()).hexdigest()[:29]
+    try:
+        address = ipaddress.ip_address(ip)
+        address = getattr(address, 'ipv4_mapped', None) or address
+        if address.version == 6:
+            address = ipaddress.ip_network(f'{address}/64', strict=False).network_address
+        ip = str(address)
+    except ValueError:
+        pass  # 'no-ip'
+    salt = request.env['ir.config_parameter'].sudo().get_str('database.secret') if request else ''
+    return IP_KEY_PREFIX + hashlib.sha256(f'{salt}:{ip}'.encode()).hexdigest()[:29]
 
 
 class ScitaAi(models.AbstractModel):
@@ -71,20 +104,37 @@ class ScitaAi(models.AbstractModel):
         return request.httprequest.cookies.get('session_id') == request.session.sid
 
     def _usage_record(self, website, feature, key=None):
-        Usage = self.env['scita.ai.usage'].sudo()
-        key = key or self._visitor_key()
-        today = fields.Date.context_today(self)
-        domain = [('date', '=', today), ('website_id', '=', website.id),
-                  ('feature', '=', feature), ('visitor_key', '=', key)]
-        usage = Usage.search(domain, limit=1)
-        if usage:
-            return usage
-        try:
-            with self.env.cr.savepoint():
-                return Usage.create({'date': today, 'website_id': website.id, 'feature': feature, 'visitor_key': key})
-        except IntegrityError:
-            # a concurrent request of the same visitor created it first
-            return Usage.search(domain, limit=1)
+        """Today's usage row, to read (empty without any use yet); _bump_usage() writes them."""
+        return self.env['scita.ai.usage'].sudo().search([
+            ('date', '=', fields.Date.context_today(self)), ('website_id', '=', website.id),
+            ('feature', '=', feature), ('visitor_key', '=', key or self._visitor_key())], limit=1)
+
+    def _own_transaction(self, func):
+        """func(scita.ai on a new cursor), committed at once. For what a request shares with
+        others: its own transaction stays open during the AI call, and a conflict there would
+        make Odoo run the whole request (and pay for the AI call) again. None if it kept failing."""
+        for attempt in range(OWN_TRANSACTION_ATTEMPTS):
+            try:
+                with self.env.registry.cursor() as cr:
+                    return func(self.with_env(self.env(cr=cr)))
+            except (errors.SerializationFailure, errors.DeadlockDetected):
+                time.sleep(0.05 * (attempt + 1))
+        _logger.warning('Scita AI: usage not recorded, too many concurrent updates')
+        return None
+
+    def _bump_usage(self, website, feature, key, actions=0, requests=0, input_tokens=0, output_tokens=0, limit=0):
+        """Add to a usage row, atomically. With `limit` (0 = none), a row whose action_count
+        reached it stays as it is. Returns whether the row was updated."""
+        params = {
+            'date': fields.Date.context_today(self), 'website': website.id, 'feature': feature, 'key': key,
+            'actions': actions, 'requests': requests, 'input_tokens': input_tokens,
+            'output_tokens': output_tokens, 'limit': limit, 'uid': self.env.uid,
+        }
+
+        def upsert(ai):
+            ai.env.cr.execute(USAGE_UPSERT, params)
+            return bool(ai.env.cr.fetchone())
+        return bool(self._own_transaction(upsert))
 
     def _site_totals(self, website):
         """(AI requests, tokens) of this website today, all AI features and visitors."""
@@ -109,8 +159,8 @@ class ScitaAi(models.AbstractModel):
     @api.model
     def check_rate_limit(self, website, feature):
         """Raise AIProviderError (with a message for the shopper) when this visitor may not use
-        `feature` now. Call it once per use, before the first AI call; count the use with
-        count_use() once it succeeded."""
+        `feature` now, else reserve the use: parallel requests can't all pass the limit. Call it
+        once per use, before the first AI call; release_use() gives it back if the call fails."""
         website = website.sudo()
         _ = self.env._
         guest = self._is_guest()
@@ -118,16 +168,6 @@ class ScitaAi(models.AbstractModel):
             raise AIProviderError(_('Please log in to use this feature.'))
         if guest and not self._has_session_cookie():
             raise AIProviderError(_('Please reload the page and try again.'))
-
-        limit = self._use_limit(website, feature, guest)
-        if limit and self._usage_record(website, feature).action_count >= limit:
-            if guest and self._use_limit(website, feature, False) > limit:
-                raise AIProviderError(_("You've reached today's limit for this feature. "
-                                        "Log in to your account to continue."))
-            raise AIProviderError(_("You've reached today's limit for this feature. Please try again tomorrow."))
-        ip_limit = website.scita_ai_ip_daily_limit
-        if guest and ip_limit and self._usage_record(website, feature, self._ip_key()).action_count >= ip_limit:
-            raise AIProviderError(_("You've reached today's limit for this feature. Please try again tomorrow."))
 
         site_requests, site_tokens = self._site_totals(website)
         budget = website.scita_ai_daily_token_budget
@@ -141,15 +181,23 @@ class ScitaAi(models.AbstractModel):
             _logger.warning('Scita AI: website %s reached its daily cap of %s AI requests', website.id, site_limit)
             raise AIProviderError(_('This feature is very busy today. Please try again tomorrow.'))
 
+        limit = self._use_limit(website, feature, guest)
+        if not self._bump_usage(website, feature, self._visitor_key(), actions=1, limit=limit):
+            if guest and self._use_limit(website, feature, False) > limit:
+                raise AIProviderError(_("You've reached today's limit for this feature. "
+                                        "Log in to your account to continue."))
+            raise AIProviderError(_("You've reached today's limit for this feature. Please try again tomorrow."))
+        ip_limit = website.scita_ai_ip_daily_limit
+        if guest and not self._bump_usage(website, feature, self._ip_key(), actions=1, limit=ip_limit):
+            self._bump_usage(website, feature, self._visitor_key(), actions=-1)
+            raise AIProviderError(_("You've reached today's limit for this feature. Please try again tomorrow."))
+
     @api.model
-    def count_use(self, website, feature):
-        """One use of `feature` (an assistant message, a photo search, a comparison) succeeded."""
-        website = website.sudo()
-        usage = self._usage_record(website, feature)
-        usage.action_count += 1
+    def release_use(self, website, feature):
+        """The AI call failed: the use reserved by check_rate_limit() doesn't count."""
+        self._bump_usage(website, feature, self._visitor_key(), actions=-1)
         if self._is_guest():
-            ip_usage = self._usage_record(website, feature, self._ip_key())
-            ip_usage.action_count += 1
+            self._bump_usage(website, feature, self._ip_key(), actions=-1)
 
     @api.model
     def chat(self, website, feature, system, messages, tools=None, max_tokens=4096, effort='low', json_schema=None,
@@ -158,16 +206,13 @@ class ScitaAi(models.AbstractModel):
         provider = self._provider(website)
         response = provider.chat(system, messages, tools=tools, max_tokens=max_tokens,
                                  effort=effort, json_schema=json_schema, allow_tool_calls=allow_tool_calls)
-        usage = self._usage_record(website, feature)
-        usage.write({
-            'request_count': usage.request_count + 1,
-            'input_tokens': usage.input_tokens + response.input_tokens,
-            'output_tokens': usage.output_tokens + response.output_tokens,
-        })
+        self._bump_usage(website, feature, self._visitor_key(), requests=1,
+                         input_tokens=response.input_tokens, output_tokens=response.output_tokens)
         # the IP row only counts requests (tokens are already on the session row)
-        ip_usage = self._usage_record(website, feature, self._ip_key())
-        ip_usage.request_count += 1
-        self._check_budget_alert(website.sudo())
+        self._bump_usage(website, feature, self._ip_key(), requests=1)
+        if website.sudo().scita_ai_daily_token_budget:
+            # a new transaction: this request's snapshot is older than the tokens just counted
+            self._own_transaction(lambda ai: ai._check_budget_alert(website.with_env(ai.env).sudo()))
         return response
 
     def _check_budget_alert(self, website):

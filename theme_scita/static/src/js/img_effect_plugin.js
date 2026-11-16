@@ -45,7 +45,7 @@ export class ScitaImgEffectPlugin extends Plugin {
 
     /** Give the span around an image the image's alignment and (% of the parent) width. */
     syncWrapper(wrapper) {
-        const img = wrapper.querySelector(":scope > img");
+        const img = wrapper.querySelector(":scope > img, :scope > a > img");
         if (!img) {
             // the image was deleted or replaced by an icon / a video: no effect box left
             wrapper.replaceWith(...wrapper.childNodes);
@@ -60,20 +60,25 @@ export class ScitaImgEffectPlugin extends Plugin {
         if (width.endsWith("%")) {
             // set by the Size option: the span gets it, the image fills the span
             wrapper.style.width = width;
+            delete wrapper.dataset.sctFullWidth;
             img.style.removeProperty("width");
         } else if (width) {
             // a px or auto width stays on the image, the span follows it
             wrapper.style.removeProperty("width");
         }
         // a full width image (also when a stylesheet makes it so) keeps a full width box
-        const parent = wrapper.parentElement;
-        const parentStyle = this.window.getComputedStyle(parent);
-        const parentWidth = parent.clientWidth - parseFloat(parentStyle.paddingLeft) - parseFloat(parentStyle.paddingRight);
         const isBlock = !!wrapper.style.width || img.matches(".d-block, .w-100") || this.window.getComputedStyle(img).display === "block"
-            || (parentWidth > 0 && img.getBoundingClientRect().width >= parentWidth - 1);
+            || this.fillsParent(img, wrapper.parentElement);
         if (wrapper.classList.contains(`${WRAP}_block`) !== isBlock) {
             wrapper.classList.toggle(`${WRAP}_block`);
         }
+    }
+
+    /** Does the image take the whole content width of `parent`? */
+    fillsParent(img, parent) {
+        const style = this.window.getComputedStyle(parent);
+        const width = parent.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        return width > 0 && img.getBoundingClientRect().width >= width - 1;
     }
 
     /**
@@ -91,13 +96,25 @@ export class ScitaImgEffectPlugin extends Plugin {
         if (parent.classList.contains(WRAP) || parent.matches(".o_grid_item_image") || (hasEffect(el) && hasEffect(parent))) {
             return parent;
         }
+        // a linked image: the span goes around the link, the image options need `a > img`
+        const target = parent.tagName === "A" ? parent : el;
+        if (target !== el && target.parentElement.classList.contains(WRAP)) {
+            return target.parentElement;
+        }
         if (!create) {
             return null;
         }
+        // measured now: a % width inside the span would shrink the image to its natural size
+        const isFull = this.fillsParent(el, target.parentElement);
         const wrapper = this.document.createElement("span");
         wrapper.className = WRAP;
-        el.before(wrapper);
-        wrapper.append(el);
+        if (isFull) {
+            // added here, not asked for: gone with the span (the image filled its parent without it)
+            wrapper.style.width = "100%";
+            wrapper.dataset.sctFullWidth = "true";
+        }
+        target.before(wrapper);
+        wrapper.append(target);
         this.syncWrapper(wrapper);
         return wrapper;
     }
@@ -123,7 +140,7 @@ export class ScitaImgEffectAction extends BuilderAction {
                 editingElement.classList.add(className);
             }
         } else if (box.classList.contains(WRAP)) {
-            if (box.style.width && !editingElement.style.width) {
+            if (box.style.width && !editingElement.style.width && !box.dataset.sctFullWidth) {
                 editingElement.style.width = box.style.width;
             }
             box.replaceWith(...box.childNodes);
@@ -148,7 +165,13 @@ export class ScitaImgEffectBgOption extends BaseOptionComponent {
 }
 
 /** The image "Size" option: an image with an effect has its % width on its span. */
-const wrapperWidth = (img) => img.parentElement?.matches(`span.${WRAP}`) && img.parentElement.style.width;
+const wrapperWidth = (img) => img.closest(`span.${WRAP}`)?.style.width;
+// "no width" cannot be read from the image, which never keeps a % width: clear the span here
+const clearWrapperWidth = (img) => {
+    const wrapper = img.closest(`span.${WRAP}`);
+    wrapper?.style.removeProperty("width");
+    delete wrapper?.dataset.sctFullWidth;
+};
 for (const Action of [MediaSizeSliderAction, MediaSizeTextAction]) {
     patch(Action.prototype, {
         getValue({ editingElement }) {
@@ -156,9 +179,21 @@ for (const Action of [MediaSizeSliderAction, MediaSizeTextAction]) {
         },
     });
 }
+patch(MediaSizeTextAction.prototype, {
+    apply({ editingElement, value }) {
+        if (!value) {
+            clearWrapperWidth(editingElement);
+        }
+        return super.apply(...arguments);
+    },
+});
 patch(SetMediaSizeAutoAction.prototype, {
     isApplied({ editingElement }) {
         return !wrapperWidth(editingElement) && super.isApplied(...arguments);
+    },
+    apply({ editingElement }) {
+        clearWrapperWidth(editingElement);
+        return super.apply(...arguments);
     },
 });
 

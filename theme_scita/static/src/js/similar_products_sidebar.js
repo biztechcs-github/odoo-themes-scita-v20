@@ -2,6 +2,7 @@
 
 import publicWidget from "@theme_scita/js/compat/public_widget";
 import { rpc } from "@web/core/network/rpc";
+import { escape } from "@web/core/utils/strings";
 
 publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
     selector: '#wrapwrap',
@@ -18,7 +19,7 @@ publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
         $('#similar-product-sidebar').removeClass('o_hidden').addClass('active');
         $('body').addClass('sidebar-open');
 
-        $('#similar-products-list').html('<p>Loading...</p>');
+        $('#similar-products-list').html('<p class="p-3">Loading...</p>');
 
         try {
             const result = await rpc('/get_similar_products', { product_id: productID });
@@ -27,11 +28,11 @@ publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
                 const currency = result.currency;
                 html += `
                     <div class="similar-product">
-                        <img src="${prod.image_url}" alt="${prod.name}"/>
+                        <img src="${prod.image_url}" alt="${escape(prod.name)}"/>
                         <div class="details">
-                            <a href="${prod.product_url}">${prod.name}</a>
+                            <a href="${prod.product_url}">${escape(prod.name)}</a>
                             ${prod.description_ecommerce ? `<div class="desc">${prod.description_ecommerce}</div>` : ''}
-                            ${prod.sku && prod.sku !== 'false' ? `<div class="sku"><b>SKU: </b>: ${prod.sku}</div>` : ''}
+                            ${prod.sku && prod.sku !== 'false' ? `<div class="sku"><b>SKU: </b>${escape(prod.sku)}</div>` : ''}
                             <div class="rating_count">⭐ ${prod.rating_count} | ${prod.rating_avg}</div>
                             ${prod.price === null ? '' : `<div class="price">
                                 <span class="oe_price">${formatCurrency(prod.price, currency)}</span>
@@ -49,9 +50,9 @@ publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
 
             });
 
-            $('#similar-products-list').html(html || '<p>No similar products found.</p>');
+            $('#similar-products-list').html(html || '<p class="p-3">No similar products found.</p>');
         } catch (e) {
-            $('#similar-products-list').html('<p>Error loading similar products.</p>');
+            $('#similar-products-list').html('<p class="p-3">Error loading similar products.</p>');
         }
     }
 });

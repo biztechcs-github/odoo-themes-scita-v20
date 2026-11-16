@@ -45,9 +45,10 @@ export class ScitaImageSizeAttributesPlugin extends Plugin {
 
     resources = {
         // runs right after initElementForEdition, before changes are tracked; only the
-        // images shipped with the theme (Odoo's own images keep its resize behaviour)
+        // images shipped with the theme, by path or by xmlid (Odoo's own images and the user's
+        // uploads, /web/image/<id>-..., keep its resize behaviour)
         html_compatibility_processors: (root) =>
-            sizeStylesToAttributes(root, 'img[style][src^="/theme_scita/static/"]'),
+            sizeStylesToAttributes(root, 'img[style][src^="/theme_scita/static/"], img[style][src^="/web/image/theme_scita."]'),
         clean_for_save_processors: (root) => sizeStylesToAttributes(root),
     };
 }

@@ -10,7 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 // ---------------------------------------------
 // Shared Modal Logic
 // ---------------------------------------------
-async function openMultiCategorySliderModal(snippetEl) {
+async function openMultiCategorySliderModal(snippetEl, onChange) {
     // Render modal
     const modalEl = renderToElement("theme_scita.multi_product_custom_slider_block");
     document.body.appendChild(modalEl);
@@ -36,22 +36,6 @@ async function openMultiCategorySliderModal(snippetEl) {
     const submitBtn = modalEl.querySelector("#snippnet_submit");
     const cancelBtn = modalEl.querySelector("#cancel");
 
-    // Fetch options
-    const res = await rpc("/theme_scita/product_multi_get_options", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach(opt => {
-        const option = document.createElement("option");
-        option.value = opt.id;
-        option.textContent = opt.name;
-        sliderTypeSelect.appendChild(option);
-    });
-
-    // Pre-fill if exists
-    const currentType = snippetEl.getAttribute("data-multi-cat-slider-type");
-    if (currentType) {
-        sliderTypeSelect.value = currentType;
-    }
-
     // Handle submit
     submitBtn.addEventListener("click", () => {
         const selectedOpt = sliderTypeSelect.options[sliderTypeSelect.selectedIndex];
@@ -70,7 +54,7 @@ async function openMultiCategorySliderModal(snippetEl) {
                     <div class="col-md-12">
                         <div class="title-block">
                             <h4 id="snippet-title" class="section-title style1">
-                                <span>${_t(type)}</span>
+                                <span></span>
                             </h4>
                         </div>
                         <div class="category-slider-placeholder">
@@ -81,6 +65,10 @@ async function openMultiCategorySliderModal(snippetEl) {
             </div>
         `;
 
+        // a record name is text, not HTML
+        snippetEl.querySelector("#snippet-title span").textContent = _t(type);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -93,6 +81,25 @@ async function openMultiCategorySliderModal(snippetEl) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Fetch options
+    const res = await rpc("/theme_scita/product_multi_get_options", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.id;
+        option.textContent = opt.name;
+        sliderTypeSelect.appendChild(option);
+    });
+
+    // Pre-fill if exists
+    const currentType = snippetEl.getAttribute("data-multi-cat-slider-type");
+    if (currentType) {
+        sliderTypeSelect.value = currentType;
+    }
+    submitBtn.disabled = false;
 }
 
 // ---------------------------------------------
@@ -100,11 +107,10 @@ async function openMultiCategorySliderModal(snippetEl) {
 // ---------------------------------------------
 class FashionMultiCatCustomSnippetPlugin extends Plugin {
     static id = "fashionMultiCatCustomSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".fashion_multi_category_slider"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -112,10 +118,9 @@ class FashionMultiCatCustomSnippetPlugin extends Plugin {
             return;
         }
         snippetEl.classList.remove("o_hidden");
-        snippetEl.innerHTML = "";
 
         // open modal once after drop
-        openMultiCategorySliderModal(snippetEl);
+        openMultiCategorySliderModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 
@@ -129,10 +134,11 @@ registry.category("website-plugins").add(
 // ---------------------------------------------
 export class FashionMultiCatModifyBtnAction extends BuilderAction {
     static id = "fashion_multi_cat_modifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openMultiCategorySliderModal(editingElement);
+            openMultiCategorySliderModal(editingElement, () => this.dependencies.history.commit());
         }
     }
 
@@ -150,7 +156,6 @@ class FashionMultiCatSnippetModifyPlugin extends Plugin {
     selector = ".fashion_multi_category_slider";
 
     resources = {
-        so_content_addition_selector: [".fashion_multi_category_slider"],
         builder_actions: {
             FashionMultiCatModifyBtnAction,
         },

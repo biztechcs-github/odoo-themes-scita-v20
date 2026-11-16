@@ -56,12 +56,15 @@ class ProductPublicCategory(models.Model):
             kept = self.exists().sudo().filtered_domain(domain)
         return kept.with_env(self.env)  # keeps the prefetch of the whole menu tree
 
-    @api.onchange('attributes_ids')
-    def onchange_website_attributes_ids(self):
-        if self.child_id:
-            for child in self.child_id:
-                child._origin.attributes_ids = self.attributes_ids
-                child._origin.onchange_website_attributes_ids()
+    def write(self, vals):
+        res = super().write(vals)
+        # sub-categories follow their parent, once saved (each child's write passes it on)
+        if 'attributes_ids' in vals:
+            for category in self:
+                category.child_id.attributes_ids = category.attributes_ids
+        return res
+
+
 class ProductStyleTags(models.Model):
     _name = 'biztech.product.style.tag'
     _description = 'Product Style Tags'
@@ -126,6 +129,9 @@ class ProductTemplate(models.Model):
         if 'company_id' in self._fields:
             # and of the website's company (products of another company can't be sold here)
             domain &= Domain('company_id', 'in', [False, website.company_id.id])
+        # a product unpublished after it was put in a block: only editors still see it
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            domain &= Domain('is_published', '=', True)
         # read as superuser: a visitor may not even read a record of another website.
         # Records of a relation (menus, sliders: rendered on every page) are prefetched, so
         # filter them directly; exists() (one query per call) only when an id was deleted.
@@ -134,6 +140,47 @@ class ProductTemplate(models.Model):
         except MissingError:
             kept = self.exists().sudo().filtered_domain(domain)
         return kept.with_env(self.env)  # keeps the prefetch of the whole menu tree
+
+    def _sct_price_hidden(self):
+        """This visitor must not get this product's price (prices hidden, login to see price,
+        Hide Price or Request Quote product): routes and JSON-LD, which no template guards."""
+        self.ensure_one()
+        website = self.env.website
+        return bool(website) and bool(
+            self.quote_request or self.website_hide_price or website._sct_hide_line_price(False)
+        )
+
+    def write(self, vals):
+        res = super().write(vals)
+        # the placeholder heights of "Multi Product Snippet 1" count these products (website.py):
+        # only such a change reaches the cache, and page renders keep their single cached value
+        if not vals.keys().isdisjoint(('is_published', 'active', 'website_id', 'company_id')):
+            configurations = self.env['product.snippet.configuration'].sudo().with_context(active_test=False)
+            if configurations.search_count([('collection_of_products', 'in', self.ids)], limit=1):
+                self.env.transaction.invalidate_ormcache()
+        return res
+
+    def _prepare_jsonld_vals(self):
+        vals = super()._prepare_jsonld_vals()
+        if self._sct_price_hidden():
+            vals.pop('offers', None)
+        return vals
+
+    def _get_google_analytics_data(self, product, combination_info):
+        tracking_data = super()._get_google_analytics_data(product, combination_info)
+        if self._sct_price_hidden():
+            tracking_data.pop('price', None)
+            tracking_data.pop('discount', None)
+        return tracking_data
+
+    def _get_google_analytics_list_data_batch(self, products_prices, website, item_list_name):
+        """Shop / wishlist cards print this in data-product-tracking-info."""
+        result = super()._get_google_analytics_list_data_batch(products_prices, website, item_list_name)
+        for template in self:
+            if template._sct_price_hidden():
+                result[template.id].pop('price', None)
+                result[template.id].pop('discount', None)
+        return result
 
     def _sct_hidden_price_message(self):
         """The text shown where this product's price would be, while Scita hides it (prices
@@ -228,31 +275,50 @@ class ProductTemplate(models.Model):
         combination_info['quote_request'] = self.quote_request
         # price hidden by Scita (login to see price, prices hidden, Request Quote): say so, as
         # the compare bar, compare page and wishlist only check `hide_price`
-        website = self.env.website
-        if website and (self.quote_request or website._sct_hide_line_price(False)
-                        or self.website_hide_price):
+        if self._sct_price_hidden():
             combination_info.update(hide_price=True, compare_list_price=0)
+            combination_info.pop('packaging_prices', None)
+            if 'base_unit_price' in combination_info:
+                combination_info['base_unit_price'] = 0  # core's JS needs it, 0 hides it
         return combination_info
 
-    def _scita_bulk_prices(self, variant, pricelist):
+    def _scita_bulk_prices(self, variant, pricelist, combination=False, uom_id=False):
         """Bulk-buy tiers of this product for `pricelist`: one dict per minimum quantity
         (>= 2) with the unit price at that quantity, as Odoo prices it (fixed, percentage,
-        discount or formula rule, taxes as the website shows them).
+        discount or formula rule, taxes as the website shows them). Only rules valid now.
 
-        :return: [{'min_quantity': int, 'fixed_price': float}] sorted by quantity
+        :param combination: the selected product.template.attribute.value, for the price extras
+            of no_variant attributes (which `variant` doesn't hold)
+        :param int uom_id: the selected unit of measure: quantities and prices are given in it
+            (default: the product's main one)
+        :return: [{'min_quantity': int or float, 'fixed_price': float}] sorted by quantity,
+            empty when this visitor can't see the price
         """
         self.ensure_one()
-        if not pricelist:
+        if not pricelist or self._sct_price_hidden():
             return []
+        now = fields.Datetime.now()
+        uom = self.env['uom.uom'].browse(uom_id) or self._get_main_uom()
         rules = pricelist.item_ids.filtered(
             lambda r: r.product_tmpl_id == self and r.min_quantity and r.min_quantity >= 2
             and (not r.product_id or (variant and r.product_id == variant))
+            and (not r.date_start or r.date_start <= now)
+            and (not r.date_end or r.date_end >= now)
+            and (not r.uom_id or r.uom_id == uom)
         )
+
+        def tier_quantity(rule):
+            # as product.pricelist.item._is_applicable_for reads min_quantity
+            if rule.uom_id or uom == self.uom_id:
+                return rule.min_quantity
+            return self.uom_id._compute_quantity(rule.min_quantity, uom, round=False)
+
         tiers = {}
-        for quantity in sorted({int(r.min_quantity) for r in rules}):
+        for quantity in sorted({tier_quantity(r) for r in rules}):
             info = self._get_combination_info(
-                product_id=variant.id if variant else False, add_qty=quantity, pricelist=pricelist)
-            tiers[quantity] = info['price']
+                combination=combination, product_id=variant.id if variant else False,
+                add_qty=quantity, uom_id=uom.id, pricelist=pricelist)
+            tiers[int(quantity) if quantity == int(quantity) else quantity] = info['price']
         return [{'min_quantity': quantity, 'fixed_price': price} for quantity, price in tiers.items()]
 
     def _website_show_quick_add(self, product=None):
@@ -263,6 +329,9 @@ class ProductTemplate(models.Model):
         # no price shown (login to see price, prices hidden): no quick "Add to Cart" either
         website = self.env.website
         if website and website._sct_hide_line_price(False):
+            return False
+        # Theme settings > "Hide Add Cart Button" (visitors)
+        if website and website.add_to_cart and self.env.user._is_public():
             return False
         return super()._website_show_quick_add(product=product)
 
@@ -279,6 +348,21 @@ class ProductTemplate(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
+
+    def _is_add_to_cart_allowed(self):
+        # core asks website._prevent_product_sale only with "Prevent sale of zero priced
+        # products" on, so a Request Quote product could be bought through any cart route
+        # A product whose price is hidden can't go in the cart either: checkout would be blocked
+        # (sale.order._is_cart_ready_for_checkout)
+        if self.product_tmpl_id._sct_price_hidden():
+            return False
+        return super()._is_add_to_cart_allowed()
+
+    def _prepare_jsonld_vals(self, **kwargs):
+        vals = super()._prepare_jsonld_vals(**kwargs)
+        if self.product_tmpl_id._sct_price_hidden():
+            vals.pop('offers', None)
+        return vals
 
     def quick_publish_product(self):
         self.ensure_one()

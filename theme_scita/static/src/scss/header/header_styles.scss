@@ -106,6 +106,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
             a {
                 width: 100%;
+                height: 100%;
                 display: block;
             }
 
@@ -355,7 +356,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 padding-top: 10px;
 
                 >.oe_structure,
-                >.sct_text_block {
+                >.sct_text_list {
                     display: none;
                 }
 
@@ -483,7 +484,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
             @include content-sb;
             @include align-content;
             padding: 0 15px;
-            background: $light-color;
+            background: transparent; // the header colour (theme presets) shows through
 
             @media (max-width: 767px) {
                 position: relative;
@@ -793,9 +794,12 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                     }
 
                     .configuration {
-                        &:hover {
-                            .toggle-config {
-                                display: block !important;
+                        // a touch screen keeps :hover after the tap: the panel could not be closed
+                        @media (hover: hover) {
+                            &:hover {
+                                .toggle-config {
+                                    display: block !important;
+                                }
                             }
                         }
                     }
@@ -1254,7 +1258,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                     >ul {
                         >li {
-                            a {
+                            a:where(:not(.btn_cta)) { // Header Button keeps its button style
                                 padding: 0;
                                 width: auto;
                                 height: auto;
@@ -5263,7 +5267,8 @@ header {
                                         }
                                     }
 
-                                    &:hover {
+                                    &:hover,
+                                    &:focus-within {
                                         .sct_submenu_level {
                                             display: block;
                                         }
@@ -6300,10 +6305,21 @@ $-sct-menu-color: o-color('menu-custom') or o-color('menu');
                 color: inherit !important;
             }
         }
+        // mobile menu: social icons, pricelist and language stayed dark on its dark background
+        .o_header_mobile #top_menu_collapse_mobile {
+            .s_social_media:not(.no_icon_color) a,
+            .o_pricelist_dropdown .dropdown-toggle,
+            .o_header_pricelist_selector .dropdown-toggle,
+            .js_language_selector .dropdown-toggle {
+                &, &:hover, &:focus {
+                    color: color-contrast($-sct-menu-color) !important;
+                }
+            }
+        }
 
-        // Headers 2, 4 and 5 put their icons straight on the header background (Headers 1 and 3
-        // have them on a white bar / in light circles, which stay as they are)
-        @if index((scita_header_2, scita_header_4, scita_header_5), $-sct-header) {
+        // Headers 1, 2, 4 and 5 put their icons straight on the header background (Header 3
+        // has them in light circles, which stay as they are)
+        @if index((scita_header_1, scita_header_2, scita_header_4, scita_header_5), $-sct-header) {
             .navbar:not(.o_header_mobile) {
                 .menu_right img[src*="sct_"],
                 .header_search_modal .o_search_btn img[src*="sct_"] {
@@ -6311,6 +6327,7 @@ $-sct-menu-color: o-color('menu-custom') or o-color('menu');
                 }
                 .menu_right {
                     .o_wsale_my_compare .fa,
+                    .currency-lang-ul .js_language_selector .dropdown-toggle,
                     .o_pricelist_dropdown .dropdown-toggle {
                         color: inherit !important;
                     }
@@ -6339,8 +6356,18 @@ $-sct-menu-color: o-color('menu-custom') or o-color('menu');
             }
         }
 
-        // Headers 2 and 4: the menu bar is the header background too, its links were black
-        @if index((scita_header_2, scita_header_4), $-sct-header) {
+        // Header 1: its menu links and compare link are black with !important
+        @if $-sct-header == scita_header_1 {
+            .navbar:not(.o_header_mobile) {
+                #top_menu > .nav-item > .nav-link:not(.active):not(:hover),
+                .menu_right .o_wsale_my_compare .compare_link:not(:hover) {
+                    color: inherit !important;
+                }
+            }
+        }
+
+        // Headers 1, 2 and 4: the menu bar is the header background too, its links were black
+        @if index((scita_header_1, scita_header_2, scita_header_4), $-sct-header) {
             .navbar:not(.o_header_mobile) #top_menu > .nav-item > .nav-link:not(.active) {
                 color: inherit;
 
@@ -6787,4 +6814,9 @@ $-sct-pill-rest: contrast-ratio($-sct-pill-color, $white) < 3.05 or (o-website-v
         border-top-color: currentColor !important;
         border-left-color: currentColor !important;
     }
+}
+
+// Header > Show/Hide Elements > Wishlist
+.o_sct_hide_wishlist {
+    display: none !important;
 }

@@ -774,6 +774,14 @@ body #wrapwrap.o_portal {
 	background-color: $light-color; @include sct-light-box($light-color, false);
 	border-color: $light-color;
 }
+// Bootstrap's disabled text stays white: it did not show on this background (.o_wysiwyg_loader
+// keeps its transparent text)
+.btn-fill-primary:disabled, .btn-primary:disabled, .btn-fill-primary.disabled, .disabled.btn-primary{
+	color: sct-oc($dark-color, $light-color);
+	&::after{
+		border-color: sct-oc($dark-color, $light-color);
+	}
+}
 .o_payment_form .o_outline:hover {
     border-color: $primary;
 }

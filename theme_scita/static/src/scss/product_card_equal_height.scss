@@ -125,6 +125,12 @@
         min-width: 40px;
         padding: 0;
         aspect-ratio: auto;
+
+        // Lineicons draws the eye in the upper part of its box: centre what is seen
+        > .lni {
+            position: relative;
+            top: 0.22em;
+        }
     }
 }
 

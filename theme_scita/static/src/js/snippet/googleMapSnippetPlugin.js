@@ -79,7 +79,7 @@ function closeOnEscape(modalEl, modal) {
 // ------------------------------------------------------
 // Shared Modal Openers
 // ------------------------------------------------------
-async function openGoogleMapModal(snippetEl) {
+async function openGoogleMapModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.s_google_map_modal");
     document.body.appendChild(modalEl);
 
@@ -98,6 +98,8 @@ async function openGoogleMapModal(snippetEl) {
             return;
         }
         snippetEl.replaceChildren(iframe);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         modal.hide();
     });
 
@@ -106,7 +108,7 @@ async function openGoogleMapModal(snippetEl) {
     });
 }
 
-async function openGoogleMapContentModal(snippetEl) {
+async function openGoogleMapContentModal(snippetEl, onChange) {
     const modalEl = renderToElement("theme_scita.s_google_map_content_modal");
     document.body.appendChild(modalEl);
 
@@ -127,6 +129,8 @@ async function openGoogleMapContentModal(snippetEl) {
         if (container) {
             container.replaceChildren(iframe);
         }
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         modal.hide();
     });
 
@@ -140,11 +144,10 @@ async function openGoogleMapContentModal(snippetEl) {
 // ------------------------------------------------------
 class GoogleMapSnippetPlugin extends Plugin {
     static id = "googleMapSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".google_map_v1"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -152,7 +155,7 @@ class GoogleMapSnippetPlugin extends Plugin {
             return;
         }
         snippetEl.innerHTML = "<div class='map_container'><span>Google Map Address</span></div>";
-        openGoogleMapModal(snippetEl);
+        openGoogleMapModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(GoogleMapSnippetPlugin.id, GoogleMapSnippetPlugin);
@@ -162,18 +165,17 @@ registry.category("website-plugins").add(GoogleMapSnippetPlugin.id, GoogleMapSni
 // ------------------------------------------------------
 class GoogleMapContentSnippetPlugin extends Plugin {
     static id = "googleMapContentSnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".google_map_v2"],
     };
 
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("google_map_v2")) {
             return;
         }
-        openGoogleMapContentModal(snippetEl);
+        openGoogleMapContentModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(GoogleMapContentSnippetPlugin.id, GoogleMapContentSnippetPlugin);
@@ -183,10 +185,11 @@ registry.category("website-plugins").add(GoogleMapContentSnippetPlugin.id, Googl
 // ------------------------------------------------------
 export class GoogleMapModifyBtnAction extends BuilderAction {
     static id = "googleMapModifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openGoogleMapModal(editingElement);
+            openGoogleMapModal(editingElement, () => this.dependencies.history.commit());
         }
     }
     isApplied() { return false; }
@@ -194,10 +197,11 @@ export class GoogleMapModifyBtnAction extends BuilderAction {
 
 export class GoogleMapContentModifyBtnAction extends BuilderAction {
     static id = "googleMapContentModifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openGoogleMapContentModal(editingElement);
+            openGoogleMapContentModal(editingElement, () => this.dependencies.history.commit());
         }
     }
     isApplied() { return false; }
@@ -211,7 +215,6 @@ class GoogleMapModifyPlugin extends Plugin {
     static dependencies = [];
 
     resources = {
-        so_content_addition_selector: [".google_map_v1"],
         builder_actions: { GoogleMapModifyBtnAction },
     };
 }
@@ -222,7 +225,6 @@ class GoogleMapContentModifyPlugin extends Plugin {
     static dependencies = [];
 
     resources = {
-        so_content_addition_selector: [".google_map_v2"],
         builder_actions: { GoogleMapContentModifyBtnAction },
     };
 }

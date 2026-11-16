@@ -72,7 +72,10 @@ ul{
     box-shadow: none;
 }
 .btn-link, a {
-	white-space: normal !important;
+	// :where: keeps the specificity of the rule
+	&:where(:not(.text-truncate, .text-nowrap)){
+		white-space: normal !important;
+	}
 	&:hover{
 		text-decoration: none;
 		cursor: pointer;
@@ -425,9 +428,11 @@ header{
 			}
 		}
 		li.configuration {
-			&:hover{
-				.toggle-config {
-					display:block !important;
+			@media (hover: hover) {
+				&:hover{
+					.toggle-config {
+						display:block !important;
+					}
 				}
 			}
 			.toggle-config {
@@ -750,6 +755,17 @@ header{
 }
 /*other comman styling end*/
 
+// Phones: Odoo's live chat button, in its Shadow DOM, covered the account icon of Scita's mobile
+// bar. Above the bar and the back-to-top arrow (its part is open to page styles). The folded chat
+// bubbles have no part: header.js lifts them.
+@media (max-width: 767.98px){
+	body:has(.ab-mob-view) .o-livechat-root{
+		&::part(openChatButton){
+			transform: translateY(-75px);
+		}
+	}
+}
+
 /*top to bottom icon*/
 .cd-top{
 	display: none;
@@ -764,9 +780,15 @@ header{
 		padding-left: 10px;
 		line-height: 35px;
 		color: $light-color;
-		z-index: 999999;
+		z-index: 1035;
 		@media (max-width: 767px){
 			bottom: 80px;
+		}
+		// above Odoo's live chat bubble (56px tall, 10px from the bottom, 50px at the end of the page)
+		@media (min-width: 768px){
+			body:has(.o-livechat-root) &{
+				bottom: 120px;
+			}
 		}
 		.fa {
 			@include transition(all, 1s, ease);
@@ -1233,11 +1255,14 @@ span.sct_img_effect_wrap {
 		// a centred image smaller than its column: the box stays the image's size
 		width: fit-content;
 	}
-	> img {
+	> a {
+		display: block;
+	}
+	> img, > a > img {
 		max-width: 100%;
 	}
 	// the box has the image's % width (editor "Size" option): the image fills it
-	&[style*="width"] > img {
+	&[style*="width"] > img, &[style*="width"] > a > img {
 		width: 100%;
 	}
 }
@@ -2290,18 +2315,18 @@ header{
 // Fixed...) and on-scroll animations listen to the document - with #wrapwrap scrolling they
 // never ran.
 
-*::-webkit-scrollbar, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar{
+*::-webkit-scrollbar, .o_wsale_products_main_row #products_grid .o_wsale_filmstrip_wrapper::-webkit-scrollbar, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar{
 	width: 3px;
 	height: 3px;
 }
 html::-webkit-scrollbar{
 	width: 6px;
 }
-*::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid .o_wsale_filmstrip_wrapper::-webkit-scrollbar-thumb, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-thumb {
 	background: rgba(0, 0, 0, 0.3); @include sct-light-box(rgba(0, 0, 0, 0.3), false);
 	border-radius: 8px;
 }
-*::-webkit-scrollbar-track, .o_wsale_products_main_row #products_grid .o_wsale_filmstip_wrapper::-webkit-scrollbar-track, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track, .o_wsale_products_main_row #products_grid .o_wsale_filmstrip_wrapper::-webkit-scrollbar-track, .o_wsale_products_main_row #products_grid_before .o_wsale_products_grid_before_rail::-webkit-scrollbar-track {
 	background: #f5f5f5; @include sct-light-box(#f5f5f5, false);
 }
 
@@ -3249,4 +3274,59 @@ body:not(.editor_enable) #wrapwrap {
 .s_add_to_cart_btn .cart_icon + .add_to_cart_text,
 .sct-contact-us-btn .cart_icon + .add_to_cart_text {
     margin-left: 4px;
+}
+
+// Odoo keeps the comparison bar at modal level, so it stayed on top of the open mobile menu and
+// the filter drawer and covered their last items. Under the backdrop while one of those is open.
+body:has(.o_navbar_mobile.show, .o_website_offcanvas.show) .o_wsale_comparison_bottom_bar {
+    z-index: 1039;
+}
+
+// Odoo's ribbon styles stop at .oe_website_sale, and Scita's product cards are on any page: there
+// the ribbon was a small tag in the flow, pushing the image down. Same values as Odoo's.
+.cs-product .pwp-img {
+    &:has(> .o_wsale_ribbon) {
+        overflow: hidden;
+    }
+    .o_ribbons {
+        margin: 0;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        text-align: center;
+        pointer-events: none;
+
+        &:empty {
+            display: none;
+        }
+    }
+    .o_wsale_ribbon {
+        position: absolute;
+        top: 0;
+        padding: 8px 100px;
+        transform-origin: top right;
+        z-index: 1;
+
+        &.o_left {
+            left: 0;
+            transform: translateX(calc(0.708 * (100% - 200px) - 100%)) rotate(-45deg) translateX(100px);
+        }
+        &.o_right {
+            right: 0;
+            transform: translateX(calc(-0.708 * (100% - 200px))) rotate(45deg) translateX(calc(100% - 100px));
+        }
+    }
+    .o_wsale_badge {
+        position: absolute;
+        top: 8px;
+        padding: 4px 8px;
+        border-radius: var(--border-radius) !important;
+        z-index: 1;
+
+        &.o_left {
+            left: 8px;
+        }
+        &.o_right {
+            right: 8px;
+        }
+    }
 }

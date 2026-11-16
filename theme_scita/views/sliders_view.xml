@@ -389,7 +389,7 @@
                         <field name="include_inourteam"/>
                     </group>
                     <!-- <group attrs="{'invisible': [('include_inourteam', '=', False)]}"> -->
-                    <group invisible="include_inourteam == 'False'">
+                    <group invisible="not include_inourteam">
                         <field name="emp_social_twitter"/>
                         <field name="emp_social_facebook"/>
                         <field name="emp_social_linkdin"/>

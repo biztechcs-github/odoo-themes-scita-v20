@@ -5,7 +5,7 @@
     'author': 'AppJetty',
     'website': 'https://www.appjetty.com/',
     'category': 'Theme/Ecommerce',
-    'version': '20.0.1.1',
+    'version': '20.0.1.2',
     'license': 'OPL-1',
     'description': '''Theme Scita
 Business theme
@@ -66,7 +66,6 @@ publish unpublish product
         'sale_management',
         'website_sale',
         'website_sale_stock',
-        'hr',
         'website_blog',
         'website_sale_loyalty',
         'html_editor',
@@ -136,7 +135,6 @@ publish unpublish product
         'views/hide_price_configurations.xml',
     ],
     'support': 'support@appjetty.com',
-    'live_test_url': 'https://theme-scita-furniture-v19.appjetty.com/',
     'images': [
         'static/description/splash-screen.png',
         'static/description/splash-screen_screenshot.gif',
@@ -241,6 +239,7 @@ publish unpublish product
             ('before', '/theme_scita/static/src/scss/comman.scss',
              'theme_scita/static/src/scss/product_hover_effect.scss'),
             'theme_scita/static/src/xml/hide_product_comparison_sticky.xml',
+            'theme_scita/static/src/xml/configurator_hidden_price.xml',
         ],
         'theme_scita.assets_playground': [
             ('include', 'web._assets_helpers'),

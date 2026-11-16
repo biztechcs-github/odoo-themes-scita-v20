@@ -41,7 +41,7 @@ class AIResponse:
 class BaseProvider:
     code = None
 
-    def __init__(self, api_key, model, timeout=60.0):
+    def __init__(self, api_key, model, timeout=30.0):
         self.api_key = api_key
         self.model = model
         self.timeout = timeout

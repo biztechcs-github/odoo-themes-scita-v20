@@ -7,6 +7,13 @@ body #wrapwrap{
 	&.odoo-editor-editable{
 		z-index: 0;
 	}
+	// Odoo's slide-out footer (z-index: -1, from 992px) needs the stacking context #wrapwrap gets
+	// from its z-index: 0. isolation, so that .modal-open's z-index above still applies.
+	@include min992{
+		&.o_footer_effect_enable{
+			isolation: isolate;
+		}
+	}
 }
 
 /*banner scss*/

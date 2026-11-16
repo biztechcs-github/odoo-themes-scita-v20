@@ -13,6 +13,7 @@ class ResPartnerInherit(models.Model):
 
     @api.onchange('add_to_slider')
     def _on_change_add_to_slider(self):
-        self.is_published = True
+        if self.add_to_slider:
+            self.is_published = True
 
     website_show_price = fields.Boolean(string="Displaying Prices on Website", default=True)

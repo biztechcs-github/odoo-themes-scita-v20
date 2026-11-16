@@ -10,7 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 // --------------------------------------------------
 // Shared Modal Logic for Dynamic Product Snippet 2
 // --------------------------------------------------
-async function openDynamicProductModal2(snippetEl) {
+async function openDynamicProductModal2(snippetEl, onChange) {
     // Render modal template
     const modalEl = renderToElement("theme_scita.scita_dynamic_product_snippet_configuration_two");
     document.body.appendChild(modalEl);
@@ -35,20 +35,6 @@ async function openDynamicProductModal2(snippetEl) {
     const submitBtn = modalEl.querySelector("#snippnet_submit_two");
     const cancelBtn = modalEl.querySelector("#cancel_two");
 
-    // Load product configuration options
-    const res = await rpc("/theme_scita/product_configuration_two", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach(opt => {
-        const option = document.createElement("option");
-        option.value = opt.id;
-        option.textContent = opt.name;
-        sliderTypeSelect.appendChild(option);
-    });
-    // Modify re-opens on the slider the block shows
-    if (snippetEl.dataset.multiCatSliderType) {
-        sliderTypeSelect.value = snippetEl.dataset.multiCatSliderType;
-    }
-
     // Handle submit
     submitBtn.addEventListener("click", () => {
         const selectedOption =
@@ -64,7 +50,7 @@ async function openDynamicProductModal2(snippetEl) {
                     <div class="col-md-12">
                         <div class="title-block">
                             <h4 id="snippet-title" class="section-title style1">
-                                <span>${_t(selectedOption)}</span>
+                                <span></span>
                             </h4>
                             <div class="category-slider-placeholder">
                                 <img src="/theme_scita/static/src/img/img_cat_slider.jpg" alt="Product Snippet" class="img-fluid"/>
@@ -75,6 +61,10 @@ async function openDynamicProductModal2(snippetEl) {
             </div>
         `;
 
+        // a record name is text, not HTML
+        snippetEl.querySelector("#snippet-title span").textContent = _t(selectedOption);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -87,6 +77,23 @@ async function openDynamicProductModal2(snippetEl) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Load product configuration options
+    const res = await rpc("/theme_scita/product_configuration_two", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.id;
+        option.textContent = opt.name;
+        sliderTypeSelect.appendChild(option);
+    });
+    // Modify re-opens on the slider the block shows
+    if (snippetEl.dataset.multiCatSliderType) {
+        sliderTypeSelect.value = snippetEl.dataset.multiCatSliderType;
+    }
+    submitBtn.disabled = false;
 }
 
 // --------------------------------------------------
@@ -94,11 +101,10 @@ async function openDynamicProductModal2(snippetEl) {
 // --------------------------------------------------
 class SctProductSnippet2Plugin extends Plugin {
     static id = "sctProductSnippet2";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".sct_product_snippet_2"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -110,7 +116,7 @@ class SctProductSnippet2Plugin extends Plugin {
         snippetEl.querySelector(".owl-carousel")?.replaceChildren();
 
         // Open modal when dropped
-        openDynamicProductModal2(snippetEl);
+        openDynamicProductModal2(snippetEl, () => this.dependencies.history.commit());
     }
 }
 
@@ -128,7 +134,6 @@ class SctProductSnippet2ModifyPlugin extends Plugin {
     selector = ".sct_product_snippet_2";
 
     resources = {
-        so_content_addition_selector: [".sct_product_snippet_2"],
         builder_actions: {
             ModifyBtnAction2,
         },
@@ -137,10 +142,11 @@ class SctProductSnippet2ModifyPlugin extends Plugin {
 
 export class ModifyBtnAction2 extends BuilderAction {
     static id = "sctProductModifyBtn2";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openDynamicProductModal2(editingElement);
+            openDynamicProductModal2(editingElement, () => this.dependencies.history.commit());
         }
     }
 

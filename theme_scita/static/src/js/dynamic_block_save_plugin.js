@@ -49,7 +49,7 @@ export class ScitaDynamicBlockSavePlugin extends Plugin {
             return root;
         },
         clean_for_save_processors: (root) => {
-            for (const el of root.querySelectorAll(RUNTIME_CLASSES.map((c) => "." + c).join(","))) {
+            for (const el of selectElements(root, RUNTIME_CLASSES.map((c) => "." + c).join(","))) {
                 el.classList.remove(...RUNTIME_CLASSES);
             }
             for (const img of selectElements(root, DYNAMIC_SAMPLE_IMG)) {

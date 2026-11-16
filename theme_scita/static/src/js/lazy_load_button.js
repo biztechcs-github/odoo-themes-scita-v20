@@ -13,10 +13,14 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.product_grid = document.querySelector('#o_wsale_products_grid');
-        this.ppg = parseInt(this.product_grid?.getAttribute('data-ppg'));
+        // Odoo sets it on the shop's container (#o_wsale_container), not on the grid
+        this.ppg = parseInt(this.product_grid?.closest('.oe_website_sale')?.dataset.ppg);
         this.product_count = this.product_grid?.querySelectorAll('.oe_product').length;
+        // /shop/page/3 starts after the products of the two pages before it
+        const page = parseInt(window.location.pathname.match(/\/page\/(\d+)/)?.[1]) || 1;
+        this.page_offset = (page - 1) * (this.ppg || 0);
         // Initialize offset to the number of products already loaded on the page
-        this.offset = this.product_count;
+        this.offset = this.page_offset + this.product_count;
         this.loaded_product_ids = new Set();
         this.total_count = null; // Will be set from first API response
         // Track already loaded product IDs to prevent duplicates
@@ -80,7 +84,7 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
 
     _onClickLazyLoad: function (ev) {
         // Use current product count as offset (already tracks loaded products)
-        this.offset = this.product_count;
+        this.offset = this.page_offset + this.product_count;
 
         // the category is written in the shop sidebar; layouts without one (filters on top) only
         // have it in the URL, the last one of the path (/shop/category/living-room-19/sofas-20)
@@ -99,6 +103,7 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
             // the shop's own query params too: Odoo 20 attribute filters (`brand-1=oakline-28`)
             // and tags are only there, without them the next products were not filtered
             ...Object.fromEntries(url.searchParams),
+            brand: url.searchParams.getAll('brand'),  // fromEntries keeps only the last one
             search,
             ppg: this.ppg,
             offset: this.offset,
@@ -150,7 +155,7 @@ publicWidget.registry.LazyLoadButton = publicWidget.Widget.extend({
                 // 3. Total count is known and we've loaded all products
                 const shouldHide = newProductsAdded === 0 || 
                     data.count < this.ppg || 
-                    (this.total_count !== null && this.product_count >= this.total_count);
+                    (this.total_count !== null && this.page_offset + this.product_count >= this.total_count);
                 
                 if (shouldHide && loadButton) {
                     loadButton.classList.add('d-none');

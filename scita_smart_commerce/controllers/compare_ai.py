@@ -170,8 +170,8 @@ class ScitaCompareAi(Controller):
             response = Ai.chat(website, 'compare', system, messages, max_tokens=4096,
                                effort='low', json_schema=EXPLAIN_SCHEMA)
         except AIProviderError as e:
+            Ai.release_use(website, 'compare')
             return {'error': Ai.public_error(e)}
-        Ai.count_use(website, 'compare')
         if response.stop_reason == 'refusal':
             return {'error': _('We could not compare these products right now.')}
         try:

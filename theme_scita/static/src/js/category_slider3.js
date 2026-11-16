@@ -10,7 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 // ------------------------------------------------------
 // Shared Modal Logic
 // ------------------------------------------------------
-async function openCategorySliderModal(snippetEl) {
+async function openCategorySliderModal(snippetEl, onChange) {
     // Render modal template
     const modalEl = renderToElement("theme_scita.scita_category_gray_slider_configration");
     document.body.appendChild(modalEl);
@@ -36,22 +36,6 @@ async function openCategorySliderModal(snippetEl) {
     const submitBtn = modalEl.querySelector("#pro_category_sub_data");
     const cancelBtn = modalEl.querySelector("#cancel");
 
-    // Fetch slider types
-    const res = await rpc("/theme_scita/category_get_options", {});
-    sliderTypeSelect.innerHTML = "";
-    res.forEach((item) => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = item.name;
-        sliderTypeSelect.appendChild(opt);
-    });
-
-    // Pre-fill from attributes
-    const currentType = snippetEl.getAttribute("data-category-config-type");
-    const currentColor = snippetEl.getAttribute("data-category-color");
-    if (currentType) sliderTypeSelect.value = currentType;
-    if (currentColor) colorInput.value = currentColor;
-
     // Submit
     submitBtn.addEventListener("click", () => {
         const selectedOpt = sliderTypeSelect.options[sliderTypeSelect.selectedIndex];
@@ -67,7 +51,7 @@ async function openCategorySliderModal(snippetEl) {
                 <div class="row our-category">
                     <div class="col-md-12">
                         <h3 class="section-title style1" id="snippet-title">
-                            <span>${_t(typeText)}</span>
+                            <span></span>
                         </h3>
                         <div class="category-slider-placeholder">
                             <img src="/theme_scita/static/src/img/cat_slide_3.png" alt="Category Slider" class="img-fluid"/>
@@ -77,6 +61,10 @@ async function openCategorySliderModal(snippetEl) {
             </div>
         `;
 
+        // a record name is text, not HTML
+        snippetEl.querySelector("#snippet-title span").textContent = _t(typeText);
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -87,6 +75,25 @@ async function openCategorySliderModal(snippetEl) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Fetch slider types
+    const res = await rpc("/theme_scita/category_get_options", {});
+    sliderTypeSelect.innerHTML = "";
+    res.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = item.name;
+        sliderTypeSelect.appendChild(opt);
+    });
+
+    // Pre-fill from attributes
+    const currentType = snippetEl.getAttribute("data-category-config-type");
+    const currentColor = snippetEl.getAttribute("data-category-color");
+    if (currentType) sliderTypeSelect.value = currentType;
+    if (currentColor) colorInput.value = currentColor;
+    submitBtn.disabled = false;
 }
 
 // ------------------------------------------------------
@@ -94,20 +101,18 @@ async function openCategorySliderModal(snippetEl) {
 // ------------------------------------------------------
 class CategorySliderPlugin3 extends Plugin {
     static id = "categorySliderSnippet3";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".oe_category_slider"],
     };
 
     async onSnippetDropped({ snippetEl }) {
         if (!snippetEl.classList.contains("oe_category_slider")) return;
 
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
 
-        openCategorySliderModal(snippetEl);
+        openCategorySliderModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -120,10 +125,11 @@ registry.category("website-plugins").add(
 // ------------------------------------------------------
 export class CategorySlider3ModifyBtnAction extends BuilderAction {
     static id = "cat_slider3_modifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openCategorySliderModal(editingElement);
+            openCategorySliderModal(editingElement, () => this.dependencies.history.commit());
         }
     }
 
@@ -139,7 +145,6 @@ class CategorySlider3ModifyPlugin extends Plugin {
     selector = ".oe_category_slider";
 
     resources = {
-        so_content_addition_selector: [".oe_category_slider"],
         builder_actions: {
             CategorySlider3ModifyBtnAction,
         },

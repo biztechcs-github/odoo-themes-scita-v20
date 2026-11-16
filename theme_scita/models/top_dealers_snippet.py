@@ -15,8 +15,19 @@ class TopDealersConfiguration(models.Model):
                                   string="Vendors")
     sequence = fields.Integer(string="Sequence", default=1)
 
-    @api.onchange('vendor_ids')
-    def onchange_vendor_ids(self):
-        for vendor in self.vendor_ids:
-            vendor._origin.product_count = self.env['product.template'].search_count(
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._scita_update_vendor_product_count()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'vendor_ids' in vals:
+            self._scita_update_vendor_product_count()
+        return res
+
+    def _scita_update_vendor_product_count(self):
+        for vendor in self.vendor_ids.sudo():
+            vendor.product_count = self.env['product.template'].search_count(
                 [('seller_ids', 'ilike', vendor.name)])

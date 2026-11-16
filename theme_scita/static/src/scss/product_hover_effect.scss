@@ -3571,7 +3571,7 @@ span[name="hidden_ptavs_count"] {
                                                 border: 0;
                                                 border-radius: 50% !important;
                                                 margin: 0 7.5px 5px !important;
-                                                background-color: #34222f !important; @include sct-light-box(#34222f, true);
+                                                background-color: darken($primary, 20%) !important; @include sct-light-box(darken($primary, 20%), true); // as the cart button (was a fixed #34222f)
                                                 width: 37px !important;
                                                 height: 37px !important;
                                                 color: sct-dk(#ffffff);
@@ -4445,23 +4445,20 @@ span[name="hidden_ptavs_count"] {
                                                 opacity: 0;
                                                 bottom: unset;
                                             }
+                                            // the round 32px buttons of the other blocks (sct-round-block-btn): the
+                                            // 26px / 35px !important sizes here drew them as ovals, without shadow
                                             .btn {
                                                 font-size: 16px;
                                                 padding: 5px;
-                                                width: 26px !important;
-                                                height: 26px !important;
                                                 margin: 0 2px 5px;
                                                 border-radius: 6px;
                                                 background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                                 display: flex;
                                                 justify-content: center;
                                                 align-items: center;
-                                                box-shadow: none !important;
                                                 border: 1px solid rgba(113, 75, 103, 0.3);
                                                 @include min992 {
                                                     font-size: 18px;
-                                                    width: 35px !important;
-                                                    height: 35px !important;
                                                 }
                                             }
                                         }
@@ -5545,7 +5542,8 @@ span[name="hidden_ptavs_count"] {
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
-                                        box-shadow: none !important;
+                                        // no `box-shadow: none !important`: white buttons on the white card
+                                        // then showed only their icons; the shadow of the other blocks applies
                                         @include min992 {
                                             font-size: 18px;
                                         }
@@ -7879,7 +7877,7 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
             height: 37px !important;
             flex: 0 0 auto !important;
             max-width: none !important;
-            background: #34222f !important; @include sct-light-box(#34222f, true);
+            background: darken($primary, 20%) !important; @include sct-light-box(darken($primary, 20%), true); // the cart button's colour (was a fixed #34222f)
             color: $white !important;
             box-shadow: none !important;
 
@@ -8175,9 +8173,9 @@ $sct-3d-other-side: if($sct-3d-left, right, left);
     // phones and tablets (cards down to ~150px wide beside a tag): the round icon
     @media (max-width: 991.98px) {
         justify-content: center;
-        width: 32px;
-        min-width: 32px;
-        height: 32px;
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
         padding: 0;
 
         .o_scita_ar_card_btn_short {
@@ -8206,5 +8204,94 @@ $sct-3d-other-side: if($sct-3d-left, right, left);
     }
     @media (max-width: 575.98px) {
         top: if($sct-3d-swatch-styles and not $sct-3d-left, 62px, 56px); // ~49px on the deals page
+    }
+}
+
+// Hover style 4: the cart button of the block hover bars (Product Snippet 1, Trending, Deals) kept
+// this style's 35x32 bordered square next to the round buttons of the others (sct-round-block-btn)
+@if o-website-value('prod-hover-style') == 'prod_hover_style_4' {
+    .cs-product .sct-hover-info .btn.btn-cart {
+        @include sct-round-block-btn;
+    }
+    // Product Image Snippet: the spacing of the other blocks' buttons (4px each side from 1200px;
+    // the block's own rule for all styles, above, sets 2px)
+    @include media-breakpoint-up(xl) {
+        .sct_product_snippet_2 .sct-snippet-full .bottom-row .cst_sct_right_side .grid_product form .cs-product .pwd-desc .sct-hover-info .btn {
+            margin: 0 4px 5px;
+        }
+    }
+    // phones: the buttons had no margin there and touched (Product Image Snippet: 2px each side already)
+    @media (max-width: 575.98px) {
+        section:not(.sct_product_snippet_2) .cs-product .sct-hover-info,
+        section:not(.sct_product_snippet_2) .cs-product .sct-hover-info .sct-feature-wrap {
+            column-gap: 4px;
+        }
+    }
+}
+
+// Product Image Snippet below 992px: Request Quote is an outline button there (primary text and
+// border) in hover styles 2-5, but the filled rule of all Request Quote buttons
+// (product_card_equal_height.scss) gave it the primary background too: its text did not show.
+// (Style 1 draws it filled, with light text.)
+@if o-website-value('prod-hover-style') and o-website-value('prod-hover-style') != 'prod_hover_style_1' {
+    @media (max-width: 991.98px) {
+        .sct_product_snippet_2 .cs-product .o_wsale_product_request_quote #request_for_quote_button {
+            background-color: $white; @include sct-light-box($white, true);
+        }
+    }
+}
+
+// Product blocks: the compare (strike-through) price is marked up as `.h5` (20px, weight 500),
+// bigger than the 15-16px price it stands next to: the price's size instead
+p.price > b > del.h5.oe_compare_list_price {
+    font-size: inherit;
+    font-weight: 400;
+}
+
+// Touch screens have no hover: the card buttons that wait for it from 992px are shown (phones
+// already show them). The ones placed out of the card until hover stay in the card, as below 992px.
+@media (hover: none) and (min-width: 992px) {
+    #products_grid .oe_product :is(.o_wsale_product_btn, .o_wsale_product_request_quote),
+    :is(.oe_product, .cs-product) #request_for_quote_button,
+    .cs-product :is(.sct-hover-info, .sct-hover-info form) {
+        opacity: 1 !important;
+    }
+    #products_grid .oe_product .o_wsale_product_request_quote,
+    :is(.oe_product, .cs-product) #request_for_quote_button {
+        position: static !important;
+        transform: none !important;
+    }
+    .cs-product .sct-hover-info,
+    .cs-product .sct-hover-info .btn:not(:is(.cart_view_sct_btn, .sct-contact-us-btn), .login-price-btn) {
+        transform: none !important;
+    }
+    // Bento's bar on the image: the row only lets clicks through on hover
+    #products_grid .o_wsale_products_opt_actions_onhover.o_wsale_products_opt_layout_catalog.o_wsale_products_opt_design_bento .o_wsale_product_action_row {
+        pointer-events: auto;
+
+        .btn {
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+    }
+    // hover styles 3 and 5 slide an overlay over the text: in the card's flow here
+    @if o-website-value('prod-hover-style') == 'prod_hover_style_3' or o-website-value('prod-hover-style') == 'prod_hover_style_5' {
+        .cs-product .sct-hover-info {
+            position: static !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+    }
+    @if o-website-value('prod-hover-style') == 'prod_hover_style_3' {
+        #products_grid .oe_product .o_wsale_product_btn {
+            top: unset !important;
+            margin-left: 0 !important;
+            background: transparent !important;
+        }
+        #products_grid .oe_product .o_wsale_product_request_quote {
+            margin: 8px 0 0 !important;
+            background: none !important;
+        }
     }
 }

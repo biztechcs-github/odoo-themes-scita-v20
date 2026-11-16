@@ -69,6 +69,16 @@
             <img class='img img-fluid' src="/web/image/theme_scita.sct_wishlist_icon" width="23" height="20" fetchpriority="high" loading="eager" alt="Wishlist"/>
         </xpath>
     </template>
+    <!-- Header > Show/Hide Elements > Wishlist -->
+    <template id="header_hide_wishlist_link" name="Hide Header Wishlist" inherit_id="website_sale.header_wishlist_link" active="False">
+        <xpath expr="//t[@t-set='show_wishes']" position="after">
+            <t t-set="show_wishes" t-value="False"/>
+        </xpath>
+        <!-- not only d-none: website_sale's JS removes it when the wishlist has products -->
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
+            <attribute name="t-attf-class" add="o_sct_hide_wishlist" separator=" "/>
+        </xpath>
+    </template>
     <template id="scita_header_search_box_icon" name="Scita Header Search Box" inherit_id="website.website_search_box_input" active='False'>
         <xpath expr="//a[contains(@t-attf-class, 'o_search_btn')]/i" position="replace">
             <img class='img img-fluid' src="/web/image/theme_scita.sct_search_icon" height="20" fetchpriority="high" loading="eager" alt="Search"/>
@@ -95,14 +105,16 @@
     <template id="scita_user_dropdown" name="Scita Portal User Dropdown">
         <t>
             <t t-set="is_connected" t-value="not user_id._is_public()"/>
-            <li class="configuration">
+            <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
+            <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
+            <t t-set="sct_show_sign_in" t-value="is_view_active('portal.user_sign_in')"/>
+            <!-- no icon when the panel would open empty (visitor, Sign In off, no selector to show) -->
+            <li class="configuration" t-if="is_connected or sct_show_sign_in or (_sct_price_list and hasPricelistDropdown and is_view_active('website_sale.header_pricelist_selector')) or (_sct_lang_list and is_view_active('website.header_language_selector') and len(frontend_languages) &gt; 1)">
                 <a class="top-link-wishlist account_icon" href="javascript:void(0);" id="user_account" title="My Profile">
                     <img class='img img-fluid' src="/web/image/theme_scita.sct_user_icon" height="20" fetchpriority="high" loading="eager" alt="User"/>
                 </a>
                 <div class="toggle-config o_hidden">
                     <ul class="options">
-                        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-                        <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                         <t t-out='sct_price_list'/>
                         <t t-call="website_sale.pricelist_selector" t-if="_sct_price_list and is_view_active('website_sale.header_pricelist_selector')" _div_classes.f="o_pricelist_dropdown dropdown me-3 d-lg-inline mb-3">
                         </t>
@@ -128,7 +140,7 @@
                         </li>
                         <t t-call="portal.placeholder_user_sign_in" _item_class.f="position-relative" _link_class.f="nav-link btn-sm fw-bold text-uppercase o_nav-link_secondary">
                         </t>
-                        <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c'">
+                        <t t-if="sct_show_sign_in and request.env['res.users']._get_signup_invitation_scope() == 'b2c'">
                             <li t-if="website.user_id == user_id" class='position-relative o_no_autohide_item'>
                                 <a href="/web/signup" class="nav-link btn-sm fw-bold text-uppercase o_nav-link_secondary">Register</a>
                             </li>
@@ -170,9 +182,12 @@
     <template active="False" id="option_header_1" inherit_id="website.layout" name="Header option 1">
         <xpath expr="//header//nav" position="replace">
             <t t-call="website.navbar" _navbar_classes.f="d-none d-lg-block" _navbar_expand_class.f="None">
-                <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _div_class.f="mx-auto" _item_class.f="flex-basis-0 flex-grow-1 flex-shrink-0 sct_text_block">
-                </t>
-                <div class="oe_structure">
+                <!-- <ul>: Odoo renders the text element as an <li>; outside a list the editor strips it -->
+                <ul class="sct_text_list flex-basis-0 flex-grow-1 flex-shrink-0 list-unstyled m-0" t-if="is_view_active('website.header_text_element')">
+                    <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _div_class.f="mx-auto" _item_class.f="sct_text_block">
+                    </t>
+                </ul>
+                <div t-attf-class="oe_structure #{'' if (is_view_active('website.header_text_element') and (res_company.phone or res_company.email)) or is_view_active('website.header_social_links') or is_view_active('website.header_call_to_action') else 'd-none'}">
                     <div class="container">
                         <div class="row align-items-center justify-content-between top-header">
                             <div class="col-lg-6 col-md-12">
@@ -242,7 +257,7 @@
         <xpath expr="//header//nav" position="replace">
             <t t-call="website.navbar" _navbar_classes.f="d-none d-lg-block shadow-sm" _navbar_expand_class.f="None">
 
-                <div class="oe_structure top-header">
+                <div t-attf-class="oe_structure top-header #{'' if (is_view_active('website.header_text_element') and (res_company.phone or res_company.email)) or is_view_active('website.header_search_box') or is_view_active('website.header_social_links') else 'd-none'}">
                     <div class="container">
                         <div class="row align-items-center justify-content-between">
                             <div class="col-lg-6 col-md-6 sct_left_side">
@@ -291,6 +306,7 @@
                             </t>
                             <t t-call="theme_scita.header_cart_link_sidebar" _icon="True" _item_class="''" _link_class="'top-link-checkout'">
                             </t>
+                            <t t-call="website.placeholder_header_call_to_action"/>
                         </ul>
                     </div>
                 </div>
@@ -308,7 +324,10 @@
                     <div class="container">
                         <div class="row align-items-center justify-content-between belt_inner">
                             <div class="col-md-5">
-                                <p t-if="is_view_active('website.header_text_element')">Buy one get one free on first order</p>
+                                <ul class="sct_text_list list-unstyled m-0" t-if="is_view_active('website.header_text_element')">
+                                    <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _item_class.f="p-0">
+                                    </t>
+                                </ul>
                             </div>
                             <div class="col-md-7">
                                 <ul class="d-flex align-items-center justify-content-md-end">
@@ -322,7 +341,7 @@
                                     <t t-call="website.placeholder_header_language_selector" _btn_class.f="btn-outline-secondary d-flex align-items-center w-100 px-2" _txt_class.f="me-auto small" _flag_class.f="me-2" _div_classes.f="dropup mb-3" _dropdown_menu_class.f="w-100">
                                     </t>
                                     <li>
-                                        <a href="/my" title="Track Your Order">
+                                        <a href="/my/orders" title="Track Your Order">
                                             <img src="/web/image/theme_scita.sct_track_order" alt="Track Your Order"/>Track Your Order
                                         </a>
                                     </li>
@@ -356,7 +375,7 @@
                                                 <span t-if="address_details['country_id']" t-out="address_details['country_id']"/> --><span t-if="address_details['zip']">-<t t-out="address_details['zip']"/></span>
                                             </div>
                                         </div>
-                                        <a class="delivery_name" t-elif="not request.env.user._is_public() and not request.env.user.street" href="/my/account">
+                                        <a class="delivery_name" t-elif="not request.env.user._is_public()" href="/my/account">
                                             <span class='user_name'>Hello <t t-out="request.env.user.name"/>,</span>
                                             <div class="contact_address">Select your address</div>
                                         </a>
@@ -375,6 +394,7 @@
                                         </t>
                                          <t t-call="website_sale.header_wishlist_link" _icon="True" _link_class="'o_navlink_background_hover btn position-relative rounded-pill p-1 text-reset'" _badge_class="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'">
                                         </t>
+                                        <t t-call="website.placeholder_header_call_to_action"/>
                                     </ul>
                                 </div>
                             </div>
@@ -391,11 +411,13 @@
                                 </t>
                             </t>
                         </t>
-                        <div class="head_deal">
-                            <img src="/web/image/theme_scita.sct_discount_img" alt="Today's Deal" height="40" fetchpriority="high" loading="eager" />
+                        <div class="head_deal" t-if="is_view_active('website.header_text_element')">
+                            <img src="/web/image/theme_scita.sct_discount_img" alt="" height="40" fetchpriority="high" loading="eager" />
                             <div class="deal_right">
-                                <p class="nav-link">Todays deal</p>
-                                <span>Get amazing offers</span>
+                                <ul class="sct_text_list list-unstyled m-0">
+                                    <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="sentence" _item_class.f="p-0">
+                                    </t>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -435,15 +457,21 @@
     <template active="False" id="option_header_4" inherit_id="website.layout" name='Header option 4'>
         <xpath expr="//header//nav" position="replace">
             <t t-call="website.navbar" _navbar_classes.f="d-none d-lg-block shadow-sm" _navbar_expand_class.f="None">
-                <div class="header_belt">
+                <!-- d-none, not t-if: the "hide on scroll" rule uses .header_belt + .oe_structure -->
+                <div t-attf-class="header_belt #{'' if is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or len(frontend_languages) &gt; 1 and is_view_active('website.header_language_selector') or len(website.get_pricelist_available(show_visible=True)) &gt; 1 and is_view_active('website_sale.header_pricelist_selector') else 'd-none'}">
                     <div class="container">
                         <div class="row align-items-center justify-content-between belt_inner">
                             <div class="col-md-4">
-                                <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _div_class.f="mx-auto" _item_class.f="flex-basis-0 flex-grow-1 flex-shrink-0 sct_text_block">
-                                </t>
+                                <ul class="sct_text_list list-unstyled m-0" t-if="is_view_active('website.header_text_element')">
+                                    <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _div_class.f="mx-auto" _item_class.f="flex-basis-0 flex-grow-1 flex-shrink-0 sct_text_block p-0">
+                                    </t>
+                                </ul>
                             </div>
                             <div class="col-md-4 text-center">
-                                <p t-if="is_view_active('website.header_text_element')">Free Shipping Worldwide</p>
+                                <ul class="sct_text_list list-unstyled m-0" t-if="is_view_active('website.header_text_element')">
+                                    <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="sentence" _div_class.f="mx-auto" _item_class.f="sct_text_block p-0">
+                                    </t>
+                                </ul>
                             </div>
                             <div class="col-md-4">
                                 <ul class="d-flex align-items-center justify-content-md-end">
@@ -480,6 +508,7 @@
                                         </t>
                                          <t t-call="website_sale.header_wishlist_link" _icon="True" _link_class="'o_navlink_background_hover btn position-relative rounded-pill p-1 text-reset'" _badge_class="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'">
                                         </t>
+                                        <t t-call="website.placeholder_header_call_to_action"/>
                                     </ul>
                                 </div>
                             </div>
@@ -496,13 +525,13 @@
                                 </t>
                             </t>
                         </t>
-                        <div class="head_deal">
+                        <div class="head_deal" t-if="res_company.phone">
                             <div class='phone-icon'>
                                 <span class="fa fa-phone" alt="Today's Deal"/>
                             </div>
                             <div class="deal_right">
                                 <p class="nav-link">Call Us On</p>
-                                <a href="tel:+1800-55-854">(1800) 11-55-854</a>
+                                <a t-attf-href="tel:#{res_company.phone}" t-out="res_company.phone"/>
                             </div>
                         </div>
                     </div>
@@ -517,12 +546,14 @@
        <template active="False" id="option_header_5" inherit_id="website.layout" name='Header option 5'>
         <xpath expr="//header//nav" position="replace">
             <t t-call="website.navbar" _navbar_classes.f="d-none d-lg-block" _navbar_expand_class.f="None">
-                <div class="header_belt sct_shipping_box">
+                <div t-attf-class="header_belt sct_shipping_box #{'' if is_view_active('website.header_text_element') or is_view_active('website.header_social_links') else 'd-none'}">
                     <div class="container">
                         <div class="row align-items-center justify-content-between belt_inner">
                             <div class="col-md-6">
-                                <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _div_class.f="mx-auto" _item_class.f="flex-basis-0 flex-grow-1 flex-shrink-0 sct_text_block">
-                                </t>
+                                <ul class="sct_text_list list-unstyled m-0" t-if="is_view_active('website.header_text_element')">
+                                    <t t-call="website.placeholder_header_text_element" _txt_elt_content.f="list" _div_class.f="mx-auto" _item_class.f="flex-basis-0 flex-grow-1 flex-shrink-0 sct_text_block">
+                                    </t>
+                                </ul>
                             </div>
 
                             <div class="col-md-6">
@@ -561,6 +592,7 @@
                             </t>
                             <t t-call="theme_scita.header_cart_link_sidebar" _icon="True" _item_class="''" _link_class="'top-link-checkout'">
                             </t>
+                            <t t-call="website.placeholder_header_call_to_action"/>
                         </ul>
                     </div>
                 </div>
@@ -606,12 +638,11 @@
                         <div class="cart-list-wrap" t-if="website_sale_order and website_sale_order.website_order_line">
                             <!-- Request Quote / login to see price: no prices in the sidebar.
                                  A single hidden-price line also hides the totals (they'd reveal it). -->
-                            <t t-set="sct_login_price" t-value="website.login_see_price and website.env.user._is_public()"/>
-                            <t t-set="sct_hide_totals" t-value="not website.website_show_price or sct_login_price or any(website_sale_order.website_order_line.product_id.mapped('website_hide_price'))"/>
+                            <t t-set="sct_hide_totals" t-value="website._sct_hide_order_prices(website_sale_order)"/>
                             <div class="cart-item-list">
                                 <!-- Cart Lines -->
                              <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                                    <t t-set="sct_hide_line_price" t-value="not website.website_show_price or sct_login_price or line.product_id.website_hide_price"/>
+                                    <t t-set="sct_hide_line_price" t-value="website._sct_hide_line_price(line)"/>
                                     <div class="cart-item" t-att-id="'scita_sidebar_line_'+ str(line.id)">
                                         <div class="scita_cart_lines oe_website_sale_cart">
                                         <!-- Product Image -->
@@ -808,7 +839,7 @@
                                 </td>
                                 <td>
                                     <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
-                                    <t t-out="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    <t t-if="not combination_info.get('hide_price')" t-out="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                 </td>
                             </tr>
                         </t>
@@ -844,7 +875,7 @@
                                 </span>
                                 <span class="product-img" t-if="line.product_id and line.product_id.product_tmpl_id and not line.product_id.product_tmpl_id.image_512">
                                     <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                        <img src="/web/static/src/img/placeholder.png"/>
+                                        <img src="/web/static/img/placeholder.png"/>
                                     </a>
                                 </span>
                                 <div class="product-detail">

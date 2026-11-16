@@ -284,6 +284,18 @@
 				}
 			}
 		}
+		// touch screens have no hover: the excerpt stays shown
+		@media (hover: none){
+			.sct_base_class{
+				.sct_blog_content_wrap{
+					transform: translateY(0);
+					.sct_blog_content{
+						opacity: 1;
+						transform: none;
+					}
+				}
+			}
+		}
 	}
 }
 

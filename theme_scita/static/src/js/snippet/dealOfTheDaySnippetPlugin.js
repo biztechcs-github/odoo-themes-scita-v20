@@ -8,24 +8,30 @@ import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 // A missing / invalid date must not block the editor with a browser alert() (it freezes the
-// whole builder until dismissed) nor save a "nan" countdown: flag the field in the dialog
-// and keep the dialog open.
-function rejectInvalidDate(dateInput, date) {
+// whole builder until dismissed) nor save a "nan" countdown, and a time out of range ("25:0:0")
+// is an Invalid Date for the timer, which then freezes: flag the field in the dialog and keep
+// the dialog open.
+const TIME_MAX = { hours: 23, minutes: 59, second: 59 };
+
+function rejectInvalidDate(dateInput, date, timeInputs) {
     const feedbackClass = "o_scita_date_feedback";
-    let feedback = dateInput.parentElement.querySelector("." + feedbackClass);
-    if (!isNaN(date.getTime())) {
-        dateInput.classList.remove("is-invalid");
-        feedback?.remove();
+    const invalidInput = isNaN(date.getTime())
+        ? dateInput
+        : timeInputs.find(({ id, value }) => !/^\d*$/.test(value.trim()) || Number(value) > TIME_MAX[id]);
+    for (const input of [dateInput, ...timeInputs]) {
+        input.classList.toggle("is-invalid", input === invalidInput);
+    }
+    dateInput.closest(".modal").querySelector("." + feedbackClass)?.remove();
+    if (!invalidInput) {
         return false;
     }
-    dateInput.classList.add("is-invalid");
-    if (!feedback) {
-        feedback = document.createElement("div");
-        feedback.className = `invalid-feedback d-block ${feedbackClass}`;
-        feedback.textContent = _t("Please choose the date when the deal ends.");
-        dateInput.after(feedback);
-    }
-    dateInput.focus();
+    const feedback = document.createElement("div");
+    feedback.className = `invalid-feedback d-block ${feedbackClass}`;
+    feedback.textContent = invalidInput === dateInput
+        ? _t("Please choose the date when the deal ends.")
+        : _t("Enter hours from 0 to 23, minutes and seconds from 0 to 59.");
+    invalidInput.after(feedback);
+    invalidInput.focus();
     return true;
 }
 
@@ -48,7 +54,7 @@ function prefillTimer(modalEl, storedDate, storedMsg) {
     }
 }
 
-async function openDealOfTheDayModal(snippetEl) {
+async function openDealOfTheDayModal(snippetEl, onChange) {
     // Render modal template
     const modalEl = renderToElement("theme_scita.deal_of_the_day_configration");
     document.body.appendChild(modalEl);
@@ -81,25 +87,11 @@ async function openDealOfTheDayModal(snippetEl) {
 
     prefillTimer(modalEl, snippetEl.dataset.date, snippetEl.dataset.msg);
 
-    // Populate dropdown from RPC
-    const res = await rpc("/theme_scita/deal_get_options", {});
-    selectEl.innerHTML = "";
-    res.forEach(opt => {
-        const option = document.createElement("option");
-        option.value = opt.id;
-        option.textContent = opt.name;
-        selectEl.appendChild(option);
-    });
-    // after the options exist: set before, it was lost and Modify switched to the first deal
-    if (snippetEl.dataset.dealSnippetId) {
-        selectEl.value = snippetEl.dataset.dealSnippetId;
-    }
-
     // Handle submit
     submitBtn.addEventListener("click", () => {
         // local midnight: a bare "YYYY-MM-DD" is read as UTC (the day before, west of UTC)
         const date = new Date(`${dateInput.value}T00:00`);
-        if (rejectInvalidDate(dateInput, date)) {
+        if (rejectInvalidDate(dateInput, date, [hourInput, minInput, secInput])) {
             return;
         }
         const hours = parseInt(hourInput.value) || 0;
@@ -127,13 +119,17 @@ async function openDealOfTheDayModal(snippetEl) {
         snippetEl.innerHTML = `
             <div class="container">
                 <div class="block-title">
-                    <h2 class="fancy">${type}</h2>
+                    <h2 class="fancy"></h2>
                 </div>
                 <div class="category-slider-placeholder">
                     <img src="/theme_scita/static/src/img/dealofday.jpg" alt="Deal of the Day" class="img-fluid"/>
                 </div>
             </div>
         `;
+        // a record name is text, not HTML
+        snippetEl.querySelector(".fancy").textContent = type;
+        // record the change (undo step), or the editor does not save it
+        onChange?.();
         myModal.hide();
     });
 
@@ -146,6 +142,23 @@ async function openDealOfTheDayModal(snippetEl) {
     modalEl.addEventListener("hidden.bs.modal", () => {
         modalEl.remove();
     });
+
+    // Apply stays off until the options are there: it would only close the dialog
+    submitBtn.disabled = true;
+    // Populate dropdown from RPC
+    const res = await rpc("/theme_scita/deal_get_options", {});
+    selectEl.innerHTML = "";
+    res.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.id;
+        option.textContent = opt.name;
+        selectEl.appendChild(option);
+    });
+    // after the options exist: set before, it was lost and Modify switched to the first deal
+    if (snippetEl.dataset.dealSnippetId) {
+        selectEl.value = snippetEl.dataset.dealSnippetId;
+    }
+    submitBtn.disabled = false;
 }
 
 // -------------------------------------------------
@@ -153,11 +166,10 @@ async function openDealOfTheDayModal(snippetEl) {
 // -------------------------------------------------
 class DealOfTheDaySnippetPlugin extends Plugin {
     static id = "dealOfTheDaySnippet";
-    static dependencies = [];
+    static dependencies = ["history"];
 
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".oe_deal_of_the_day"],
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -166,10 +178,9 @@ class DealOfTheDaySnippetPlugin extends Plugin {
         }
 
         snippetEl.classList.remove("hidden");
-        snippetEl.innerHTML = "";
 
         // open modal after drop
-        openDealOfTheDayModal(snippetEl);
+        openDealOfTheDayModal(snippetEl, () => this.dependencies.history.commit());
     }
 }
 registry.category("website-plugins").add(
@@ -182,10 +193,11 @@ registry.category("website-plugins").add(
 // -------------------------------------------------
 export class DealOfTheDayModifyBtnAction extends BuilderAction {
     static id = "dealOfTheDayModifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
-            openDealOfTheDayModal(editingElement);
+            openDealOfTheDayModal(editingElement, () => this.dependencies.history.commit());
         }
     }
 
@@ -201,7 +213,6 @@ class DealOfTheDayModifyPlugin extends Plugin {
     selector = ".oe_deal_of_the_day";
 
     resources = {
-        so_content_addition_selector: [".oe_deal_of_the_day"],
         builder_actions: {
             DealOfTheDayModifyBtnAction,
         },

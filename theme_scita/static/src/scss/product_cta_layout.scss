@@ -98,6 +98,11 @@
             white-space: nowrap !important;
         }
 
+        // "Hide Add Cart Button" (visitors): the display rules above must not bring it back
+        .sct-add-to-cart-mob > .btn.d-none {
+            display: none !important;
+        }
+
         // second row: Scita's Add to wishlist / Compare
         .o_add_wishlist_dyn,
         .o_add_compare_dyn {

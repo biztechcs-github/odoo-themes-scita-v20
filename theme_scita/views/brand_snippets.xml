@@ -19,7 +19,7 @@
     </template>
 
     <template id="it_brand_snippet_1" name="Brand Snippet">
-        <div class="it_brand_snippet_1">
+        <div class="it_brand_snippet_1" t-if="website_brands">
             <div class="container">
                 <div class='row'>
                     <div class="col-md-12 title-block">
@@ -117,7 +117,7 @@
         </section>
     </template>
     <template id="box_brand_snippet_4" name="Brand Snippet">
-        <div class="box_brand_snippet_4">
+        <div class="box_brand_snippet_4" t-if="website_brands">
             <div class="container">
                 <div class='row'>
                     <div class="col-md-12 title-block">

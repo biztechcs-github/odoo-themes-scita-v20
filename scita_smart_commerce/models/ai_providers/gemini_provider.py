@@ -19,7 +19,7 @@ _working_model = {}
 ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent'
 # an overloaded model may hang instead of answering 503: give each model at most this many
 # seconds, then try the next one, within the provider's overall timeout
-ATTEMPT_TIMEOUT = 30.0
+ATTEMPT_TIMEOUT = 20.0
 # thoughtSignature value Google documents for function calls whose signature is unknown
 # (history from another model, or built without one): skips the signature check
 SKIP_SIGNATURE = 'skip_thought_signature_validator'
@@ -199,11 +199,13 @@ class GeminiProvider(BaseProvider):
                 text_parts.append(part['text'])
                 raw.append({'type': 'text', 'text': part['text'], **extra})
         usage = data.get('usageMetadata') or {}
+        prompt_tokens = usage.get('promptTokenCount', 0)
         return AIResponse(
             text='\n'.join(text_parts).strip(),
             tool_calls=tool_calls,
             stop_reason='tool_use' if tool_calls else 'end_turn',
             raw_content=raw,
-            input_tokens=usage.get('promptTokenCount', 0),
-            output_tokens=usage.get('candidatesTokenCount', 0),
+            input_tokens=prompt_tokens,
+            # the total, as billed: candidatesTokenCount leaves out the thinking tokens
+            output_tokens=max(usage.get('totalTokenCount', prompt_tokens) - prompt_tokens, 0),
         )

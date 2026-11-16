@@ -2,6 +2,19 @@
 <templates xml:space="preserve">
     <!-- Scita Headers 1-5 of Header > Template: static/src/js/header_templates_plugin.js -->
     
+<!-- Wishlist of Show/Hide Elements: Odoo only offers hiding it while it is empty -->
+<t t-inherit="website.HeaderElementsOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderButton[@title.translate='Search Bar']" position="after">
+        <BuilderButton
+            title.translate="Wishlist"
+            className="'flex-grow-1'"
+            icon="'favorite'"
+            iconClass="'oi-filled'"
+            actionParam="{ views: ['!theme_scita.header_hide_wishlist_link'] }"
+        />
+    </xpath>
+</t>
+
 <!-- Lazy Loading -->
 <t t-inherit="website_sale.ProductsListPageOption" t-inherit-mode="extension">
     <xpath expr="//BuilderRow[@label.translate='Toolbar']" position="after">

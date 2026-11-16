@@ -19,8 +19,46 @@ publicWidget.registry.HeaderExtraMenuItems = publicWidget.Widget.extend({
         'click li.li-mega-menu i.fa-chevron-right': '_onClickSliderRight',
         'click li.li-mega-menu i.fa-chevron-left': '_onClickSliderLeft',
     },
-    _onUserAccount(event) {
-        $('div.toggle-config').toggleClass("o_hidden");
+    start() {
+        // Sub Menus "On Hover": Odoo's HoverableDropdown opens every .dropdown of the header, and
+        // in the user panel the pricelist and language menus then cover each other: click only
+        this.el.querySelectorAll(".toggle-config").forEach((panelEl) => {
+            for (const type of ["mouseenter", "mouseleave"]) {
+                panelEl.addEventListener(type, (ev) => ev.stopPropagation(), true);
+            }
+        });
+        return this._super.apply(this, arguments);
+    },
+    destroy() {
+        this._closeUserPanel?.();
+        this._super.apply(this, arguments);
+    },
+    // The panel stays open until a click on the icon or outside it, or Escape
+    _onUserAccount() {
+        if (this._closeUserPanel) {
+            this._closeUserPanel();
+            return;
+        }
+        const panelEl = this.el.querySelector(".toggle-config");
+        panelEl.classList.remove("o_hidden");
+        const onClick = (ev) => {
+            if (!ev.target.closest("li.configuration")) {
+                this._closeUserPanel();
+            }
+        };
+        const onKeydown = (ev) => {
+            if (ev.key === "Escape") {
+                this._closeUserPanel();
+            }
+        };
+        document.addEventListener("click", onClick, true);
+        document.addEventListener("keydown", onKeydown);
+        this._closeUserPanel = () => {
+            panelEl.classList.add("o_hidden");
+            document.removeEventListener("click", onClick, true);
+            document.removeEventListener("keydown", onKeydown);
+            this._closeUserPanel = null;
+        };
     },
     _onClickSliderRight(event){
         event.stopImmediatePropagation();
@@ -28,6 +66,85 @@ publicWidget.registry.HeaderExtraMenuItems = publicWidget.Widget.extend({
     _onClickSliderLeft(event){
         event.stopImmediatePropagation();
     }
+});
+
+// Category menu: its sub-categories open on hover, and a touch screen has none: the tap followed
+// the link straight away. The first tap opens them, the second one follows the link.
+publicWidget.registry.sct_category_touch = publicWidget.Widget.extend({
+    selector: "li.ca-sub",
+    start() {
+        this._linkEl = this.el.querySelector(":scope > a");
+        this._submenuEl = this.el.querySelector(":scope > .sct_submenu_level");
+        this._onLinkClick = this._onLinkClick.bind(this);
+        this._onDocumentClick = this._onDocumentClick.bind(this);
+        this._linkEl?.addEventListener("click", this._onLinkClick);
+        return this._super.apply(this, arguments);
+    },
+    destroy() {
+        this._close();
+        this._linkEl?.removeEventListener("click", this._onLinkClick);
+        this._super.apply(this, arguments);
+    },
+    _onLinkClick(ev) {
+        const touchMenu = window.matchMedia("(hover: none) and (min-width: 992px)").matches;
+        if (!touchMenu || !this._submenuEl || this._opened) {
+            return;
+        }
+        ev.preventDefault();
+        document.dispatchEvent(new Event("sct_category_touch_close"));
+        this._opened = true;
+        this._submenuEl.style.display = "block";
+        document.addEventListener("click", this._onDocumentClick, true);
+        document.addEventListener("sct_category_touch_close", this._onDocumentClick);
+    },
+    _onDocumentClick(ev) {
+        if (ev.type !== "click" || !this.el.contains(ev.target)) {
+            this._close();
+        }
+    },
+    _close() {
+        if (!this._opened) {
+            return;
+        }
+        this._opened = false;
+        this._submenuEl.style.removeProperty("display");
+        document.removeEventListener("click", this._onDocumentClick, true);
+        document.removeEventListener("sct_category_touch_close", this._onDocumentClick);
+    },
+});
+
+// Phones: Odoo keeps folded chat bubbles 45px from the bottom, on the account icon of Scita's bar.
+// They live in the live chat's Shadow DOM, where page styles don't apply: the rule goes in there.
+// 110px: above the bar and the back-to-top arrow.
+publicWidget.registry.sct_livechat_lift = publicWidget.Widget.extend({
+    selector: ".ab-mob-view",
+    start() {
+        this._liftBubbles();
+        if (!this._lifted) {
+            this._observer = new MutationObserver(() => this._liftBubbles());
+            this._observer.observe(document.body, { childList: true });
+        }
+        return this._super.apply(this, arguments);
+    },
+    destroy() {
+        this._observer?.disconnect();
+        this._super.apply(this, arguments);
+    },
+    _liftBubbles() {
+        const shadowRoot = document.querySelector(".o-livechat-root")?.shadowRoot;
+        if (!shadowRoot) {
+            return;
+        }
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(`@media (max-width: 767.98px) {
+            .o-mail-ChatHub:not(.o-dragged) .o-mail-ChatHub-bubbles {
+                --mail-ChatHub-bubbles-bottomLift: 110px !important;
+            }
+        }`);
+        shadowRoot.adoptedStyleSheets.push(sheet);
+        this._lifted = true;
+        this._observer?.disconnect();
+    },
 });
 
 publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
@@ -41,11 +158,15 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
 
     _bindEvents() {
         const self = this;
-        // Delegated event for quantity change
-        $('body').off('change', '.scita_js_quantity').on('change', '.scita_js_quantity', debounce(async function(ev) {
+        // Delegated event for quantity change: one debounce per line, or changing two lines
+        // quickly only saved the last one
+        const lineChanges = {};
+        $('body').off('change', '.scita_js_quantity').on('change', '.scita_js_quantity', function(ev) {
             ev.preventDefault();
-            await self._onChangeQty(ev);
-        }, 200));
+            const lineId = ev.currentTarget.dataset.lineId;
+            lineChanges[lineId] ||= debounce((lineEv) => self._onChangeQty(lineEv), 200);
+            lineChanges[lineId](ev);
+        });
 
         // Delegated event for remove line click
         $('body').off('click', '.sc-remove-line').on('click', '.sc-remove-line', function(ev) {
@@ -95,7 +216,9 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
 
     async _reloadCartSidebar() {
         try {
-            const response = await rpc("/shop/cart/sidebar");
+            // only the latest answer: an older one would show older quantities
+            this._sidebarRequests ||= new KeepLast();
+            const response = await this._sidebarRequests.add(rpc("/shop/cart/sidebar"));
             const html = response.html;
 
             const cartContainer = document.querySelector('.cart_details');
@@ -103,10 +226,6 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
                 const parent = cartContainer.parentElement;
                 cartContainer.remove();
                 parent.insertAdjacentHTML('beforeend', html);
-
-                // Show the sidebar menu
-                $('#cstm-nav-menu-toggle').removeClass("o_hidden");
-                $('body').addClass('show-scita-cstm-menu');
             }
         } catch (err) {
             console.error("Failed to reload cart sidebar:", err);
@@ -140,7 +259,7 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
             this._refreshCart(data);
             this._reloadCartSidebar();
             if (data.cart_quantity === 0) {
-                const cartContainer = document.querySelector('.sc_cart_lines');
+                const cartContainer = document.querySelector('.scita_cart_lines');
                 if (cartContainer) {
                     cartContainer.innerHTML = `
                         <div class="empty-cart-message text-center p-4">
