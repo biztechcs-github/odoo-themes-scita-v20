@@ -50,6 +50,8 @@ $(document).ready(function(){
     if($(".js_sale").length === 0){
         $("div#wrap").addClass("js_sale");
     }
+    // a tile clicked in the editor is saved with "open": start from the first tile only
+    $('.how_it_work_v_5 .sct_content_div').removeClass('open');
     $('.how_it_work_v_5 .sct_content_div:first-child').addClass('open');
     $('.how_it_work_v_5 .sct_content_div').on("click",function() {
         $(this).removeClass('open'); // Close others
@@ -1861,9 +1863,11 @@ $(document).ready(function(){
                         }
                     }
                     
+                    // keep the Content Width chosen in the editor (the rendered content carries it)
+                    var widthClass = self._contentWidthClass();
                     // Restore placeholder structure (exact match to template structure like brand snippet)
                     self.$target.html(`
-                        <div class="container">
+                        <div class="${widthClass}">
                             <div class="row our-config-products">
                                 <div class="col-md-12">
                                     <div class="title-block">
@@ -1959,6 +1963,13 @@ $(document).ready(function(){
                     }
                 }
             },
+            // Odoo's Content Width option class of the block's container: placeholder (saved page)
+            // or rendered content
+            _contentWidthClass: function() {
+                var $c = this.$target.children('div').add(this.$target.find('.sct-snippet-full > div'))
+                    .filter('.container, .container-fluid, .o_container_small').first();
+                return ['container-fluid', 'o_container_small'].find((c) => $c.hasClass(c)) || 'container';
+            },
             _injectContent: function(html) {
                 var self = this;
                 // For Odoo 19 dynamic snippet structure
@@ -1968,8 +1979,13 @@ $(document).ready(function(){
                     self.$target.removeClass('o_dynamic_snippet_empty');
                 } else {
                     // Legacy structure - replace entire content
+                    // The rendered HTML has a fixed .container: give it the Content Width chosen
+                    // in the editor (saved on the placeholder's container), or the option does nothing
+                    var widthClass = self._contentWidthClass();
                     self.$target.empty();
                     self.$target.append(html);
+                    self.$target.find('.sct-snippet-full > .container')
+                        .removeClass('container').addClass(widthClass);
                 }
                 
                 $(".sct_product_snippet_1").removeClass('hidden');

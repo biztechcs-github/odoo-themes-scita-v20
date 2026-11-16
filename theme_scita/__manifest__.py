@@ -136,8 +136,8 @@ publish unpublish product
     ],
     'support': 'support@appjetty.com',
     'images': [
-        'static/description/splash-screen.png',
-        'static/description/splash-screen_screenshot.gif',
+        'static/description/splash-screen-v20.png',
+        'static/description/splash-screen_screenshot-v20.gif',
     ],
     "cloc_exclude": [
         "static/**/*",

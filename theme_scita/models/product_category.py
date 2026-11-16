@@ -212,6 +212,8 @@ class ProductTemplate(models.Model):
             elif product.website_hide_price or product.quote_request or not website_show_price:
                 # Markup: a plain str was escaped and showed the <span> tags as text
                 message = product._sct_hidden_price_message()
+                if not message and product.quote_request:
+                    message = self.env._("Not Available For Sale")
                 data.update({
                     "price": Markup("<span>%s</span>") % message if message else "",
                     "list_price": "",
@@ -334,16 +336,6 @@ class ProductTemplate(models.Model):
         if website and website.add_to_cart and self.env.user._is_public():
             return False
         return super()._website_show_quick_add(product=product)
-
-    def _search_render_results_prices(self, mapping, combination_info):
-        """Modify displayed price in search results if quote_request is enabled."""
-        # Odoo 20 returns only the rendered price (no list price any more)
-        price = super()._search_render_results_prices(mapping, combination_info)
-
-        if combination_info.get('quote_request'):
-            price = 'Not Available For Sale'
-
-        return price
 
 
 class ProductProduct(models.Model):

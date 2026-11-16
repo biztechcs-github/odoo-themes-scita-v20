@@ -49,7 +49,7 @@
                                             <div class="sct_blog_detail row align-items-center">
                                                 <div class="col-8 blog_left_content">
                                                     <p class="date">
-                                                        <t t-out="datetime.date.strftime(slide.create_date, '%B %d,%Y')"/>
+                                                        <t t-out="slide.published_date or slide.create_date" t-options="{'widget': 'date', 'format': 'MMMM d, y'}"/>
                                                     </p>
                                                     <p class="author">By <span t-out="slide.author_id.name"/>
                                                     </p>
@@ -128,7 +128,7 @@
                                         <p class="author">By <span t-out="slide.author_id.name"/></p>
                                         <p class="date">
                                             <span class="icon-calendar"></span>
-                                            <t t-out="datetime.date.strftime(slide.create_date, '%B %d,%Y')"/>
+                                            <t t-out="slide.published_date or slide.create_date" t-options="{'widget': 'date', 'format': 'MMMM d, y'}"/>
                                         </p>
                                     </div>
                                 </div>  
@@ -189,7 +189,7 @@
                                     <div class="sct_blog_detail d-flex flex-wrap align-items-center">
                                         <div class="col-8 blog_left_content">
                                             <p class="date">
-                                                <t t-out="datetime.date.strftime(slide.create_date, '%B %d,%Y')"/>
+                                                <t t-out="slide.published_date or slide.create_date" t-options="{'widget': 'date', 'format': 'MMMM d, y'}"/>
                                             </p>
                                             <p class="author">By <span t-out="slide.author_id.name"/></p>
                                         </div>
@@ -248,8 +248,8 @@
                                             </div>
                                             <div class='sct_img_content'>
                                                 <p class="date">
-                                                    <span class='day' t-out="datetime.date.strftime(first_blog_slide.create_date, '%d')"/>
-                                                    <span class='month' t-out="datetime.date.strftime(first_blog_slide.create_date, '%b')"/>
+                                                    <span class='day' t-out="first_blog_slide.published_date or first_blog_slide.create_date" t-options="{'widget': 'date', 'format': 'dd'}"/>
+                                                    <span class='month' t-out="first_blog_slide.published_date or first_blog_slide.create_date" t-options="{'widget': 'date', 'format': 'MMM'}"/>
                                                 </p>
                                             </div>
                                         </a>
@@ -271,8 +271,8 @@
                                     <div class='sct_blog_desc'>
                                         <div class='sct_left_side'>
                                             <p class="date">
-                                                <span class='day' t-out="datetime.date.strftime(other_blog_slide.create_date, '%d')"/>
-                                                <span class='month' t-out="datetime.date.strftime(other_blog_slide.create_date, '%b')"/>
+                                                <span class='day' t-out="other_blog_slide.published_date or other_blog_slide.create_date" t-options="{'widget': 'date', 'format': 'dd'}"/>
+                                                <span class='month' t-out="other_blog_slide.published_date or other_blog_slide.create_date" t-options="{'widget': 'date', 'format': 'MMM'}"/>
                                             </p>
                                         </div>
                                         <div class='sct_right_side'>

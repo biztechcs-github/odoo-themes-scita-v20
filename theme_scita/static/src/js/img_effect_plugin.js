@@ -165,7 +165,8 @@ export class ScitaImgEffectBgOption extends BaseOptionComponent {
 }
 
 /** The image "Size" option: an image with an effect has its % width on its span. */
-const wrapperWidth = (img) => img.closest(`span.${WRAP}`)?.style.width;
+// (the hotspots option passes a plain {style} object for an image in a hotspot area: no wrapper)
+const wrapperWidth = (img) => img.closest?.(`span.${WRAP}`)?.style.width;
 // "no width" cannot be read from the image, which never keeps a % width: clear the span here
 const clearWrapperWidth = (img) => {
     const wrapper = img.closest(`span.${WRAP}`);

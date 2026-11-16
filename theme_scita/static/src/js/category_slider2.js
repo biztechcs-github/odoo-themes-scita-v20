@@ -121,7 +121,8 @@ registry.category("website-plugins").add(
 // Modify Button Action
 // ------------------------------------------------------
 export class CategorySlider2ModifyBtnAction extends BuilderAction {
-    static id = "cat_slider2_modifyBtn";    
+    static id = "cat_slider2_modifyBtn";
+    static dependencies = ["history"];
 
     apply({ editingElement, params: { mainParam } }) {
         if (mainParam === "open") {
