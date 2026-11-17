@@ -6,6 +6,23 @@ $-sct-btn-radius: map-get(('btn_style_2': 40px, 'btn_style_3': 8px, 'btn_style_4
 :root {
     --sct-btn-radius: #{$-sct-btn-radius};
 }
+// The primary button of the chosen style, as CSS variables: the product reviews are drawn in a
+// shadow DOM with Odoo's own styles, only variables of the page reach them (chatter_buttons.scss)
+$-sct-bp: map-get((
+    'btn_style_2': (bg: $primary, color: sct-oc($light-color, $primary), border: $primary, pad: 10px 14px, fw: bold, lh: 1, arrow: block, display: inline-flex,
+        hbg: transparent, hcolor: sct-pc($primary), hborder: $primary),
+    'btn_style_3': (bg: $light-color, color: sct-pc($primary, $light-color), border: $primary, shadow: 3.5px 3.5px $primary, pad: 7px 18px, fw: bold,
+        hbg: $primary, hcolor: sct-oc($light-color, $primary), hborder: $primary, hshadow: none),
+    'btn_style_4': (bg: $primary, bgimg: linear-gradient(45deg, lighten($primary, 15%) 10%, darken($primary, 25%) 90%), color: sct-oc($light-color, $primary),
+        border: transparent, pad: 7px 18px, fw: bold, hbg: $primary, hcolor: sct-oc($light-color, $primary), hborder: transparent),
+), o-website-value('btn-style-template'));
+@if $-sct-bp {
+    :root {
+        @each $k, $v in $-sct-bp {
+            --sct-bp-#{$k}: #{$v};
+        }
+    }
+}
 .btn, .btn:is(.btn-sm, .btn-lg) {
     --btn-border-radius: var(--sct-btn-radius);
 }

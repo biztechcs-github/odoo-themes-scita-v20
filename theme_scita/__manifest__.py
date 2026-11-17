@@ -360,6 +360,10 @@ publish unpublish product
             'theme_scita/static/src/scss/mixins.scss',
             'theme_scita/static/src/scss/checkout_style.scss',
         ],
+        # product reviews: Odoo styles the chatter on its own (shadow DOM, backend colours)
+        'portal.assets_chatter_style': [
+            'theme_scita/static/src/scss/chatter_buttons.scss',
+        ],
         'website.assets_wysiwyg': [
             '/theme_scita/static/src/xml/**/*',
         ],

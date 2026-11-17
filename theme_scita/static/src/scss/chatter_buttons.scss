@@ -1,0 +1,45 @@
+// Product reviews ("Write a review", the review dialog's "Send"): the chatter is drawn in a shadow
+// DOM with Odoo's own bundle, which forces the enterprise purple as primary colour. CSS variables
+// of the page reach into the shadow DOM: the website's button colours, Scita's button corners and
+// the chosen Buttons Style (--sct-bp-*, button_styles.scss). Odoo's look stays the fallback.
+.btn-primary {
+    --btn-color: var(--sct-bp-color, var(--o-cc1-btn-primary-text, #{$white}));
+    --btn-bg: var(--sct-bp-bg, var(--o-cc1-btn-primary, #{$primary}));
+    --btn-border-color: var(--sct-bp-border, var(--o-cc1-btn-primary-border, #{$primary}));
+    --btn-hover-color: var(--sct-bp-hcolor, var(--o-cc1-btn-primary-text, #{$white}));
+    --btn-hover-bg: var(--sct-bp-hbg, var(--o-cc1-btn-primary, #{$primary}));
+    --btn-hover-border-color: var(--sct-bp-hborder, var(--o-cc1-btn-primary-border, #{$primary}));
+    --btn-active-color: var(--btn-hover-color);
+    --btn-active-bg: var(--btn-hover-bg);
+    --btn-active-border-color: var(--btn-hover-border-color);
+    --btn-disabled-color: var(--btn-color);
+    --btn-disabled-bg: var(--btn-bg);
+    --btn-disabled-border-color: var(--btn-border-color);
+    display: var(--sct-bp-display, inline-block);
+    align-items: center;
+    justify-content: center;
+    padding: var(--sct-bp-pad, var(--btn-padding-y) var(--btn-padding-x));
+    font-weight: var(--sct-bp-fw, var(--btn-font-weight));
+    line-height: var(--sct-bp-lh, var(--btn-line-height));
+    background-image: var(--sct-bp-bgimg, none);
+    box-shadow: var(--sct-bp-shadow, none);
+
+    // Buttons Style 2: the arrow after the label
+    &::after {
+        content: '';
+        display: var(--sct-bp-arrow, none);
+        width: 8px;
+        height: 8px;
+        margin-left: 5px;
+        border-top: 2px solid currentColor;
+        border-right: 2px solid currentColor;
+        transform: rotate(45deg);
+    }
+    &:not(:disabled, .disabled):is(:hover, :focus-visible, :active) {
+        background-image: none;
+        box-shadow: var(--sct-bp-hshadow, var(--sct-bp-shadow, none));
+    }
+}
+.btn {
+    --btn-border-radius: var(--sct-btn-radius, #{$btn-border-radius});
+}
