@@ -223,17 +223,19 @@ a.btn.request_for_quote_button#request_for_quote_button {
         padding: 3px 8px;
         border: 1px solid transparent;
         border-radius: var(--sct-btn-radius);
-        background-color: $light-grey-color; @include sct-light-box($light-grey-color, true);
-        color: $gray-900 !important; // over the white of the general rule above
+        // filled with the theme colour at every width (the hover effects fill it with $primary
+        // from 992px, a fixed dark text here was unreadable on it), text readable on it
+        background-color: $primary !important; @include sct-light-box($primary, true);
+        color: sct-oc($light-color, $primary) !important;
         font-size: 16px !important; // global #request_for_quote_button sets 14px !important
         font-weight: 700;
         text-transform: capitalize;
         transition: 0.5s;
 
         &:hover, &:focus {
-            background-color: transparent;
-            border-color: $secondary;
-            color: $gray-900 !important;
+            background-color: transparent !important;
+            border-color: $primary;
+            color: sct-pc($primary) !important;
         }
     }
 }

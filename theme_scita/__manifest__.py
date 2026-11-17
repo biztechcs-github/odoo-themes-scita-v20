@@ -80,6 +80,7 @@ publish unpublish product
         'views/theme.xml',
         'views/footer_option.xml',
         'views/header_option.xml',
+        'views/scita_connect_views.xml',
         'views/res_config_view.xml',
         'views/views.xml',
         'views/res_company_view.xml',
@@ -171,6 +172,7 @@ publish unpublish product
             'theme_scita/static/src/scss/image_hotspot.scss',
             # after comman.scss: refines its search dropdown rules
             'theme_scita/static/src/scss/search_dropdown.scss',
+            'theme_scita/static/src/scss/quick_contact.scss',
             'theme_scita/static/src/scss/snippets.scss',
             # Split out of snippets.scss for readability only. Kept here
             # because these specific selectors are the ones actually used by

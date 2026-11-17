@@ -19,3 +19,4 @@ from . import quote
 from . import ir_qweb
 from . import gzip_middleware
 from . import sale_order
+from . import scita_connect

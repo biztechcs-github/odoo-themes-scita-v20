@@ -582,6 +582,18 @@ header{
 		}
 	}
 }
+// "Copyright With Payment": footers without their own layout for it (icons at the end, as in
+// Scita's footers) and the full width copyright (its row's negative margins put the text on
+// the screen edge)
+.sct-fot-belt > .sct-payment-icons {
+	text-align: center;
+	@include media-breakpoint-up(md) {
+		text-align: end;
+	}
+}
+.o_footer_copyright > .container-fluid > .sct-fot-belt {
+	margin-inline: 0;
+}
 /*Footer end*/
 
 /*button styling*/

@@ -204,6 +204,13 @@ span.o_scita_hotspots {
             object-fit: cover;
             transition: transform 0.35s ease;
         }
+        // hotspots on a grid image (Masonry...): Odoo's `.o_grid_item_image img` forces every
+        // image in the cell to 100% / cover with !important, the card's thumbnail included
+        .o_grid_item_image & img {
+            width: 92px !important;
+            height: 92px !important;
+            object-fit: cover !important;
+        }
         &:hover img {
             transform: scale(1.06);
         }

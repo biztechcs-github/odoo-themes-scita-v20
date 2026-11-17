@@ -59,5 +59,8 @@ class CustomResConfiguration(models.TransientModel):
         related="website_id.brand_display_option", readonly=False)
     is_default_code = fields.Boolean(
         string="Default code display in product page", related="website_id.is_default_code", readonly=False)
+    # Quick Contact Panel (side tab + drawer)
+    scita_connect_enabled = fields.Boolean(related="website_id.scita_connect_enabled", readonly=False)
+    scita_connect_title = fields.Char(related="website_id.scita_connect_title", readonly=False)
     # is_amp_enable = fields.Boolean(
     #     string="Enable AMP", related="website_id.is_amp_enable", readonly=False)

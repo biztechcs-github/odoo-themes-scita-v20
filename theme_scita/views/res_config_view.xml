@@ -99,6 +99,20 @@
                         <field name="is_default_code"/>
                     </setting>
                 </block>
+                <block title="Quick Contact Panel" id="scita_connect_settings">
+                    <setting id="scita_connect_enabled" string="Quick Contact Panel"
+                             help="A side tab that opens a drawer with your contact cards (quote, call, email, directions, links...). Shown when it has at least one card.">
+                        <field name="scita_connect_enabled"/>
+                        <div class="content-group mt-2" invisible="not scita_connect_enabled">
+                            <div class="row">
+                                <label for="scita_connect_title" string="Title" class="col-lg-3 o_light_label"/>
+                                <field name="scita_connect_title"/>
+                            </div>
+                            <button type="action" name="theme_scita.scita_connect_item_action" string="Manage Cards"
+                                    icon="oi-arrow-right" class="btn-link"/>
+                        </div>
+                    </setting>
+                </block>
                 <!-- AMP Settings -->
                 <!-- <block title="AMP Settings" id="amp_setting">
                     <setting id="website_is_amp_enable">

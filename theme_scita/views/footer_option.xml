@@ -89,14 +89,16 @@
         <xpath expr="//div[hasclass('o_footer_copyright')]" position='attributes'>
             <attribute name='class' add="sct_ftr_copyright_main" separator=" "/>
         </xpath>
-        <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('container','py-3')]//div[hasclass('row')]" position="attributes">
+        <!-- o_footer_copyright/div, as Odoo's own width options: the content width option
+             (small / full width) turns its `container` into o_container_small / container-fluid -->
+        <xpath expr="//div[hasclass('o_footer_copyright')]/div/div[hasclass('row')]" position="attributes">
             <attribute name='class' add="sct-fot-belt justify-content-between footer_copyright" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('o_footer_copyright')]//span[hasclass('o_footer_copyright_name')]" position="replace">
-            <span class="o_footer_copyright_name me-2">Copyright © 2024 Scita All Rights Reserved.</span>
+            <span class="o_footer_copyright_name me-2">Copyright © <t t-out="datetime.date.today().year"/> <span t-field="res_company.name"/>. All Rights Reserved.</span>
         </xpath>
         <!-- not found in v17  payment.icon -->
-        <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('container','py-3')]//div[hasclass('row')]" position="inside">
+        <xpath expr="//div[hasclass('o_footer_copyright')]/div/div[hasclass('row')]" position="inside">
             <div class="sct-payment-icons col-md-6">
                 <t t-foreach="request.env.website.theme_scita_payment_icons()" t-as="pm_to_display_sudo">
                      <span t-out="pm_to_display_sudo.image_payment_form"
@@ -112,8 +114,8 @@
         <xpath expr="//div[hasclass('o_footer_copyright')]//div[@name='footer_copyright_col']" position="attributes">
             <attribute name='class' add="sct-copyright-text col-md-6" separator=" "/>
         </xpath>
-        <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('container','py-3')]" position="attributes">
-            <attribute name='class'>container sct-pd-0</attribute>
+        <xpath expr="//div[hasclass('o_footer_copyright')]/div" position="attributes">
+            <attribute name='class' remove="py-3" add="sct-pd-0" separator=" "/>
         </xpath>
     </template>
     <template active="False" id="option_footer_2" inherit_id="website.layout" name='footer 2'>

@@ -48,3 +48,4 @@ access_image_hotspot_point,image.hotspot.point,image.hotspot.point,base.group_us
 access_image_hotspot_point_portal,image.hotspot.point,image.hotspot.point,base.group_portal,r,
 access_image_hotspot_point_public,image.hotspot.point,image.hotspot.point,base.group_public,r,
 access_quote_request_groups,access_quote_request,quote.request,sales_team.group_sale_salesman,crud,
+access_scita_connect_item_designer,scita.connect.item,scita.connect.item,website.group_website_designer,crud,

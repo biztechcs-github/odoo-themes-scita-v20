@@ -1,3 +1,7 @@
+// paper plane of img/grocery/newsletter-image.svg (same viewBox), used as a mask so the send
+// button follows the theme colours
+$sct-newsletter-plane: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 35 36'%3E%3Cpath d='M7.67799 16.529C7.32286 16.162 7.21488 15.6219 7.40001 15.146C7.58514 14.67 8.03056 14.3457 8.53996 14.3151L22.6277 13.4695C23.1219 13.4396 23.5908 13.6918 23.8385 14.1208C24.0862 14.5499 24.0702 15.0821 23.7971 15.4951L16.021 27.2726C15.7398 27.6985 15.2363 27.9221 14.7315 27.8444C14.2267 27.7668 13.813 27.4032 13.6727 26.9122L12.1745 21.6735L18.4677 17.2217L11.4657 20.4458L7.67799 16.529Z'/%3E%3C/svg%3E");
+
 @if o-website-value('footer-template') == 'Footer-1' {
     // footer.o_footer: Odoo 20 paints .o_footer with the footer colour preset, which
     // beat a plain `footer` rule and hid this template's own background
@@ -912,13 +916,21 @@
                             right: 5px;
                             z-index: 5;
                             display: block !important;
-                            background-image: url(../../img/grocery/newsletter-image.svg);
-                            background-repeat: no-repeat;
-                            background-position: center;
-                            background-size: cover;
-                            background-color: transparent;
+                            // same round send button as newsletter-image.svg, in the theme
+                            // colour instead of its fixed pink
+                            // !important: the input group squares a button's left corners
+                            border-radius: 50% !important;
+                            background-color: $primary;
                             border: 0;
 
+                            &::before{
+                                content: "";
+                                position: absolute;
+                                inset: 0;
+                                background-color: sct-oc($light-color, $primary);
+                                -webkit-mask: $sct-newsletter-plane center / 100% 100% no-repeat;
+                                mask: $sct-newsletter-plane center / 100% 100% no-repeat;
+                            }
                             &:focus{
                                 box-shadow: none;
                             }

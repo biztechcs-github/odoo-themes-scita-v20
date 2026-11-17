@@ -3000,6 +3000,15 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 .h-cart {
                     ul {
                         li {
+                            // even icon gaps: no extra space after compare only (shared rule below)
+                            &.o_wsale_my_compare {
+                                margin-right: 0;
+                            }
+
+                            // the Call to Action follows the cart: keep the button off the icon
+                            &:has(> .oe_structure_solo) {
+                                margin-left: 10px;
+                            }
 
                             &.o_wsale_my_cart , &.o_wsale_my_compare{
                                 @include flex-wrap-common;
@@ -6298,6 +6307,12 @@ header .o_pricelist_dropdown .dropdown-menu {
     box-sizing: content-box; // its padding stays outside the picture, as with `width: auto`
     width: 18px;
     height: 14px;
+}
+
+// Header Button ("Contact Us"): a link, so the global `.btn-link, a { white-space: normal
+// !important }` let its label break onto two lines when the header row was tight (Bulk Buy...)
+#wrapwrap > header .btn_cta {
+    white-space: nowrap !important;
 }
 
 // Menu items moved into the "+" overflow menu kept Bootstrap's small triangle while the menu bar
