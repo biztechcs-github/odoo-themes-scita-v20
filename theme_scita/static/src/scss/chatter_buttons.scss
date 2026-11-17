@@ -21,11 +21,13 @@
     padding: var(--sct-bp-pad, var(--btn-padding-y) var(--btn-padding-x));
     font-weight: var(--sct-bp-fw, var(--btn-font-weight));
     line-height: var(--sct-bp-lh, var(--btn-line-height));
+    // fallbacks = Odoo's values on these buttons (Bootstrap defines --btn-box-shadow but
+    // doesn't use it here)
     background-image: var(--sct-bp-bgimg, none);
     box-shadow: var(--sct-bp-shadow, none);
 
-    // Buttons Style 2: the arrow after the label
-    &::after {
+    // Buttons Style 2: the arrow after the label (not on a dropdown: its ::after is the caret)
+    &:not(.dropdown-toggle)::after {
         content: '';
         display: var(--sct-bp-arrow, none);
         width: 8px;
@@ -35,11 +37,19 @@
         border-right: 2px solid currentColor;
         transform: rotate(45deg);
     }
-    &:not(:disabled, .disabled):is(:hover, :focus-visible, :active) {
-        background-image: none;
+    // not :focus-visible: the box-shadow there is Bootstrap's keyboard focus ring
+    &:not(:disabled, .disabled):is(:hover, :active):not(:focus-visible) {
+        background-image: var(--sct-bp-hbgimg, none);
         box-shadow: var(--sct-bp-hshadow, var(--sct-bp-shadow, none));
     }
 }
+// Scita's corners (Buttons Style); without them each size keeps Odoo's own radius
 .btn {
     --btn-border-radius: var(--sct-btn-radius, #{$btn-border-radius});
+}
+.btn-sm {
+    --btn-border-radius: var(--sct-btn-radius, #{$btn-border-radius-sm});
+}
+.btn-lg {
+    --btn-border-radius: var(--sct-btn-radius, #{$btn-border-radius-lg});
 }
