@@ -2792,7 +2792,8 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
             }
         }
 
-        .oe_structure {
+        // the top row only: Odoo's "Call to Action" wraps its button in an .oe_structure_solo
+        .oe_structure:not(.oe_structure_solo) {
             border-bottom: 1px solid darken($light-grey-color, 9%);
         }
 
