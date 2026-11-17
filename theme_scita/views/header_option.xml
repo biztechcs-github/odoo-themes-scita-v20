@@ -211,8 +211,9 @@
                             <div class="col-lg-4 col-md-12">
                                 <ul class="h-right">
                                     <t t-call="website.placeholder_header_social_links"/>
-                                    <t t-call="website.header_call_to_action_stretched" _div_class.f="d-flex h-100">
-                                    </t>
+                                    <!-- as in the other headers: the stretched one is square (rounded-0) and
+                                         ignored Theme > Buttons Style -->
+                                    <t t-call="website.placeholder_header_call_to_action"/>
                                 </ul>
                             </div>
                         </div>

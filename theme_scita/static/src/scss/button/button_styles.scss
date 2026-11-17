@@ -1,3 +1,15 @@
+// Corners of every button, from Theme > Buttons Style: style 1 keeps the theme's button radius,
+// style 2 is a pill, styles 3 and 4 have 8px corners. Scita's own buttons (Add to cart, Request
+// Quote, the product page ones...) use --sct-btn-radius instead of fixed corners, so a page no
+// longer mixes square and round buttons.
+$-sct-btn-radius: map-get(('btn_style_2': 40px, 'btn_style_3': 8px, 'btn_style_4': 8px), o-website-value('btn-style-template')) or $btn-border-radius;
+:root {
+    --sct-btn-radius: #{$-sct-btn-radius};
+}
+.btn, .btn:is(.btn-sm, .btn-lg) {
+    --btn-border-radius: var(--sct-btn-radius);
+}
+
 @if o-website-value('btn-style-template') == 'btn_style_1' {
     .btn-primary {
         height: auto;

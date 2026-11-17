@@ -977,7 +977,7 @@
                     color: $secondary;
                     @include transition(all, 0.3s, ease-in);
                     &:hover{
-                        color: #78B33D;
+                        color: sct-pc($primary);
                     }
                 }
             }

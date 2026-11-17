@@ -126,8 +126,29 @@
         > .p-3:last-child {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
             padding: 8px 12px 12px !important;
+
+            // soft separator between product rows (in the gap), hidden next to the hovered row
+            > li + li > .dropdown-item {
+                position: relative;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: -3px;
+                    left: 12px;
+                    right: 12px;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba($primary, 0.2) 15%, rgba($primary, 0.2) 85%, transparent);
+                    transition: opacity 0.2s ease-in;
+                    pointer-events: none;
+                }
+            }
+            > li + li > .dropdown-item:is(:hover, :focus, .focus)::before,
+            > li:has(> .dropdown-item:is(:hover, :focus, .focus)) + li > .dropdown-item::before {
+                opacity: 0;
+            }
         }
         .dropdown-item {
             padding: 7px 12px !important;

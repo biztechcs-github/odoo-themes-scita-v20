@@ -984,7 +984,7 @@
 				
 				.o_bulk_price_btn{
 					padding: 12px 20px;
-					border-radius: 10px;
+					border-radius: var(--sct-btn-radius);
 					font-size: $font-body - 1;
 					line-height: 17px;
 					transition: 0.3s ease-in;
@@ -1012,11 +1012,12 @@
 						
 					}
 					.buy-tag{
-						background: rgba(156, 39, 176, 0.2); @include sct-light-box(rgba(156, 39, 176, 0.2), true);
+						// theme's secondary colour (was a fixed purple that ignored the palette)
+						background: rgba($secondary, 0.12); @include sct-light-box(rgba($secondary, 0.12), true);
 						padding: 0 4px;
 						border-radius: 4px;
 						font-size: $font-body - 1;
-						color: sct-dk(#9c27b0);
+						color: sct-pc($secondary, rgba($secondary, 0.12));
 					}
 					.buy-price{
 						padding: 0 4px;
@@ -1726,7 +1727,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 
 			.form-control{
 				height: 37px;
-				border-radius: 50px;
+				border-radius: var(--sct-btn-radius);
 				padding: 9px 20px;
 				// the "Check" button sits over the end of the field: typed text stops before it
 				padding-inline-end: 120px;
@@ -1745,7 +1746,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 				right: 0;
 				top: 0;
 				bottom: 0;
-				border-radius: 0 50px 50px 0;
+				border-radius: 0 var(--sct-btn-radius) var(--sct-btn-radius) 0;
 				padding: 6px 33px;
 				
 				@include min1200{
@@ -2034,7 +2035,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 				.btn {
 					padding: 5px 12px;
 					line-height: normal;
-					border-radius: 6px;
+					border-radius: var(--sct-btn-radius);
 					border: 1px solid #8e8989;
 					min-height: 36px;
 					min-width: 40px;
@@ -2281,7 +2282,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 	.sct-filter-grid-wrap{
 		button.btn{
 			padding: 6px 16px;
-			border-radius: 6px;
+			border-radius: var(--sct-btn-radius);
 			font-size: 16px;
 		}
 	}
@@ -2444,7 +2445,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 			#o_wsale_cta_wrapper{
 				#add_to_cart_wrap{
 					.js_check_product{
-						border-radius: 50px !important;
+						border-radius: var(--sct-btn-radius) !important;
 						margin-top: 10px;
 						padding: 10px 24px 11px !important;
 						font-size: 16px;
@@ -3158,7 +3159,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 
 											&.a-submit{
 												margin-right: 10px;
-												border-radius: 50px;
+												border-radius: var(--sct-btn-radius);
 												background-color: $secondary; @include sct-light-box($secondary, true);
 												color: color-contrast($secondary);
 												line-height: 21px;
@@ -3246,7 +3247,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 								margin: 20px 0 0;
 								#request_for_quote_button {
 									margin: 0px 0 25px !important;
-    								border-radius: 50px;
+    								border-radius: var(--sct-btn-radius);
 									&:hover, &:focus {
 										color: sct-pc($primary, $light-color) !important;
 									}
@@ -3680,7 +3681,7 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 							padding: 5px 12px;
 							background: transparent;
 							margin: 0 4px 8px 4px;
-							border-radius: 6px;
+							border-radius: var(--sct-btn-radius);
 						}
 					}
 				}

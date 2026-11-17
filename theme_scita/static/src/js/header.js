@@ -226,6 +226,10 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
                 const parent = cartContainer.parentElement;
                 cartContainer.remove();
                 parent.insertAdjacentHTML('beforeend', html);
+                // the new sidebar comes hidden: keep it open when it was open
+                if (document.body.classList.contains('show-scita-cstm-menu')) {
+                    document.getElementById('cstm-nav-menu-toggle')?.classList.remove('o_hidden');
+                }
             }
         } catch (err) {
             console.error("Failed to reload cart sidebar:", err);

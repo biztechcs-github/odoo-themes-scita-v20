@@ -16,8 +16,9 @@ patch(SearchBarResults.prototype, {
             const style = getStyle();
             if (window.innerWidth >= 992 && this.el.querySelector(".searchbar_cat_right")) {
                 const margin = 16;
-                const width = Math.min(880, window.innerWidth - 2 * margin);
                 const formRect = this.searchBarEl.getBoundingClientRect();
+                // never narrower than the search box itself (the search pop-up's bar is wider)
+                const width = Math.min(Math.max(880, formRect.width), window.innerWidth - 2 * margin);
                 const centredLeft = formRect.left + formRect.width / 2 - width / 2;
                 const left = Math.min(
                     Math.max(centredLeft, margin),

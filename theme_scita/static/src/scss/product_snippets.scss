@@ -392,7 +392,7 @@
 		position: relative;
 		:is(.cart_view_sct_btn, .sct-contact-us-btn){
 			background-color: #F0F0F0; @include sct-light-box(#F0F0F0, false);
-			border-radius: 40px;
+			border-radius: var(--sct-btn-radius);
 			position: relative;
 			@include transition(all, 0.5s, ease);
 			border: 1px solid transparent;
@@ -1269,7 +1269,7 @@
 			margin-right: 10px;
 			padding: 9px 10px;
 			margin-bottom: 15px !important;
-			border-radius: 50px;
+			border-radius: var(--sct-btn-radius);
 			background-color: $secondary; @include sct-light-box($secondary, true);
 			color: color-contrast($secondary);
 			
@@ -3258,7 +3258,7 @@
 									position: relative;
 									:is(.cart_view_sct_btn, .sct-contact-us-btn) {
 										background-color: #F0F0F0; @include sct-light-box(#F0F0F0, false);
-										border-radius: 40px;
+										border-radius: var(--sct-btn-radius);
 										position: relative;
 										transition: all 0.5s ease;
 										border: 1px solid transparent;

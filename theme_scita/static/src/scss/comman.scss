@@ -1622,7 +1622,7 @@ span.sct_img_effect_wrap {
 			right: 10px;
 			top: -7px;
 			height: 7px;
-			border-left: 7px solid #78B33D;
+			border-left: 7px solid darken($primary, 15%); // fold of the label (was a fixed green)
 			border-top: 7px solid transparent;
 		    opacity: 0.8;
 		}
@@ -1633,7 +1633,7 @@ span.sct_img_effect_wrap {
 		    left: -10px;
 		    bottom: -7px;
 			height: 7px;
-			border-top: 7px solid #78B33D;
+			border-top: 7px solid darken($primary, 15%);
 			border-left: 7px solid transparent;
 		    opacity: 0.8;
 		}
@@ -2710,7 +2710,7 @@ html::-webkit-scrollbar{
 									padding: 7px 12px;
 									color: sct-pc($primary);
 									background: transparent;
-									border-radius: 10px;
+									border-radius: var(--sct-btn-radius);
 
 									span{
 										display: inline-block !important;
@@ -3329,4 +3329,9 @@ body:has(.o_navbar_mobile.show, .o_website_offcanvas.show) .o_wsale_comparison_b
             right: 8px;
         }
     }
+}
+
+// "N result(s)" in the search button: core underlines it; the line touched the text ("(s)")
+.o_searchbar_form .oe_search_button {
+	text-underline-offset: 4px;
 }

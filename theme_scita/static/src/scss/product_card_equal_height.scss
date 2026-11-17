@@ -181,7 +181,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     min-width: 90px;
     padding: 3px 10px;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: var(--sct-btn-radius);
     background-color: $primary; @include sct-light-box($primary, true);
     color: sct-oc($light-color, $primary);
     // Default hover style / style 1: the product snippets' rules (deal of the day, product
@@ -222,7 +222,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
         margin: 0 !important;
         padding: 3px 8px;
         border: 1px solid transparent;
-        border-radius: 40px;
+        border-radius: var(--sct-btn-radius);
         background-color: $light-grey-color; @include sct-light-box($light-grey-color, true);
         color: $gray-900 !important; // over the white of the general rule above
         font-size: 16px !important; // global #request_for_quote_button sets 14px !important
@@ -250,7 +250,7 @@ a.btn.request_for_quote_button#request_for_quote_button {
     margin: 0 !important;
     padding: 0 20px !important;
     border: 1px solid transparent;
-    border-radius: 50px;
+    border-radius: var(--sct-btn-radius);
     background-color: $secondary; @include sct-light-box($secondary, true);
     color: color-contrast($secondary);
     font-size: 18px !important;

@@ -500,6 +500,12 @@
         border-left: 0 !important;
         margin-left: 0 !important;
     }
+    // shown last but not last in the markup: Bootstrap's input group squared its end
+    // (buttons with their own rounded-* class keep it)
+    > button[type="submit"]:not([class*="rounded"]) {
+        border-top-right-radius: var(--btn-border-radius) !important;
+        border-bottom-right-radius: var(--btn-border-radius) !important;
+    }
 
     > input.search-query {
         border-right: 0 !important;

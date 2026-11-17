@@ -870,10 +870,11 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 #top_menu {
                     li {
                         .dropdown-toggle {
+                            // the theme colour (was a fixed teal)
 
                             &:hover,
                             &.active {
-                                color: #276e72;
+                                color: sct-pc($primary);
                             }
                         }
                     }
@@ -886,7 +887,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                                         padding: 6px 10px !important;
 
                                         &:hover {
-                                            color: #276e72;
+                                            color: sct-pc($primary);
                                             transition: 0.3s ease;
                                         }
                                     }
@@ -908,7 +909,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                                 .dropdown-header {
                                     a {
                                         &:hover {
-                                            color: #276e72;
+                                            color: sct-pc($primary);
                                         }
                                     }
                                 }
@@ -920,7 +921,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                                     padding: 6px 10px !important;
 
                                     &:hover {
-                                        color: #276e72;
+                                        color: $white;
                                         transition: 0.3s ease;
                                         background-color: $black;
                                     }
@@ -934,7 +935,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                                         transition: 0.3s ease;
 
                                         &:hover {
-                                            color: #276e72;
+                                            color: sct-pc($primary);
                                             transition: 0.3s ease;
                                             background-color: transparent;
                                         }
@@ -1072,6 +1073,10 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                             border-radius: 0;
                             border: 0;
                             color: $light-grey-color;
+                            // Odoo's placeholder is the dark body colour: unreadable on this dark bar
+                            &::placeholder {
+                                color: rgba($light-grey-color, 0.6);
+                            }
                         }
 
                         .btn {
@@ -4133,9 +4138,11 @@ header {
                         }
 
                         .o_no_autohide_item {
-                            a {
+                            // Logout is a form button since Odoo 20: style it like the links
+                            a, #o_logout {
+                                border: 0;
                                 color: $black !important;
-                                font-size: 14px;
+                                font-size: 14px !important; // header .btn sets inherit !important
                                 padding: 6px 0 !important;
                                 @include transition(all, 0.3s, ease-in);
 
@@ -5511,6 +5518,42 @@ header {
     }
 }
 
+// Search pop-up of the headers with a search icon (Odoo 20 renders it as #o_search_modal): one
+// rounded bar like Scita's search bars, on no box; the results panel below has the same width
+// (js/search_dropdown_width.js)
+#o_search_modal {
+    .modal-content {
+        background: transparent;
+        border: 0;
+    }
+
+    .o_search_input_group {
+        overflow: hidden;
+        border: 1px solid rgba($dark-color, 0.12);
+        border-radius: 50rem;
+        background: $light-color;
+        @include sct-light-box($light-color);
+        box-shadow: 0 18px 40px rgba($dark-color, 0.16), 0 2px 6px rgba($dark-color, 0.06);
+
+        > .form-control,
+        > .btn {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            color: inherit;
+            box-shadow: none !important;
+        }
+
+        > .form-control {
+            padding: 16px 8px 16px 24px !important;
+        }
+
+        > .btn:last-child {
+            padding-right: 20px;
+        }
+    }
+}
+
 #o_search_modal_block {
     .modal-content {
         background: transparent;
@@ -6424,9 +6467,20 @@ $-sct-menu-color: o-color('menu-custom') or o-color('menu');
             padding: 0;
         }
         .o_search_btn {
-            padding-left: 0;
-            padding-right: 0;
+            padding: 4px;
+            line-height: 1;
         }
+    }
+}
+
+// Search icon of Headers 1 and 5 (it opens the search pop-up): like the icons next to it, no grey
+// box (core's o_navlink_background), a round light background on hover only
+#wrapwrap > header .navbar:not(.o_header_mobile) .o_searchbar_form > .o_search_btn.o_navlink_background {
+    border-radius: 50rem;
+    background: none;
+
+    &:hover {
+        background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
     }
 }
 
@@ -6743,7 +6797,7 @@ $-sct-on-secondary: sct-on($secondary);
                 @include sct-hover-color($primary, $-sct-hdr-bg, true);
             }
         }
-        .menu_right .toggle-config .options .o_no_autohide_item a:hover {
+        .menu_right .toggle-config .options .o_no_autohide_item :is(a, #o_logout):hover {
             &, .fa {
                 @include sct-hover-color($primary, $white, true);
             }
@@ -6783,6 +6837,28 @@ $-sct-pp-hdr: o-color('menu-custom') or o-color('menu');
         &:hover, &.show {
             &, span {
                 @include sct-hover-color($primary, mix($primary, $-sct-hdr-bg, 8%), true);
+            }
+        }
+    }
+}
+
+// Headers 3 and 4, menu in the "pills" style: the menu spacing sits on the items, so the pill had no
+// padding (their old rules are scoped to .o_header_mobile, the phone header only since Odoo 20), and
+// Header 4's black menu text stayed black on the pill. Same spacing as without pills.
+@if index((scita_header_3, scita_header_4), o-website-value('header-template')) {
+    header .navbar:not(.o_header_mobile) #o_main_nav #top_menu.nav-pills > .nav-item {
+        @include min992 {
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 if(o-website-value('header-template') == 'scita_header_4', 1px, 2px);
+            > .nav-link {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            @if o-website-value('header-template') == 'scita_header_4' {
+                > .nav-link.active {
+                    color: sct-on($primary);
+                }
             }
         }
     }

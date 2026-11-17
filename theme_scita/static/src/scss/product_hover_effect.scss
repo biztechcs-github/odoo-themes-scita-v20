@@ -57,7 +57,7 @@ span[name="hidden_ptavs_count"] {
                         overflow: hidden;
 
                         .btn#request_for_quote_button{
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             min-height: auto;
                             width: auto;
                             height: auto;
@@ -196,7 +196,7 @@ span[name="hidden_ptavs_count"] {
                             }
     
                             .btn{
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 min-width: auto;
                                 min-height: auto;
                                 width: auto;
@@ -719,7 +719,7 @@ span[name="hidden_ptavs_count"] {
                                         border: 0;
                                         margin: 0 3px;
                                         width: auto;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         @include transition(all, 0.3s, ease-in);
                                         
                                         @include min992{
@@ -978,7 +978,7 @@ span[name="hidden_ptavs_count"] {
                                 border: 0;
                                 margin: 0 3px;
                                 width: auto;
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 @include transition(all, 0.3s, ease-in);
                                 
                                 @include min992{
@@ -1133,7 +1133,7 @@ span[name="hidden_ptavs_count"] {
                                         width: 26px;
                                         height: 26px;
                                         margin: 0 2px 5px;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
@@ -1259,7 +1259,7 @@ span[name="hidden_ptavs_count"] {
                         overflow: hidden;
 
                         .btn#request_for_quote_button{
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             min-height: auto;
                             width: auto;
                             height: auto;
@@ -1398,7 +1398,7 @@ span[name="hidden_ptavs_count"] {
                             }
     
                             .btn{
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 min-width: auto;
                                 min-height: auto;
                                 width: auto;
@@ -1930,7 +1930,7 @@ span[name="hidden_ptavs_count"] {
                                         border: 0;
                                         margin: 0 3px;
                                         width: auto;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         @include transition(all, 0.3s, ease-in);
                                         
                                         @include min992{
@@ -2172,7 +2172,7 @@ span[name="hidden_ptavs_count"] {
                                 border: 0;
                                 margin: 0 3px;
                                 width: auto;
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 line-height: 24px;
                                 @include transition(all, 0.3s, ease-in);
                                 
@@ -2401,7 +2401,7 @@ span[name="hidden_ptavs_count"] {
                         align-content: center;
                         margin: auto;
                         margin-left: -100%;
-                        background: rgba(18, 52, 191, 0.12); @include sct-light-box(rgba(18, 52, 191, 0.12), false);
+                        background: rgba($primary, 0.12); @include sct-light-box(rgba($primary, 0.12), false); // as the cart overlay (was a fixed blue)
                         transition: all 0.5s ease;
                         gap: 0 !important;
                         @include min992 {
@@ -2419,7 +2419,7 @@ span[name="hidden_ptavs_count"] {
                             background: none;
                         }
                         .btn#request_for_quote_button{
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             min-height: auto;
                             width: auto;
                             height: auto;
@@ -3119,7 +3119,7 @@ span[name="hidden_ptavs_count"] {
                                 position: absolute;
                                 width: 100%;
                                 height: auto;
-                                border-radius: 20px;
+                                border-radius: var(--sct-btn-radius);
                                 border: 1px solid darken($primary, 20%);
 
                                 &:hover{
@@ -3666,7 +3666,7 @@ span[name="hidden_ptavs_count"] {
                         }
 
                         .btn#request_for_quote_button{
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             min-height: auto;
                             width: auto;
                             height: auto;
@@ -4451,7 +4451,7 @@ span[name="hidden_ptavs_count"] {
                                                 font-size: 16px;
                                                 padding: 5px;
                                                 margin: 0 2px 5px;
-                                                border-radius: 6px;
+                                                border-radius: var(--sct-btn-radius);
                                                 background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                                 display: flex;
                                                 justify-content: center;
@@ -4507,7 +4507,7 @@ span[name="hidden_ptavs_count"] {
                         overflow: hidden;
 
                         .btn#request_for_quote_button{
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             min-height: auto;
                             width: auto;
                             height: auto;
@@ -4837,7 +4837,7 @@ span[name="hidden_ptavs_count"] {
                                 height: auto;
                                 border: 0;
                                 margin: 0 2px 5px;
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 background-color: $light-color; @include sct-light-box($light-color, false);
                                 box-shadow: rgba($dark-color, 0.2) 0px 0px 6px 0px;
                                 position: static;
@@ -5160,7 +5160,7 @@ span[name="hidden_ptavs_count"] {
                             width: 26px;
                             height: 26px;
                             margin: 0 2px 5px;
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             background-color: $light-color; @include sct-light-box($light-color, false);
                             @include flex;
                             @include justify-align-content;
@@ -5381,7 +5381,7 @@ span[name="hidden_ptavs_count"] {
                                 flex: 0 0 auto;
                                 min-width: 27px;
                                 margin: 0 2px 5px;
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 background-color: $light-color; @include sct-light-box($light-color, false);
                                 @include flex;
                                 @include justify-align-content;
@@ -5537,7 +5537,7 @@ span[name="hidden_ptavs_count"] {
                                         height: unset;
                                         padding: 0 !important;
                                         margin: 0 2px 5px;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
@@ -5760,7 +5760,7 @@ span[name="hidden_ptavs_count"] {
                         overflow: hidden;
 
                         .btn#request_for_quote_button{
-                            border-radius: 6px;
+                            border-radius: var(--sct-btn-radius);
                             min-height: auto;
                             width: auto;
                             height: auto;
@@ -5899,7 +5899,7 @@ span[name="hidden_ptavs_count"] {
                             }
     
                             .btn{
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 min-width: auto;
                                 min-height: auto;
                                 width: auto;
@@ -6391,7 +6391,7 @@ span[name="hidden_ptavs_count"] {
                                         border: 0;
                                         margin: 0 3px;
                                         width: auto;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         @include transition(all, 0.3s, ease-in);
                                         
                                         @include min992{
@@ -6596,7 +6596,7 @@ span[name="hidden_ptavs_count"] {
                                 border: 0;
                                 margin: 0 3px;
                                 width: auto;
-                                border-radius: 6px;
+                                border-radius: var(--sct-btn-radius);
                                 @include transition(all, 0.3s, ease-in);
                                 
                                 @include min992{
@@ -6822,7 +6822,7 @@ span[name="hidden_ptavs_count"] {
                                         width: 26px;
                                         height: 26px;
                                         margin: 0 2px 5px;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
@@ -6915,7 +6915,7 @@ span[name="hidden_ptavs_count"] {
     .cs-product .pwd-desc .sct-hover-info .btn.login-price-btn {
         position: relative !important;
         width: 100%;
-        border-radius: 5px;
+        border-radius: var(--sct-btn-radius);
         font-size: 16px;
         line-height: 24px;
         height: auto;
@@ -7082,7 +7082,7 @@ span[name="hidden_ptavs_count"] {
                                         width: 26px;
                                         height: 26px;
                                         margin: 0 2px 5px;
-                                        border-radius: 6px;
+                                        border-radius: var(--sct-btn-radius);
                                         background-color: #ffffff; @include sct-light-box(#ffffff, false);
                                         display: flex;
                                         justify-content: center;
@@ -8072,7 +8072,7 @@ $sct-icon-envelope: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/20
             padding: 0 8px !important;
             margin: 0 6px 0 0 !important;
             border: 1px solid #8e8989 !important;
-            border-radius: 6px !important;
+            border-radius: var(--sct-btn-radius) !important;
         }
         > .btn:last-child {
             margin-right: 0 !important;

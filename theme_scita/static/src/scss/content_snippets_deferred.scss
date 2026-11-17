@@ -3829,7 +3829,7 @@
 						line-height: 40px;
 						padding: 0 30px;
 						outline: none;
-						border-radius: 50px;
+						border-radius: var(--sct-btn-radius);
 						align-self: stretch;
 						display: flex;
 						align-items: center;
@@ -7435,7 +7435,7 @@
             @include transition(all, 0.3s, ease);
            a{
              &:hover{
-                color: sct-dk(#78B33D);
+                color: sct-pc($primary);
                 @include transition(all, 0.3s, ease);
              }
            }
