@@ -113,6 +113,12 @@
             margin: 0 !important;
         }
 
+        // Lineicons draws the heart in the upper part of its box: level it with the text
+        .o_add_wishlist_dyn > .lni {
+            position: relative;
+            top: 0.19em;
+        }
+
         .sct-other-desciption {
             order: 3;
             flex: 0 0 100%;
