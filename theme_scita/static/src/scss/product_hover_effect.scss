@@ -5679,9 +5679,10 @@ span[name="hidden_ptavs_count"] {
         }
         // narrow cards (4 per row below Bootstrap's xxl breakpoint, ~190px) with the compare
         // icon shown: the label would be cut to "Add ..."; show the cart as the icon button
-        // Scita already uses below 1200px, and a slightly tighter Request Quote
+        // Scita already uses below 1200px, and a slightly tighter Request Quote. For every card
+        // of the grid as soon as one has compare (a product without it kept its label: mixed rows)
         @media (min-width: 1200px) and (max-width: 1399.98px) {
-            #products_grid .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_sub .o_wsale_product_btn:has(.o_add_compare) .btn.a-submit {
+            #products_grid:has(.o_add_compare) .oe_product .o_wsale_product_grid_wrapper .o_wsale_product_information .o_wsale_product_sub .o_wsale_product_btn .btn.a-submit {
                 min-width: 0;
                 padding-left: 6px;
                 padding-right: 6px;
