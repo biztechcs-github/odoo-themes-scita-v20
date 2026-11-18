@@ -81,6 +81,11 @@ $-sct-bp: map-get((
             margin-left: 5px;
             @include transition(all, 0.3s, ease);
         }
+        // product card buttons (wishlist, Odoo's product tiles) start with an icon and Odoo hides
+        // their label on narrow cards: no arrow, like Scita's own card Add to cart
+        &.o_wsale_product_btn_primary::after {
+            display: none;
+        }
         // pressed and keyboard focus look like the hover (Bootstrap's own pressed / focus colours,
         // a darker fill, hid the arrow: it is drawn in the primary colour then). `.btn:active`: as
         // specific as Bootstrap's pressed rules (and after them); a selected toggle (.active,

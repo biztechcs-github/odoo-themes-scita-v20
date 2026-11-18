@@ -2240,6 +2240,58 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 					position: absolute;
 					font-size: 14px;
 				}
+				// Odoo 20 swaps the magnifier for "11 result(s)" inside the button after a
+				// search: too long for the circle, it spilled out. The magnifier stays and the
+				// count is small text in the field, just before the button
+				.o_search_found_results {
+					position: absolute;
+					right: calc(100% + 8px);
+					color: $text-muted;
+					font-size: 12px;
+					white-space: nowrap;
+					pointer-events: none;
+				}
+				.o_search_found_results:not(.d-none) ~ i.d-none {
+					display: inline-block !important;
+				}
+			}
+			// the typed text stops before the count
+			&:has(.o_search_found_results:not(.d-none)) > input.search-query {
+				padding-right: 125px;
+			}
+			// the camera of the visual search (scita_smart_commerce) inside the pill, before the
+			// round search button: it took the button's place (both dark, on top of each other)
+			// and the add-on's rule took the pill's right border away. Its script copies the
+			// search button's colours inline (white on the dark circle): !important, the
+			// camera is drawn on the pill here, in the field's text colour
+			&:has(> .o_scita_visual_search_btn:not(.d-none)) {
+				> input.search-query {
+					border-right: 1px solid darken($light-grey-color, 9%) !important;
+					padding-right: 72px;
+				}
+				> .o_scita_visual_search_btn {
+					position: absolute;
+					right: 39px;
+					height: 31px;
+					min-width: 31px;
+					padding: 0 4px;
+					border: 0;
+					background: transparent !important;
+					color: $input-color !important;
+				}
+				// the add-on gives the search button's right corners the buttons' radius
+				// (square with Buttons Style 1): Scita's round button again
+				> .oe_search_button {
+					border-radius: 50% !important;
+
+					// the count before the camera
+					.o_search_found_results {
+						right: calc(100% + 43px);
+					}
+				}
+				&:has(.o_search_found_results:not(.d-none)) > input.search-query {
+					padding-right: 160px;
+				}
 			}
 		}
 

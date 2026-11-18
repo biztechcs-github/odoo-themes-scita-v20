@@ -508,7 +508,10 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
             .scita_top_menu {
                 flex: 0 0 calc(71% + 30px);
                 max-width: calc(71% + 30px);
-                margin-left: 0;
+                // !important: the centred / right menu options add mx-auto / ms-auto, whose auto
+                // margin pushed this fixed-width row past its room, the "+" onto the compare icon
+                // (the items are placed by justify-content)
+                margin-left: 0 !important;
                 margin-right: 0 !important;
                 padding-left: 20px;
                 padding-right: 10px;
@@ -2643,6 +2646,21 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
                 color: $light-color;
                 font-size: 15px;
                 line-height: normal;
+
+                // three equal columns gave the left texts ~120px each at 992-1024px: they
+                // wrapped. Left and right share what the centre text leaves, left texts on one line
+                > .col-md-4 {
+                    flex: 1 1 0;
+                    width: auto;
+
+                    &.text-center {
+                        flex: 0 0 auto;
+                    }
+                    &:first-child .sct_text_block {
+                        flex: 0 0 auto;
+                        white-space: nowrap;
+                    }
+                }
 
                 p {
                     margin: 0;

@@ -299,6 +299,11 @@ span.o_scita_hotspots {
             font-size: 14px;
             font-weight: 600;
             white-space: nowrap !important; // theme_scita's comman.scss forces wrapping
+
+            // the buttons have their own icon / arrow: no extra arrow of Scita's Buttons Style 2
+            &::after {
+                display: none;
+            }
         }
         .fa-arrow-right {
             font-size: 12px;

@@ -313,6 +313,11 @@
 
         .o_scita_assistant_send {
             flex: 0 0 auto;
+
+            // the button is its own arrow (➤): no extra arrow of Scita's Buttons Style 2
+            &::after {
+                display: none;
+            }
         }
     }
 

@@ -5642,6 +5642,18 @@ span[name="hidden_ptavs_count"] {
                 max-width: calc(100% - 82px);
                 overflow: hidden;
                 text-overflow: ellipsis;
+
+                // Buttons Style 2's arrow: a block in this inline-block button went to a second
+                // line, cut off by the fixed height; on the label's line instead, where the card
+                // has room for both (narrower, it shortened the label to "Request Q...")
+                &::after {
+                    display: inline-block;
+                    vertical-align: middle;
+
+                    @media (max-width: 1399.98px) {
+                        display: none;
+                    }
+                }
             }
             &:has(.o_add_compare) .o_wsale_product_information .o_wsale_product_request_quote .btn#request_for_quote_button {
                 max-width: calc(100% - 114px);
@@ -5693,6 +5705,10 @@ span[name="hidden_ptavs_count"] {
                     vertical-align: middle;
                 }
                 .o_sct_rq_label {
+                    display: none;
+                }
+                // icon only: no arrow of Buttons Style 2 next to it
+                &::after {
                     display: none;
                 }
             }

@@ -423,6 +423,10 @@
     gap: 8px;
     font-weight: 500;
 }
+// they start with their own icon: no extra arrow of Scita's Buttons Style 2
+.btn:is(.o_scita_ar_room, .o_scita_ar_cart, .o_scita_ar_link)::after {
+    display: none;
+}
 .o_scita_ar_modal .o_scita_ar_room svg {
     width: 20px;
     height: 20px;
