@@ -45,4 +45,12 @@
             </t>
         </xpath>
     </template>
+
+    <!-- Settings > Position, read by assistant.scss. On #wrapwrap from a view of its own: the
+         website-specific copies of assistant_bubble made by the editor keep their old markup -->
+    <template id="assistant_position" inherit_id="website.layout" name="Scita AI Shopping Assistant Position">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-att-data-scita-assistant-pos">website and website.scita_assistant_position</attribute>
+        </xpath>
+    </template>
 </odoo>

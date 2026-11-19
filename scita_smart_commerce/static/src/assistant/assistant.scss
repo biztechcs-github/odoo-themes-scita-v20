@@ -11,8 +11,8 @@
     @return $result;
 }
 
-// Floating AI shopping assistant. Bottom-left: Scita's back-to-top button and the
-// product comparison bar live bottom-right / along the bottom edge.
+// Floating AI shopping assistant, bottom-left by default (Settings > Position; bottom-right: see
+// the end of this file). Scita's back-to-top button lives bottom-right.
 .o_scita_assistant {
     --scita-assistant-bg: var(--o-color-4, #fff);
     --scita-assistant-accent: var(--o-color-1, #{$primary});
@@ -412,5 +412,46 @@ body.modal-open .o_scita_assistant {
 @media (max-width: 575.98px) {
     body:has(.o_scita_assistant_is_open) .cd-top {
         display: none !important;
+    }
+}
+
+// Position "Bottom right" (Settings, data-scita-assistant-pos on #wrapwrap): the same corners
+// mirrored. On phones the open chat still takes the full width.
+#wrapwrap[data-scita-assistant-pos="right"] .o_scita_assistant {
+    left: auto;
+    right: 20px;
+
+    .o_scita_assistant_panel {
+        left: auto;
+        right: 0;
+    }
+
+    @media (max-width: 767.98px) {
+        right: 10px;
+    }
+    @media (max-width: 575.98px) {
+        &.o_scita_assistant_is_open {
+            left: 0;
+            right: 0;
+        }
+    }
+}
+// ... and Scita's back-to-top arrow (right 20px, at the bottom) goes above the chat button instead
+// of under it; Odoo Live Chat moves it higher already (the button then overlaps the chat bubble:
+// use bottom-left with Live Chat)
+@media (min-width: 768px) {
+    body:has(#wrapwrap[data-scita-assistant-pos="right"] .o_scita_assistant):not(:has(.o-livechat-root)) .cd-top.cd-is-visible {
+        bottom: 86px;
+    }
+}
+@media (max-width: 767.98px) {
+    body:has(#wrapwrap[data-scita-assistant-pos="right"] .o_scita_assistant) .cd-top.cd-is-visible {
+        bottom: 124px;
+    }
+}
+// phones: Scita's Get in Touch nub (right edge, 130px up) above the arrow
+@media (max-width: 575.98px), (orientation: landscape) and (max-height: 500px) {
+    body:has(#wrapwrap[data-scita-assistant-pos="right"] .o_scita_assistant) .o_scita_connect_tab {
+        bottom: 170px;
     }
 }

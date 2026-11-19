@@ -28,6 +28,7 @@ class ResConfigSettings(models.TransientModel):
     scita_ai_proxy_warning = fields.Boolean(compute='_compute_scita_ai_proxy_warning')
     scita_assistant_enabled = fields.Boolean(related='website_id.scita_assistant_enabled', readonly=False)
     scita_assistant_name = fields.Char(related='website_id.scita_assistant_name', readonly=False)
+    scita_assistant_position = fields.Selection(related='website_id.scita_assistant_position', readonly=False)
     scita_assistant_welcome = fields.Text(related='website_id.scita_assistant_welcome', readonly=False)
     scita_visual_search_enabled = fields.Boolean(related='website_id.scita_visual_search_enabled', readonly=False)
     scita_visual_search_match = fields.Selection(related='website_id.scita_visual_search_match', readonly=False)

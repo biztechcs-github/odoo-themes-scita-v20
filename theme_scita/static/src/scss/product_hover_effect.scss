@@ -4180,6 +4180,10 @@ span[name="hidden_ptavs_count"] {
                         max-width: calc(100% - 105px);
                     }
                 }
+                // the room above is for the colour dots: a card without them uses the whole width
+                &:not(:has(.o_wsale_product_attribute)) .pwpi-title{
+                    max-width: none;
+                }
                 .o_wsale_product_attribute{
                     font-size: 11px;
                     @include flex-wrap-common;
@@ -5234,6 +5238,10 @@ span[name="hidden_ptavs_count"] {
                     @include min1200{
                         max-width: calc(100% - 105px);
                     }
+                }
+                // the room above is for the colour dots: a card without them uses the whole width
+                &:not(:has(.o_wsale_product_attribute)) .pwpi-title{
+                    max-width: none;
                 }
                 .o_wsale_product_attribute{
                     font-size: 11px;

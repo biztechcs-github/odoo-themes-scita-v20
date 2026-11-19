@@ -53,3 +53,7 @@
 .btn-lg {
     --btn-border-radius: var(--sct-btn-radius, #{$btn-border-radius-lg});
 }
+// Product reviews: the reviewer's name at a fixed 12px read smaller than the review below it
+.o-review-Message-content .o-mail-Message-author {
+    font-size: 0.875em;
+}

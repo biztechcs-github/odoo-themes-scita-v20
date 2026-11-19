@@ -1092,6 +1092,12 @@
 		margin-top: 30px;
 	}
 }
+// Product reviews: Odoo draws them in a shadow DOM whose :host rule gives the system font at 14px,
+// smaller than and different from the page. A page rule wins over :host, inside sizes are relative
+#o_product_page_reviews #chatterRoot {
+    font-family: inherit;
+    font-size: inherit;
+}
 .o_portal_chatter_attachment_btn {
     height: auto;
     line-height: normal;
@@ -2712,11 +2718,15 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 		}
 		#o-carousel-product{
 			.o_carousel_product_outer{
+				// the box follows the product page's image ratio (Odoo option, set on this element):
+				// a fixed 500px height cut the top and bottom off square photos on desktop
 				height: initial;
 
 				img{
 					height: 100%;
 					border-radius: 12px;
+					// the whole product, also when its photo has another shape than the box
+					object-fit: contain;
 				}
 			}
 		}
@@ -3510,9 +3520,6 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 						}
 						.carousel{
 							.o_carousel_product_outer{
-								@include min992{
-									height: 500px;
-								}
 			
 								.carousel-item{
 									background-color: rgba($primary, 0.1); @include sct-light-box(rgba($primary, 0.1), false);

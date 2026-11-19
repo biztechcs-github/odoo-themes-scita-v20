@@ -53,6 +53,10 @@ class Website(models.Model):
     # --- feature switches (all off until the shop owner turns them on) ---
     scita_assistant_enabled = fields.Boolean('AI Shopping Assistant')
     scita_assistant_name = fields.Char('Assistant Name', default='Shopping Assistant', translate=True)
+    scita_assistant_position = fields.Selection(
+        [('left', 'Bottom left'), ('right', 'Bottom right')], string='Assistant Position',
+        default='left', required=True,
+        help='Corner of the screen for the chat button. Odoo Live Chat also uses the bottom right.')
     scita_assistant_welcome = fields.Text(
         'Assistant Welcome Message', translate=True,
         default='Hi! Tell me what you are looking for and I will find it in our catalogue.')

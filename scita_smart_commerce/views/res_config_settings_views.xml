@@ -85,6 +85,10 @@
                                 <label for="scita_assistant_welcome" class="col-lg-4 o_light_label"/>
                                 <field name="scita_assistant_welcome"/>
                             </div>
+                            <div class="row">
+                                <label for="scita_assistant_position" string="Position" class="col-lg-4 o_light_label"/>
+                                <field name="scita_assistant_position" widget="radio" options="{'horizontal': true}"/>
+                            </div>
                         </div>
                     </setting>
                     <setting id="scita_visual_search_setting" help="Shoppers upload a photo and see visually similar products.">

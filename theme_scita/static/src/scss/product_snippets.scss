@@ -2465,6 +2465,12 @@
                     @include flexwrap;
                     .ratings{
 						margin-right: 5px;
+                        // the same height as the price beside it: a card without a price (Request
+                        // Quote products) keeps its stars on the line of the other cards
+                        padding: 8px 0;
+                        @include min992{
+                            padding: 10px 0;
+                        }
                         .fa{
                             color: sct-pc($primary, $light-color);
                         }
