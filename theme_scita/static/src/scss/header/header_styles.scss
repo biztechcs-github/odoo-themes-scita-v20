@@ -5998,6 +5998,24 @@ header {
     margin-right: 5px;
 }
 
+/* the product's own description (text, often with a list): the bullets inside the text column
+   and the same space above the stars whether it ends with a paragraph or a list */
+.similar-product .details .desc {
+    margin-bottom: 8px;
+
+    p {
+        margin-bottom: 6px;
+    }
+    ul,
+    ol {
+        padding-left: 1.1rem;
+        margin-bottom: 6px;
+    }
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
 .similar-product .details .brand,
 .similar-product .details .sku {
     font-size: 0.75rem;
