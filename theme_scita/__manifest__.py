@@ -139,7 +139,7 @@ publish unpublish product
     'live_test_url': 'https://theme-scita-furniture-v20.appjetty.com/',
     'images': [
         'static/description/splash-screen-v20.png',
-        'static/description/splash-screen_screenshot-v20.gif',
+        'static/description/splash-screen-v20_screenshot.gif',
     ],
     "cloc_exclude": [
         "static/**/*",

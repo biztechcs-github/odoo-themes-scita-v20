@@ -5,6 +5,9 @@
     <!--    website product price template-->
     <!--  Common template for pop up modal-->
     <template id="request_for_quote_modal">
+        <!-- a logged-in visitor gets their own contact details filled in (still editable) -->
+        <t t-set="sct_quote_partner" t-value="not request.env.user._is_public() and request.env.user.partner_id"/>
+        <t t-set="sct_quote_names" t-value="sct_quote_partner and (sct_quote_partner.name or '').split(' ', 1) or []"/>
         <div id="cfp_pop_up" role="dialog" class="modal fade" tabindex="-1" aria-hidden="true" aria-labelledby="cfp_pop_up_title">
             <div class="modal-dialog modal-dialog-centered modal-lg sct_quote_dialog">
                 <div class="modal-content">
@@ -29,19 +32,19 @@
                             <div class="row g-3">
                                 <div class="col-sm-6">
                                     <label for="first_name" class="form-label">First name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="first_name" id="first_name" required="required" autocomplete="given-name"/>
+                                    <input type="text" class="form-control" name="first_name" id="first_name" t-att-value="sct_quote_names[:1] and sct_quote_names[0]" required="required" autocomplete="given-name"/>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="last_name" class="form-label">Last name</label>
-                                    <input type="text" class="form-control" name="last_name" id="last_name" autocomplete="family-name"/>
+                                    <input type="text" class="form-control" name="last_name" id="last_name" t-att-value="sct_quote_names[1:] and sct_quote_names[1]" autocomplete="family-name"/>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" name="email" id="email" required="required" autocomplete="email"/>
+                                    <input type="email" class="form-control" name="email" id="email" t-att-value="sct_quote_partner and sct_quote_partner.email" required="required" autocomplete="email"/>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" name="phone" id="phone" required="required" autocomplete="tel"/>
+                                    <input type="tel" class="form-control" name="phone" id="phone" t-att-value="sct_quote_partner and sct_quote_partner.phone" required="required" autocomplete="tel"/>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="quantity" class="form-label">Quantity <span class="text-danger">*</span></label>
