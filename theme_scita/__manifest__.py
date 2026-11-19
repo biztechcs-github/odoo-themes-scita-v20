@@ -136,6 +136,7 @@ publish unpublish product
         'views/hide_price_configurations.xml',
     ],
     'support': 'support@appjetty.com',
+    'live_test_url': 'https://theme-scita-furniture-v20.appjetty.com/',
     'images': [
         'static/description/splash-screen-v20.png',
         'static/description/splash-screen_screenshot-v20.gif',
