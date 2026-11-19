@@ -567,8 +567,11 @@ Wishlist
     <template id="product_details_brand_display" inherit_id="theme_scita.scita_tag" name="Product Brand">
         <xpath expr="//small" position="before">
             <t t-set="sct_brand" t-value="website.is_brand_display and product.product_brand_id.filtered('active')"/>
+            <!-- the same brand as the product's "Brand" attribute value: link to the shop's own Brand
+                 filter, so its box is ticked in the sidebar (?brand= filters too, but ticks nothing) -->
+            <t t-set="sct_brand_value" t-value="sct_brand and product.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Brand').value_ids.filtered(lambda v: v.name == sct_brand.name)[:1]"/>
             <div t-if="sct_brand" class="sct-brand-display mt-2 mb-2">
-                <a t-attf-href="/shop?brand={{sct_brand.id}}" t-att-title="sct_brand.name">
+                <a t-att-href="'/shop?%s=%s' % (slug(sct_brand_value.attribute_id), slug(sct_brand_value)) if sct_brand_value else '/shop?brand=%s' % sct_brand.id" t-att-title="sct_brand.name">
                     <img t-if="website.brand_display_option == 'logo' and sct_brand.image" class="sct-brand-logo img-fluid"
                          style="max-height: 40px;" t-att-src="website.image_url(sct_brand, 'image')" t-att-alt="sct_brand.name"/>
                     <span t-else="" class="sct-brand-name">Brand: <t t-out="sct_brand.name"/></span>
