@@ -858,8 +858,17 @@
             <a href="/" t-attf-class="navbar-brand logo #{_link_class}">
                 <!-- Scita's own header logo (Settings) or, while none is uploaded, the website logo:
                      an empty header logo showed a camera placeholder to visitors -->
-                <span t-if="website.header_logo" t-field="website.header_logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
-                <span t-else="" t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+                <t t-if="editable">
+                    <span t-if="website.header_logo" t-field="website.header_logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+                    <span t-else="" t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+                </t>
+                <!-- visitors: the same image, loaded at once (PageSpeed: the logo is in the first view,
+                     the website's default lazy loading delayed it). Editors keep the field above
+                     so the logo can still be replaced in the website editor -->
+                <span t-else="" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name">
+                    <img t-att-src="website.image_url(website, 'header_logo' if website.header_logo else 'logo')"
+                         class="img img-fluid" t-att-alt="website.name" loading="eager" fetchpriority="high"/>
+                </span>
             </a>
         </xpath>
     </template>
