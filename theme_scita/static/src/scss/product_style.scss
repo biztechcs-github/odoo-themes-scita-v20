@@ -69,11 +69,10 @@
 								content: '\f105';
 								font-family: 'FontAwesome';
 								left: 0;
-								top: -2px;
-
-								@media (min-width: 768px) {
-									top: -3px;
-								}
+								// centred on the text: a fixed top offset left the arrow sitting high
+								top: 50%;
+								transform: translateY(-50%);
+								line-height: 1;
 							}
 						}
 					}
