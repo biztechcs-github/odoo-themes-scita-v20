@@ -20,12 +20,17 @@
     column-gap: 16px;
     row-gap: 16px;
 
-    // website_sale boxes the wrapper as soon as a .product_price sits inside it
-    // (_onChangeCombination adds these classes at runtime).
+    // Purchase Style "Boxed" (website_sale.cta_wrapper_boxed): keep Odoo's border and padding,
+    // only the 26rem cap goes (the row takes the whole column, as above)
     &.o_wsale_cta_wrapper_boxed {
-        padding: 0 !important;
-        border: 0 !important;
         max-width: none !important;
+    }
+
+    // its "Price" row comes first, above quantity and the buttons (Bootstrap's .order-first
+    // ties with the buttons' order -1 and came after them in the markup)
+    #o_wsale_cta_wrapper_boxed_price {
+        order: -4 !important;
+        flex: 0 0 100%;
     }
 
     // flatten the wrappers so their contents join this flex row. !important:
@@ -238,6 +243,16 @@
     }
 }
 
+// Purchase Style "Large" (website_sale.cta_wrapper_large): taller quantity picker and buttons
+// than the fixed heights above (after the phone rules: same weight, this one wins)
+#wrapwrap #product_detail #product_details #o_wsale_cta_wrapper.o_wsale_cta_wrapper_large #add_to_cart_wrap {
+    .css_quantity,
+    .sct-add-to-cart-mob > .btn,
+    [data-action="buy_now"] {
+        height: 58px;
+    }
+}
+
 // Quick view: the "Out of Stock" box that replaces Add to Cart, styled like the product
 // page's stock message instead of a bare bordered strip glued to the tags below it
 #shop_quick_view_modal #product_unavailable.d-flex {
@@ -260,4 +275,11 @@
     #contact_us_wrapper.d-flex {
         margin-bottom: 16px;
     }
+}
+
+// Similar Products link under the buttons: Lineicons draws the layers icon in the upper part
+// of its box, level it with the text as Add to Cart's cart
+#product_detail .btn-similar-products > .lni {
+    position: relative;
+    top: 0.14em;
 }

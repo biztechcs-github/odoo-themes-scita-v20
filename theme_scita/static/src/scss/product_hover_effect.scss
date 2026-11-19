@@ -7457,6 +7457,17 @@ $sct-dyn-card: '.o_wsale_products_opt_wishlist_fixed:not(.o_wsale_products_opt_d
     --o-wsale-card-thumb-size: 210px;
     --o-wsale-card-thumb-min-height: 0;
     --o-wsale-card-info-padding: 10px 15px;
+
+    // Grid layout: the 210px image ran past a phone's narrow card and left a gap beside it on
+    // desktop, and Odoo's two-column grid for the text (made for the overlay) squeezed the name,
+    // description and buttons into half the card. Full-width image, text stacked as in Thumbnails.
+    &.o_wsale_products_opt_layout_catalog {
+        --o-wsale-card-thumb-size: 100%;
+
+        .o_wsale_product_information {
+            display: flex !important;
+        }
+    }
 }
 
 // Designs that show the buttons all the time (Chips: actions "inline"): Scita's hover styles

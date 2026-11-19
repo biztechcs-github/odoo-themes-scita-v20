@@ -124,11 +124,11 @@ class HrEmployee(models.Model):
     include_inourteam = fields.Boolean(
         string="Enable to make the employee visible in snippet")
     emp_social_twitter = fields.Char(
-        string="Twitter account", default="https://twitter.com/Odoo")
+        string="Twitter account")
     emp_social_facebook = fields.Char(
-        string="Facebook account", default="https://www.facebook.com/Odoo")
+        string="Facebook account")
     emp_social_linkdin = fields.Char(
-        string="Linkedin account", default="https://www.linkedin.com/company/odoo")
+        string="Linkedin account")
     emp_description = fields.Text(
         string="Short description about employee", translate=True)
 
@@ -165,8 +165,8 @@ class ProductSnippetConfiguration(models.Model):
         self.env.transaction.invalidate_ormcache()
         return res
 
-    name = fields.Char(string='Name', default="Trending", required=True)
-    sub_title = fields.Char(string="Sub Title", default="Lorem Ipsum is simply dummy text.", )
+    name = fields.Char(string='Name', default="Trending", required=True, translate=True)
+    sub_title = fields.Char(string="Sub Title", default="Lorem Ipsum is simply dummy text.", translate=True)
     active = fields.Boolean(
         string="Active", default=True)
     collection_of_products = fields.Many2many('product.template', 'product_configuration_rel', 'slider_id',
@@ -179,7 +179,7 @@ class ProductSnippetConfigurationTwo(models.Model):
     _name = 'product.snippet.configuration.two'
     _description = "Add Multiple Product In Snippet Two"
 
-    name = fields.Char(string='Name', default="Trending", required=True)
+    name = fields.Char(string='Name', default="Trending", required=True, translate=True)
     active = fields.Boolean(
         string="Active", default=True)
     collection_of_products = fields.Many2many('product.template', 'product_configuration_two_rel', 'slider_id',

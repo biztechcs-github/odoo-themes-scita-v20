@@ -3692,6 +3692,14 @@ body:not(.editor_enable) .sct-description-tab:not(:has(#product_full_description
 					height: 210px !important;
 					margin-right: 10px;
 					width: 210px;
+
+					// as the hover styles want it on phones / tablets (this later rule undid it:
+					// the 210px image left ~110px for the name, price and buttons)
+					@include mobiletab{
+						height: 170px !important;
+						width: 130px;
+						min-width: 130px;
+					}
 				}
 				.o_wsale_product_information {
 					text-align: left;

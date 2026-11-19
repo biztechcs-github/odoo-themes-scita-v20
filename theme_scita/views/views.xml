@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>   
     <!-- Website product paging -->
-    <menuitem id="scita_menu_slider_config" name="Theme Scita Configuration" parent="website.menu_website_configuration" sequence="101"/>
+    <menuitem id="scita_menu_slider_config" name="Theme Scita Configuration" parent="website.menu_website_configuration" sequence="101" groups="website.group_website_designer"/>
 
     <!-- client slider  -->
     <record id="scita_view_res_partner_form_inherit" model="ir.ui.view">

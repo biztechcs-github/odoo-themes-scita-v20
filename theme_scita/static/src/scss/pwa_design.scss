@@ -4,7 +4,8 @@
     display: none;
     padding: 10px;
     position: fixed;
-    z-index: 11111111;
+    // above the app bar (1031), below the assistant button / offcanvas (1045) and modals (1055)
+    z-index: 1040;
     // above the app bar (10px from the edge, 60px tall), which it covered by 10px
     bottom: 80px;
     width: 90%;
@@ -26,6 +27,22 @@
         margin-bottom: 0;
         margin-top: 5px;
         color: sct-dk(#000000);
+    }
+}
+// phone in landscape (no app bar from 768px): a compact bar at the bottom, it took ~20% of the screen
+@media (orientation: landscape) and (max-height: 500px) {
+    .mobile-deive-popup {
+        bottom: 10px;
+        max-width: 480px;
+        padding: 6px 10px;
+        .pwa-icon-img {
+            height: 32px;
+            width: 32px;
+        }
+        p {
+            font-size: 12px;
+            margin-top: 0;
+        }
     }
 }
 .pwa_off_section{

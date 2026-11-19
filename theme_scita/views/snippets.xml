@@ -1093,8 +1093,11 @@
     <template id="fashion_multi_cat_slider_view" name="Fashion Multi Product Tabs Snippet">
         <!-- the same configuration can be dropped twice on a page: its tabs must not share ids -->
         <t t-set="tab_uid" t-value="int(time.time() * 1000000)"/>
+        <!-- only the tabs (up to "Counts") whose collection has products shown here; the first is active -->
+        <t t-set="sct_tabs" t-value="[n for n in range(1, int(slider_details.no_of_collection or 0) + 1) if slider_details['collection_%s_ids' % n]._scita_on_website()]"/>
+        <t t-set="sct_active" t-value="sct_tabs and sct_tabs[0]"/>
         <!-- no products: nothing rendered, the block stays empty (dynamic_block_empty.js) -->
-        <div class='fashion_featured_product_1' t-if="(slider_details.collection_1_ids | slider_details.collection_2_ids | slider_details.collection_3_ids | slider_details.collection_4_ids | slider_details.collection_5_ids)._scita_on_website()">
+        <div class='fashion_featured_product_1' t-if="sct_tabs">
             <div class="container">
                 <div class="lns-inner latest-news-section">
                     <div class="row">
@@ -1111,96 +1114,96 @@
                                 <ul id="multi_dynamic_slider_tabs" class="nav nav-tabs">
 
                                     <t t-if="slider_details.no_of_collection == '2'">
-                                        <li class="my-test">
+                                        <li class="my-test" t-if="1 in sct_tabs">
                                             <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab" class="active show">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 1 else None">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
-                                        <li class="my-test">
+                                        <li class="my-test" t-if="2 in sct_tabs">
                                             <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 2 else None">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
                                     </t>
 
                                     <t t-if="slider_details.no_of_collection == '3'">
-                                        <li class="">
+                                        <li class="" t-if="1 in sct_tabs">
                                             <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab" class="active show">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 1 else None">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="2 in sct_tabs">
                                             <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 2 else None">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="3 in sct_tabs">
                                             <a t-att-href="'#fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 3 else None">
                                                 <t t-out='slider_details.label_collection_3'/>
                                             </a>
                                         </li>
                                     </t>
 
                                     <t t-if="slider_details.no_of_collection == '4'">
-                                        <li class="">
+                                        <li class="" t-if="1 in sct_tabs">
                                             <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab" class="active show">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 1 else None">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="2 in sct_tabs">
                                             <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 2 else None">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="3 in sct_tabs">
                                             <a t-att-href="'#fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 3 else None">
                                                 <t t-out='slider_details.label_collection_3'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="4 in sct_tabs">
                                             <a t-att-href="'#fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 4 else None">
                                                 <t t-out='slider_details.label_collection_4'/>
                                             </a>
                                         </li>
                                     </t>
 
                                     <t t-if="slider_details.no_of_collection == '5'">
-                                        <li class="">
+                                        <li class="" t-if="1 in sct_tabs">
                                             <a t-att-href="'#fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab" class="active show">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 1 else None">
                                                 <t t-out='slider_details.label_collection_1'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="2 in sct_tabs">
                                             <a t-att-href="'#fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 2 else None">
                                                 <t t-out='slider_details.label_collection_2'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="3 in sct_tabs">
                                             <a t-att-href="'#fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 3 else None">
                                                 <t t-out='slider_details.label_collection_3'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="4 in sct_tabs">
                                             <a t-att-href="'#fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 4 else None">
                                                 <t t-out='slider_details.label_collection_4'/>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="" t-if="5 in sct_tabs">
                                             <a t-att-href="'#fashion-collection5-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
-                                               data-bs-toggle="tab">
+                                               data-bs-toggle="tab" t-att-class="'active show' if sct_active == 5 else None">
                                                 <t t-out='slider_details.label_collection_5'/>
                                             </a>
                                         </li>
@@ -1209,7 +1212,7 @@
 
                                 <div class="tab-content">
                                     <t t-if="slider_details.no_of_collection == '2'">
-                                        <div class="active multi_hide"
+                                        <div t-if="1 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 1 else ''}"
                                              t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1219,7 +1222,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="2 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 2 else ''}"
                                              t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1232,7 +1235,7 @@
                                     </t>
 
                                     <t t-if="slider_details.no_of_collection == '3'">
-                                        <div class="active multi_hide"
+                                        <div t-if="1 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 1 else ''}"
                                              t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1242,7 +1245,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="2 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 2 else ''}"
                                              t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1252,7 +1255,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="3 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 3 else ''}"
                                              t-att-id="'fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1265,7 +1268,7 @@
                                     </t>
 
                                     <t t-if="slider_details.no_of_collection == '4'">
-                                        <div class="active multi_hide"
+                                        <div t-if="1 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 1 else ''}"
                                              t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1275,7 +1278,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="2 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 2 else ''}"
                                              t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1285,7 +1288,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="3 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 3 else ''}"
                                              t-att-id="'fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1295,7 +1298,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="4 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 4 else ''}"
                                              t-att-id="'fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1308,7 +1311,7 @@
                                     </t>
 
                                     <t t-if="slider_details.no_of_collection == '5'">
-                                        <div class="active multi_hide"
+                                        <div t-if="1 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 1 else ''}"
                                              t-att-id="'fashion-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection1-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1318,7 +1321,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="2 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 2 else ''}"
                                              t-att-id="'fashion-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection2-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1328,7 +1331,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="3 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 3 else ''}"
                                              t-att-id="'fashion-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection3-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1338,7 +1341,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="4 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 4 else ''}"
                                              t-att-id="'fashion-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection4-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"
@@ -1348,7 +1351,7 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="multi_hide"
+                                        <div t-if="5 in sct_tabs" t-attf-class="multi_hide #{'active' if sct_active == 5 else ''}"
                                              t-att-id="'fashion-collection5-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)">
                                             <div class="owl-carousel fashion_cro"
                                                  t-att-id="'multi-collection5-%s-%s-%s' %(slider_header.no_of_collection, slider_details.id, tab_uid)"

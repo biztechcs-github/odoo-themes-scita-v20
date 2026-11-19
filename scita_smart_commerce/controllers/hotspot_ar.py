@@ -69,6 +69,8 @@ class ScitaHotspotAr(http.Controller):
             'compare_price': compare_price,
             'discount': discount,
             'hide_price': hide_price,
+            # hidden by "login to see price": the card offers sign-in, as the product page does
+            'price_login': bool(hide_price and website.login_see_price and request.env.user._is_public()),
             'in_stock': in_stock,
             'needs_options': needs_options,
             'can_add_to_cart': can_add,

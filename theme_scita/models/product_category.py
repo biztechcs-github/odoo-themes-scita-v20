@@ -241,7 +241,10 @@ class ProductTemplate(models.Model):
     def _search_get_detail(self, website, order, options):
         search_details = super()._search_get_detail(website, order, options)
         if options.get('brandlistdomain'):
-            search_details['base_domain'].append([('product_brand_id', 'in', options.get('brandlistdomain'))])
+            # archived brands are not a filter (search() leaves them out); only archived ones: no filter
+            brand_ids = self.env['product.brands'].search([('id', 'in', options.get('brandlistdomain'))]).ids
+            if brand_ids:
+                search_details['base_domain'].append([('product_brand_id', 'in', brand_ids)])
         return search_details
 
     def _get_product_variant(self, attrib_value):

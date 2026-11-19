@@ -10,11 +10,11 @@ import { browser } from '@web/core/browser/browser';
 // opens only when the product really went in the cart, else the reason is shown (no stock...)
 export function sctCartAddDone(widget, buttonEl, data) {
     const warning = data?.notifications?.find((item) => item.type === "warning")?.data.warning_message
-        || (!data?.quantity && _t("This product could not be added to your cart."));
+        || (!(data?.quantity > 0) && _t("This product could not be added to your cart."));
     if (warning) {
         widget.services.notification.add(warning, { type: "warning" });
     }
-    if (data?.quantity && buttonEl.classList.contains("cart_view_sct_btn")) {
+    if (data?.quantity > 0 && buttonEl.classList.contains("cart_view_sct_btn")) {
         widget.cartViewData({ currentTarget: buttonEl });
     }
 }
@@ -386,10 +386,15 @@ $(document).ready(function(){
                 const $productIDInput = $cartWrapper.find("input[name='product_id']");
                 const productID = parseInt($productIDInput.val()); 
                 const productTemplateID = parseInt($btn.data("templateId"));
-                const addQuantity = parseInt($qtyInput.val()) || 1;
-            
+                const addQuantity = Math.max(1, parseInt($qtyInput.val()) || 1);
+
                 const self = this;
-                
+                // one add at a time: a double click must not add the product twice
+                if ($btn.data("sctAdding")) {
+                    return;
+                }
+                $btn.data("sctAdding", true);
+
                 // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
                 // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                 rpc("/shop/cart/add", {
@@ -403,6 +408,8 @@ $(document).ready(function(){
                     sctCartAddDone(self, $btn[0], data);
                 }).catch((err) => {
                     sctCartAddFailed(self, err);
+                }).finally(() => {
+                    $btn.data("sctAdding", false);
                 });
             },
 
@@ -1156,7 +1163,22 @@ $(document).ready(function(){
         }
     });
     // End
-    
+
+    // Testimonial Slider 2 saved before its indicators were fixed still point them at
+    // #myCarousel1557120239396, which doesn't exist: aim them at their own carousel.
+    publicWidget.registry.sct_testimonial_indicators = publicWidget.Widget.extend({
+        selector: ".testinomial_varient_2 .carousel[id]",
+
+        start: function () {
+            for (const indicatorEl of this.el.querySelectorAll(".carousel-indicators [data-bs-target]")) {
+                if (indicatorEl.dataset.bsTarget === "#myCarousel1557120239396") {
+                    indicatorEl.dataset.bsTarget = `#${this.el.id}`;
+                }
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
     // Client sliders 2 Start
     publicWidget.registry.third_client_slider_snippet = publicWidget.Widget.extend({ 
         selector: ".testimonial-client-slider",
@@ -2022,10 +2044,15 @@ $(document).ready(function(){
                     const $productIDInput = $cartWrapper.find("input[name='product_id']");
                     const productID = parseInt($productIDInput.val()); 
                     const productTemplateID = parseInt($btn.data("templateId"));
-                    const addQuantity = parseInt($qtyInput.val()) || 1;
-                
+                    const addQuantity = Math.max(1, parseInt($qtyInput.val()) || 1);
+
                     const self = this;
-                    
+                    // one add at a time: a double click must not add the product twice
+                    if ($btn.data("sctAdding")) {
+                        return;
+                    }
+                    $btn.data("sctAdding", true);
+
                     // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
                     // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                     rpc("/shop/cart/add", {
@@ -2039,6 +2066,8 @@ $(document).ready(function(){
                         sctCartAddDone(self, $btn[0], data);
                     }).catch((err) => {
                         sctCartAddFailed(self, err);
+                    }).finally(() => {
+                        $btn.data("sctAdding", false);
                     });
                 },
 
@@ -2293,10 +2322,15 @@ $(document).ready(function(){
                     const $productIDInput = $cartWrapper.find("input[name='product_id']");
                     const productID = parseInt($productIDInput.val()); 
                     const productTemplateID = parseInt($btn.data("templateId"));
-                    const addQuantity = parseInt($qtyInput.val()) || 1;
-                
+                    const addQuantity = Math.max(1, parseInt($qtyInput.val()) || 1);
+
                     const self = this;
-                    
+                    // one add at a time: a double click must not add the product twice
+                    if ($btn.data("sctAdding")) {
+                        return;
+                    }
+                    $btn.data("sctAdding", true);
+
                     // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
                     // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                     rpc("/shop/cart/add", {
@@ -2310,6 +2344,8 @@ $(document).ready(function(){
                         sctCartAddDone(self, $btn[0], data);
                     }).catch((err) => {
                         sctCartAddFailed(self, err);
+                    }).finally(() => {
+                        $btn.data("sctAdding", false);
                     });
                 },
 
@@ -2818,10 +2854,15 @@ $(document).ready(function(){
                 const $productIDInput = $cartWrapper.find("input[name='product_id']");
                 const productID = parseInt($productIDInput.val()); 
                 const productTemplateID = parseInt($btn.data("templateId"));
-                const addQuantity = parseInt($qtyInput.val()) || 1;
-            
+                const addQuantity = Math.max(1, parseInt($qtyInput.val()) || 1);
+
                 const self = this;
-                
+                // one add at a time: a double click must not add the product twice
+                if ($btn.data("sctAdding")) {
+                    return;
+                }
+                $btn.data("sctAdding", true);
+
                 // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
                 // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                 rpc("/shop/cart/add", {
@@ -2835,6 +2876,8 @@ $(document).ready(function(){
                     sctCartAddDone(self, $btn[0], data);
                 }).catch((err) => {
                     sctCartAddFailed(self, err);
+                }).finally(() => {
+                    $btn.data("sctAdding", false);
                 });
             }, 
 

@@ -109,7 +109,7 @@
             <t t-as="slide" t-foreach="client_details">
                 <div class='col-6 col-md-4 col-lg-3 sct_client_wrap'>
                     <div class="sct_client_box">
-                        <img t-att-alt="slide.name" t-att-src="website.image_url(slide, 'image_1920')" t-att-title="slide.name"/>
+                        <img t-att-alt="slide.name" t-att-src="website.image_url(slide, 'image_512')" t-att-title="slide.name" loading="lazy"/>
                     </div>  
                 </div>
             </t>

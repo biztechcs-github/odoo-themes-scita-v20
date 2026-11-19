@@ -756,6 +756,11 @@
             <field name="active">True</field>
             <field name="arch" type="xml">
                 <t t-name="theme_scita.coming_soon_page">
+                    <!-- standalone page: web.layout gives the doctype, <head>, charset and title -->
+                    <t t-set="head"><meta name="viewport" content="width=device-width, initial-scale=1"/></t>
+                    <t t-call="web.layout" title.translate="Coming Soon" head="head"
+                       html_data="{'lang': (request.env.lang or 'en_US').replace('_', '-'), 'dir': request.env['res.lang']._get_data(code=request.env.lang or 'en_US').direction}"
+                       x_icon="website.image_url(website, 'favicon')">
                     <style type="text/css">
                         body {
                             margin: 0px;
@@ -814,10 +819,11 @@
                                     <img src="/theme_scita/static/src/img/smily.png" class="img img-fluid object"/>
                                 </div>
                                 <h1 class="sct-title">Coming Soon</h1>
-                                <h2 class="sct-sub-title">Something good will be appear here very soon</h2>
+                                <h2 class="sct-sub-title">Something good will appear here very soon</h2>
                             </div>
                         </section>
                     </div>
+                    </t>
                 </t>
             </field>
         </record>
@@ -829,6 +835,11 @@
             <field name="active">True</field>
             <field name="arch" type="xml">
                 <t t-name="theme_scita.maintenance_page">
+                    <!-- standalone page: web.layout gives the doctype, <head>, charset and title -->
+                    <t t-set="head"><meta name="viewport" content="width=device-width, initial-scale=1"/></t>
+                    <t t-call="web.layout" title.translate="Website Under Maintenance" head="head"
+                       html_data="{'lang': (request.env.lang or 'en_US').replace('_', '-'), 'dir': request.env['res.lang']._get_data(code=request.env.lang or 'en_US').direction}"
+                       x_icon="website.image_url(website, 'favicon')">
                     <style type="text/css">
                         body {
                             margin: 0px;
@@ -864,10 +875,11 @@
                         <section class="coming_soon oe_img_bg" style="background-image: url(/theme_scita/static/src/img/maintenance-bg.jpg); height: 100vh; background-position: center; background-size: cover;">
                             <div class="sct-coming">
                                 <h1 class="sct-title">Website Under Maintenance</h1>
-                                <h2 class="sct-sub-title">Website is currently under maintenance, something good will be appear here very soon</h2>
+                                <h2 class="sct-sub-title">Website is currently under maintenance, something good will appear here very soon</h2>
                             </div>
                         </section>
                     </div>
+                    </t>
                 </t>
             </field>
         </record>

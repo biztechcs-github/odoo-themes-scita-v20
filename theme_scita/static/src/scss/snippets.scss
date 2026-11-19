@@ -1265,9 +1265,10 @@ img[src$="/testimonial-quote.png"]   { @include scita-placeholder-ratio(376, 363
    hard-coded. The defaults are the measured post-RPC heights on the electronics
    demo (548px / 556px). Set them per site if a gap appears under the slider:
    too small costs a little CLS, too large leaves visible blank space, and the
-   blank space is the worse bug of the two.
+   blank space is the worse bug of the two. Only while the placeholder is shown: the loaded
+   content keeps its own height (no blank gap under a shorter slider).
    --------------------------------------------------------------------------- */
-.fashion_multi_category_slider {
+body:not(.editor_enable) #wrapwrap section.fashion_multi_category_slider:has(.category-slider-placeholder) {
 	min-height: var(--scita-multicat-reserve, 548px);
 
 	@media (min-width: 992px) {
@@ -1283,7 +1284,7 @@ img[src$="/testimonial-quote.png"]   { @include scita-placeholder-ratio(376, 363
    Measured headless at 412px: 100px -> 1228px, a 1128px jump. At 1200px
    desktop: 746px. Electronics-demo defaults; tune per site like the
    multicat reservation above if content differs. */
-.deal_multi_product_slider {
+body:not(.editor_enable) #wrapwrap section.deal_multi_product_slider:has(.category-slider-placeholder) {
 	min-height: var(--scita-dealslider-reserve, 1228px);
 
 	@media (min-width: 992px) {

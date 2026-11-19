@@ -1082,8 +1082,8 @@ footer{
 .o_rtl{
     .js_language_selector {
         &.dropup{
-            width: 180px;
             .dropdown-menu{
+                min-width: 180px;
                 .js_change_lang {
                     width: 100%;
                 }

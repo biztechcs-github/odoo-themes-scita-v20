@@ -86,6 +86,11 @@ $-sct-bp: map-get((
         &.o_wsale_product_btn_primary::after {
             display: none;
         }
+        // Odoo's own buttons that already end in an arrow icon (Checkout, Save Address, Confirm...):
+        // a second arrow after it
+        &:has(> .oi:is([data-icon="keyboard_arrow_right"], [data-icon="east"], [data-icon="chevron_right"], [data-icon="arrow_forward"], [data-icon="arrow_right_alt"]))::after {
+            display: none;
+        }
         // pressed and keyboard focus look like the hover (Bootstrap's own pressed / focus colours,
         // a darker fill, hid the arrow: it is drawn in the primary colour then). `.btn:active`: as
         // specific as Bootstrap's pressed rules (and after them); a selected toggle (.active,

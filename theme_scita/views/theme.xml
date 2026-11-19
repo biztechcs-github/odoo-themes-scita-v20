@@ -150,7 +150,7 @@
                                                         <div t-att-class="'carousel-item active' if a == 0 else 'carousel-item'">
                                                             <t t-set="a" t-value="a+1"/>
                                                             <a t-att-href="'/shop/category/%s' % slug(categ)">
-                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '300x250')" loading="lazy"/>
+                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '600x500')" loading="lazy"/>
                                                             </a>
                                                             <h4>
                                                                 <small>
@@ -225,7 +225,7 @@
                                                         <div t-att-class="'carousel-item active' if a == 0 else 'carousel-item'">
                                                             <t t-set="a" t-value="a+1"/>
                                                             <a t-att-href="'/shop/category/%s' % slug(categ)">
-                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '300x250')" loading="lazy"/>
+                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '600x500')" loading="lazy"/>
                                                             </a>
                                                             <h4>
                                                                 <small>
@@ -251,7 +251,7 @@
                                             <t t-foreach="submenu.banner_images_ids" t-as="banner_img">
                                                 <div class="col-lg-6 scita-grid-img">
                                                     <a t-att-href="banner_img.page_link">
-                                                        <img class="img-responsive" t-att-alt="banner_img.name" t-att-src="website.image_url(banner_img, 'image_1920', '300x250')" loading="lazy"/>
+                                                        <img class="img-responsive" t-att-alt="banner_img.name" t-att-src="website.image_url(banner_img, 'image_1920', '600x500')" loading="lazy"/>
                                                     </a>
                                                 </div>
                                             </t>
@@ -311,7 +311,7 @@
                                                         <div t-att-class="'carousel-item active' if a == 0 else 'carousel-item'">
                                                             <t t-set="a" t-value="a+1"/>
                                                             <a t-att-href="'/shop/category/%s' % slug(categ)">
-                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '300x250')" loading="lazy"/>
+                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '600x500')" loading="lazy"/>
                                                             </a>
                                                             <h4>
                                                                 <small>
@@ -337,7 +337,7 @@
                                             <t t-foreach="submenu.banner_images_ids" t-as="banner_img">
                                                 <div class="col-lg-6 scita-grid-img">
                                                     <a t-att-href="banner_img.page_link">
-                                                        <img class="img-responsive" t-att-alt="banner_img.name" t-att-src="website.image_url(banner_img, 'image_1920', '300x250')" loading="lazy"/>
+                                                        <img class="img-responsive" t-att-alt="banner_img.name" t-att-src="website.image_url(banner_img, 'image_1920', '600x500')" loading="lazy"/>
                                                     </a>
                                                 </div>
                                             </t>
@@ -397,7 +397,7 @@
                                                         <div t-att-class="'carousel-item active' if a == 0 else 'carousel-item'">
                                                             <t t-set="a" t-value="a+1"/>
                                                             <a t-att-href="'/shop/category/%s' % slug(categ)">
-                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '300x250')" loading="lazy"/>
+                                                                <img class="img-responsive" t-att-alt="categ.name" t-att-src="website.image_url(categ, 'image_1920', '600x500')" loading="lazy"/>
                                                             </a>
                                                             <h4>
                                                                 <small>
@@ -423,7 +423,7 @@
                                             <t t-foreach="submenu.banner_images_ids" t-as="banner_img">
                                                 <div class="col-lg-6 scita-grid-img">
                                                     <a t-att-href="banner_img.page_link">
-                                                        <img class="img-responsive" t-att-alt="banner_img.name" t-att-src="website.image_url(banner_img, 'image_1920', '300x250')" loading="lazy"/>
+                                                        <img class="img-responsive" t-att-alt="banner_img.name" t-att-src="website.image_url(banner_img, 'image_1920', '600x500')" loading="lazy"/>
                                                     </a>
                                                 </div>
                                             </t>
@@ -486,7 +486,7 @@
                                             </li>
                                             <li class="cat_img">
                                                 <a t-att-href="'/shop/category/%s' % slug(category)">
-                                                    <img class="img-responsive" t-att-alt="category.name" t-att-src="website.image_url(category, 'image_1920')" loading="lazy"/>
+                                                    <img class="img-responsive" t-att-alt="category.name" t-att-src="website.image_url(category, 'image_1920', '600x500')" loading="lazy"/>
                                                 </a>
                                             </li>
                                             <li class="cat_description" t-if="category.description">
@@ -1322,7 +1322,7 @@
                                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                             <div class="js_product js_main_product mb-3">
                                                <h1 class="product_detail_name">
-                                                    <t t-out="product_variant.display_name"/>
+                                                    <t t-out="combination_info['display_name']"/>
                                                 </h1>
                                         <div t-field="product.description_ecommerce" class="oe_structure"
                                           placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/>

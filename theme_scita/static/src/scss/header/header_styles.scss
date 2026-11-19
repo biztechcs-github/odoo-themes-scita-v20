@@ -1780,6 +1780,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                     .delivery_name {
                         display: none;
+                        color: inherit; // the <a> variant: header text colour, not the link colour
 
                         @include min992 {
                             display: block;
@@ -2983,6 +2984,7 @@ body:has(.offcanvas.show, .offcanvas.showing) .ab-mob-view {
 
                     .delivery_name {
                         display: none;
+                        color: inherit; // the <a> variant: header text colour, not the link colour
 
                         @include min992 {
                             display: block;
@@ -5107,7 +5109,8 @@ header {
                         // and the bar (the panel is as wide as the container's content). Not the
                         // ones in the "+" list: they open in place (product_card_equal_height.scss)
                         @include min992 {
-                            &:not(.o_extra_menu_items *) {
+                            // not in the sidebar header / hamburger offcanvas: the panel is static there
+                            &:not(.o_extra_menu_items *):not(.o_header_sidebar *):not(.offcanvas *) {
                                 left: 50% !important;
                                 transform: translateX(-50%) !important;
                             }

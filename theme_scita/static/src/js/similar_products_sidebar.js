@@ -2,7 +2,7 @@
 
 import publicWidget from "@theme_scita/js/compat/public_widget";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
+import { htmlEscape as escape } from "@odoo/owl";
 
 publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
     selector: '#wrapwrap',
@@ -13,7 +13,7 @@ publicWidget.registry.SimilarProductsSidebar = publicWidget.Widget.extend({
     _onClickSimilarProducts: async function (ev) {
         ev.preventDefault();
         const $btn = $(ev.currentTarget);
-        const productID = parseInt($btn.data('product-id'));
+        const productID = parseInt($btn.data('product-template-id'));
         if (!productID || isNaN(productID)) return;
 
         $('#similar-product-sidebar').removeClass('o_hidden').addClass('active');
@@ -78,7 +78,7 @@ function closeSidebar() {
 }
 
 function formatCurrency(amount, currency) {
-    amount = parseFloat(amount).toFixed(currency.decimal_places || 2);
+    amount = parseFloat(amount).toFixed(currency.decimal_places ?? 2);
     return currency.position === 'before'
         ? `${currency.symbol}${amount}`
         : `${amount}${currency.symbol}`;

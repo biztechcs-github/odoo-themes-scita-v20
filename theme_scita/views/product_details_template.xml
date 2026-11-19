@@ -447,10 +447,12 @@ Wishlist
                     </div>
                     <div class="sct-next-prev-prod">
                         <div class='sct-btn-wrap'>
-                            <a t-att-href="'/shop/%s' % prev_product" t-att-class="'sct_prev_text' if prev_product else 'sct_prev_text disable'">prev</a>
+                            <a t-att-href="prev_product and '/shop/%s' % prev_product" t-att-class="'sct_prev_text' if prev_product else 'sct_prev_text disable'"
+                               t-att-aria-disabled="not prev_product and 'true'" t-att-tabindex="not prev_product and '-1'">prev</a>
                         </div>
                         <div class='sct-btn-wrap'>
-                            <a t-att-href="'/shop/%s' % next_product" t-att-class="'sct_next_text' if next_product else 'sct_next_text disable'">next</a>
+                            <a t-att-href="next_product and '/shop/%s' % next_product" t-att-class="'sct_next_text' if next_product else 'sct_next_text disable'"
+                               t-att-aria-disabled="not next_product and 'true'" t-att-tabindex="not next_product and '-1'">next</a>
                         </div>
                     </div>
                 </div>
@@ -564,7 +566,7 @@ Wishlist
          logo or its name (the name when the brand has no logo), linking to the shop of that brand -->
     <template id="product_details_brand_display" inherit_id="theme_scita.scita_tag" name="Product Brand">
         <xpath expr="//small" position="before">
-            <t t-set="sct_brand" t-value="website.is_brand_display and product.product_brand_id"/>
+            <t t-set="sct_brand" t-value="website.is_brand_display and product.product_brand_id.filtered('active')"/>
             <div t-if="sct_brand" class="sct-brand-display mt-2 mb-2">
                 <a t-attf-href="/shop?brand={{sct_brand.id}}" t-att-title="sct_brand.name">
                     <img t-if="website.brand_display_option == 'logo' and sct_brand.image" class="sct-brand-logo img-fluid"

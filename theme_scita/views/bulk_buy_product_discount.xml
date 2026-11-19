@@ -27,7 +27,7 @@
                             <span class="buy-tag">Buy
                             <t t-out="rule['min_quantity']"/></span>
                             at
-                            <span class="buy-price"><t t-out="'%.2f' % rule['fixed_price']"/></span>
+                            <span class="buy-price"><t t-out="rule['fixed_price']" t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id}"/></span>
                             / Unit
                         </a>
                     </t>

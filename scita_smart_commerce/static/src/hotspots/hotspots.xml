@@ -13,7 +13,8 @@
                 <div class="o_scita_hotspot_card_info">
                     <a t-att-href="product.url" class="o_scita_hotspot_card_name" t-out="product.name"/>
                     <div class="o_scita_hotspot_card_price">
-                        <t t-if="product.hide_price">
+                        <t t-if="product.price_login"/>
+                        <t t-elif="product.hide_price">
                             <span class="o_scita_hotspot_card_request">Price on request</span>
                         </t>
                         <t t-else="">
@@ -28,6 +29,9 @@
                 <button t-if="product.can_add_to_cart" type="button" class="btn btn-primary o_scita_hotspot_card_add">
                     <i class="fa fa-shopping-cart" aria-hidden="true"/> Add to cart
                 </button>
+                <a t-elif="product.price_login" t-attf-href="/web/login?redirect={{product.url}}" class="btn btn-primary">
+                    Login to see price
+                </a>
                 <a t-elif="product.hide_price" t-att-href="product.url" class="btn btn-primary">
                     Request a quote <i class="fa fa-arrow-right" aria-hidden="true"/>
                 </a>

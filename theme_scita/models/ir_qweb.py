@@ -159,8 +159,9 @@ class IrQweb(models.AbstractModel):
         JS has loaded (when no element of the page has it), and Scita's rules keyed on it (shop
         and product page titles, breadcrumbs...) then moved the page (layout shift)."""
         context = self.env.context
-        if (context.get('inherit_branding') or context.get('rendering_bundle')
-                or context.get('edit_translations')):
+        # branded renders (any designer, edit mode or not) keep it too: the script adds the same
+        # class on those pages anyway, so an editor save holds nothing it would not hold already
+        if context.get('rendering_bundle') or context.get('edit_translations'):
             return atts
         website = self.env.website
         if not website or not website._scita_theme_active():

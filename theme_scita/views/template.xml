@@ -110,8 +110,9 @@
 
     <!-- Scita search dropdown (was the OWL extension static/src/snippets/000_categories.xml on 19).
          Odoo 20 renders autocomplete results server-side, so the same markup lives here.
-         Links are wrapped in <li style="display: contents"> so Odoo 20's keyboard navigation
-         (li > a) keeps working without changing the layout. -->
+         Links are wrapped in <li class="o_search_result_item" style="display: contents"> so Odoo 20's
+         keyboard navigation (li > a, keys bound on .o_search_result_item a) keeps working without
+         changing the layout. -->
     <template id="search_autocomplete_results" name="Scita Search Autocomplete Results">
         <t t-set="combos" t-value="[r for r in results if r.get('is_combo')]"/>
         <t t-set="categories" t-value="[r for r in results if r.get('category')]"/>
@@ -122,7 +123,7 @@
                 <div class="p-3 border-end searchbar_cat_left">
                     <h6 class="fw-bold mb-3"><i class="fa fa-dot-circle-o text-purple me-1"></i> Your search:</h6>
                     <div class="d-flex flex-column gap-2">
-                        <li t-foreach="combos" t-as="result" style="display: contents">
+                        <li t-foreach="combos" t-as="result" class="o_search_result_item" style="display: contents">
                             <a t-att-href="result['website_url']" class="badge bg-light text-dark px-3 py-2 search_chip text-decoration-none d-block">
                                 <i class="fa fa-search me-2" aria-hidden="true"></i>
                                 <t t-out="result['name']"/>
@@ -139,7 +140,7 @@
                             <i class="fa fa-dot-circle-o text-purple me-1"></i> Categories:
                         </div>
                         <div class="d-flex flex-wrap gap-2">
-                            <li t-foreach="categories" t-as="result" style="display: contents">
+                            <li t-foreach="categories" t-as="result" class="o_search_result_item" style="display: contents">
                                 <a t-att-href="result['website_url']" class="chip-link text-decoration-none">
                                     <span class="chip">
                                         <t t-if="result.get('image')">
@@ -161,7 +162,7 @@
                             <i class="fa fa-dot-circle-o text-primary me-1"></i> Brands:
                         </div>
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <li t-foreach="brands" t-as="result" style="display: contents">
+                            <li t-foreach="brands" t-as="result" class="o_search_result_item" style="display: contents">
                                 <a t-att-href="result['website_url']" class="chip-link text-decoration-none">
                                     <span class="chip">
                                         <div class="d-flex align-items-center flex-wrap o_search_result_item">
@@ -180,7 +181,7 @@
                 </div>
                 <hr t-if="results"/>
                 <div class="p-3">
-                    <li t-foreach="items" t-as="result" style="display: contents">
+                    <li t-foreach="items" t-as="result" class="o_search_result_item" style="display: contents">
                         <a t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
                             <div class="d-flex align-items-center flex-wrap o_search_result_item">
                                 <img t-if="result.get('image_url')" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>

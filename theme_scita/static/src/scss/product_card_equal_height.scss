@@ -115,6 +115,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        // Add to Cart / Contact Us: Odoo lines the icon up with the label's baseline
+        // (.align-items-baseline, !important); the taller icon then stood above the text
+        > .d-inline-flex {
+            align-items: center !important;
+        }
     }
     .btn:not(.o_wsale_product_btn_primary) {
         display: inline-flex;
@@ -553,6 +559,40 @@ header .navbar .o_extra_menu_items > .show > li.li-mega-menu {
 @media (hover: none) {
     #sct_deal_of_day_page .cs-product .sct-hover-info .btn {
         pointer-events: auto;
+    }
+}
+// Visitors with "login to see price": the text button sat in the row of round icon buttons,
+// which does not wrap, so "Login / to see / price" stacked and spilled over the stars. It gets
+// its own row under the icons (below 1200px, where the icons are a bar over the image, the
+// stars move down to make room for it).
+#sct_deal_of_day_page #theme_scita_products_grid_view .cs-product .sct-hover-info {
+    form:has(> .login-price-btn) {
+        flex-wrap: wrap;
+    }
+    // 14px text needs 4.5:1: a theme colour that only reaches 3:1 with white text gets a darker
+    // shade of itself here
+    $-sct-lp-bg: $primary;
+    $-sct-lp-fg: sct-oc($light-color, $primary);
+    @if type-of($primary) == 'color' and type-of($-sct-lp-fg) == 'color' and lightness($-sct-lp-fg) > 50% and contrast-ratio($primary, $-sct-lp-fg) < 4.5 {
+        $-sct-lp-bg: shade-color($primary, 20%);
+    }
+    .btn.login-price-btn {
+        flex: 0 0 100%;
+        width: auto;
+        height: auto;
+        margin: 5px 0 0;
+        padding: 6px 10px;
+        border: 1px solid $-sct-lp-bg;
+        border-radius: var(--sct-btn-radius);
+        background: $-sct-lp-bg !important; @include sct-light-box($-sct-lp-bg, true);
+        color: sct-oc($light-color, $-sct-lp-bg);
+        font-size: 14px;
+        line-height: 1.2;
+    }
+}
+@media (max-width: 1199px) {
+    #sct_deal_of_day_page #theme_scita_products_grid_view .cs-product .pwd-desc:has(.login-price-btn) {
+        padding-top: 50px;
     }
 }
 

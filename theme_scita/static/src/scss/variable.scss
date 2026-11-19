@@ -163,6 +163,15 @@ $-sct-dark-page: contrast-ratio($-sct-page-bg, #202020) < 3.05;
             --link-color-rgb: #{to-rgb(sct-pc-on($primary, $bg))};
             --link-hover-color: #{sct-pc-on($primary, $bg)};
             --link-hover-color-rgb: #{to-rgb(sct-pc-on($primary, $bg))};
+            // Odoo's outline buttons (shop cards' Login to see price...) kept the page's light
+            // primary on this light box (not in a colour preset or a coloured background inside it:
+            // those keep their own outline colours)
+            // (built with selector functions: libsass leaves a `&` inside :where() as is; :where keeps
+            // the specificity of `<box> .btn-outline-primary`)
+            @at-root #{selector-append(selector-nest(&, '.btn-outline-primary'), ':not(:where(#{selector-nest(&, ':is(.o_cc1, .o_cc2, .o_cc3, .o_cc4, .o_cc5, .bg-primary, .bg-secondary, .bg-dark, .bg-black, .text-bg-primary, .text-bg-secondary, .text-bg-dark) *')}))')} {
+                --btn-color: #{sct-pc-on($primary, $bg)};
+                --btn-border-color: #{sct-pc-on($primary, $bg)};
+            }
         }
         --sct-tp: #{sct-pc-on($primary, $bg)};
         --sct-ts: #{sct-pc-on($secondary, $bg)};

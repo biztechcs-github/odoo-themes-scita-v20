@@ -18,7 +18,7 @@
                     <div class='col-lg-6 sct_cmp_info'>
                         <div class='row sct_icon_img it-icon'>
                             <!-- <ul> -->
-                                <div class="col-6 sct_service_content_block">
+                                <div class="col-12 col-sm-6 sct_service_content_block">
                                     <div class="sct_img_content_block">
                                         <div class="icon-based">
                                             <img src="/web/image/theme_scita.sct_case_study_snippet_3" class="img img-fluid" alt="cloud db"/>
@@ -27,7 +27,7 @@
                                         <p class="sct_simple_text">Lorem ipsum dolor amet, adipiscing, sed do   eiusmod tempor incididunt ut labore dolore magna aliqua.Lorem ipsum dolor amet, adipiscing, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.</p>
                                     </div>
                                 </div>
-                                <div class="col-6 sct_service_content_block">
+                                <div class="col-12 col-sm-6 sct_service_content_block">
                                     <div class="sct_img_content_block">
                                         <div class="icon-based">
                                             <img src="/web/image/theme_scita.sct_service_snippet_1_img_file" class="img img-fluid" alt="file explore"/>
@@ -36,7 +36,7 @@
                                         <p class="sct_simple_text">Lorem ipsum dolor amet, adipiscing, sed do   eiusmod tempor incididunt ut labore dolore magna aliqua.Lorem ipsum dolor amet, adipiscing, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.</p>
                                     </div>
                                 </div>
-                                <div class="col-6 sct_service_content_block">
+                                <div class="col-12 col-sm-6 sct_service_content_block">
                                     <div class="sct_img_content_block">
                                         <div class="icon-based">
                                             <img src="/web/image/theme_scita.sct_service_snippet_1_img_server" class="img img-fluid" alt="email server"/>
@@ -45,7 +45,7 @@
                                         <p class="sct_simple_text">Lorem ipsum dolor amet, adipiscing, sed do   eiusmod tempor incididunt ut labore dolore magna aliqua.Lorem ipsum dolor amet, adipiscing, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.</p>
                                     </div>
                                 </div>
-                                <div class="col-6 sct_service_content_block">
+                                <div class="col-12 col-sm-6 sct_service_content_block">
                                     <div class="sct_img_content_block">
                                         <div class="icon-based">
                                             <img src="/web/image/theme_scita.sct_service_snippet_1_img_file" class="img img-fluid" alt="file explore"/>
@@ -54,7 +54,7 @@
                                         <p class="sct_simple_text">Lorem ipsum dolor amet, adipiscing, sed do   eiusmod tempor incididunt ut labore dolore magna aliqua.Lorem ipsum dolor amet, adipiscing, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.</p>
                                     </div>
                                 </div>
-                                <div class="col-6 sct_service_content_block">
+                                <div class="col-12 col-sm-6 sct_service_content_block">
                                     <div class="sct_img_content_block">
                                         <div class="icon-based">
                                             <img src="/web/image/theme_scita.sct_service_snippet_1_img_ecomerce" class="img img-fluid" alt="ecommerce"/>
@@ -63,7 +63,7 @@
                                         <p class="sct_simple_text">Lorem ipsum dolor amet, adipiscing, sed do   eiusmod tempor incididunt ut labore dolore magna aliqua.Lorem ipsum dolor amet, adipiscing, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.</p>
                                     </div>
                                 </div>
-                                <div class="col-6 sct_service_content_block">
+                                <div class="col-12 col-sm-6 sct_service_content_block">
                                     <div class="sct_img_content_block">
                                         <div class="icon-based">
                                             <img src="/web/image/theme_scita.sct_service_snippet_1_img_desktop" class="img img-fluid" alt="remote desktop"/>

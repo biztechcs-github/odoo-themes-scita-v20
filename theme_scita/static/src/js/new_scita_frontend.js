@@ -503,10 +503,15 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
                 const $productIDInput = $cartWrapper.find("input[name='product_id']");
                 const productID = parseInt($productIDInput.val()); 
                 const productTemplateID = parseInt($btn.data("templateId"));
-                const addQuantity = parseInt($qtyInput.val()) || 1;
-            
+                const addQuantity = Math.max(1, parseInt($qtyInput.val()) || 1);
+
                 const self = this;
-                
+                // one add at a time: a double click must not add the product twice
+                if ($btn.data("sctAdding")) {
+                    return;
+                }
+                $btn.data("sctAdding", true);
+
                 // /shop/cart/add merges into an existing line. No Odoo "added to cart" popup:
                 // Scita's own confirmation (cartViewData) opens once the product is in the cart.
                 rpc("/shop/cart/add", {
@@ -520,6 +525,8 @@ publicWidget.registry.oe_deal_of_the_day = publicWidget.Widget.extend({
                     sctCartAddDone(self, $btn[0], data);
                 }).catch((err) => {
                     sctCartAddFailed(self, err);
+                }).finally(() => {
+                    $btn.data("sctAdding", false);
                 });
             },
 

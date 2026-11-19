@@ -5,7 +5,7 @@
     'author': 'AppJetty',
     'website': 'https://www.appjetty.com/',
     'category': 'Theme/Ecommerce',
-    'version': '20.0.1.2',
+    'version': '20.0.1.3',
     'license': 'OPL-1',
     'description': '''Theme Scita
 Business theme

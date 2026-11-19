@@ -3,6 +3,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import format_amount
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.variant import WebsiteSaleVariantController
 from odoo.addons.website_sale.controllers.product_configurator import WebsiteSaleProductConfiguratorController
@@ -58,6 +59,8 @@ class ScitaBulkVariantController(WebsiteSaleVariantController):
                 tier['fixed_price'] = template._get_combination_info(
                     combination=ptavs, product_id=variant.id, add_qty=tier['min_quantity'],
                     uom_id=uom_id, pricelist=pricelist)['price']
+                # as the page shows prices: currency symbol, the visitor's number format
+                tier['price_text'] = format_amount(request.env, tier['fixed_price'], pricelist.currency_id)
 
         combination_info['bulk_prices'] = bulk_prices
 

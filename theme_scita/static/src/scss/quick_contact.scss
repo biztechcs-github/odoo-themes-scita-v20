@@ -45,9 +45,21 @@
     }
 }
 
-// out of the way while its drawer is open
-#wrapwrap:has(> .o_scita_connect.showing, > .o_scita_connect.show) > .o_scita_connect_tab {
+// Sidebar header docked on the right (desktop): the tab sat on top of the sidebar's column;
+// next to it instead
+@if o-website-value('header-template') == 'sidebar' and o-website-value('hamburger-position') == 'right' {
+    @include media-breakpoint-up(lg) {
+        .o_scita_connect_tab {
+            right: o-website-value('sidebar-width');
+        }
+    }
+}
+
+// out of the way while its drawer or any other offcanvas is open (the header's menu offcanvas
+// sits inside the header's stacking context, under this tab)
+body:has(.offcanvas.showing, .offcanvas.show) .o_scita_connect_tab {
     opacity: 0;
+    pointer-events: none;
     transform: translate(100%, -50%);
 }
 
@@ -55,7 +67,7 @@
 .o_scita_connect.offcanvas {
     --offcanvas-width: 420px;
     border-left: 0;
-    background: $light-color;
+    background: $light-color; @include sct-light-box($light-color, false);
     box-shadow: -18px 0 48px rgba($dark-color, 0.18);
 
     .offcanvas-header {
@@ -148,6 +160,7 @@
         font-size: 15px;
         font-weight: 600;
         line-height: 1.3;
+        overflow-wrap: anywhere;
     }
 
     .o_scita_connect_desc {
@@ -231,10 +244,45 @@
             padding: 18px 16px;
         }
     }
+}
 
+// a small icon-only nub low on the edge (above the back-to-top arrow and the app bar): the
+// full-height label mid-screen covered the right-edge buttons, arrows and toggles of
+// full-width blocks (the label stays for screen readers). Phones held sideways too: the
+// 150px label took 40% of their height
+@media (max-width: 575.98px), (orientation: landscape) and (max-height: 500px) {
     .o_scita_connect_tab {
-        padding: 12px 8px 14px;
+        top: auto;
+        bottom: 130px;
+        padding: 12px 8px;
         font-size: 13px;
+        writing-mode: horizontal-tb;
+        transform: none;
+
+        svg {
+            transform: none;
+        }
+
+        span {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+    }
+
+    body:has(.offcanvas.showing, .offcanvas.show) .o_scita_connect_tab {
+        transform: translateX(100%);
+    }
+}
+
+// iPhone "add to home screen" hint (pwa_design.scss, 80px from the bottom, ~90px tall): the
+// nub sat under it, next to its close button
+@media (max-width: 575.98px) {
+    body:has(.mobile-deive-popup[style*="block"]:not(.o_hidden)) .o_scita_connect_tab {
+        bottom: 180px;
     }
 }
 

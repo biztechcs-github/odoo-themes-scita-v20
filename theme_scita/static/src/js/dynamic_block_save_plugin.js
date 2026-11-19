@@ -55,6 +55,11 @@ export class ScitaDynamicBlockSavePlugin extends Plugin {
             for (const img of selectElements(root, DYNAMIC_SAMPLE_IMG)) {
                 img.classList.remove("o_snippet_not_selectable");
             }
+            // a +New page's #wrap is itself the editable area, saved with its classes: the ones
+            // added on display (ir_qweb.py, scita_fronted.js) stayed in the page for good
+            for (const wrap of selectElements(root, "div#wrap")) {
+                wrap.classList.remove("js_sale", "oe_website_sale");
+            }
             return root;
         },
     };

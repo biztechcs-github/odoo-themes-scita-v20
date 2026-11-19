@@ -31,4 +31,15 @@ patch(SearchBarResults.prototype, {
             return style;
         };
     },
+
+    // Scita's product results are .dropdown-item links inside li.o_search_result_item: the
+    // search bar's own handler already moved the focus to the next / previous one; this one
+    // (which only knows the menu's direct children) then sent it back to the search box, so
+    // ArrowDown never got past the first product
+    onKeydown(ev) {
+        if (ev.currentTarget.closest(".o_search_result_item")) {
+            return;
+        }
+        return super.onKeydown(...arguments);
+    },
 });

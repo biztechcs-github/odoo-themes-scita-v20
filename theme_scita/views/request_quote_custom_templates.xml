@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="quantity" class="form-label">Quantity <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="quantity" id="quantity" required="required" min="1" step="1" value="1"/>
+                                    <input type="number" class="form-control" name="quantity" id="quantity" required="required" min="1" max="1000000" step="1" value="1"/>
                                 </div>
                                 <div class="col-12">
                                     <label for="message" class="form-label">Message</label>

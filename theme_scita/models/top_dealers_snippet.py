@@ -30,4 +30,4 @@ class TopDealersConfiguration(models.Model):
     def _scita_update_vendor_product_count(self):
         for vendor in self.vendor_ids.sudo():
             vendor.product_count = self.env['product.template'].search_count(
-                [('seller_ids', 'ilike', vendor.name)])
+                [('seller_ids.partner_id', 'child_of', vendor.id)])

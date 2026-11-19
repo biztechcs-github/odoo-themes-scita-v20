@@ -22,9 +22,27 @@ import logging
 import threading
 from collections import OrderedDict
 
+from odoo.http import request
 from odoo.http.router import Application
+from odoo.orm.registry import Registry
 
 _logger = logging.getLogger(__name__)
+
+
+def _theme_scita_installed():
+    """True only when the current request's database has theme_scita installed.
+
+    The patch below is process-wide (one Odoo server can serve several
+    databases, and it stays loaded after the module is uninstalled), so it
+    must stay inert for requests without a database or for a database that
+    does not have the theme. Called from start_response, while the request
+    is still bound.
+    """
+    try:
+        registry = request.registry or (request.db and Registry.registries.get(request.db))
+    except RuntimeError:  # no request bound
+        return False
+    return bool(registry) and 'theme_scita' in registry._init_modules
 
 # Compressing the frontend bundles costs real CPU on every single hit
 # (measured: 26ms for the 2.1MB stylesheet, 65ms for the 2.7MB script), and
@@ -110,6 +128,7 @@ def _patch_gzip_compression():
             captured['status'] = status
             captured['headers'] = headers
             captured['exc_info'] = exc_info
+            captured['active'] = _theme_scita_installed()
             return lambda data: None
 
         app_iter = original_call(self, environ, capturing_start_response)
@@ -130,7 +149,8 @@ def _patch_gzip_compression():
         content_type = header_dict.get('content-type', '').split(';')[0].strip()
 
         compressible = (
-            not captured.get('status', '').startswith('1')
+            captured.get('active')
+            and not captured.get('status', '').startswith('1')
             and 'content-encoding' not in header_dict
             and 'content-range' not in header_dict
             and content_type in COMPRESSIBLE_TYPES

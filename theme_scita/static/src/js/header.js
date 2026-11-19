@@ -203,15 +203,53 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
             e.preventDefault();
             $('#cstm-nav-menu-toggle').removeClass("o_hidden");
             $('body').addClass('show-scita-cstm-menu');
+            self._bindCartSidebarClose(this);
             self._reloadCartSidebar();
         });
 
         // Close cart sidebar
         $('body').off('click', '#close_cstm_nav_toggle').on('click', '#close_cstm_nav_toggle', function(e) {
             e.preventDefault();
-            $('#cstm-nav-menu-toggle').addClass("o_hidden");
-            $('body').removeClass('show-scita-cstm-menu');
+            self._closeCartSidebar();
         });
+    },
+
+    // Like an offcanvas: focus goes into the drawer, and Escape or a click on the dimmed page
+    // outside it closes it (focus then goes back to the cart button)
+    _bindCartSidebarClose(openerEl) {
+        this._unbindCartSidebarClose?.();
+        document.getElementById('cstm-nav-menu-toggle')?.focus({ preventScroll: true });
+        const onKeydown = (ev) => {
+            if (ev.key === "Escape") {
+                this._closeCartSidebar(openerEl);
+            }
+        };
+        const onClick = (ev) => {
+            // the drawer is the whole dimmed screen: its panel is .my-cart (the event path, as
+            // a click on +/- or the trash re-renders the panel before the click gets here)
+            const inside = ev.composedPath().some((el) => el instanceof Element
+                && el.matches('#cstm-nav-menu-toggle .my-cart, .nav-toggle-btn, .modal, .o_notification_manager'));
+            if (!inside) {
+                this._closeCartSidebar();
+            }
+        };
+        document.addEventListener("keydown", onKeydown);
+        document.addEventListener("click", onClick);
+        this._unbindCartSidebarClose = () => {
+            document.removeEventListener("keydown", onKeydown);
+            document.removeEventListener("click", onClick);
+            this._unbindCartSidebarClose = null;
+        };
+    },
+
+    _closeCartSidebar(focusEl) {
+        this._unbindCartSidebarClose?.();
+        if (!document.body.classList.contains('show-scita-cstm-menu')) {
+            return;
+        }
+        $('#cstm-nav-menu-toggle').addClass("o_hidden");
+        $('body').removeClass('show-scita-cstm-menu');
+        focusEl?.focus({ preventScroll: true });
     },
 
     async _reloadCartSidebar() {
@@ -224,11 +262,17 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
             const cartContainer = document.querySelector('.cart_details');
             if (cartContainer) {
                 const parent = cartContainer.parentElement;
+                const hadFocus = cartContainer.contains(document.activeElement);
                 cartContainer.remove();
                 parent.insertAdjacentHTML('beforeend', html);
                 // the new sidebar comes hidden: keep it open when it was open
                 if (document.body.classList.contains('show-scita-cstm-menu')) {
-                    document.getElementById('cstm-nav-menu-toggle')?.classList.remove('o_hidden');
+                    const drawerEl = document.getElementById('cstm-nav-menu-toggle');
+                    drawerEl?.classList.remove('o_hidden');
+                    // focus stays in the drawer (Escape, Tab) instead of falling back to <body>
+                    if (hadFocus) {
+                        drawerEl?.focus({ preventScroll: true });
+                    }
                 }
             }
         } catch (err) {
@@ -243,7 +287,9 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
         // Only send real changes: the input's value attribute still holds the quantity the
         // server rendered. A change event without a new number (e.g. fired again on a
         // re-rendered sidebar, or a cleared field) must never update - or delete - the line.
-        const renderedQty = parseInt($target.attr("value"));
+        // (Not for the hidden input of a non-editable line, e.g. a promo code: only the trash
+        // button changes it, and setting a hidden input's value also rewrites its attribute.)
+        const renderedQty = ev.currentTarget.type === "hidden" ? NaN : parseInt($target.attr("value"));
         if (isNaN(qty) || qty < 0 || qty === renderedQty) {
             if (!isNaN(renderedQty)) {
                 $target.val(renderedQty);
@@ -254,12 +300,24 @@ publicWidget.registry.toggle_nav_menu = publicWidget.Widget.extend({
         const currencyId = $target.data("currency-id");
         const params = {
             product_id: $target.data("productId"),
-            line_id: $target.data("lineId"),
+            // a promo line (website_sale_loyalty) has no id: the server finds it from the product
+            line_id: $target.data("lineId") || null,
             quantity: qty,
         };
 
         try {
             const data = await rpc("/shop/cart/update", params);
+            // Cart and checkout steps (incl. the payment amount) show the order: reload them,
+            // a stale amount would be paid as a partial payment. Not the address step: a reload
+            // threw away what was typed in its form (no amount is paid there, the next steps
+            // show the updated order)
+            if (
+                document.body.classList.contains("o_website_sale_checkout") &&
+                !document.querySelector("form[name='address_form']")
+            ) {
+                window.location.reload();
+                return;
+            }
             this._refreshCart(data);
             this._reloadCartSidebar();
             if (data.cart_quantity === 0) {

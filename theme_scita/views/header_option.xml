@@ -619,7 +619,7 @@
     </template>
     <template id="cart_sidebar_template" name="Custom Cart Sidebar">
         <div class="cart_details">
-            <div id="cstm-nav-menu-toggle" class="scita-side-menu css_editable_mode_hidden o_hidden">
+            <div id="cstm-nav-menu-toggle" class="scita-side-menu css_editable_mode_hidden o_hidden" tabindex="-1">
                 <div class="my-cart">
                     <div class="cart-header">
                         <div class="cart-title">
@@ -662,13 +662,14 @@
                                                 <!-- Quantity & Unit Price -->
                                                 <p class="cart_qty_amt">
                                                     <span class="sc-product-quantity theme_scita_cart_quantity1" t-out="int(line.product_uom_qty)"/>x
-                                                    <span t-if="not sct_hide_line_price" t-out="line.price_unit"
+                                                    <span t-if="not sct_hide_line_price" t-out="line._get_displayed_unit_price()"
                                                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 </p>
 
                                                 <!-- Subtotal -->
                                                 <p t-if="not sct_hide_line_price" class="sc-product-subtotal cart_line_subtotal">
-                                                    <span t-out="line.price_subtotal"
+                                                    <!-- as the cart page: tax included or not per the website setting -->
+                                                    <span t-out="line._get_cart_display_price()"
                                                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 </p>
                                                 <!-- Quantity Controls -->

@@ -48,7 +48,8 @@
                                     <h3 class="img_title">Man Collection</h3>
                                     <p class="sub_title">Designed to stand the test of time</p>
                                     <div class='sct_deal_btn'>
-                                        <a href="/shop" class="btn btn-primary">Shop Now</a>
+                                        <!-- a span: the whole card is already the link (no <a> in <a>) -->
+                                        <span class="btn btn-primary">Shop Now</span>
                                     </div>
                                 </div>
                             </a>

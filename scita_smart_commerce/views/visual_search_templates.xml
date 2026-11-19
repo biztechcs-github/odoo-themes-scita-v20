@@ -6,7 +6,10 @@
          static class rewrite can drop them. -->
     <template id="visual_search_button" inherit_id="website.website_search_box" name="Scita Visual Search Button">
         <xpath expr="//div[@role='search']/button[@type='submit']" position="after">
-            <button t-if="website and website.scita_visual_search_enabled and website._scita_ai_ready()"
+            <!-- only in the boxes that search products (all, products): the camera finds products,
+                 not pages, posts, courses, events... -->
+            <button t-if="website and website.scita_visual_search_enabled and website._scita_ai_ready()
+                          and search_type in (None, False, 'all', 'products')"
                     type="button"
                     t-attf-class="btn o_scita_visual_search_btn o_not_editable"
                     title="Search by photo" aria-label="Search by photo">

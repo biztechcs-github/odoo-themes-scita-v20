@@ -2,6 +2,7 @@
 
 import publicWidget from '@theme_scita/js/compat/public_widget';
 import { patch } from '@web/core/utils/patch';
+import { _t } from '@web/core/l10n/translation';
 import { ProductPage } from '@website_sale/interactions/product_page';
 
 // The quantity input is the only state: a tier button just fills it in. The price shown and
@@ -44,12 +45,6 @@ publicWidget.registry.BulkPriceButtonWidget = publicWidget.Widget.extend({
         }
         qtyInput.value = parseInt(btn.getAttribute('qty')) || 1;
         highlightBulkTier(el);
-        // show the tier price right away; Odoo's combination update confirms it
-        const price = parseFloat(btn.getAttribute('price'));
-        const currencyVal = el.querySelector('.oe_price .oe_currency_value');
-        if (currencyVal && !isNaN(price)) {
-            currencyVal.textContent = price.toFixed(2);
-        }
         // Odoo listens to `change` on the input: it re-prices the combination for this quantity
         qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
     },
@@ -72,17 +67,22 @@ patch(ProductPage.prototype, {
         bulkSection.classList.remove('d-none');
 
         // the tiers depend on the variant: rebuild them, then highlight the one in use
-        wrapper.innerHTML = bulkPrices.map(rule =>
-            `<a class="btn btn-outline-primary o_bulk_price_btn"
-                 qty="${rule.min_quantity}"
-                 price="${rule.fixed_price}"
-                 href="#">
-                <span class="buy-tag">Buy ${rule.min_quantity}</span>
-                at
-                <span class="buy-price">${rule.fixed_price.toFixed(2)}</span>
-                / Unit
-            </a>`
-        ).join('');
+        // (price_text is formatted by the server: currency symbol and the visitor's number format)
+        wrapper.replaceChildren(...bulkPrices.map((rule) => {
+            const btn = document.createElement('a');
+            btn.className = 'btn btn-outline-primary o_bulk_price_btn';
+            btn.setAttribute('qty', rule.min_quantity);
+            btn.setAttribute('price', rule.fixed_price);
+            btn.href = '#';
+            const tag = Object.assign(document.createElement('span'), {
+                className: 'buy-tag', textContent: `${_t("Buy")} ${rule.min_quantity}`,
+            });
+            const price = Object.assign(document.createElement('span'), {
+                className: 'buy-price', textContent: rule.price_text,
+            });
+            btn.append(tag, ` ${_t("at")} `, price, ` ${_t("/ Unit")}`);
+            return btn;
+        }));
         highlightBulkTier(parent);
     },
 });

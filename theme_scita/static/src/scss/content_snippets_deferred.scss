@@ -1457,6 +1457,13 @@
 				.sct_service_content_block{
 					margin-bottom: 30px;
 
+					// blocks dropped before the cards got col-12 col-sm-6: one card per row on phones
+					&.col-6:not([class*="col-sm-"]){
+						@media (max-width: 575.98px){
+							width: 100%;
+						}
+					}
+
 					@include min992{
 						margin-bottom: 15px;
 					}

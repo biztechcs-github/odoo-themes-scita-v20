@@ -2,7 +2,7 @@
 <odoo>
     <template id="side_content_add_class" inherit_id="portal.side_content" name='My Account Side Content'>
         <xpath expr="//div[2]" position="attributes">
-            <attribute name='t-attf-class'>{{'offcanvas-body' if isOffcanvas else 'mt-3 rounded text-bg-light p-3'}}</attribute>
+            <attribute name='t-attf-class'>{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100 rounded text-bg-light p-3'}}</attribute>
         </xpath>
         <xpath expr="//a[@href='/my/account']" position="attributes">
             <attribute name='class'>btn btn-link mt-3</attribute>

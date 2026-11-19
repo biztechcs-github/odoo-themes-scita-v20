@@ -29,7 +29,7 @@
                                     </a>
                                 </div>
                                 <div class="product-disc">
-                                    <h3 class="title"><t t-out="dealer.product_count"/> Products</h3>
+                                    <h3 class="title"><t t-out="dealer_product_counts.get(dealer.id, 0)"/> Products</h3>
                                 </div>
                             </div>
                             <div class="block-bottom">
