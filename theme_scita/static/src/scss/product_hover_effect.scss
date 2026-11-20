@@ -7804,6 +7804,19 @@ $sct-title: '.oe_product .o_wsale_products_item_title';
             left: auto;
         }
     }
+    // Shop "Rating" option: the rating chip also sits at the bottom left of the image; when the
+    // 3D button is on that side it goes just above the chip.
+    $sct-rated: '.o_wsale_products_opt_has_rating .oe_product_cart:has(.o_wsale_product_information_text .ratings)';
+    @if o-website-value('prod-hover-style') != 'prod_hover_style_2' {
+        #products_grid #{$sct-rated} .oe_product_image .o_scita_ar_card_btn {
+            bottom: 40px;
+        }
+    }
+    @media (min-width: 992px) {
+        #products_grid #{$sct-rated}:is(#{$sct-row-card}):not(:has(#{$sct-band-right})) .oe_product_image .o_scita_ar_card_btn {
+            bottom: 40px;
+        }
+    }
 
     @media (min-width: 992px) {
         #{$sct-row-card} #{$sct-row-btns} {
